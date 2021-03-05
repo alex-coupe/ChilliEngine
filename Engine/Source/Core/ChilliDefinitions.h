@@ -1,7 +1,5 @@
 #pragma once
 
-const char* chilli_version = "v0.1 WIP";
-
 #ifdef CHILLI_ENGINE
 	#define CHILLI_CLASS _declspec(dllexport)
 #else
