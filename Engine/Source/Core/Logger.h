@@ -8,18 +8,24 @@ namespace Engine::Core {
 	class Logger {
 
 	public:
-		CHILLI_CLASS static void Init();
+		CHILLI_FUNC static void Init();
 	
-		CHILLI_CLASS inline static std::shared_ptr<spdlog::logger>& GetLogger() { return m_logger; }
+		CHILLI_FUNC inline static std::shared_ptr<spdlog::logger>& GetEngineLogger() { return m_engineLogger; }
+		CHILLI_FUNC inline static std::shared_ptr<spdlog::logger>& GetEditorLogger() { return m_editorLogger; }
 
 	private:
-		static std::shared_ptr<spdlog::logger> m_logger;
+		static std::shared_ptr<spdlog::logger> m_engineLogger;
+		static std::shared_ptr<spdlog::logger> m_editorLogger;
 
 	};
 }
 
 
 
-#define CHILLI_ERROR(...) ::Engine::Core::Logger::GetLogger()->error(__VA_ARGS__)
-#define CHILLI_WARN(...)  ::Engine::Core::Logger::GetLogger()->warn(__VA_ARGS__)
-#define CHILLI_INFO(...)  ::Engine::Core::Logger::GetLogger()->info(__VA_ARGS__)
+#define ENGINE_ERROR(...) ::Engine::Core::Logger::GetEngineLogger()->error(__VA_ARGS__)
+#define ENGINE_WARN(...)  ::Engine::Core::Logger::GetEngineLogger()->warn(__VA_ARGS__)
+#define ENGINE_INFO(...)  ::Engine::Core::Logger::GetEngineLogger()->info(__VA_ARGS__)
+
+#define EDITOR_ERROR(...) ::Engine::Core::Logger::GetEditorLogger()->error(__VA_ARGS__)
+#define EDITOR_WARN(...)  ::Engine::Core::Logger::GetEditorLogger()->warn(__VA_ARGS__)
+#define EDITOR_INFO(...)  ::Engine::Core::Logger::GetEditorLogger()->info(__VA_ARGS__)

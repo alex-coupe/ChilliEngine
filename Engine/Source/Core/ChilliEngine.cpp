@@ -2,7 +2,8 @@
 
 void ChilliEngine::Init()
 {
-	Engine::Core::Logger::Init();
+	
+	ENGINE_INFO("Chilli Engine Initialized Successfully");
 }
 
 void ChilliEngine::Update()

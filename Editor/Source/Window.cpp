@@ -19,8 +19,9 @@ Window::Window(HINSTANCE& instance)
 	wndclass.lpszMenuName = nullptr;
 	
 	if (!RegisterClassEx(&wndclass))
-		CHILLI_ERROR("Failed To Register Window");
+		EDITOR_ERROR("Failed To Register Window");
 
+	EDITOR_INFO("Window Registered Successfully");
 
 	m_handle = CreateWindowEx(
 		0,
@@ -33,10 +34,11 @@ Window::Window(HINSTANCE& instance)
 
 	if (!m_handle)
 	{
-		CHILLI_ERROR("Failed To Create Window");
+		EDITOR_ERROR("Failed To Create Window");
 	}
 	else
 	{
+		EDITOR_INFO("Window Created Successfully");
 		ShowWindow(m_handle, SW_MAXIMIZE);
 	}
 	
@@ -61,7 +63,7 @@ const HWND& Window::GetHandle() const
 Window::~Window()
 {
 	UnregisterClass(m_className,m_instance);
-	CHILLI_INFO("Unregistering Window");
+	EDITOR_INFO("Unregistering Window");
 	DestroyWindow(m_handle);
-	CHILLI_INFO("Destroying Window");
+	EDITOR_INFO("Destroying Window");
 }

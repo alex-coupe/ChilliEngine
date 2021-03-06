@@ -14,4 +14,5 @@ Editor::Editor(HINSTANCE& instance)
 
 void Editor::Update()
 {
+	m_Engine->Update();
 }

@@ -6,7 +6,7 @@ namespace Engine::Core {
 	class Logger;
 }
 
-class CHILLI_CLASS ChilliEngine {
+CHILLI_CLASS ChilliEngine {
 
 public:
 	void Init();
