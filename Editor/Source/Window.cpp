@@ -1,6 +1,6 @@
 #include "Window.h"
 
-Editor::Window::Window(HINSTANCE& instance, const std::wstring& title)
+Window::Window(HINSTANCE& instance)
 	:m_instance(instance), m_handle(nullptr)
 {
 	
@@ -25,7 +25,7 @@ Editor::Window::Window(HINSTANCE& instance, const std::wstring& title)
 	m_handle = CreateWindowEx(
 		0,
 		m_className,
-		title.c_str(),
+		title,
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT,CW_USEDEFAULT,
 		CW_USEDEFAULT, CW_USEDEFAULT,NULL,NULL,m_instance,NULL);
@@ -42,7 +42,7 @@ Editor::Window::Window(HINSTANCE& instance, const std::wstring& title)
 	
 }
 
-LRESULT Editor::Window::WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT Window::WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
 	{
@@ -53,12 +53,12 @@ LRESULT Editor::Window::WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lPa
 	return DefWindowProc(handle, msg, wParam, lParam);
 }
 
-const HWND& Editor::Window::GetHandle() const
+const HWND& Window::GetHandle() const
 {
 	return m_handle;
 }
 
-Editor::Window::~Window()
+Window::~Window()
 {
 	UnregisterClass(m_className,m_instance);
 	CHILLI_INFO("Unregistering Window");
