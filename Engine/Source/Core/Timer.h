@@ -1,7 +1,7 @@
 #pragma once
 #include "ChilliDefinitions.h"
 
-namespace Chilli::Core {
+namespace Engine::Core {
 
 	class CHILLI_CLASS Timer
 	{

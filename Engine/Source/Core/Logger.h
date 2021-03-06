@@ -3,7 +3,7 @@
 #include <spdlog\sinks\stdout_color_sinks.h>
 #include "ChilliDefinitions.h"
 
-namespace Chilli::Core {
+namespace Engine::Core {
 
 	class Logger {
 
@@ -20,6 +20,6 @@ namespace Chilli::Core {
 
 
 
-#define CHILLI_ERROR(...) ::Chilli::Core::Logger::GetLogger()->error(__VA_ARGS__)
-#define CHILLI_WARN(...)  ::Chilli::Core::Logger::GetLogger()->warn(__VA_ARGS__)
-#define CHILLI_INFO(...)  ::Chilli::Core::Logger::GetLogger()->info(__VA_ARGS__)
+#define CHILLI_ERROR(...) ::Engine::Core::Logger::GetLogger()->error(__VA_ARGS__)
+#define CHILLI_WARN(...)  ::Engine::Core::Logger::GetLogger()->warn(__VA_ARGS__)
+#define CHILLI_INFO(...)  ::Engine::Core::Logger::GetLogger()->info(__VA_ARGS__)

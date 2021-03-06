@@ -1,6 +1,6 @@
 #pragma once
 #include "ChilliDefinitions.h"
 #include "Logger.h"
-namespace Chilli::Core {
+namespace Engine::Core {
 	class Logger;
 }

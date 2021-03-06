@@ -1,7 +1,7 @@
 #include "Logger.h"
 #include <fcntl.h>
 
-namespace Chilli::Core {
+namespace Engine::Core {
 
 	std::shared_ptr<spdlog::logger> Logger::m_logger;
 
