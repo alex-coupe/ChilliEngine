@@ -1,4 +1,6 @@
 #include "Window.h"
+#include "ImGui\imgui_impl_win32.h"
+#include "ImGui\imgui.h"
 
 Window::Window(HINSTANCE& instance)
 	:m_instance(instance), m_handle(nullptr)
@@ -40,18 +42,66 @@ Window::Window(HINSTANCE& instance)
 	{
 		EDITOR_INFO("Window Created Successfully");
 		ShowWindow(m_handle, SW_MAXIMIZE);
+		//ImGui_ImplWin32_Init(m_handle);
 	}
 	
 }
 
+//extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 LRESULT Window::WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	/*if (ImGui_ImplWin32_WndProcHandler(handle, msg, wParam, lParam))
+	{
+		return true;
+	}
+	const auto& imio = ImGui::GetIO();
+	*/
 	switch (msg)
 	{
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		return 0;
+		
+		case WM_CLOSE:
+			PostQuitMessage(0);
+			return 0;
+		
+		case WM_KILLFOCUS:
+		
+			break;
+		case WM_ACTIVATE:
+	
+		case WM_KEYDOWN:
+		case WM_SYSKEYDOWN:	
+		case WM_KEYUP:
+		case WM_SYSKEYUP:		
+		case WM_CHAR:
+		case WM_MOUSEMOVE:
+		{
+			const POINTS pt = MAKEPOINTS(lParam);		
+		}
+		case WM_LBUTTONDOWN:
+		{
+		
+		}
+		case WM_RBUTTONDOWN:
+		{
+		
+		}
+		case WM_LBUTTONUP:
+		{
+		
+		}
+		case WM_RBUTTONUP:
+		{
+		
+		}
+		case WM_MOUSEWHEEL:
+		{
+			EDITOR_INFO("Received Event!");
+			break;
+		}
+
 	}
+
 	return DefWindowProc(handle, msg, wParam, lParam);
 }
 
@@ -76,6 +126,7 @@ bool Window::Update()
 
 Window::~Window()
 {
+	//ImGui_ImplWin32_Shutdown();
 	UnregisterClass(m_className,m_instance);
 	EDITOR_INFO("Unregistering Window");
 	DestroyWindow(m_handle);
