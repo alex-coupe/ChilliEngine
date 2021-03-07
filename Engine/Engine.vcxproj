@@ -165,11 +165,14 @@
   <ItemGroup>
     <ClInclude Include="Source\Core\ChilliDefinitions.h" />
     <ClInclude Include="Source\Core\ChilliEngine.h" />
+    <ClInclude Include="Source\Core\Event.h" />
+    <ClInclude Include="Source\Core\EventSystem.h" />
     <ClInclude Include="Source\Core\Logger.h" />
     <ClInclude Include="Source\Core\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\ChilliEngine.cpp" />
+    <ClCompile Include="Source\Core\EventSystem.cpp" />
     <ClCompile Include="Source\Core\Timer.cpp" />
     <ClCompile Include="Source\Core\Logger.cpp" />
   </ItemGroup>

@@ -2,13 +2,28 @@
 
 void Editor::Init()
 {
-	m_Engine = std::make_unique<ChilliEngine>();
-	m_Engine->Init();
+	m_engine = std::make_unique<ChilliEngine>();
+	m_engine->Init();
 	
 }
 
 
 void Editor::Update()
 {
-	m_Engine->Update();
+	m_engine->Update();
+}
+
+void Editor::RaiseMouseEvent()
+{
+	m_engine->RaiseMouseEvent();
+}
+
+void Editor::RaiseKeyboardEvent()
+{
+	m_engine->RaiseKeyboardEvent();
+}
+
+void Editor::RaiseSystemEvent()
+{
+	m_engine->RaiseSystemEvent();
 }

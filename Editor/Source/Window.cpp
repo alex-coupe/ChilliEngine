@@ -1,11 +1,14 @@
 #include "Window.h"
 #include "ImGui\imgui_impl_win32.h"
 #include "ImGui\imgui.h"
+#include "Editor.h"
 
-Window::Window(HINSTANCE& instance)
-	:m_instance(instance), m_handle(nullptr)
+Window* Window::m_pInstance = nullptr;
+
+Window::Window(HINSTANCE& instance, std::shared_ptr<Editor> editor)
+	:m_instance(instance), m_handle(nullptr), m_editor(editor)
 {
-	
+	m_pInstance = this;
 	WNDCLASSEX wndclass = {};
 	
 	wndclass.cbSize = sizeof(WNDCLASSEX);
@@ -50,59 +53,8 @@ Window::Window(HINSTANCE& instance)
 //extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 LRESULT Window::WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
-{
-	/*if (ImGui_ImplWin32_WndProcHandler(handle, msg, wParam, lParam))
-	{
-		return true;
-	}
-	const auto& imio = ImGui::GetIO();
-	*/
-	switch (msg)
-	{
-		
-		case WM_CLOSE:
-			PostQuitMessage(0);
-			return 0;
-		
-		case WM_KILLFOCUS:
-		
-			break;
-		case WM_ACTIVATE:
-	
-		case WM_KEYDOWN:
-		case WM_SYSKEYDOWN:	
-		case WM_KEYUP:
-		case WM_SYSKEYUP:		
-		case WM_CHAR:
-		case WM_MOUSEMOVE:
-		{
-			const POINTS pt = MAKEPOINTS(lParam);		
-		}
-		case WM_LBUTTONDOWN:
-		{
-		
-		}
-		case WM_RBUTTONDOWN:
-		{
-		
-		}
-		case WM_LBUTTONUP:
-		{
-		
-		}
-		case WM_RBUTTONUP:
-		{
-		
-		}
-		case WM_MOUSEWHEEL:
-		{
-			EDITOR_INFO("Received Event!");
-			break;
-		}
-
-	}
-
-	return DefWindowProc(handle, msg, wParam, lParam);
+{	
+	return m_pInstance->MyWinProc(handle, msg, wParam, lParam);
 }
 
 const HWND& Window::GetHandle() const
@@ -131,4 +83,70 @@ Window::~Window()
 	EDITOR_INFO("Unregistering Window");
 	DestroyWindow(m_handle);
 	EDITOR_INFO("Destroying Window");
+}
+
+LRESULT Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	/*if (ImGui_ImplWin32_WndProcHandler(handle, msg, wParam, lParam))
+{
+	return true;
+}
+const auto& imio = ImGui::GetIO();
+*/
+	switch (msg)
+	{
+		case WM_CLOSE:
+			PostQuitMessage(0);
+			return 0;
+			break;
+		case WM_KILLFOCUS:
+			m_editor->RaiseSystemEvent();
+			break;
+		case WM_ACTIVATE:
+			m_editor->RaiseSystemEvent();
+			break;
+		case WM_KEYDOWN:
+		case WM_SYSKEYDOWN:
+		case WM_KEYUP:
+		case WM_SYSKEYUP:
+		case WM_CHAR:
+		{
+			m_editor->RaiseKeyboardEvent();
+			break;
+		}
+		case WM_MOUSEMOVE:
+		{
+			const POINTS pt = MAKEPOINTS(lParam);
+			m_editor->RaiseMouseEvent();
+			break;
+		}
+		case WM_LBUTTONDOWN:
+		{
+			m_editor->RaiseMouseEvent();
+			break;
+		}
+		case WM_RBUTTONDOWN:
+		{
+			m_editor->RaiseMouseEvent();
+			break;
+		}
+		case WM_LBUTTONUP:
+		{
+			m_editor->RaiseMouseEvent();
+			break;
+		}
+		case WM_RBUTTONUP:
+		{
+			m_editor->RaiseMouseEvent();
+			break;
+		}
+		case WM_MOUSEWHEEL:
+		{
+			m_editor->RaiseMouseEvent();
+			break;
+		}
+
+	}
+
+	return DefWindowProc(handle, msg, wParam, lParam);
 }
