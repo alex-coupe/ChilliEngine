@@ -7,6 +7,7 @@ public:
 	Window(HINSTANCE& instance);
 	static LRESULT CALLBACK WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam);
 	const HWND& GetHandle()const;
+	bool Update();
 	~Window();
 private:
 	HINSTANCE m_instance;

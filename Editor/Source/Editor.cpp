@@ -7,10 +7,6 @@ void Editor::Init()
 	
 }
 
-Editor::Editor(HINSTANCE& instance)
-{
-	m_Window = std::make_unique<Window>(instance);
-}
 
 void Editor::Update()
 {

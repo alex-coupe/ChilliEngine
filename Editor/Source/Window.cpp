@@ -60,6 +60,20 @@ const HWND& Window::GetHandle() const
 	return m_handle;
 }
 
+bool Window::Update()
+{
+	MSG msg = {};
+	while (PeekMessage(&msg, m_handle, 0, 0, PM_REMOVE)) 
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+
+		if (msg.message == WM_QUIT)
+			return false;
+	}
+	return true;
+}
+
 Window::~Window()
 {
 	UnregisterClass(m_className,m_instance);
