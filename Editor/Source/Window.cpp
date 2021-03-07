@@ -93,13 +93,19 @@ LRESULT Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
 }
 const auto& imio = ImGui::GetIO();
 */
+
+	Engine::Core::EventData data = {};
+	data.msg = msg;
+	data.lparam = lParam;
+	data.wparam = wParam;
+
 	switch (msg)
 	{
 		case WM_KILLFOCUS:
-			m_editor->RaiseSystemEvent();
+			m_editor->RaiseSystemEvent(data);
 			break;
 		case WM_ACTIVATE:
-			m_editor->RaiseSystemEvent();
+			m_editor->RaiseSystemEvent(data);
 			break;
 		case WM_KEYDOWN:
 		case WM_SYSKEYDOWN:
@@ -107,38 +113,38 @@ const auto& imio = ImGui::GetIO();
 		case WM_SYSKEYUP:
 		case WM_CHAR:
 		{
-			m_editor->RaiseKeyboardEvent();
+			m_editor->RaiseKeyboardEvent(data);
 			break;
 		}
 		case WM_MOUSEMOVE:
 		{
-			const POINTS pt = MAKEPOINTS(lParam);
-			m_editor->RaiseMouseEvent();
+			m_editor->RaiseMouseEvent(data);
 			break;
 		}
 		case WM_LBUTTONDOWN:
 		{
-			m_editor->RaiseMouseEvent();
+			m_editor->RaiseMouseEvent(data);
 			break;
 		}
 		case WM_RBUTTONDOWN:
 		{
-			m_editor->RaiseMouseEvent();
+			m_editor->RaiseMouseEvent(data);
 			break;
 		}
 		case WM_LBUTTONUP:
 		{
-			m_editor->RaiseMouseEvent();
+			m_editor->RaiseMouseEvent(data);
 			break;
 		}
 		case WM_RBUTTONUP:
 		{
-			m_editor->RaiseMouseEvent();
+			m_editor->RaiseMouseEvent(data);
 			break;
 		}
 		case WM_MOUSEWHEEL:
 		{
-			m_editor->RaiseMouseEvent();
+			
+			m_editor->RaiseMouseEvent(data);
 			break;
 		}
 

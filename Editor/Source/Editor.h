@@ -5,9 +5,9 @@ class Editor {
 public:
 	void Init();
 	void Update();
-	void RaiseMouseEvent();
-	void RaiseKeyboardEvent();
-	void RaiseSystemEvent();
+	void RaiseMouseEvent(EventData& data);
+	void RaiseKeyboardEvent(EventData& data);
+	void RaiseSystemEvent(EventData& data);
 private:
 	std::unique_ptr<ChilliEngine> m_engine = nullptr;
 };

@@ -13,17 +13,17 @@ void Editor::Update()
 	m_engine->Update();
 }
 
-void Editor::RaiseMouseEvent()
+void Editor::RaiseMouseEvent(EventData& data)
 {
-	m_engine->RaiseMouseEvent();
+	m_engine->RaiseMouseEvent(data);
 }
 
-void Editor::RaiseKeyboardEvent()
+void Editor::RaiseKeyboardEvent(EventData& data)
 {
-	m_engine->RaiseKeyboardEvent();
+	m_engine->RaiseKeyboardEvent(data);
 }
 
-void Editor::RaiseSystemEvent()
+void Editor::RaiseSystemEvent(EventData& data)
 {
-	m_engine->RaiseSystemEvent();
+	m_engine->RaiseSystemEvent(data);
 }

@@ -8,7 +8,7 @@ void Engine::Core::EventSystem::ProcessFrame()
 	{
 		auto& e = m_eventBuffer.front();
 		m_eventBuffer.pop();
-		ENGINE_INFO(e->ToString());
+		ENGINE_INFO("{}", e->ToString());
 	}
 }
 

@@ -11,20 +11,20 @@ void ChilliEngine::Update()
 	m_eventSystem->ProcessFrame();
 }
 
-void ChilliEngine::RaiseKeyboardEvent()
+void ChilliEngine::RaiseKeyboardEvent(EventData& data)
 {
-	KeyboardEvent* e = new KeyboardEvent;
+	KeyboardEvent* e = new KeyboardEvent(data);
 	m_eventSystem->Push(e);
 }
 
-void ChilliEngine::RaiseMouseEvent()
+void ChilliEngine::RaiseMouseEvent(EventData& data)
 {
-	MouseEvent* e = new MouseEvent;
+	MouseEvent* e = new MouseEvent(data);
 	m_eventSystem->Push(e);
 }
 
-void ChilliEngine::RaiseSystemEvent()
+void ChilliEngine::RaiseSystemEvent(EventData& data)
 {
-	SystemEvent* e = new SystemEvent;
+	SystemEvent* e = new SystemEvent(data);
 	m_eventSystem->Push(e);
 }
