@@ -11,8 +11,6 @@ void ChilliEngine::Update()
 	m_eventSystem->ProcessFrame();
 }
 
-
-
 void ChilliEngine::RaiseKeyboardEvent()
 {
 	KeyboardEvent* e = new KeyboardEvent;

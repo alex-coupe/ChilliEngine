@@ -95,10 +95,6 @@ const auto& imio = ImGui::GetIO();
 */
 	switch (msg)
 	{
-		case WM_CLOSE:
-			PostQuitMessage(0);
-			return 0;
-			break;
 		case WM_KILLFOCUS:
 			m_editor->RaiseSystemEvent();
 			break;
