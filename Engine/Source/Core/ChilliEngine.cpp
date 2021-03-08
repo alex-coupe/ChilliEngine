@@ -21,6 +21,16 @@ void FocusGainedCallback()
 	ENGINE_INFO("Window Focus Gained");
 }
 
+void KeyboardCallback(unsigned char keycode)
+{
+	ENGINE_INFO("Key Press {}", keycode);
+}
+
+void ResizeCallback(int64_t& width, int64_t& height)
+{
+	ENGINE_INFO("Window Resize width: {} height: {}", width, height);
+}
+
 void ChilliEngine::Init()
 {
 	//Initialise SubSystems
@@ -31,6 +41,8 @@ void ChilliEngine::Init()
 	m_eventSystem->Subscribe({ EventType::LeftMousePressed, EventType::RightMousePressed }, std::bind(MouseClickedCallback));
 	m_eventSystem->Subscribe({ EventType::FocusLost }, std::bind(FocusLostCallback));
 	m_eventSystem->Subscribe({ EventType::FocusGained }, std::bind(FocusGainedCallback));
+	m_eventSystem->Subscribe({ EventType::KeyDown,  EventType::SysKeyDown }, std::bind(KeyboardCallback, std::ref(m_eventSystem->m_data.keycode)));
+	m_eventSystem->Subscribe({ EventType::WindowResized }, std::bind(ResizeCallback, std::ref(m_eventSystem->m_data.screen_width), std::ref(m_eventSystem->m_data.screen_height)));
 	ENGINE_INFO("Chilli Engine Initialized Successfully");
 }
 

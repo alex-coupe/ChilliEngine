@@ -98,6 +98,7 @@ const auto& imio = ImGui::GetIO();
 	data.msg = msg;
 	data.lparam = lParam;
 	data.wparam = wParam;
+	data.handle = &m_handle;
 
 	//Raise Event For The Messages We're Interested In
 	switch (msg)
@@ -110,6 +111,13 @@ const auto& imio = ImGui::GetIO();
 	case WM_LBUTTONUP:
 	case WM_RBUTTONDOWN:
 	case WM_RBUTTONUP:
+	case WM_KEYDOWN:
+	case WM_SYSKEYDOWN:
+	case WM_KEYUP:
+	case WM_SYSKEYUP:
+	case WM_CHAR:
+	case WM_MOVE:
+	case WM_MOUSELEAVE:
 		m_editor->RaiseEvent(data);
 		break;
 	}

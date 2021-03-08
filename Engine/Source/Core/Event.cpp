@@ -1,5 +1,5 @@
 #include "Event.h"
-#include <Windows.h>
+
 namespace Engine::Core {
 
 

@@ -6,11 +6,13 @@
 #pragma warning(disable:4251)
 namespace Engine::Core {
 
-	struct CHILLI_API EventSystemData {
+	struct EventSystemData {
 		int64_t mouse_x = 0;
 		int64_t mouse_y = 0;
 		int64_t screen_width = 0;
 		int64_t screen_height = 0;
+		unsigned char keycode = 0;
+		short wheel_delta = 0;
 	};
 	
 	class CHILLI_API EventSystem{
