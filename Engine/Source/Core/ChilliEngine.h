@@ -2,6 +2,7 @@
 #include "ChilliDefinitions.h"
 #include "Logger.h"
 #include "EventSystem.h"
+#include "Timer.h"
 
 namespace Engine::Core {
 	class Logger;
@@ -17,4 +18,5 @@ public:
 	void RaiseEvent(EventData& data);
 private:
 	std::unique_ptr<EventSystem> m_eventSystem;
+	std::unique_ptr<Timer> m_timer;
 };
