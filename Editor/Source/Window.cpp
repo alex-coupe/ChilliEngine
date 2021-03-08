@@ -99,56 +99,20 @@ const auto& imio = ImGui::GetIO();
 	data.lparam = lParam;
 	data.wparam = wParam;
 
+	//Raise Event For The Messages We're Interested In
 	switch (msg)
 	{
-		case WM_KILLFOCUS:
-			m_editor->RaiseSystemEvent(data);
-			break;
-		case WM_ACTIVATE:
-			m_editor->RaiseSystemEvent(data);
-			break;
-		case WM_KEYDOWN:
-		case WM_SYSKEYDOWN:
-		case WM_KEYUP:
-		case WM_SYSKEYUP:
-		case WM_CHAR:
-		{
-			m_editor->RaiseKeyboardEvent(data);
-			break;
-		}
-		case WM_MOUSEMOVE:
-		{
-			m_editor->RaiseMouseEvent(data);
-			break;
-		}
-		case WM_LBUTTONDOWN:
-		{
-			m_editor->RaiseMouseEvent(data);
-			break;
-		}
-		case WM_RBUTTONDOWN:
-		{
-			m_editor->RaiseMouseEvent(data);
-			break;
-		}
-		case WM_LBUTTONUP:
-		{
-			m_editor->RaiseMouseEvent(data);
-			break;
-		}
-		case WM_RBUTTONUP:
-		{
-			m_editor->RaiseMouseEvent(data);
-			break;
-		}
-		case WM_MOUSEWHEEL:
-		{
-			
-			m_editor->RaiseMouseEvent(data);
-			break;
-		}
-
+	case WM_SETFOCUS:
+	case WM_KILLFOCUS:
+	case WM_MOUSEMOVE:
+	case WM_MOUSEWHEEL:
+	case WM_LBUTTONDOWN:
+	case WM_LBUTTONUP:
+	case WM_RBUTTONDOWN:
+	case WM_RBUTTONUP:
+		m_editor->RaiseEvent(data);
+		break;
 	}
-
+		
 	return DefWindowProc(handle, msg, wParam, lParam);
 }

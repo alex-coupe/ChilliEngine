@@ -3,7 +3,7 @@
 
 namespace Engine::Core {
 
-	CHILLI_CLASS Timer
+	class CHILLI_API Timer
 	{
 	};
 }

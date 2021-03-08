@@ -1,15 +1,29 @@
 #include "EventSystem.h"
 #include "Logger.h"
 
-
 void Engine::Core::EventSystem::ProcessFrame()
 {
 	if (m_eventBuffer.size() > 0)
 	{
-		auto& e = m_eventBuffer.front();
+		TrimBuffer();
+		const auto& e = m_eventBuffer.front();
 		m_eventBuffer.pop();
-		ENGINE_INFO("{}", e->ToString());
+		auto eventType = e->GetType();
+		TranslateEvent(eventType, e->m_data);
+		for (const auto& subscriber : m_Subscribers)
+		{
+			if (std::find(subscriber.first.begin(), subscriber.first.end(), eventType) != subscriber.first.end())
+			{
+				subscriber.second();
+			}
+		}
 	}
+}
+
+void Engine::Core::EventSystem::TrimBuffer()
+{
+	while (m_eventBuffer.size() > 16)
+		m_eventBuffer.pop();
 }
 
 void Engine::Core::EventSystem::ClearBuffer()
@@ -17,52 +31,18 @@ void Engine::Core::EventSystem::ClearBuffer()
 	m_eventBuffer = {};
 }
 
-size_t Engine::Core::EventSystem::Subscribe(EventCategory category, void* callback)
+void Engine::Core::EventSystem::Subscribe(std::vector<EventType> events, std::function<void()> callback)
 {
-	size_t identifier = 1;
-	switch (category)
-	{
-	case EventCategory::KeyboardEvent:
-		identifier += m_keyboardSubscribers.size();
-		m_keyboardSubscribers.emplace(identifier,callback);
-		return identifier;
-	case EventCategory::MouseEvent:
-		identifier += m_mouseSubscribers.size();
-		m_mouseSubscribers.emplace(identifier, callback);
-		return identifier;
-	case EventCategory::SystemEvent:
-		identifier += m_systemSubscribers.size();
-		m_systemSubscribers.emplace(identifier, callback);
-		return identifier;
+	m_Subscribers.push_back({ events, callback });
 	
-	}
-	return 0;
 }
 
-void Engine::Core::EventSystem::Unsubscribe(EventCategory category, size_t identifier)
+void Engine::Core::EventSystem::TranslateEvent(EventType type, const EventData& data_in )
 {
-	switch (category)
+	if (type == EventType::MouseMove)
 	{
-	case EventCategory::KeyboardEvent:
-		if (auto x = m_keyboardSubscribers.find(identifier); x != m_keyboardSubscribers.end())
-		{
-			m_keyboardSubscribers.erase(identifier);
-		}
-		break;
-	case EventCategory::MouseEvent:
-		if (auto x = m_mouseSubscribers.find(identifier); x != m_mouseSubscribers.end())
-		{
-			m_keyboardSubscribers.erase(identifier);
-		}
-		break;
-	case EventCategory::SystemEvent:
-		if (auto x = m_systemSubscribers.find(identifier); x != m_systemSubscribers.end())
-		{
-			m_systemSubscribers.erase(identifier);
-		}
-		break;
-	case EventCategory::None:
-		break;
+		m_data.mouse_x = data_in.lparam & 0x0000FFFF;
+		m_data.mouse_y = data_in.lparam >> 16;
 	}
 }
 

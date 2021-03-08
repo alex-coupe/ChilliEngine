@@ -13,17 +13,9 @@ void Editor::Update()
 	m_engine->Update();
 }
 
-void Editor::RaiseMouseEvent(EventData& data)
+void Editor::RaiseEvent(EventData& data)
 {
-	m_engine->RaiseMouseEvent(data);
+	m_engine->RaiseEvent(data);
 }
 
-void Editor::RaiseKeyboardEvent(EventData& data)
-{
-	m_engine->RaiseKeyboardEvent(data);
-}
 
-void Editor::RaiseSystemEvent(EventData& data)
-{
-	m_engine->RaiseSystemEvent(data);
-}

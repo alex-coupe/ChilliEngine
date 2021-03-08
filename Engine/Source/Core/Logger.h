@@ -8,10 +8,10 @@ namespace Engine::Core {
 	class Logger {
 
 	public:
-		CHILLI_FUNC static void Init();
+		CHILLI_API static void Init();
 	
-		CHILLI_FUNC inline static std::shared_ptr<spdlog::logger>& GetEngineLogger() { return m_engineLogger; }
-		CHILLI_FUNC inline static std::shared_ptr<spdlog::logger>& GetEditorLogger() { return m_editorLogger; }
+		CHILLI_API inline static std::shared_ptr<spdlog::logger>& GetEngineLogger() { return m_engineLogger; }
+		CHILLI_API inline static std::shared_ptr<spdlog::logger>& GetEditorLogger() { return m_editorLogger; }
 
 	private:
 		static std::shared_ptr<spdlog::logger> m_engineLogger;

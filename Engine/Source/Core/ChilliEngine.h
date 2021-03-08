@@ -9,14 +9,12 @@ namespace Engine::Core {
 
 using namespace Engine::Core;
 
-CHILLI_CLASS ChilliEngine {
+class CHILLI_API ChilliEngine {
 
 public:
 	void Init();
 	void Update();
-	void RaiseKeyboardEvent(EventData& data);
-	void RaiseMouseEvent(EventData& data);
-	void RaiseSystemEvent(EventData& data);
+	void RaiseEvent(EventData& data);
 private:
 	std::unique_ptr<EventSystem> m_eventSystem;
 };
