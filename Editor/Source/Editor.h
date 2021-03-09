@@ -3,7 +3,7 @@
 #include "Core\ChilliEngine.h"
 class Editor {
 public:
-	void Init();
+	void Init(HWND& handle);
 	void Update();
 	void RaiseEvent(EventData& data);
 private:

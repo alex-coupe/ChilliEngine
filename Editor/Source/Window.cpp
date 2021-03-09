@@ -57,7 +57,7 @@ LRESULT Window::WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
 	return m_pInstance->MyWinProc(handle, msg, wParam, lParam);
 }
 
-const HWND& Window::GetHandle() const
+ HWND& Window::GetHandle() 
 {
 	return m_handle;
 }

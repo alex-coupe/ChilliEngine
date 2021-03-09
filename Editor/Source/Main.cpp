@@ -8,11 +8,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	//Create Editor On The Heap
 	std::shared_ptr<Editor> ChilliEditor = std::make_shared<Editor>();
 
-	//Initialize Engine Systems
-	ChilliEditor->Init();
-
 	//Create Window On The Stack And Give Reference To Editor
 	Window wnd(hInstance, ChilliEditor);
+
+	//Initialize Engine Systems
+	ChilliEditor->Init(wnd.GetHandle());
+
+
 
 	//Enter Main App Loop
 	while (wnd.Update())

@@ -1,9 +1,9 @@
 #include "Editor.h"
 
-void Editor::Init()
+void Editor::Init(HWND& handle)
 {
 	m_engine = std::make_unique<ChilliEngine>();
-	m_engine->Init();
+	m_engine->Init(handle);
 	
 }
 

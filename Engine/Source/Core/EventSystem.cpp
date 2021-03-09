@@ -34,7 +34,7 @@ Engine::Core::EventSystem::EventSystem(std::shared_ptr<DependencyResolver<Engine
 
 int Engine::Core::EventSystem::GetHash()
 {
-	return 2;
+	return static_cast<int>(SystemTypes::EventSystem);
 }
 
 void Engine::Core::EventSystem::ClearBuffer()

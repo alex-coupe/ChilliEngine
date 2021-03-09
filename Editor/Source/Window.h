@@ -8,7 +8,7 @@ class Window {
 public:
 	Window(HINSTANCE& instance, std::shared_ptr<Editor> editor);
 	static LRESULT CALLBACK WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam);
-	const HWND& GetHandle()const;
+	HWND& GetHandle();
 	bool Update();
 	~Window();
 private:

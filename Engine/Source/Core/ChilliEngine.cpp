@@ -1,15 +1,16 @@
 #include "ChilliEngine.h"
 
-void ChilliEngine::Init()
+void ChilliEngine::Init(HWND& handle)
 {
 	//Create Systems
 	m_resolver = std::make_shared<DependencyResolver<EngineSystem>>();
 	m_eventSystem = std::make_shared<EventSystem>(m_resolver);
 	m_timer = std::make_shared<Timer>(m_resolver);
-
+	m_renderer = std::make_shared<Renderer>(handle, m_resolver);
 	//Register Dependencies	
 	m_resolver->Add(m_eventSystem);
 	m_resolver->Add(m_timer);
+	m_resolver->Add(m_renderer);
 	ENGINE_INFO("Chilli Engine Initialized Successfully");
 	
 	//Subscribe To Events

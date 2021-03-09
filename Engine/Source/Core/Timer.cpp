@@ -20,7 +20,7 @@ void Engine::Core::Timer::ProcessFrame()
 
 int Engine::Core::Timer::GetHash()
 {
-	return 1;
+	return static_cast<int>(SystemTypes::Timer);
 }
 
 const float Engine::Core::Timer::GetDeltaTime()
