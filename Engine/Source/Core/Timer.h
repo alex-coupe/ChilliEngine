@@ -15,7 +15,7 @@ namespace Engine::Core {
 		std::chrono::steady_clock::time_point m_frameStart;
 		float m_deltaTime = 0.0f;
 		std::chrono::steady_clock::time_point m_frameEnd;
-		std::chrono::system_clock::time_point m_appStart;
+		std::chrono::steady_clock::time_point m_appStart;
 	};
 }
 

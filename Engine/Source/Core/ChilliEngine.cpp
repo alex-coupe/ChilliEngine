@@ -17,7 +17,7 @@ void ChilliEngine::Update()
 {
 	m_timer->ProcessFrame();
 	m_eventSystem->ProcessFrame();	
-	ENGINE_INFO("Running Time: {}", m_timer->GetElapsedTime());
+	
 }
 
 //Bridge Between Window And Engine
