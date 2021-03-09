@@ -1,7 +1,7 @@
 #pragma once
 #include "ChilliDefinitions.h"
 #include <chrono>
-
+#pragma warning(disable:4251)
 namespace Engine::Core {
 
 	class CHILLI_API Timer
@@ -10,11 +10,12 @@ namespace Engine::Core {
 		Timer();
 		void ProcessFrame();
 		const float GetDeltaTime();
-		std::chrono::high_resolution_clock::duration GetElapsedTime();
+		const float GetElapsedTime();
 	private:
-		std::chrono::high_resolution_clock::time_point m_frameStart;
-		std::chrono::high_resolution_clock::time_point m_frameEnd;
-		std::chrono::high_resolution_clock::time_point m_timeStart;
+		std::chrono::steady_clock::time_point m_frameStart;
+		float m_deltaTime = 0.0f;
+		std::chrono::steady_clock::time_point m_frameEnd;
+		std::chrono::system_clock::time_point m_appStart;
 	};
 }
 
