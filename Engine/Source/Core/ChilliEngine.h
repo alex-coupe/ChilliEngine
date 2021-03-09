@@ -3,7 +3,8 @@
 #include "Logger.h"
 #include "EventSystem.h"
 #include "Timer.h"
-
+#include "DependencyResolver.h"
+#include "EngineSystem.h"
 namespace Engine::Core {
 	class Logger;
 }
@@ -17,6 +18,7 @@ public:
 	void Update();
 	void RaiseEvent(EventData& data);
 private:
-	std::unique_ptr<EventSystem> m_eventSystem;
-	std::unique_ptr<Timer> m_timer;
+	std::shared_ptr<EventSystem> m_eventSystem;
+	std::shared_ptr<Timer> m_timer;
+	std::shared_ptr<DependencyResolver<EngineSystem>> m_resolver;
 };

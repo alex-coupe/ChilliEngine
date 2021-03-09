@@ -1,11 +1,11 @@
 #include "Timer.h"
 
-Engine::Core::Timer::Timer()
+Engine::Core::Timer::Timer(std::shared_ptr<DependencyResolver<EngineSystem>> resolver)
 	: m_frameStart(std::chrono::steady_clock::now()),
 	m_frameEnd(std::chrono::steady_clock::now()),
-	m_appStart(std::chrono::steady_clock::now())
-{
-}
+	m_appStart(std::chrono::steady_clock::now()),
+	EngineSystem(resolver)
+{}
 
 void Engine::Core::Timer::ProcessFrame()
 {
@@ -16,6 +16,11 @@ void Engine::Core::Timer::ProcessFrame()
 	std::chrono::duration<float> deltaMilli = std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime);
 	m_deltaTime = deltaMilli.count();
 
+}
+
+int Engine::Core::Timer::GetHash()
+{
+	return 1;
 }
 
 const float Engine::Core::Timer::GetDeltaTime()

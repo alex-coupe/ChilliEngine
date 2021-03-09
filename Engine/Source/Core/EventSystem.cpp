@@ -27,6 +27,16 @@ void Engine::Core::EventSystem::TrimBuffer()
 		m_eventBuffer.pop();
 }
 
+Engine::Core::EventSystem::EventSystem(std::shared_ptr<DependencyResolver<EngineSystem>> m_resolver)
+	: EngineSystem(m_resolver)
+{
+}
+
+int Engine::Core::EventSystem::GetHash()
+{
+	return 2;
+}
+
 void Engine::Core::EventSystem::ClearBuffer()
 {
 	m_eventBuffer = {};

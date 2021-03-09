@@ -2,9 +2,14 @@
 
 void ChilliEngine::Init()
 {
-	//Initialise SubSystems
-	m_timer = std::make_unique<Timer>();
-	m_eventSystem = std::make_unique<EventSystem>();
+	//Create Systems
+	m_resolver = std::make_shared<DependencyResolver<EngineSystem>>();
+	m_eventSystem = std::make_shared<EventSystem>(m_resolver);
+	m_timer = std::make_shared<Timer>(m_resolver);
+
+	//Register Dependencies	
+	m_resolver->Add(m_eventSystem);
+	m_resolver->Add(m_timer);
 	ENGINE_INFO("Chilli Engine Initialized Successfully");
 	
 	//Subscribe To Events
