@@ -12,7 +12,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	Window wnd(hInstance, ChilliEditor);
 
 	//Initialize Engine Systems
-	ChilliEditor->Init(wnd.GetHandle());
+	ChilliEditor->Init(wnd.GetWindowData());
 
 	wnd.DisplayWindow();
 

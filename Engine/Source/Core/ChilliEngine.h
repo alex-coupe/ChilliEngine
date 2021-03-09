@@ -14,10 +14,16 @@ namespace Engine::Core {
 using namespace Engine::Core;
 using namespace Engine::Renderer;
 
+struct WindowData {
+	int64_t width = 0;
+	int64_t height = 0;
+	HWND handle = 0;
+};
+
 class CHILLI_API ChilliEngine {
 
 public:
-	void Init(HWND& handle);
+	void Init(WindowData& window_data);
 	void Update();
 	void RaiseEvent(EventData& data);
 private:

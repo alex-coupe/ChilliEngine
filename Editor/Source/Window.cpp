@@ -45,6 +45,15 @@ Window::Window(HINSTANCE& instance, std::shared_ptr<Editor> editor)
 	{
 		EDITOR_INFO("Window Created Successfully");
 		
+		RECT rect;
+		GetWindowRect(m_handle, &rect);		
+	    int width = rect.right - rect.left;
+	    int height = rect.bottom - rect.top;
+		
+		m_data.handle = m_handle;
+		m_data.height = height;
+		m_data.width = width;
+		
 		//ImGui_ImplWin32_Init(m_handle);
 	}
 	
@@ -79,6 +88,11 @@ bool Window::Update()
 void Window::DisplayWindow()
 {
 	ShowWindow(m_handle, SW_MAXIMIZE);
+}
+
+WindowData& Window::GetWindowData()
+{
+	return m_data;
 }
 
 Window::~Window()

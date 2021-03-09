@@ -11,10 +11,12 @@ public:
 	HWND& GetHandle();
 	bool Update();
 	void DisplayWindow();
+	WindowData& GetWindowData();
 	~Window();
 private:
 	HINSTANCE m_instance;
 	std::shared_ptr<Editor> m_editor = nullptr;
+	WindowData m_data = {};
 	HWND m_handle;
 	static Window* m_pInstance;
 	LRESULT CALLBACK MyWinProc(HWND, UINT, WPARAM, LPARAM);
