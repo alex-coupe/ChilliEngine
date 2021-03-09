@@ -19,10 +19,10 @@ namespace Engine::Renderer  {
 		void EndFrame();
 		int GetHash() override;
 	private:
-		HWND m_handle;
 		Microsoft::WRL::ComPtr<IDXGISwapChain> m_swapChain;
 		Microsoft::WRL::ComPtr<ID3D11Device> m_device;
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_context;
+		HRESULT m_hresult;
 	};
 
 }

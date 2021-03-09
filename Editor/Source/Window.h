@@ -10,6 +10,7 @@ public:
 	static LRESULT CALLBACK WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam);
 	HWND& GetHandle();
 	bool Update();
+	void DisplayWindow();
 	~Window();
 private:
 	HINSTANCE m_instance;

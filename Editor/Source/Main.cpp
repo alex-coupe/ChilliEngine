@@ -14,7 +14,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	//Initialize Engine Systems
 	ChilliEditor->Init(wnd.GetHandle());
 
-
+	wnd.DisplayWindow();
 
 	//Enter Main App Loop
 	while (wnd.Update())

@@ -29,7 +29,7 @@ Window::Window(HINSTANCE& instance, std::shared_ptr<Editor> editor)
 	EDITOR_INFO("Window Registered Successfully");
 
 	m_handle = CreateWindowEx(
-		0,
+		WS_EX_CLIENTEDGE,
 		m_className,
 		title,
 		WS_OVERLAPPEDWINDOW,
@@ -44,7 +44,7 @@ Window::Window(HINSTANCE& instance, std::shared_ptr<Editor> editor)
 	else
 	{
 		EDITOR_INFO("Window Created Successfully");
-		ShowWindow(m_handle, SW_MAXIMIZE);
+		
 		//ImGui_ImplWin32_Init(m_handle);
 	}
 	
@@ -74,6 +74,11 @@ bool Window::Update()
 			return false;
 	}
 	return true;
+}
+
+void Window::DisplayWindow()
+{
+	ShowWindow(m_handle, SW_MAXIMIZE);
 }
 
 Window::~Window()
