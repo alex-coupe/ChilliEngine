@@ -18,6 +18,8 @@ void Engine::Core::EventSystem::ProcessFrame()
 				subscriber.second();
 			}
 		}
+
+		delete e;
 	}
 }
 

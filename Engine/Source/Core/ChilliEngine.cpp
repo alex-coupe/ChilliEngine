@@ -15,7 +15,6 @@ void ChilliEngine::Init(WindowData& window_data)
 	ENGINE_INFO("Chilli Engine Initialized Successfully");
 	
 	//Subscribe To Events
-	//m_eventSystem->Subscribe({ EventType::MouseMove }, std::bind(MouseMovedCallback, std::ref(m_eventSystem->m_data.mouse_x), std::ref(m_eventSystem->m_data.mouse_y)));
 	 m_eventSystem->Subscribe({ EventType::WindowResized },
 		 std::bind(&Renderer::HandleWindowResize, m_renderer, std::ref(m_eventSystem->m_data.screen_width), std::ref(m_eventSystem->m_data.screen_height)));
 }
