@@ -1,7 +1,7 @@
 #pragma once
 #include <DirectXMath.h>
 
-namespace Enginer::Rendering {
+namespace Engine::Rendering {
 
 	struct VertexPosColor {
 		DirectX::XMFLOAT3 position;

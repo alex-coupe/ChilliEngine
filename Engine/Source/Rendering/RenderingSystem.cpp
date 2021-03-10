@@ -1,6 +1,7 @@
 #include "RenderingSystem.h"
 #include <Windows.h>
 #include "../Core/EventSystem.h"
+#include "VertexTypes.h"
 
 Engine::Rendering::RenderingSystem::RenderingSystem(HWND& handle, int64_t window_width, int64_t window_height, std::shared_ptr<DependencyResolver<EngineSystem>> m_resolver)
 	: EngineSystem(m_resolver)
@@ -24,4 +25,19 @@ void Engine::Rendering::RenderingSystem::Init()
 void Engine::Rendering::RenderingSystem::ProcessFrame()
 {
 	m_renderer->ProcessFrame();
+}
+
+void Engine::Rendering::RenderingSystem::CreateTestTriangle()
+{
+	VertexPos triangle;
+
+	std::vector<VertexPos> vertices = {
+		{{-1.0f,-1.0f,0.0f}},
+		{{-1.0f,-1.0f,0.0f}},
+		{{ 0.0f, 1.0f,0.0f}}
+	};
+
+	VertexBuffer vertexBuffer(vertices, m_renderer);
+	
+	
 }

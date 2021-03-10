@@ -15,6 +15,8 @@ namespace Engine::Rendering {
 		Renderer(HWND& handle, int64_t window_width, int64_t window_height);
 		void ProcessFrame();
 		void HandleWindowResize(int64_t width, int64_t height);
+		Microsoft::WRL::ComPtr<ID3D11Device> GetDevice();
+		Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetContext();
 	private:
 		void BeginFrame();
 		void EndFrame();

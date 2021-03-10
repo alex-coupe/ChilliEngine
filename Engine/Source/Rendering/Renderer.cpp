@@ -145,4 +145,14 @@ void Engine::Rendering::Renderer::HandleWindowResize(int64_t width, int64_t heig
 	
 }
 
+Microsoft::WRL::ComPtr<ID3D11Device> Engine::Rendering::Renderer::GetDevice()
+{
+	return m_device;
+}
+
+Microsoft::WRL::ComPtr<ID3D11DeviceContext> Engine::Rendering::Renderer::GetContext()
+{
+	return m_context;
+}
+
 
