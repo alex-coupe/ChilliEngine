@@ -24,12 +24,12 @@ struct WindowData {
 class CHILLI_API ChilliEngine {
 
 public:
-	void Init(WindowData& window_data);
+	bool Init(WindowData& window_data);
 	void Update();
 	void RaiseEvent(EventData& data);
 private:
 	std::shared_ptr<EventSystem> m_eventSystem;
-	std::shared_ptr<Timer> m_timer;
+	std::shared_ptr<Timer> m_timerSystem;
 	std::shared_ptr<DependencyResolver<EngineSystem>> m_resolver;
 	std::shared_ptr<RenderingSystem> m_renderingSystem;
 };

@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include "../Core/EventSystem.h"
 #include "VertexTypes.h"
+#include "../Core/Logger.h"
 
 Engine::Rendering::RenderingSystem::RenderingSystem(HWND& handle, int64_t window_width, int64_t window_height, std::shared_ptr<DependencyResolver<EngineSystem>> m_resolver)
 	: EngineSystem(m_resolver)
@@ -15,11 +16,20 @@ int Engine::Rendering::RenderingSystem::GetHash()
 	
 }
 
-void Engine::Rendering::RenderingSystem::Init()
+bool Engine::Rendering::RenderingSystem::Init()
 {
 	auto m_eventSystem = m_resolver->ResolveDependency<EventSystem>();
+
+	if (m_eventSystem == nullptr)
+	{
+		ENGINE_ERROR("Failed To Resolve Event System Dependency");
+		return false;
+	}
+
 	m_eventSystem->Subscribe({ EventType::WindowResized },
 		std::bind(&Renderer::HandleWindowResize, m_renderer, std::ref(m_eventSystem->m_data.screen_width), std::ref(m_eventSystem->m_data.screen_height)));
+
+	return true;
 }
 
 void Engine::Rendering::RenderingSystem::ProcessFrame()
