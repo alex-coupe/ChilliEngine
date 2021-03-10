@@ -7,6 +7,7 @@
 #include "EngineSystem.h"
 
 #include "../Rendering/Renderer.h"
+
 namespace Engine::Core {
 	class Logger;
 }

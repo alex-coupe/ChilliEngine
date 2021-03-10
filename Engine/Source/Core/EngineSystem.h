@@ -13,6 +13,7 @@ namespace Engine::Core {
 		EngineSystem(std::shared_ptr<DependencyResolver<EngineSystem>> m_resolver) : m_resolver(m_resolver)
 		{}
 		virtual int GetHash() = 0;		
+		virtual ~EngineSystem() {};
 	protected:
 		std::shared_ptr<DependencyResolver<EngineSystem>> m_resolver;
 	};

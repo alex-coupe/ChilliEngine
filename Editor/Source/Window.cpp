@@ -137,6 +137,7 @@ const auto& imio = ImGui::GetIO();
 	case WM_CHAR:
 	case WM_MOVE:
 	case WM_MOUSELEAVE:
+	case WM_CLOSE:
 		m_editor->RaiseEvent(data);
 		break;
 	}

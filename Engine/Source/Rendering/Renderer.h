@@ -4,6 +4,7 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <wrl.h>
+#include <DirectXMath.h>
 
 namespace Engine::Renderer  {
 
@@ -15,14 +16,24 @@ namespace Engine::Renderer  {
 	class CHILLI_API Renderer : public Engine::Core::EngineSystem {
 	public:
 		Renderer(HWND& handle, int64_t window_width, int64_t window_height, std::shared_ptr<DependencyResolver<EngineSystem>> m_resolver);
+		void ProcessFrame();
+		int GetHash() override;
+		void HandleWindowResize(int64_t width, int64_t height);
+	private:
 		void BeginFrame();
 		void EndFrame();
-		int GetHash() override;
-	private:
+		
 		Microsoft::WRL::ComPtr<IDXGISwapChain> m_swapChain;
 		Microsoft::WRL::ComPtr<ID3D11Device> m_device;
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_context;
-		HRESULT m_hresult;
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_backBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Resource> m_bufferTexture;
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depthStencil;
+		Microsoft::WRL::ComPtr<ID3D11Debug> m_debug;
+		HRESULT m_hresult = 0;
+		HWND& m_handle;
+		int64_t m_width;
+		int64_t m_height;
 	};
 
 }

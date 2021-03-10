@@ -32,6 +32,7 @@ Engine::Core::EventSystem::EventSystem(std::shared_ptr<DependencyResolver<Engine
 {
 }
 
+
 int Engine::Core::EventSystem::GetHash()
 {
 	return static_cast<int>(SystemTypes::EventSystem);
@@ -73,6 +74,9 @@ void Engine::Core::EventSystem::TranslateEvent(EventType type, const EventData& 
 				m_data.screen_width = static_cast<int64_t>(rect.right) - rect.left;
 				m_data.screen_height = static_cast<int64_t>(rect.bottom) - rect.top;
 			}
+			break;
+		case EventType::Close:
+			Engine::Core::Logger::Kill();
 			break;
 	}
 }

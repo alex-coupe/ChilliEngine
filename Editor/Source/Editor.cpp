@@ -7,7 +7,6 @@ void Editor::Init(WindowData& window_data)
 	
 }
 
-
 void Editor::Update()
 {
 	m_engine->Update();
