@@ -14,16 +14,16 @@ namespace Engine::Rendering {
 	public:
 		template <typename T>
 		VertexBuffer(const std::vector<T>& vertices, std::shared_ptr<Renderer> renderer)
-			:m_renderer(renderer), stride(sizeof(T))
+			:m_renderer(renderer), m_stride(sizeof(T))
 		{
 			D3D11_BUFFER_DESC vertex_buffer = {};
 
 			vertex_buffer.Usage = D3D11_USAGE_DEFAULT;
-			vertex_buffer.ByteWidth = stride * sizeof(vertices);
+			vertex_buffer.ByteWidth = m_stride * sizeof(vertices);
 			vertex_buffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 			vertex_buffer.CPUAccessFlags = 0u;
 			vertex_buffer.MiscFlags = 0u;
-			vertex_buffer.StructureByteStride = stride;
+			vertex_buffer.StructureByteStride = m_stride;
 
 			D3D11_SUBRESOURCE_DATA buffer_data = {};
 
@@ -31,7 +31,7 @@ namespace Engine::Rendering {
 
 			if (FAILED(m_hresult = m_renderer->GetDevice()->CreateBuffer(&vertex_buffer, &buffer_data, &m_buffer)))
 			{
-				GET_DXERROR
+				//GET_DXERROR
 			}
 
 		}

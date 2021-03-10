@@ -39,8 +39,6 @@ Engine::Rendering::Renderer::Renderer(HWND& handle, int64_t window_width, int64_
 
 	m_device->QueryInterface(__uuidof(ID3D11InfoQueue), &m_debugInfo);
 
-	m_debugInfo->PushEmptyStorageFilter();
-
 	if (FAILED(m_hresult = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &m_bufferTexture)))
 	{
 		GET_DXERROR
@@ -110,17 +108,13 @@ Engine::Rendering::Renderer::Renderer(HWND& handle, int64_t window_width, int64_
 	//Set the Viewport
 	m_context->RSSetViewports(1, &view_port);
 
-//	ImGui_ImplDX11_Init(m_device.Get(), m_context.Get());
+  //  ImGui_ImplDX11_Init(m_device.Get(), m_context.Get());
 }
 
-void Engine::Rendering::Renderer::ProcessFrame()
+Engine::Rendering::Renderer::~Renderer()
 {
-	BeginFrame();
-	
-	EndFrame();
+//	ImGui_ImplDX11_Shutdown();
 }
-
-
 
 void Engine::Rendering::Renderer::BeginFrame()
 {
@@ -130,7 +124,19 @@ void Engine::Rendering::Renderer::BeginFrame()
 
 void Engine::Rendering::Renderer::EndFrame()
 {
+//	ImGui::Render();
+//	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 	m_swapChain->Present(0u, 0u);
+}
+
+void Engine::Rendering::Renderer::Draw(UINT vertexCount, UINT startVertex)const
+{
+	m_context->Draw(vertexCount, startVertex);
+}
+
+void Engine::Rendering::Renderer::DrawIndexed(UINT count)const
+{
+	m_context->DrawIndexed(count, 0u, 0u);
 }
 
 void Engine::Rendering::Renderer::HandleWindowResize(int64_t width, int64_t height)

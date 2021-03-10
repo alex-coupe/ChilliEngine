@@ -3,6 +3,10 @@
 #include "../Core/EngineSystem.h"
 #include "Renderer.h"
 #include "VertexBuffer.h"
+#include "Shader.h"
+#include "InputLayout.h"
+#include "Topology.h"
+
 namespace Engine::Rendering {
 
 	using namespace Engine::Core;

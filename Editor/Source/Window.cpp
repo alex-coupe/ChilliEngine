@@ -107,11 +107,11 @@ Window::~Window()
 LRESULT Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	/*if (ImGui_ImplWin32_WndProcHandler(handle, msg, wParam, lParam))
-{
-	return true;
-}
-const auto& imio = ImGui::GetIO();
-*/
+	{
+		return true;
+	}
+	const auto& imgio = ImGui::GetIO();
+	*/
 
 	Engine::Core::EventData data = {};
 	data.msg = msg;
@@ -130,11 +130,19 @@ const auto& imio = ImGui::GetIO();
 	case WM_LBUTTONUP:
 	case WM_RBUTTONDOWN:
 	case WM_RBUTTONUP:
+	/*	if (imgio.WantCaptureMouse)
+		{
+			break;
+		}*/
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:
 	case WM_KEYUP:
 	case WM_SYSKEYUP:
 	case WM_CHAR:
+		/*if (imgio.WantCaptureKeyboard)
+		{
+			break;
+		}*/
 	case WM_MOVE:
 	case WM_MOUSELEAVE:
 	case WM_CLOSE:

@@ -13,13 +13,16 @@ namespace Engine::Rendering {
 	class CHILLI_API Renderer  {
 	public:
 		Renderer(HWND& handle, int64_t window_width, int64_t window_height);
-		void ProcessFrame();
+		~Renderer();
+		void BeginFrame();
+		void EndFrame();
+		void Draw(UINT vertexCount, UINT startVertex)const;
+		void DrawIndexed(UINT count)const;
 		void HandleWindowResize(int64_t width, int64_t height);
 		Microsoft::WRL::ComPtr<ID3D11Device> GetDevice();
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetContext();
 	private:
-		void BeginFrame();
-		void EndFrame();
+	
 		Microsoft::WRL::ComPtr<IDXGISwapChain> m_swapChain;
 		Microsoft::WRL::ComPtr<ID3D11Device> m_device;
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_context;
