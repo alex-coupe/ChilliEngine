@@ -26,7 +26,11 @@ void Engine::Core::EventSystem::ProcessFrame()
 void Engine::Core::EventSystem::TrimBuffer()
 {
 	while (m_eventBuffer.size() > 16)
+	{
+		const auto& e = m_eventBuffer.front();
 		m_eventBuffer.pop();
+		delete e;
+	}
 }
 
 Engine::Core::EventSystem::EventSystem(std::shared_ptr<DependencyResolver<EngineSystem>> m_resolver)
