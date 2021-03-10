@@ -34,20 +34,24 @@ Engine::Renderer::Renderer::Renderer(HWND& handle, int64_t window_width, int64_t
 		NULL, NULL, D3D11_SDK_VERSION, &swap_chain, m_swapChain.GetAddressOf(),
 		m_device.GetAddressOf(), NULL, m_context.GetAddressOf())))
 	{
-		ENGINE_ERROR("Failed To Create Device/Swapchain: {} -- Line {}", m_hresult, __LINE__);
+		ENGINE_ERROR("Failed To Create Device/Swapchain");
 	}
+
+	m_device->QueryInterface(__uuidof(ID3D11InfoQueue), &m_debugInfo);
+
+	m_debugInfo->PushEmptyStorageFilter();
 
 	if (FAILED(m_hresult = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &m_bufferTexture)))
 	{
-		ENGINE_ERROR("Failed To Get Handle To Back Buffer: {} -- Line {}", m_hresult, __LINE__);
+		GET_DXERROR
 	}
 
 	if (FAILED(m_hresult = m_device->CreateRenderTargetView(m_bufferTexture.Get(), NULL, &m_backBuffer)))
 	{
-		ENGINE_ERROR("Failed To Create Render Target View From Back Buffer: {} -- Line {}", m_hresult, __LINE__);
+		GET_DXERROR
 	}
 
-	m_device->QueryInterface(__uuidof(ID3D11Debug), &m_debug);
+	
 
 	D3D11_DEPTH_STENCIL_DESC depth_stencil = {};
 
@@ -58,7 +62,7 @@ Engine::Renderer::Renderer::Renderer(HWND& handle, int64_t window_width, int64_t
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
 
 	if (FAILED(m_hresult = m_device->CreateDepthStencilState(&depth_stencil, depthStencilState.GetAddressOf()))) {
-		ENGINE_ERROR("Failed To Create Depth/Stencil State: {} -- Line {}", m_hresult, __LINE__);
+		GET_DXERROR
 	}
 
 	m_context->OMSetDepthStencilState(depthStencilState.Get(), 1u);
@@ -77,7 +81,7 @@ Engine::Renderer::Renderer::Renderer(HWND& handle, int64_t window_width, int64_t
 
 	if (FAILED(m_hresult = m_device->CreateTexture2D(&depth_desc, nullptr, depth_texture.GetAddressOf())))
 	{
-		ENGINE_ERROR("Failed To Create Depth/Stencil Texture: {} -- Line {}", m_hresult, __LINE__);
+		GET_DXERROR
 	}
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC depth_view = {};
@@ -85,8 +89,9 @@ Engine::Renderer::Renderer::Renderer(HWND& handle, int64_t window_width, int64_t
 	depth_view.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	depth_view.Texture2D.MipSlice = 0u;
 
-	if (FAILED(m_hresult = m_device->CreateDepthStencilView(depth_texture.Get(), &depth_view, m_depthStencil.GetAddressOf()))) {
-		ENGINE_ERROR("Failed To Bind Depth/Stencil View: {} -- Line {}", m_hresult, __LINE__);
+	if (FAILED(m_hresult = m_device->CreateDepthStencilView(depth_texture.Get(), &depth_view, m_depthStencil.GetAddressOf()))) 
+	{
+		GET_DXERROR
 	}
 
 	//Set the render target view to the back buffer that we created above
@@ -111,6 +116,7 @@ Engine::Renderer::Renderer::Renderer(HWND& handle, int64_t window_width, int64_t
 void Engine::Renderer::Renderer::ProcessFrame()
 {
 	BeginFrame();
+	
 	EndFrame();
 }
 
@@ -141,3 +147,5 @@ void Engine::Renderer::Renderer::HandleWindowResize(int64_t width, int64_t heigh
 	}
 	
 }
+
+

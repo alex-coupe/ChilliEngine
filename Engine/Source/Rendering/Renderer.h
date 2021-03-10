@@ -29,7 +29,7 @@ namespace Engine::Renderer  {
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_backBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Resource> m_bufferTexture;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depthStencil;
-		Microsoft::WRL::ComPtr<ID3D11Debug> m_debug;
+		Microsoft::WRL::ComPtr<ID3D11InfoQueue> m_debugInfo;
 		HRESULT m_hresult = 0;
 		HWND& m_handle;
 		int64_t m_width;
@@ -37,3 +37,18 @@ namespace Engine::Renderer  {
 	};
 
 }
+
+#define GET_DXERROR UINT64 message_count = m_debugInfo->GetNumStoredMessages();\
+for (UINT64 i = 0; i < message_count; i++)\
+{\
+SIZE_T message_size = 0;\
+m_debugInfo->GetMessage(i, nullptr, &message_size);\
+D3D11_MESSAGE* message = (D3D11_MESSAGE*)malloc(message_size);\
+if (message != nullptr)\
+{\
+m_debugInfo->GetMessage(i, message, &message_size); \
+ENGINE_ERROR("Directx11: {} - {}", message->DescriptionByteLength, message->pDescription);\
+}\
+free(message);\
+}\
+m_debugInfo->ClearStoredMessages();
