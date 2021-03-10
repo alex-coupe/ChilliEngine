@@ -22,7 +22,7 @@ namespace Engine::Core {
 		EventSystem(std::shared_ptr<DependencyResolver<EngineSystem>> m_resolver);
 		int GetHash() override;
 		void ClearBuffer();
-		void ProcessFrame();
+		void ProcessFrame()override;
 		void TrimBuffer();
 		void Push(Event* e);
 		void Subscribe(std::vector<EventType> types, std::function<void()> callback);

@@ -6,14 +6,14 @@
 #include "DependencyResolver.h"
 #include "EngineSystem.h"
 
-#include "../Rendering/Renderer.h"
+#include "../Rendering/RenderingSystem.h"
 
 namespace Engine::Core {
 	class Logger;
 }
 
 using namespace Engine::Core;
-using namespace Engine::Renderer;
+using namespace Engine::Rendering;
 
 struct WindowData {
 	int64_t width = 0;
@@ -31,5 +31,5 @@ private:
 	std::shared_ptr<EventSystem> m_eventSystem;
 	std::shared_ptr<Timer> m_timer;
 	std::shared_ptr<DependencyResolver<EngineSystem>> m_resolver;
-	std::shared_ptr<Renderer> m_renderer;
+	std::shared_ptr<RenderingSystem> m_renderingSystem;
 };

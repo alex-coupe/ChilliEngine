@@ -10,7 +10,7 @@ namespace Engine::Core {
 	{
 	public:
 		Timer(std::shared_ptr<DependencyResolver<EngineSystem>> resolver);
-		void ProcessFrame();
+		void ProcessFrame()override;
 		int GetHash() override;
 		const float GetDeltaTime();
 		const float GetElapsedTime();

@@ -5,8 +5,8 @@
 #include "../Core/Logger.h"
 #include "../Core/EventSystem.h"
 
-Engine::Renderer::Renderer::Renderer(HWND& handle, int64_t window_width, int64_t window_height, std::shared_ptr<DependencyResolver<EngineSystem>> m_resolver)
-	: EngineSystem(m_resolver), m_handle(handle), m_width(window_width), m_height(window_height)
+Engine::Rendering::Renderer::Renderer(HWND& handle, int64_t window_width, int64_t window_height)
+	:  m_handle(handle), m_width(window_width), m_height(window_height)
 {
 	assert(handle != nullptr);
 
@@ -113,30 +113,27 @@ Engine::Renderer::Renderer::Renderer(HWND& handle, int64_t window_width, int64_t
 //	ImGui_ImplDX11_Init(m_device.Get(), m_context.Get());
 }
 
-void Engine::Renderer::Renderer::ProcessFrame()
+void Engine::Rendering::Renderer::ProcessFrame()
 {
 	BeginFrame();
 	
 	EndFrame();
 }
 
-int Engine::Renderer::Renderer::GetHash()
-{
-	return static_cast<int>(SystemTypes::Renderer);
-}
 
-void Engine::Renderer::Renderer::BeginFrame()
+
+void Engine::Rendering::Renderer::BeginFrame()
 {
 	m_context->ClearRenderTargetView(m_backBuffer.Get(), DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f, 1.0f });
 	m_context->ClearDepthStencilView(m_depthStencil.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
 }
 
-void Engine::Renderer::Renderer::EndFrame()
+void Engine::Rendering::Renderer::EndFrame()
 {
 	m_swapChain->Present(0u, 0u);
 }
 
-void Engine::Renderer::Renderer::HandleWindowResize(int64_t width, int64_t height)
+void Engine::Rendering::Renderer::HandleWindowResize(int64_t width, int64_t height)
 {
 	if (m_width != width || m_height != height)
 	{

@@ -14,6 +14,7 @@ namespace Engine::Core {
 		{}
 		virtual int GetHash() = 0;		
 		virtual ~EngineSystem() {};
+		virtual void ProcessFrame() = 0;
 	protected:
 		std::shared_ptr<DependencyResolver<EngineSystem>> m_resolver;
 	};
