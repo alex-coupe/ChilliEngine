@@ -1,12 +1,9 @@
 #include "Window.h"
-#include "ImGui\imgui_impl_win32.h"
-#include "ImGui\imgui.h"
-#include "Editor.h"
 
-Window* Window::m_pInstance = nullptr;
+Engine::Core::Window* Engine::Core::Window::m_pInstance = nullptr;
 
-Window::Window(HINSTANCE& instance, std::shared_ptr<Editor> editor)
-	:m_instance(instance), m_handle(nullptr), m_editor(editor)
+Engine::Core::Window::Window(HINSTANCE& instance, std::shared_ptr<EventSystem> event_system, int64_t width, int64_t height)
+	:m_instance(instance), m_width(width), m_height(height), m_eventSystem(event_system)
 {
 	m_pInstance = this;
 	WNDCLASSEX wndclass = {};
@@ -34,7 +31,7 @@ Window::Window(HINSTANCE& instance, std::shared_ptr<Editor> editor)
 		title,
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT,CW_USEDEFAULT,
-		CW_USEDEFAULT, CW_USEDEFAULT,NULL,NULL,m_instance,NULL);
+		static_cast<int>(m_width), static_cast<int>(m_height),NULL,NULL,m_instance,NULL);
 
 
 	if (!m_handle)
@@ -47,31 +44,52 @@ Window::Window(HINSTANCE& instance, std::shared_ptr<Editor> editor)
 		
 		RECT rect;
 		GetWindowRect(m_handle, &rect);		
-	    int width = rect.right - rect.left;
-	    int height = rect.bottom - rect.top;
-		
-		m_data.handle = m_handle;
-		m_data.height = height;
-		m_data.width = width;
-		
-		//ImGui_ImplWin32_Init(m_handle);
+	    m_width = rect.right - rect.left;
+	    m_height = rect.bottom - rect.top;
+
+		ShowWindow(m_handle, SW_MAXIMIZE);
+		UpdateWindow(m_handle);
+
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+
+		ImGuiIO& io = ImGui::GetIO();
+		ImGui::StyleColorsDark();
+
+
+		ImGui_ImplWin32_Init(m_handle);
 	}
 	
 }
 
-//extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-LRESULT Window::WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT Engine::Core::Window::WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
 {	
+	if (ImGui_ImplWin32_WndProcHandler(handle, msg, wParam, lParam))
+	{
+		return true;
+	}
+
 	return m_pInstance->MyWinProc(handle, msg, wParam, lParam);
 }
 
- HWND& Window::GetHandle() 
+ HWND Engine::Core::Window::GetHandle() 
 {
 	return m_handle;
 }
 
-bool Window::Update()
+ int64_t Engine::Core::Window::GetWidth() const
+ {
+	 return m_width;
+ }
+
+ int64_t Engine::Core::Window::GetHeight() const
+ {
+	 return m_height;
+ }
+
+bool Engine::Core::Window::Update()
 {
 	MSG msg = {};
 	while (PeekMessage(&msg, m_handle, 0, 0, PM_REMOVE)) 
@@ -85,40 +103,30 @@ bool Window::Update()
 	return true;
 }
 
-void Window::DisplayWindow()
+void Engine::Core::Window::DisplayWindow()
 {
-	ShowWindow(m_handle, SW_MAXIMIZE);
+	
 }
 
-WindowData& Window::GetWindowData()
+Engine::Core::Window::~Window()
 {
-	return m_data;
-}
-
-Window::~Window()
-{
-	//ImGui_ImplWin32_Shutdown();
+	ImGui_ImplWin32_Shutdown();
 	UnregisterClass(m_className,m_instance);
 	EDITOR_INFO("Unregistering Window");
 	DestroyWindow(m_handle);
 	EDITOR_INFO("Destroying Window");
 }
 
-LRESULT Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT Engine::Core::Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	/*if (ImGui_ImplWin32_WndProcHandler(handle, msg, wParam, lParam))
-	{
-		return true;
-	}
-	const auto& imgio = ImGui::GetIO();
-	*/
-
+	
+	//const auto& imgio = ImGui::GetIO();
+	
 	Engine::Core::EventData data = {};
 	data.msg = msg;
 	data.lparam = lParam;
 	data.wparam = wParam;
-	data.handle = &m_handle;
-
+	data.handle = &handle;
 	//Raise Event For The Messages We're Interested In
 	switch (msg)
 	{
@@ -130,23 +138,26 @@ LRESULT Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONUP:
 	case WM_RBUTTONDOWN:
 	case WM_RBUTTONUP:
-	/*	if (imgio.WantCaptureMouse)
-		{
-			break;
-		}*/
+	//	if (imgio.WantCaptureMouse)
+		//{
+			//break;
+		//}
+		[[fallthrough]];
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:
 	case WM_KEYUP:
 	case WM_SYSKEYUP:
 	case WM_CHAR:
-		/*if (imgio.WantCaptureKeyboard)
-		{
-			break;
-		}*/
+	//	if (imgio.WantCaptureKeyboard)
+	//	{
+		//	break;
+	//	}
+		[[fallthrough]];
 	case WM_MOVE:
 	case WM_MOUSELEAVE:
 	case WM_CLOSE:
-		m_editor->RaiseEvent(data);
+		Event* e = new Event(data);
+		m_eventSystem->Push(e);
 		break;
 	}
 		

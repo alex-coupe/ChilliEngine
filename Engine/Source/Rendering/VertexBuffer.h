@@ -31,7 +31,7 @@ namespace Engine::Rendering {
 
 			if (FAILED(m_hresult = m_renderer->GetDevice()->CreateBuffer(&vertex_buffer, &buffer_data, &m_buffer)))
 			{
-				//GET_DXERROR
+				m_renderer->GetDXError();
 			}
 
 		}

@@ -5,7 +5,7 @@
 #include "../Core/Logger.h"
 #include "../Core/EventSystem.h"
 
-Engine::Rendering::Renderer::Renderer(HWND& handle, int64_t window_width, int64_t window_height)
+Engine::Rendering::Renderer::Renderer(HWND handle, int64_t window_width, int64_t window_height)
 	:  m_handle(handle), m_width(window_width), m_height(window_height)
 {
 	assert(handle != nullptr);
@@ -41,15 +41,13 @@ Engine::Rendering::Renderer::Renderer(HWND& handle, int64_t window_width, int64_
 
 	if (FAILED(m_hresult = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &m_bufferTexture)))
 	{
-		GET_DXERROR
+		GetDXError();
 	}
 
 	if (FAILED(m_hresult = m_device->CreateRenderTargetView(m_bufferTexture.Get(), NULL, &m_backBuffer)))
 	{
-		GET_DXERROR
+		GetDXError();
 	}
-
-	
 
 	D3D11_DEPTH_STENCIL_DESC depth_stencil = {};
 
@@ -60,7 +58,7 @@ Engine::Rendering::Renderer::Renderer(HWND& handle, int64_t window_width, int64_
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
 
 	if (FAILED(m_hresult = m_device->CreateDepthStencilState(&depth_stencil, depthStencilState.GetAddressOf()))) {
-		GET_DXERROR
+		GetDXError();
 	}
 
 	m_context->OMSetDepthStencilState(depthStencilState.Get(), 1u);
@@ -79,7 +77,7 @@ Engine::Rendering::Renderer::Renderer(HWND& handle, int64_t window_width, int64_
 
 	if (FAILED(m_hresult = m_device->CreateTexture2D(&depth_desc, nullptr, depth_texture.GetAddressOf())))
 	{
-		GET_DXERROR
+		GetDXError();
 	}
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC depth_view = {};
@@ -89,7 +87,7 @@ Engine::Rendering::Renderer::Renderer(HWND& handle, int64_t window_width, int64_
 
 	if (FAILED(m_hresult = m_device->CreateDepthStencilView(depth_texture.Get(), &depth_view, m_depthStencil.GetAddressOf()))) 
 	{
-		GET_DXERROR
+		GetDXError();
 	}
 
 	//Set the render target view to the back buffer that we created above
@@ -108,12 +106,12 @@ Engine::Rendering::Renderer::Renderer(HWND& handle, int64_t window_width, int64_
 	//Set the Viewport
 	m_context->RSSetViewports(1, &view_port);
 
-  //  ImGui_ImplDX11_Init(m_device.Get(), m_context.Get());
+    ImGui_ImplDX11_Init(m_device.Get(), m_context.Get());
 }
 
 Engine::Rendering::Renderer::~Renderer()
 {
-//	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplDX11_Shutdown();
 }
 
 void Engine::Rendering::Renderer::BeginFrame()
@@ -124,8 +122,8 @@ void Engine::Rendering::Renderer::BeginFrame()
 
 void Engine::Rendering::Renderer::EndFrame()
 {
-//	ImGui::Render();
-//	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	//ImGui::Render();
+	//ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 	m_swapChain->Present(0u, 0u);
 }
 
@@ -159,6 +157,24 @@ Microsoft::WRL::ComPtr<ID3D11Device> Engine::Rendering::Renderer::GetDevice()
 Microsoft::WRL::ComPtr<ID3D11DeviceContext> Engine::Rendering::Renderer::GetContext()
 {
 	return m_context;
+}
+
+void Engine::Rendering::Renderer::GetDXError()
+{
+	UINT64 message_count = m_debugInfo->GetNumStoredMessages(); 
+		for (UINT64 i = 0; i < message_count; i++)
+		{
+			SIZE_T message_size = 0; 
+			m_debugInfo->GetMessage(i, nullptr, &message_size); 
+			D3D11_MESSAGE* message = (D3D11_MESSAGE*)malloc(message_size); 
+			if (message != nullptr)
+			{
+				m_debugInfo->GetMessage(i, message, &message_size); \
+				ENGINE_ERROR("Directx11: {} - {}", message->DescriptionByteLength, message->pDescription); 
+			}
+				free(message); 
+		}
+			m_debugInfo->ClearStoredMessages();
 }
 
 

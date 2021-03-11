@@ -1,13 +1,14 @@
 #include "RenderingSystem.h"
 #include <Windows.h>
 #include "../Core/EventSystem.h"
+#include "../Core/Window.h"
 #include "VertexTypes.h"
 #include "../Core/Logger.h"
 
-Engine::Rendering::RenderingSystem::RenderingSystem(HWND& handle, int64_t window_width, int64_t window_height, std::shared_ptr<DependencyResolver<EngineSystem>> m_resolver)
-	: EngineSystem(m_resolver)
+Engine::Rendering::RenderingSystem::RenderingSystem(std::shared_ptr<DependencyResolver<EngineSystem>> resolver, int64_t width, int64_t height, HWND handle)
+	: EngineSystem(resolver)
 {
-	m_renderer = std::make_shared<Renderer>(handle, window_width, window_height);
+	m_renderer = std::make_shared<Renderer>(handle, width, height);
 }
 
 int Engine::Rendering::RenderingSystem::GetHash()
@@ -35,6 +36,16 @@ bool Engine::Rendering::RenderingSystem::Init()
 void Engine::Rendering::RenderingSystem::ProcessFrame()
 {
 	m_renderer->BeginFrame();
+	/*ImGui::NewFrame();
+	{
+
+		ImGui::Begin("Debug");
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
+			1000.0 / float(ImGui::GetIO().Framerate), float(ImGui::GetIO().Framerate));
+
+		ImGui::End();
+
+	}*/
 	CreateTestTriangle();
 	m_renderer->EndFrame();
 	

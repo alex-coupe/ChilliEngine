@@ -1,20 +1,22 @@
 #include "Editor.h"
 
-bool Editor::Init(WindowData& window_data)
+
+bool Editor::Init(HINSTANCE& hInstance)
 {
 	m_engine = std::make_unique<ChilliEngine>();
-	return m_engine->Init(window_data);
-	
+	if (m_engine->Init(hInstance))
+	{
+		EDITOR_INFO("Editor Initialized Successfully");
+		return true;
+	}
+	EDITOR_INFO("Editor Could Not Initialize");
+	return false;
 }
 
-void Editor::Update()
+bool Editor::Update()
 {
-	m_engine->Update();
+	return m_engine->Update();
 }
 
-void Editor::RaiseEvent(EventData& data)
-{
-	m_engine->RaiseEvent(data);
-}
 
 

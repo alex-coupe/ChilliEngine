@@ -6,7 +6,7 @@ Engine::Rendering::InputLayout::InputLayout(const std::vector<D3D11_INPUT_ELEMEN
 	if (FAILED(m_hresult = m_renderer->GetDevice()->CreateInputLayout(layout.data(), (UINT)layout.size(), vertexByteCode->GetBufferPointer(),
 		vertexByteCode->GetBufferSize(), &m_inputLayout)))
 	{
-		//GET_DXERROR
+		m_renderer->GetDXError();
 	}
 }
 

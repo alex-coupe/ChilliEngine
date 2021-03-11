@@ -9,34 +9,34 @@ Engine::Rendering::Shader::Shader(ShaderType type, const std::wstring& path, std
 	case ShaderType::Pixel:
 		if (FAILED(m_hresult = D3DCompileFromFile(path.c_str(), 0, 0, "main", "ps_4_0", 0, 0, &m_byteCode, nullptr)))
 		{
-			//GET_DXERROR
+			m_renderer->GetDXError();
 		}
 
 		if (FAILED(m_hresult = m_renderer->GetDevice()->CreatePixelShader(m_byteCode->GetBufferPointer(), m_byteCode->GetBufferSize(), nullptr, &m_pixelShader)))
 		{
-			//GET_DXERROR
+			m_renderer->GetDXError();
 		}
 		break;
 	case ShaderType::Vertex:
 		if (FAILED(m_hresult = D3DCompileFromFile(path.c_str(), 0, 0, "main", "vs_4_0", 0, 0, &m_byteCode, nullptr)))
 		{
-			//GET_DXERROR
+			m_renderer->GetDXError();
 		}
 
 		if (FAILED(m_hresult = m_renderer->GetDevice()->CreateVertexShader(m_byteCode->GetBufferPointer(), m_byteCode->GetBufferSize(), nullptr, &m_vertexShader)))
 		{
-			//GET_DXERROR
+			m_renderer->GetDXError();
 		}
 		break;
 	case ShaderType::Geometry:
 		if (FAILED(m_hresult = D3DCompileFromFile(path.c_str(), 0, 0, "main", "gs_4_0", 0, 0, &m_byteCode, nullptr)))
 		{
-			//GET_DXERROR
+			m_renderer->GetDXError();
 		}
 
 		if (FAILED(m_hresult = m_renderer->GetDevice()->CreateGeometryShader(m_byteCode->GetBufferPointer(), m_byteCode->GetBufferSize(), nullptr, &m_geometryShader)))
 		{
-			//GET_DXERROR
+			m_renderer->GetDXError();
 		}
 		break;
 	}

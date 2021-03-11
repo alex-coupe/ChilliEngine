@@ -1,6 +1,19 @@
 #include "ChilliEngine.h"
 
-bool ChilliEngine::Init(WindowData& window_data)
+ChilliEngine::ChilliEngine()
+{
+	//Enable Logging
+	Engine::Core::Logger::Init();
+
+
+}
+
+ChilliEngine::~ChilliEngine()
+{
+	ImGui::DestroyContext();
+}
+
+bool ChilliEngine::Init(HINSTANCE& hInstance)
 {
 	//Create Systems
 	if (m_resolver = std::make_shared<DependencyResolver<EngineSystem>>(); m_resolver == nullptr)
@@ -21,14 +34,22 @@ bool ChilliEngine::Init(WindowData& window_data)
 		return false;
 	}
 
-	m_renderingSystem = std::make_shared<RenderingSystem>(window_data.handle, window_data.width, window_data.height, m_resolver);
+	if (m_window = std::make_unique<Window>(hInstance,m_eventSystem, 1920,1080 ); m_window == nullptr)
+	{
+		ENGINE_ERROR("Failed To Create Window");
+		return false;
+	}
+
+	m_renderingSystem = std::make_shared<RenderingSystem>(m_resolver, m_window->GetWidth(), m_window->GetHeight(), m_window->GetHandle());
 
 	//Register Dependencies	
 	m_resolver->Add(m_eventSystem);
 	m_resolver->Add(m_timerSystem);
 	m_resolver->Add(m_renderingSystem);
 
+
 	//Initialize SubSystems As Required
+
 	if (!m_renderingSystem->Init())
 	{
 		ENGINE_ERROR("Failed To Initialize Rendering System");
@@ -39,17 +60,16 @@ bool ChilliEngine::Init(WindowData& window_data)
 	return true;
 }
 
-void ChilliEngine::Update()
+bool ChilliEngine::Update()
 {
-	m_timerSystem->ProcessFrame();
-	m_eventSystem->ProcessFrame();	
-	m_renderingSystem->ProcessFrame();
+	while (m_window->Update())
+	{
+		m_timerSystem->ProcessFrame();
+		m_eventSystem->ProcessFrame();
+		m_renderingSystem->ProcessFrame();
+		return true;
+	}
+	return false;
 }
 
-//Bridge Between Window And Engine
-void ChilliEngine::RaiseEvent(EventData& data)
-{
-	Event* e = new Event(data);
-	m_eventSystem->Push(e);
-}
 
