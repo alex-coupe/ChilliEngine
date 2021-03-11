@@ -171,7 +171,6 @@
     <ClInclude Include="Source\Core\EventSystem.h" />
     <ClInclude Include="Source\Core\Logger.h" />
     <ClInclude Include="Source\Core\Timer.h" />
-    <ClInclude Include="Source\Core\Window.h" />
     <ClInclude Include="Source\ImGui\imconfig.h" />
     <ClInclude Include="Source\ImGui\imgui.h" />
     <ClInclude Include="Source\ImGui\imgui_impl_dx11.h" />
@@ -195,7 +194,6 @@
     <ClCompile Include="Source\Core\EventSystem.cpp" />
     <ClCompile Include="Source\Core\Timer.cpp" />
     <ClCompile Include="Source\Core\Logger.cpp" />
-    <ClCompile Include="Source\Core\Window.cpp" />
     <ClCompile Include="Source\ImGui\imgui.cpp" />
     <ClCompile Include="Source\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Source\ImGui\imgui_draw.cpp" />

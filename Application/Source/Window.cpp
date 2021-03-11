@@ -1,9 +1,12 @@
 #include "Window.h"
+#include "Application.h"
+#include "ImGui\imgui.h"
+#include "ImGui\imgui_impl_win32.h"
 
-Engine::Core::Window* Engine::Core::Window::m_pInstance = nullptr;
+Window* Window::m_pInstance = nullptr;
 
-Engine::Core::Window::Window(HINSTANCE& instance, std::shared_ptr<EventSystem> event_system, int64_t width, int64_t height)
-	:m_instance(instance), m_width(width), m_height(height), m_eventSystem(event_system)
+Window::Window(HINSTANCE& instance, unsigned int width, unsigned int height, std::shared_ptr<ChilliEngine> engine)
+	:m_instance(instance), m_width(width), m_height(height), m_engine(engine)
 {
 	m_pInstance = this;
 	WNDCLASSEX wndclass = {};
@@ -57,27 +60,27 @@ Engine::Core::Window::Window(HINSTANCE& instance, std::shared_ptr<EventSystem> e
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-LRESULT Engine::Core::Window::WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT Window::WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
 {	
 	return m_pInstance->MyWinProc(handle, msg, wParam, lParam);
 }
 
- HWND Engine::Core::Window::GetHandle() 
+ HWND Window::GetHandle() 
 {
 	return m_handle;
 }
 
- int64_t Engine::Core::Window::GetWidth() const
+ unsigned int Window::GetWidth() const
  {
 	 return m_width;
  }
 
- int64_t Engine::Core::Window::GetHeight() const
+ unsigned int Window::GetHeight() const
  {
 	 return m_height;
  }
 
-bool Engine::Core::Window::Update()
+bool Window::Update()
 {
 	MSG msg = {};
 	while (PeekMessage(&msg, m_handle, 0, 0, PM_REMOVE)) 
@@ -91,7 +94,7 @@ bool Engine::Core::Window::Update()
 	return true;
 }
 
-Engine::Core::Window::~Window()
+Window::~Window()
 {
 	ImGui_ImplWin32_Shutdown();
 	UnregisterClass(m_className,m_instance);
@@ -100,7 +103,7 @@ Engine::Core::Window::~Window()
 	EDITOR_INFO("Destroying Window");
 }
 
-LRESULT Engine::Core::Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	
 	if (ImGui_ImplWin32_WndProcHandler(handle, msg, wParam, lParam))
@@ -118,7 +121,7 @@ LRESULT Engine::Core::Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LP
 	data.msg = msg;
 	data.lparam = lParam;
 	data.wparam = wParam;
-	data.handle = &handle;
+	data.handle = handle;
 
 	//Raise Event For The Messages We're Interested In
 	switch (msg)
@@ -149,8 +152,7 @@ LRESULT Engine::Core::Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LP
 	case WM_MOVE:
 	case WM_MOUSELEAVE:
 	case WM_CLOSE:
-		Event* e = new Event(data);
-		m_eventSystem->Push(e);
+		m_engine->RaiseEvent(data);
 		break;
 	}
 		

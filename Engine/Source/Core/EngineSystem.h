@@ -5,7 +5,7 @@
 namespace Engine::Core {
 
 	enum class SystemTypes {
-		Timer = 1, EventSystem = 2, Renderer = 3, Window = 4
+		Timer = 1, EventSystem = 2, Renderer = 3
 	};
 
 	class CHILLI_API EngineSystem {

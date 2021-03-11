@@ -1,12 +1,12 @@
 #include "RenderingSystem.h"
 #include <Windows.h>
 #include "../Core/EventSystem.h"
-#include "../Core/Window.h"
 #include "VertexTypes.h"
 #include "../Core/Logger.h"
 #include "../ImGui/imgui_impl_dx11.h"
 #include "../ImGui/imgui_impl_win32.h"
-Engine::Rendering::RenderingSystem::RenderingSystem(std::shared_ptr<DependencyResolver<EngineSystem>> resolver, int64_t width, int64_t height, HWND handle)
+
+Engine::Rendering::RenderingSystem::RenderingSystem(std::shared_ptr<DependencyResolver<EngineSystem>> resolver, HWND handle, unsigned int width, unsigned int height)
 	: EngineSystem(resolver)
 {
 	m_renderer = std::make_shared<Renderer>(handle, width, height);
@@ -60,8 +60,6 @@ void Engine::Rendering::RenderingSystem::CreateTestTriangle()
 		{{ 0.0f, 0.5f,0.0f}},
 		{{ 0.5f, -0.5f,0.0f}},
 		{{-0.5f,-0.5f,0.0f}}
-		
-		
 	};
 
 	const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =

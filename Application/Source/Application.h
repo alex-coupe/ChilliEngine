@@ -1,11 +1,13 @@
 #pragma once
 #include <memory>
 #include "Core\ChilliEngine.h"
+#include "Window.h"
 
 class Application {
 public:
 	bool Init(HINSTANCE& hInstance);
-	bool Update();
+	void Update();
 private:
-	std::unique_ptr<ChilliEngine> m_engine = nullptr;
+	std::shared_ptr<ChilliEngine> m_engine = nullptr;
+	std::unique_ptr<Window> m_window = nullptr;
 };
