@@ -75,7 +75,7 @@ void Engine::Core::EventSystem::TranslateEvent(EventType type, const EventData& 
 			break;
 		case EventType::WindowResized:
 			RECT rect;
-			if (GetWindowRect(data_in.handle, &rect))
+			if (GetWindowRect(*data_in.handle, &rect))
 			{
 				m_data.screen_width = static_cast<int64_t>(rect.right) - rect.left;
 				m_data.screen_height = static_cast<int64_t>(rect.bottom) - rect.top;

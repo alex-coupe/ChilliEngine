@@ -154,11 +154,9 @@
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Main.cpp" />
-    <ClCompile Include="Source\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
-    <ClInclude Include="Source\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dependencies\ImGui\ImGui.vcxproj">

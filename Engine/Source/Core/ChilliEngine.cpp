@@ -3,6 +3,11 @@
 ChilliEngine::ChilliEngine(ImGuiContext* context)
 {
 	ImGui::SetCurrentContext(context);
+
+	//Enable Logging
+	Engine::Core::Logger::Init();
+
+
 }
 
 ChilliEngine::~ChilliEngine()
@@ -10,7 +15,7 @@ ChilliEngine::~ChilliEngine()
 	ImGui::DestroyContext();
 }
 
-bool ChilliEngine::Init(HINSTANCE& hInstance, HWND handle, unsigned int width, unsigned int height)
+bool ChilliEngine::Init(HINSTANCE& hInstance)
 {
 	//Create Systems
 	if (m_resolver = std::make_shared<DependencyResolver<EngineSystem>>(); m_resolver == nullptr)
@@ -24,17 +29,24 @@ bool ChilliEngine::Init(HINSTANCE& hInstance, HWND handle, unsigned int width, u
 		ENGINE_ERROR("Failed To Initialize Event System");
 		return false;
 	}
-	//Register Dependencies	
-	m_resolver->Add(m_eventSystem);
 
 	if (m_timerSystem = std::make_shared<Timer>(m_resolver); m_timerSystem == nullptr)
 	{
 		ENGINE_ERROR("Failed To Initialize Timer System");
 		return false;
 	}
-	m_resolver->Add(m_timerSystem);
 
-	m_renderingSystem = std::make_shared<RenderingSystem>(m_resolver,handle, width, height);
+	if (m_window = std::make_unique<Window>(hInstance,m_eventSystem, 1920,1080 ); m_window == nullptr)
+	{
+		ENGINE_ERROR("Failed To Create Window");
+		return false;
+	}
+
+	m_renderingSystem = std::make_shared<RenderingSystem>(m_resolver, m_window->GetWidth(), m_window->GetHeight(), m_window->GetHandle());
+
+	//Register Dependencies	
+	m_resolver->Add(m_eventSystem);
+	m_resolver->Add(m_timerSystem);
 	m_resolver->Add(m_renderingSystem);
 
 	//Initialize SubSystems As Required
@@ -49,21 +61,16 @@ bool ChilliEngine::Init(HINSTANCE& hInstance, HWND handle, unsigned int width, u
 	return true;
 }
 
-void ChilliEngine::Update()
+bool ChilliEngine::Update()
 {
+	while (m_window->Update())
+	{
 		m_timerSystem->ProcessFrame();
 		m_eventSystem->ProcessFrame();
 		m_renderingSystem->ProcessFrame();
-		
-}
-
-void ChilliEngine::RaiseEvent(EventData& data)
-{
-	if (m_eventSystem != nullptr)
-	{
-		Event* e = new Event(data);
-		m_eventSystem->Push(e);
+		return true;
 	}
+	return false;
 }
 
 

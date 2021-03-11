@@ -9,10 +9,8 @@ bool Application::Init(HINSTANCE& hInstance)
 
 	ImGuiContext* context = ImGui::GetCurrentContext();
 
-	m_engine = std::make_shared<ChilliEngine>(context);
-	m_window = std::make_unique<Window>(hInstance, 1920, 1080, m_engine);
-
-	if (m_engine->Init(hInstance, m_window->GetHandle(), m_window->GetWidth(), m_window->GetHeight()))
+	m_engine = std::make_unique<ChilliEngine>(context);
+	if (m_engine->Init(hInstance))
 	{
 		EDITOR_INFO("Editor Initialized Successfully");
 		return true;
@@ -21,12 +19,9 @@ bool Application::Init(HINSTANCE& hInstance)
 	return false;
 }
 
-void Application::Update()
+bool Application::Update()
 {
-	while (m_window->Update())
-	{
-		m_engine->Update();
-	}
+	return m_engine->Update();
 }
 
 

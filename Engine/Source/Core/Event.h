@@ -25,7 +25,7 @@ namespace Engine::Core {
 		uint64_t wparam = 0;
 		int64_t lparam = 0;
 		uint32_t msg = 0;
-		HWND handle;
+		HWND* handle = nullptr;
 	};
 
 	class CHILLI_API Event{

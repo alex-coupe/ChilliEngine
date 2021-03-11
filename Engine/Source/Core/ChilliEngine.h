@@ -7,6 +7,7 @@
 #include "EngineSystem.h"
 #include "../ImGui/imgui.h"
 #include "../Rendering/RenderingSystem.h"
+#include "Window.h"
 
 namespace Engine::Core {
 	class Logger;
@@ -20,13 +21,13 @@ class CHILLI_API ChilliEngine {
 public:
 	ChilliEngine(ImGuiContext* context);
 	~ChilliEngine();
-	bool Init(HINSTANCE& hInstance, HWND handle, unsigned int width, unsigned int height);
-	void Update();
-	void RaiseEvent(EventData& data);
+	bool Init(HINSTANCE& hInstance);
+	bool Update();
 	
 private:
 	std::shared_ptr<EventSystem> m_eventSystem;
 	std::shared_ptr<Timer> m_timerSystem;
 	std::shared_ptr<RenderingSystem> m_renderingSystem;
 	std::shared_ptr<DependencyResolver<EngineSystem>> m_resolver;
+	std::unique_ptr<Window> m_window;
 };
