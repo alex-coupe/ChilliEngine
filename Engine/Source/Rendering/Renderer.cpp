@@ -117,13 +117,13 @@ Engine::Rendering::Renderer::~Renderer()
 void Engine::Rendering::Renderer::BeginFrame()
 {
 	m_context->ClearRenderTargetView(m_backBuffer.Get(), DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f, 1.0f });
-	m_context->ClearDepthStencilView(m_depthStencil.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
+	m_context->ClearDepthStencilView(m_depthStencil.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 }
 
 void Engine::Rendering::Renderer::EndFrame()
 {
-	//ImGui::Render();
-	//ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 	m_swapChain->Present(0u, 0u);
 }
 

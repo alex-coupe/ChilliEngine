@@ -44,19 +44,14 @@ Engine::Core::Window::Window(HINSTANCE& instance, std::shared_ptr<EventSystem> e
 		
 		RECT rect;
 		GetWindowRect(m_handle, &rect);		
-	    m_width = rect.right - rect.left;
-	    m_height = rect.bottom - rect.top;
+	    m_width = static_cast<int64_t>(rect.right) - rect.left;
+	    m_height = static_cast<int64_t>(rect.bottom) - rect.top;
 
 		ShowWindow(m_handle, SW_MAXIMIZE);
-		UpdateWindow(m_handle);
-
+		
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
-
-		ImGuiIO& io = ImGui::GetIO();
 		ImGui::StyleColorsDark();
-
-
 		ImGui_ImplWin32_Init(m_handle);
 	}
 	
@@ -66,11 +61,6 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 LRESULT Engine::Core::Window::WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
 {	
-	if (ImGui_ImplWin32_WndProcHandler(handle, msg, wParam, lParam))
-	{
-		return true;
-	}
-
 	return m_pInstance->MyWinProc(handle, msg, wParam, lParam);
 }
 
@@ -103,11 +93,6 @@ bool Engine::Core::Window::Update()
 	return true;
 }
 
-void Engine::Core::Window::DisplayWindow()
-{
-	
-}
-
 Engine::Core::Window::~Window()
 {
 	ImGui_ImplWin32_Shutdown();
@@ -120,13 +105,23 @@ Engine::Core::Window::~Window()
 LRESULT Engine::Core::Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	
-	//const auto& imgio = ImGui::GetIO();
+	if (ImGui_ImplWin32_WndProcHandler(handle, msg, wParam, lParam))
+	{
+		return true;
+	}
+	const ImGuiIO* io = nullptr;
+	
+	if (ImGui::GetCurrentContext())
+	{
+		io = &ImGui::GetIO();
+	}
 	
 	Engine::Core::EventData data = {};
 	data.msg = msg;
 	data.lparam = lParam;
 	data.wparam = wParam;
 	data.handle = &handle;
+
 	//Raise Event For The Messages We're Interested In
 	switch (msg)
 	{
@@ -138,20 +133,20 @@ LRESULT Engine::Core::Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LP
 	case WM_LBUTTONUP:
 	case WM_RBUTTONDOWN:
 	case WM_RBUTTONUP:
-	//	if (imgio.WantCaptureMouse)
-		//{
-			//break;
-		//}
+		if (io != nullptr && io->WantCaptureMouse)
+		{
+			break;
+		}
 		[[fallthrough]];
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:
 	case WM_KEYUP:
 	case WM_SYSKEYUP:
 	case WM_CHAR:
-	//	if (imgio.WantCaptureKeyboard)
-	//	{
-		//	break;
-	//	}
+		if (io != nullptr &&  io->WantCaptureKeyboard)
+		{
+			break;
+		}
 		[[fallthrough]];
 	case WM_MOVE:
 	case WM_MOUSELEAVE:

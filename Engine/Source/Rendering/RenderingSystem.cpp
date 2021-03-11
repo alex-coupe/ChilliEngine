@@ -4,7 +4,8 @@
 #include "../Core/Window.h"
 #include "VertexTypes.h"
 #include "../Core/Logger.h"
-
+#include "../ImGui/imgui_impl_dx11.h"
+#include "../ImGui/imgui_impl_win32.h"
 Engine::Rendering::RenderingSystem::RenderingSystem(std::shared_ptr<DependencyResolver<EngineSystem>> resolver, int64_t width, int64_t height, HWND handle)
 	: EngineSystem(resolver)
 {
@@ -36,7 +37,9 @@ bool Engine::Rendering::RenderingSystem::Init()
 void Engine::Rendering::RenderingSystem::ProcessFrame()
 {
 	m_renderer->BeginFrame();
-	/*ImGui::NewFrame();
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
 	{
 
 		ImGui::Begin("Debug");
@@ -45,7 +48,7 @@ void Engine::Rendering::RenderingSystem::ProcessFrame()
 
 		ImGui::End();
 
-	}*/
+	}
 	CreateTestTriangle();
 	m_renderer->EndFrame();
 	
