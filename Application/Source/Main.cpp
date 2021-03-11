@@ -1,17 +1,17 @@
 #include <Windows.h>
-#include "Editor.h"
+#include "Application.h"
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 	
 	//Create Editor On The Heap
-	std::shared_ptr<Editor> ChilliEditor = std::make_shared<Editor>();
+	std::shared_ptr<Application> application = std::make_shared<Application>();
 
 	//Initialize Engine Systems
-	ChilliEditor->Init(hInstance);
+	application->Init(hInstance);
 
 	//Enter Main App Loop
-	while (ChilliEditor->Update());
+	while (application->Update());
 
 	return 0;
 }

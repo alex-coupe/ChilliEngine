@@ -19,7 +19,7 @@ using namespace Engine::Rendering;
 class CHILLI_API ChilliEngine {
 
 public:
-	ChilliEngine();
+	ChilliEngine(ImGuiContext* context);
 	~ChilliEngine();
 	bool Init(HINSTANCE& hInstance);
 	bool Update();

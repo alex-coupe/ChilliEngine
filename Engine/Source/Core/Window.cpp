@@ -49,9 +49,7 @@ Engine::Core::Window::Window(HINSTANCE& instance, std::shared_ptr<EventSystem> e
 
 		ShowWindow(m_handle, SW_MAXIMIZE);
 		
-		IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
-		ImGui::StyleColorsDark();
+		
 		ImGui_ImplWin32_Init(m_handle);
 	}
 	

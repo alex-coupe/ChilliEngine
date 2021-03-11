@@ -1,7 +1,9 @@
 #include "ChilliEngine.h"
 
-ChilliEngine::ChilliEngine()
+ChilliEngine::ChilliEngine(ImGuiContext* context)
 {
+	ImGui::SetCurrentContext(context);
+
 	//Enable Logging
 	Engine::Core::Logger::Init();
 

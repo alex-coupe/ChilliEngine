@@ -2,7 +2,7 @@
 #include <memory>
 #include "Core\ChilliEngine.h"
 
-class Editor {
+class Application {
 public:
 	bool Init(HINSTANCE& hInstance);
 	bool Update();
