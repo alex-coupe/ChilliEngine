@@ -6,6 +6,7 @@
 #include "Shader.h"
 #include "InputLayout.h"
 #include "Topology.h"
+#include "IndexBuffer.h"
 
 namespace Engine::Rendering {
 

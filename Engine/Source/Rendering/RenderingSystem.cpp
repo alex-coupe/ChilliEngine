@@ -84,7 +84,13 @@ void Engine::Rendering::RenderingSystem::CreateTestTriangle()
 	Topology topology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, m_renderer);
 	topology.Bind();
 
-	m_renderer->Draw(3, 0);
+	std::vector<unsigned short> indices = {
+		0,1,2
+	};
 
+	IndexBuffer indexBuffer(indices, m_renderer);
+	indexBuffer.Bind();
+
+	m_renderer->DrawIndexed(indexBuffer.GetCount());
 	
 }
