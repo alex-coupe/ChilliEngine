@@ -4,6 +4,7 @@
 Engine::Rendering::Shader::Shader(ShaderType type, const std::wstring& path, std::shared_ptr<Renderer> renderer)
 	:m_renderer(renderer), m_type(type)
 {
+	auto thing = path.c_str();
 	switch (type)
 	{
 	case ShaderType::Pixel:
@@ -17,7 +18,7 @@ Engine::Rendering::Shader::Shader(ShaderType type, const std::wstring& path, std
 			m_renderer->GetDXError();
 		}
 		break;
-	case ShaderType::Vertex:
+	case ShaderType::Vertex:	
 		if (FAILED(m_hresult = D3DCompileFromFile(path.c_str(), 0, 0, "main", "vs_4_0", 0, 0, &m_byteCode, nullptr)))
 		{
 			m_renderer->GetDXError();

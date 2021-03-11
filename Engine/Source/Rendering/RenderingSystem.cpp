@@ -72,10 +72,10 @@ void Engine::Rendering::RenderingSystem::CreateTestTriangle()
 	VertexBuffer vertexBuffer(vertices, m_renderer);
 	vertexBuffer.Bind();
 
-	Shader vertexShader(ShaderType::Vertex, L"C:\\Users\\Alexander\\Documents\\Repos\\ChilliEngine\\Engine\\Source\\Rendering\\shaders\\Vertex_Basic.hlsl", m_renderer);
+	Shader vertexShader(ShaderType::Vertex, L"../Engine/Source/Rendering/shaders/Vertex_Basic.hlsl", m_renderer);
 	vertexShader.Bind();
 
-	Shader pixelShader(ShaderType::Pixel, L"C:\\Users\\Alexander\\Documents\\Repos\\ChilliEngine\\Engine\\Source\\Rendering\\shaders\\Pixel_Basic.hlsl", m_renderer);
+	Shader pixelShader(ShaderType::Pixel, L"../Engine/Source/Rendering/shaders/Pixel_Basic.hlsl", m_renderer);
 	pixelShader.Bind();
 
 	InputLayout inputLayout(ied, vertexShader.GetByteCode(), m_renderer);
