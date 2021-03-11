@@ -3,6 +3,7 @@
 #include "Event.h"
 #include <queue>
 #include <functional>
+#include "EngineSystem.h"
 #pragma warning(disable:4251)
 namespace Engine::Core {
 
@@ -15,12 +16,13 @@ namespace Engine::Core {
 		short wheel_delta = 0;
 	};
 	
-	class CHILLI_API EventSystem{
+	class CHILLI_API EventSystem : public EngineSystem {
 	using tuple = std::vector<std::pair<std::vector<EventType>,std::function<void()>>>;
 	public:
-		EventSystem() = default;
+		EventSystem(std::shared_ptr<DependencyResolver<EngineSystem>> m_resolver);
+		int GetHash() override;
 		void ClearBuffer();
-		void ProcessFrame();
+		void ProcessFrame()override;
 		void TrimBuffer();
 		void Push(Event* e);
 		void Subscribe(std::vector<EventType> types, std::function<void()> callback);

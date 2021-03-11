@@ -8,15 +8,8 @@ namespace Engine::Core {
 
 	void Logger::Init()
 	{
+		
 		AllocConsole();
-		HANDLE stdHandle;
-		int hConsole;
-		FILE* fp;
-		stdHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-		hConsole = _open_osfhandle(reinterpret_cast<long long>(stdHandle), _O_TEXT);
-		fp = _fdopen(hConsole, "w");
-		freopen_s(&fp, "CONOUT$", "w", stdout);
-
 		m_engineLogger = spdlog::stdout_color_mt("Chilli Engine");
 		m_engineLogger->set_level(spdlog::level::trace);
 		m_editorLogger = spdlog::stdout_color_mt("Chilli Editor");
@@ -25,6 +18,11 @@ namespace Engine::Core {
 
 		ENGINE_INFO("Engine Logger Initialized");
 		EDITOR_INFO("Editor Logger Initialized");
+	}
+
+	CHILLI_API void Logger::Kill()
+	{
+		FreeConsole();
 	}
 
 }

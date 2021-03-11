@@ -18,13 +18,30 @@ void Engine::Core::EventSystem::ProcessFrame()
 				subscriber.second();
 			}
 		}
+
+		delete e;
 	}
 }
 
 void Engine::Core::EventSystem::TrimBuffer()
 {
 	while (m_eventBuffer.size() > 16)
+	{
+		const auto& e = m_eventBuffer.front();
 		m_eventBuffer.pop();
+		delete e;
+	}
+}
+
+Engine::Core::EventSystem::EventSystem(std::shared_ptr<DependencyResolver<EngineSystem>> m_resolver)
+	: EngineSystem(m_resolver)
+{
+}
+
+
+int Engine::Core::EventSystem::GetHash()
+{
+	return static_cast<int>(SystemTypes::EventSystem);
 }
 
 void Engine::Core::EventSystem::ClearBuffer()
@@ -58,11 +75,14 @@ void Engine::Core::EventSystem::TranslateEvent(EventType type, const EventData& 
 			break;
 		case EventType::WindowResized:
 			RECT rect;
-			if (GetWindowRect(*data_in.handle, &rect))
+			if (GetWindowRect(data_in.handle, &rect))
 			{
 				m_data.screen_width = static_cast<int64_t>(rect.right) - rect.left;
 				m_data.screen_height = static_cast<int64_t>(rect.bottom) - rect.top;
 			}
+			break;
+		case EventType::Close:
+			Engine::Core::Logger::Kill();
 			break;
 	}
 }

@@ -1,61 +1,76 @@
 #include "ChilliEngine.h"
 
-
-void MouseMovedCallback(int64_t& x, int64_t& y)
+ChilliEngine::ChilliEngine(ImGuiContext* context)
 {
-	ENGINE_INFO("Mouse Moved - x: {} y: {}", x, y);
+	ImGui::SetCurrentContext(context);
+
+	//Enable Logging
+	Engine::Core::Logger::Init();
+
+
 }
 
-void MouseClickedCallback()
+ChilliEngine::~ChilliEngine()
 {
-	ENGINE_INFO("Mouse Clicked");
+	ImGui::DestroyContext();
 }
 
-void FocusLostCallback()
+bool ChilliEngine::Init(HINSTANCE& hInstance)
 {
-	ENGINE_INFO("Window Focus Lost");
-}
+	//Create Systems
+	if (m_resolver = std::make_shared<DependencyResolver<EngineSystem>>(); m_resolver == nullptr)
+	{
+		ENGINE_ERROR("Failed To Initialize Engine System Resolver");
+		return false;
+	}
 
-void FocusGainedCallback()
-{
-	ENGINE_INFO("Window Focus Gained");
-}
+	if (m_eventSystem = std::make_shared<EventSystem>(m_resolver); m_eventSystem == nullptr)
+	{
+		ENGINE_ERROR("Failed To Initialize Event System");
+		return false;
+	}
 
-void KeyboardCallback(unsigned char keycode)
-{
-	ENGINE_INFO("Key Press {}", keycode);
-}
+	if (m_timerSystem = std::make_shared<Timer>(m_resolver); m_timerSystem == nullptr)
+	{
+		ENGINE_ERROR("Failed To Initialize Timer System");
+		return false;
+	}
 
-void ResizeCallback(int64_t& width, int64_t& height)
-{
-	ENGINE_INFO("Window Resize width: {} height: {}", width, height);
-}
+	if (m_window = std::make_unique<Window>(hInstance,m_eventSystem, 1920,1080 ); m_window == nullptr)
+	{
+		ENGINE_ERROR("Failed To Create Window");
+		return false;
+	}
 
-void ChilliEngine::Init()
-{
-	//Initialise SubSystems
-	m_eventSystem = std::make_unique<EventSystem>();
+	m_renderingSystem = std::make_shared<RenderingSystem>(m_resolver, m_window->GetWidth(), m_window->GetHeight(), m_window->GetHandle());
 
-	//Subscribe To Events
-	m_eventSystem->Subscribe({ EventType::MouseMove }, std::bind(MouseMovedCallback, std::ref(m_eventSystem->m_data.mouse_x), std::ref(m_eventSystem->m_data.mouse_y)));
-	m_eventSystem->Subscribe({ EventType::LeftMousePressed, EventType::RightMousePressed }, std::bind(MouseClickedCallback));
-	m_eventSystem->Subscribe({ EventType::FocusLost }, std::bind(FocusLostCallback));
-	m_eventSystem->Subscribe({ EventType::FocusGained }, std::bind(FocusGainedCallback));
-	m_eventSystem->Subscribe({ EventType::KeyDown,  EventType::SysKeyDown }, std::bind(KeyboardCallback, std::ref(m_eventSystem->m_data.keycode)));
-	m_eventSystem->Subscribe({ EventType::WindowResized }, std::bind(ResizeCallback, std::ref(m_eventSystem->m_data.screen_width), std::ref(m_eventSystem->m_data.screen_height)));
+	//Register Dependencies	
+	m_resolver->Add(m_eventSystem);
+	m_resolver->Add(m_timerSystem);
+	m_resolver->Add(m_renderingSystem);
+
+	//Initialize SubSystems As Required
+
+	if (!m_renderingSystem->Init())
+	{
+		ENGINE_ERROR("Failed To Initialize Rendering System");
+		return false;
+	}
+
 	ENGINE_INFO("Chilli Engine Initialized Successfully");
+	return true;
 }
 
-void ChilliEngine::Update()
+bool ChilliEngine::Update()
 {
-	//Process Events
-	m_eventSystem->ProcessFrame();
+	while (m_window->Update())
+	{
+		m_timerSystem->ProcessFrame();
+		m_eventSystem->ProcessFrame();
+		m_renderingSystem->ProcessFrame();
+		return true;
+	}
+	return false;
 }
 
-//Bridge Between Window And Engine
-void ChilliEngine::RaiseEvent(EventData& data)
-{
-	Event* e = new Event(data);
-	m_eventSystem->Push(e);
-}
 
