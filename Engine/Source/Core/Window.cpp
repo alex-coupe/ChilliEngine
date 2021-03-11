@@ -118,7 +118,7 @@ LRESULT Engine::Core::Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LP
 	data.msg = msg;
 	data.lparam = lParam;
 	data.wparam = wParam;
-	data.handle = &handle;
+	data.handle = handle;
 
 	//Raise Event For The Messages We're Interested In
 	switch (msg)
