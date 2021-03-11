@@ -47,7 +47,6 @@ bool ChilliEngine::Init(HINSTANCE& hInstance)
 	m_resolver->Add(m_timerSystem);
 	m_resolver->Add(m_renderingSystem);
 
-
 	//Initialize SubSystems As Required
 
 	if (!m_renderingSystem->Init())
