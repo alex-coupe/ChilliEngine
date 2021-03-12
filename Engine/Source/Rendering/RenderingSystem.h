@@ -16,6 +16,7 @@ namespace Engine::Rendering {
 	class CHILLI_API RenderingSystem : public EngineSystem{
 	public:
 		RenderingSystem(std::shared_ptr<DependencyResolver<EngineSystem>> resolver, int64_t width, int64_t height, HWND handle);
+		~RenderingSystem();
 		int GetHash() override;
 		bool Init();
 		void ProcessFrame()override;

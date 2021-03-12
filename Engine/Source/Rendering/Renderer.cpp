@@ -2,7 +2,7 @@
 #include "../ImGui/imgui_impl_dx11.h"
 #include "../ImGui/imgui_impl_win32.h"
 #include <assert.h>
-#include "../Core/Logger.h"
+
 #include "../Core/EventSystem.h"
 
 Engine::Rendering::Renderer::Renderer(HWND handle, int64_t window_width, int64_t window_height)
@@ -139,23 +139,49 @@ void Engine::Rendering::Renderer::DrawIndexed(UINT count)const
 
 void Engine::Rendering::Renderer::HandleWindowResize(int64_t width, int64_t height)
 {
-	if (m_width != width || m_height != height)
+	if (m_swapChain && (m_width != width || m_height != height) )
 	{
 		m_width = width;
 		m_height = height;
 
 		m_context->OMSetRenderTargets(0, 0, 0);
-		m_bufferTexture->Release();
-		m_backBuffer->Release();
+		m_swapChain->Release();
+		m_device->Release();
+		m_context->Release();
 		m_depthStencil->Release();
+		ImGui_ImplDX11_Shutdown();
 
-		if (FAILED(m_hresult = m_swapChain->ResizeBuffers(0,m_width,m_height,DXGI_FORMAT_UNKNOWN,0)))
+		DXGI_MODE_DESC buffer_desc = {};
+
+		buffer_desc.Width = static_cast<unsigned int>(m_width);
+		buffer_desc.Height = static_cast<unsigned int>(m_height);
+		buffer_desc.RefreshRate.Numerator = 60;
+		buffer_desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+		buffer_desc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+		buffer_desc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+
+		DXGI_SWAP_CHAIN_DESC swap_chain = {};
+		swap_chain.BufferDesc = buffer_desc;
+		swap_chain.BufferCount = 1;
+		swap_chain.SampleDesc.Count = 1;
+		swap_chain.SampleDesc.Quality = 0;
+		swap_chain.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		swap_chain.OutputWindow = m_handle;
+		swap_chain.Windowed = TRUE;
+		swap_chain.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+
+		if (FAILED(m_hresult = D3D11CreateDeviceAndSwapChain(
+			NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, D3D11_CREATE_DEVICE_DEBUG,
+			NULL, NULL, D3D11_SDK_VERSION, &swap_chain, m_swapChain.GetAddressOf(),
+			m_device.GetAddressOf(), NULL, m_context.GetAddressOf())))
 		{
-			GetDXError();
+			ENGINE_ERROR("Failed To Create Device/Swapchain");
 		}
 
-		ID3D11Texture2D* pBuffer;
-		if (FAILED(m_hresult = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBuffer)))
+		m_device->QueryInterface(__uuidof(ID3D11InfoQueue), &m_debugInfo);
+
+		
+		if (FAILED(m_hresult = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &m_bufferTexture)))
 		{
 			GetDXError();
 		}
@@ -206,7 +232,8 @@ void Engine::Rendering::Renderer::HandleWindowResize(int64_t width, int64_t heig
 			GetDXError();
 		}
 
-		m_context->OMSetRenderTargets(1, m_backBuffer.GetAddressOf(),m_depthStencil.Get());
+		//Set the render target view to the back buffer that we created above
+		m_context->OMSetRenderTargets(1, m_backBuffer.GetAddressOf(), m_depthStencil.Get());
 
 		//Create the Viewport
 		D3D11_VIEWPORT view_port = {};
@@ -220,6 +247,8 @@ void Engine::Rendering::Renderer::HandleWindowResize(int64_t width, int64_t heig
 
 		//Set the Viewport
 		m_context->RSSetViewports(1, &view_port);
+
+		ImGui_ImplDX11_Init(m_device.Get(), m_context.Get());
 
 		ENGINE_INFO("Window Resize Handled By Renderer - Width: {} Height: {}", m_width, m_height);
 	}

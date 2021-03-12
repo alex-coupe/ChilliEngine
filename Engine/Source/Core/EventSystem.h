@@ -20,6 +20,7 @@ namespace Engine::Core {
 	using tuple = std::vector<std::pair<std::vector<EventType>,std::function<void()>>>;
 	public:
 		EventSystem(std::shared_ptr<DependencyResolver<EngineSystem>> m_resolver);
+		~EventSystem();
 		int GetHash() override;
 		void ClearBuffer();
 		void ProcessFrame()override;

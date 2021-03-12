@@ -1,6 +1,4 @@
 #include "EventSystem.h"
-#include "Logger.h"
-
 
 void Engine::Core::EventSystem::ProcessFrame()
 {
@@ -38,6 +36,15 @@ Engine::Core::EventSystem::EventSystem(std::shared_ptr<DependencyResolver<Engine
 {
 }
 
+Engine::Core::EventSystem::~EventSystem()
+{
+	while (!m_eventBuffer.empty())
+	{
+		const auto& e = m_eventBuffer.front();
+		m_eventBuffer.pop();
+		delete e;
+	}
+}
 
 int Engine::Core::EventSystem::GetHash()
 {
@@ -46,7 +53,12 @@ int Engine::Core::EventSystem::GetHash()
 
 void Engine::Core::EventSystem::ClearBuffer()
 {
-	m_eventBuffer = {};
+	while (!m_eventBuffer.empty())
+	{
+		const auto& e = m_eventBuffer.front();
+		m_eventBuffer.pop();
+		delete e;
+	}
 }
 
 void Engine::Core::EventSystem::Subscribe(std::vector<EventType> events, std::function<void()> callback)
@@ -80,9 +92,6 @@ void Engine::Core::EventSystem::TranslateEvent(EventType type, const EventData& 
 				m_data.screen_width = static_cast<int64_t>(rect.right) - rect.left;
 				m_data.screen_height = static_cast<int64_t>(rect.bottom) - rect.top;
 			}
-			break;
-		case EventType::Close:
-			Engine::Core::Logger::Kill();
 			break;
 	}
 }

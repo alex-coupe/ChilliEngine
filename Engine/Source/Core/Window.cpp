@@ -21,9 +21,7 @@ Engine::Core::Window::Window(HINSTANCE& instance, std::shared_ptr<EventSystem> e
 	wndclass.lpszMenuName = nullptr;
 	
 	if (!RegisterClassEx(&wndclass))
-		EDITOR_ERROR("Failed To Register Window");
-
-	EDITOR_INFO("Window Registered Successfully");
+		ENGINE_ERROR("Failed To Register Window");
 
 	//Grab Desktop Resolution
 	RECT desktop;
@@ -41,11 +39,9 @@ Engine::Core::Window::Window(HINSTANCE& instance, std::shared_ptr<EventSystem> e
 
 	if (!m_handle)
 	{
-		EDITOR_ERROR("Failed To Create Window");
+		ENGINE_ERROR("Failed To Create Window");
+		return;
 	}
-	else
-	{
-		EDITOR_INFO("Window Created Successfully");
 		
 		unsigned int width = 0;
 		unsigned int height = 0;
@@ -65,7 +61,7 @@ Engine::Core::Window::Window(HINSTANCE& instance, std::shared_ptr<EventSystem> e
 		
 		
 		ImGui_ImplWin32_Init(m_handle);
-	}
+	
 	
 }
 
@@ -86,7 +82,7 @@ LRESULT Engine::Core::Window::WndProc(HWND handle, UINT msg, WPARAM wParam, LPAR
 bool Engine::Core::Window::Update()
 {
 	MSG msg = {};
-	while (PeekMessage(&msg, m_handle, 0, 0, PM_REMOVE)) 
+	while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
@@ -94,16 +90,17 @@ bool Engine::Core::Window::Update()
 		if (msg.message == WM_QUIT)
 			return false;
 	}
+
 	return true;
+
+	
 }
 
 Engine::Core::Window::~Window()
 {
 	ImGui_ImplWin32_Shutdown();
 	UnregisterClass(m_className,m_instance);
-	EDITOR_INFO("Unregistering Window");
 	DestroyWindow(m_handle);
-	EDITOR_INFO("Destroying Window");
 }
 
 const int Engine::Core::Window::GetInitialWidth() const
@@ -139,6 +136,12 @@ LRESULT Engine::Core::Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LP
 	//Raise Event For The Messages We're Interested In
 	switch (msg)
 	{
+	case WM_CLOSE:
+		if (MessageBox(m_handle, L"Really quit?", L"Chilli Engine", MB_OKCANCEL) == IDOK)
+		{
+			PostQuitMessage(0);
+		}
+		return 0;
 	case WM_SETFOCUS:
 	case WM_KILLFOCUS:
 	case WM_MOUSEMOVE:
@@ -164,7 +167,6 @@ LRESULT Engine::Core::Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LP
 		[[fallthrough]];
 	case WM_SIZE:
 	case WM_MOUSELEAVE:
-	case WM_CLOSE:
 		Event* e = new Event(data);
 		m_eventSystem->Push(e);
 		break;

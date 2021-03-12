@@ -1,48 +1,45 @@
 #include "ChilliEngine.h"
+#include <iostream>
+#include <Windows.h>
 
-ChilliEngine::ChilliEngine(ImGuiContext* context)
+void ChilliEngine::Update()
 {
-	ImGui::SetCurrentContext(context);
-
-	//Enable Logging
-	Engine::Core::Logger::Init();
-
-
+	while (m_window->Update())
+	{
+		m_timerSystem->ProcessFrame();
+		m_eventSystem->ProcessFrame();
+		m_renderingSystem->ProcessFrame();
+		
+	}
 }
 
-ChilliEngine::~ChilliEngine()
-{
-	ImGui::DestroyContext();
-}
 
-bool ChilliEngine::Init(HINSTANCE& hInstance)
+ChilliEngine::ChilliEngine(HINSTANCE& hInstance)
 {
+	AllocConsole();
+
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui::StyleColorsDark();
+	
 	//Create Systems
 	if (m_resolver = std::make_shared<DependencyResolver<EngineSystem>>(); m_resolver == nullptr)
-	{
 		ENGINE_ERROR("Failed To Initialize Engine System Resolver");
-		return false;
-	}
+		
 
 	if (m_eventSystem = std::make_shared<EventSystem>(m_resolver); m_eventSystem == nullptr)
-	{
 		ENGINE_ERROR("Failed To Initialize Event System");
-		return false;
-	}
+		
 
 	if (m_timerSystem = std::make_shared<Timer>(m_resolver); m_timerSystem == nullptr)
-	{
 		ENGINE_ERROR("Failed To Initialize Timer System");
-		return false;
-	}
-
-	if (m_window = std::make_unique<Window>(hInstance,m_eventSystem, false ); m_window == nullptr)
-	{
+		
+	if (m_window = std::make_unique<Window>(hInstance, m_eventSystem, false); m_window == nullptr)
 		ENGINE_ERROR("Failed To Create Window");
-		return false;
-	}
+		
 
 	m_renderingSystem = std::make_shared<RenderingSystem>(m_resolver, m_window->GetInitialWidth(), m_window->GetInitialHeight(), m_window->GetHandle());
+
 
 	//Register Dependencies	
 	m_resolver->Add(m_eventSystem);
@@ -52,25 +49,21 @@ bool ChilliEngine::Init(HINSTANCE& hInstance)
 	//Initialize SubSystems As Required
 
 	if (!m_renderingSystem->Init())
-	{
 		ENGINE_ERROR("Failed To Initialize Rendering System");
-		return false;
-	}
-
-	ENGINE_INFO("Chilli Engine Initialized Successfully");
-	return true;
 }
 
-bool ChilliEngine::Update()
+ChilliEngine::~ChilliEngine()
 {
-	while (m_window->Update())
-	{
-		m_timerSystem->ProcessFrame();
-		m_eventSystem->ProcessFrame();
-		m_renderingSystem->ProcessFrame();
-		return true;
-	}
-	return false;
+	FreeConsole();
+	m_eventSystem.reset();
+	m_renderingSystem.reset();
+	m_resolver->Flush();
+	m_resolver.reset();
+	m_timerSystem.reset();
+	m_window.reset();
+	ImGui::DestroyContext();
 }
+
+
 
 

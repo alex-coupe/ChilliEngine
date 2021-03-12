@@ -1,28 +1,23 @@
 #include "Application.h"
+#include <iostream>
 
-
-bool Application::Init(HINSTANCE& hInstance)
+Application::Application(HINSTANCE& hInstance)
 {
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGui::StyleColorsDark();
-
-	ImGuiContext* context = ImGui::GetCurrentContext();
-
-	m_engine = std::make_unique<ChilliEngine>(context);
-	if (m_engine->Init(hInstance))
-	{
-		EDITOR_INFO("Editor Initialized Successfully");
-		return true;
-	}
-	EDITOR_INFO("Editor Could Not Initialize");
-	return false;
+	m_engine = std::make_unique<ChilliEngine>(hInstance);
 }
 
-bool Application::Update()
+Application::~Application()
+{
+	m_engine.reset();
+}
+
+void Application::Update()
 {
 	return m_engine->Update();
 }
+
+
+
 
 
 

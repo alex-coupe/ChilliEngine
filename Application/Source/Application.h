@@ -4,8 +4,9 @@
 
 class Application {
 public:
-	bool Init(HINSTANCE& hInstance);
-	bool Update();
+	Application(HINSTANCE& hInstance);
+	~Application();
+	void Update();
 private:
 	std::unique_ptr<ChilliEngine> m_engine = nullptr;
 };

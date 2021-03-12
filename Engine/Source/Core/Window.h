@@ -2,8 +2,8 @@
 #include "ChilliDefinitions.h"
 #include <Windows.h>
 #include "EventSystem.h"
-#include "Logger.h"
 #include "EngineSystem.h"
+
 #include "../ImGui/imgui_impl_win32.h"
 #include "../ImGui/imgui.h"
 

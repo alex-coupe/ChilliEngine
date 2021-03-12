@@ -1,15 +1,22 @@
 #include "RenderingSystem.h"
 #include <Windows.h>
+#include "VertexTypes.h"
+
 #include "../Core/EventSystem.h"
 #include "../Core/Window.h"
-#include "VertexTypes.h"
-#include "../Core/Logger.h"
+
 #include "../ImGui/imgui_impl_dx11.h"
 #include "../ImGui/imgui_impl_win32.h"
+
 Engine::Rendering::RenderingSystem::RenderingSystem(std::shared_ptr<DependencyResolver<EngineSystem>> resolver, int64_t width, int64_t height, HWND handle)
 	: EngineSystem(resolver)
 {
 	m_renderer = std::make_shared<Renderer>(handle, width, height);
+}
+
+Engine::Rendering::RenderingSystem::~RenderingSystem()
+{
+	m_renderer.reset();
 }
 
 int Engine::Rendering::RenderingSystem::GetHash()
