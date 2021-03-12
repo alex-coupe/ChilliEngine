@@ -7,6 +7,7 @@
 #include "InputLayout.h"
 #include "Topology.h"
 #include "IndexBuffer.h"
+#include "ConstantBuffer.h"
 
 namespace Engine::Rendering {
 
@@ -18,7 +19,7 @@ namespace Engine::Rendering {
 		int GetHash() override;
 		bool Init();
 		void ProcessFrame()override;
-		void CreateTestTriangle();
+		void CreateTestCube();
 	private:
 		std::shared_ptr<Renderer> m_renderer;
 	};

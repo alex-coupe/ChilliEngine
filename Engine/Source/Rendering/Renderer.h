@@ -19,6 +19,8 @@ namespace Engine::Rendering {
 		void Draw(UINT vertexCount, UINT startVertex)const;
 		void DrawIndexed(UINT count)const;
 		void HandleWindowResize(int64_t width, int64_t height);
+		int64_t GetWindowWidth()const;
+		int64_t GetWindowHeight()const;
 		Microsoft::WRL::ComPtr<ID3D11Device> GetDevice();
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetContext();
 		void GetDXError();

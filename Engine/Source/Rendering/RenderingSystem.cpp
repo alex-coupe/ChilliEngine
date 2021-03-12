@@ -49,18 +49,22 @@ void Engine::Rendering::RenderingSystem::ProcessFrame()
 		ImGui::End();
 
 	}
-	CreateTestTriangle();
+	CreateTestCube();
 	m_renderer->EndFrame();
 	
 }
 
-void Engine::Rendering::RenderingSystem::CreateTestTriangle()
+void Engine::Rendering::RenderingSystem::CreateTestCube()
 {
 	std::vector<VertexPos> vertices = {
-		{{ 0.0f, 0.5f,0.0f}},
-		{{ 0.5f, -0.5f,0.0f}},
-		{{-0.5f,-0.5f,0.0f}}
-		
+		{{ -1.0f,-1.0f,-1.0f }},
+		{{ 1.0f,-1.0f,-1.0f }},
+		{{ -1.0f,1.0f,-1.0f }},
+		{{ 1.0f,1.0f, -1.0f }},
+		{{ -1.0f,-1.0f,1.0f }},
+		{{ 1.0f,-1.0f,1.0f }},
+		{{ -1.0f,1.0f,1.0f }},
+		{{ 1.0f,1.0f,1.0f }},
 		
 	};
 
@@ -85,11 +89,26 @@ void Engine::Rendering::RenderingSystem::CreateTestTriangle()
 	topology.Bind();
 
 	std::vector<unsigned short> indices = {
-		0,1,2
+		0,2,1, 2,3,1,
+		1,3,5, 3,7,5,
+		2,6,3, 3,6,7,
+		4,5,7, 4,7,6,
+		0,4,2, 2,4,6,
+		0,1,4, 1,5,4
+
 	};
 
 	IndexBuffer indexBuffer(indices, m_renderer);
 	indexBuffer.Bind();
+
+	DirectX::XMMATRIX transform = DirectX::XMMatrixTranspose(
+		DirectX::XMMatrixRotationRollPitchYaw(1.0f, 0.0f, 0.0f) *
+		DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f) * 
+		DirectX::XMMatrixPerspectiveLH(1.0f, m_renderer->GetWindowWidth() / m_renderer->GetWindowHeight(), 0.5f, 100.0f)
+	);
+
+	ConstantBuffer constantBuffer(ConstantBufferType::Vertex, transform, m_renderer);
+	constantBuffer.Bind();
 
 	m_renderer->DrawIndexed(indexBuffer.GetCount());
 	

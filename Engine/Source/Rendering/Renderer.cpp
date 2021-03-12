@@ -149,6 +149,16 @@ void Engine::Rendering::Renderer::HandleWindowResize(int64_t width, int64_t heig
 	
 }
 
+int64_t Engine::Rendering::Renderer::GetWindowWidth() const
+{
+	return m_width;
+}
+
+int64_t Engine::Rendering::Renderer::GetWindowHeight() const
+{
+	return m_height;
+}
+
 Microsoft::WRL::ComPtr<ID3D11Device> Engine::Rendering::Renderer::GetDevice()
 {
 	return m_device;
