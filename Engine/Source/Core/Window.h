@@ -13,17 +13,15 @@ namespace Engine::Core {
 		Window(HINSTANCE& instance, std::shared_ptr<EventSystem> event_system, bool fullscreen);
 		static LRESULT CALLBACK WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam);
 		HWND GetHandle();
-		int64_t GetWidth()const;
-		int64_t GetHeight()const;
 		bool Update();
-		void DisplayWindow();
 		~Window();
+		const int GetInitialWidth()const;
+		const int GetInitialHeight()const;
 	private:
-		
 		HINSTANCE& m_instance;
 		HWND m_handle = nullptr;
-		int64_t m_width;
-		int64_t m_height;
+		int m_initialWidth;
+		int m_initialHeight;
 		static Window* m_pInstance;
 		LRESULT CALLBACK MyWinProc(HWND, UINT, WPARAM, LPARAM);
 		static constexpr wchar_t title[] = L"Chilli Engine";

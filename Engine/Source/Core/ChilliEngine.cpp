@@ -42,7 +42,7 @@ bool ChilliEngine::Init(HINSTANCE& hInstance)
 		return false;
 	}
 
-	m_renderingSystem = std::make_shared<RenderingSystem>(m_resolver, m_window->GetWidth(), m_window->GetHeight(), m_window->GetHandle());
+	m_renderingSystem = std::make_shared<RenderingSystem>(m_resolver, m_window->GetInitialWidth(), m_window->GetInitialHeight(), m_window->GetHandle());
 
 	//Register Dependencies	
 	m_resolver->Add(m_eventSystem);

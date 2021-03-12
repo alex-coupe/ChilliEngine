@@ -104,6 +104,7 @@ void Engine::Rendering::RenderingSystem::CreateTestCube()
 	float aspectRatio = static_cast<float>(m_renderer->GetWindowHeight()) /static_cast<float>(m_renderer->GetWindowWidth());
 
 	DirectX::XMMATRIX transform = DirectX::XMMatrixTranspose(
+		DirectX::XMMatrixRotationRollPitchYaw(1.0f, 0.0f, 0.0f)*
 		DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f) * 
 		DirectX::XMMatrixPerspectiveLH(1.0f, aspectRatio,  0.5f, 100.0f)
 	);

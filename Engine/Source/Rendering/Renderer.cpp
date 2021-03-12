@@ -141,8 +141,85 @@ void Engine::Rendering::Renderer::HandleWindowResize(int64_t width, int64_t heig
 {
 	if (m_width != width || m_height != height)
 	{
-		//m_width = width;
-		//m_height = height;
+		m_width = width;
+		m_height = height;
+
+		m_context->OMSetRenderTargets(0, 0, 0);
+		m_bufferTexture->Release();
+		m_backBuffer->Release();
+		m_depthStencil->Release();
+
+		if (FAILED(m_hresult = m_swapChain->ResizeBuffers(0,m_width,m_height,DXGI_FORMAT_UNKNOWN,0)))
+		{
+			GetDXError();
+		}
+
+		ID3D11Texture2D* pBuffer;
+		if (FAILED(m_hresult = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBuffer)))
+		{
+			GetDXError();
+		}
+
+		if (FAILED(m_hresult = m_device->CreateRenderTargetView(m_bufferTexture.Get(), NULL, &m_backBuffer)))
+		{
+			GetDXError();
+		}
+
+		D3D11_DEPTH_STENCIL_DESC depth_stencil = {};
+
+		depth_stencil.DepthEnable = TRUE;
+		depth_stencil.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		depth_stencil.DepthFunc = D3D11_COMPARISON_LESS;
+
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
+
+		if (FAILED(m_hresult = m_device->CreateDepthStencilState(&depth_stencil, depthStencilState.GetAddressOf()))) {
+			GetDXError();
+		}
+
+		m_context->OMSetDepthStencilState(depthStencilState.Get(), 1u);
+
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> depth_texture;
+		D3D11_TEXTURE2D_DESC depth_desc = {};
+		depth_desc.Usage = D3D11_USAGE_DEFAULT;
+		depth_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		depth_desc.Width = static_cast<unsigned int>(m_width);
+		depth_desc.Height = static_cast<unsigned int>(m_height);
+		depth_desc.MipLevels = 1u;
+		depth_desc.ArraySize = 1u;
+		depth_desc.Format = DXGI_FORMAT_D32_FLOAT;
+		depth_desc.SampleDesc.Count = 1u;
+		depth_desc.SampleDesc.Quality = 0u;
+
+		if (FAILED(m_hresult = m_device->CreateTexture2D(&depth_desc, nullptr, depth_texture.GetAddressOf())))
+		{
+			GetDXError();
+		}
+
+		D3D11_DEPTH_STENCIL_VIEW_DESC depth_view = {};
+		depth_view.Format = DXGI_FORMAT_D32_FLOAT;
+		depth_view.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		depth_view.Texture2D.MipSlice = 0u;
+
+		if (FAILED(m_hresult = m_device->CreateDepthStencilView(depth_texture.Get(), &depth_view, m_depthStencil.GetAddressOf())))
+		{
+			GetDXError();
+		}
+
+		m_context->OMSetRenderTargets(1, m_backBuffer.GetAddressOf(),m_depthStencil.Get());
+
+		//Create the Viewport
+		D3D11_VIEWPORT view_port = {};
+
+		view_port.TopLeftX = 0;
+		view_port.TopLeftY = 0;
+		view_port.MinDepth = 0;
+		view_port.MaxDepth = 1;
+		view_port.Width = static_cast<float>(m_width);
+		view_port.Height = static_cast<float>(m_height);
+
+		//Set the Viewport
+		m_context->RSSetViewports(1, &view_port);
 
 		ENGINE_INFO("Window Resize Handled By Renderer - Width: {} Height: {}", m_width, m_height);
 	}

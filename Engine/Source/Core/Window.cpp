@@ -1,5 +1,5 @@
 #include "Window.h"
-
+#include <cassert>
 Engine::Core::Window* Engine::Core::Window::m_pInstance = nullptr;
 
 Engine::Core::Window::Window(HINSTANCE& instance, std::shared_ptr<EventSystem> event_system, bool fullscreen)
@@ -25,13 +25,18 @@ Engine::Core::Window::Window(HINSTANCE& instance, std::shared_ptr<EventSystem> e
 
 	EDITOR_INFO("Window Registered Successfully");
 
+	//Grab Desktop Resolution
+	RECT desktop;
+	const HWND hDesktop = GetDesktopWindow();
+	GetWindowRect(hDesktop, &desktop);
+
 	m_handle = CreateWindowEx(
 		WS_EX_CLIENTEDGE,
 		m_className,
 		title,
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT,CW_USEDEFAULT,
-		CW_USEDEFAULT, CW_USEDEFAULT,NULL,NULL,m_instance,NULL);
+		desktop.right, desktop.bottom,NULL,NULL,m_instance,NULL);
 
 
 	if (!m_handle)
@@ -42,23 +47,19 @@ Engine::Core::Window::Window(HINSTANCE& instance, std::shared_ptr<EventSystem> e
 	{
 		EDITOR_INFO("Window Created Successfully");
 		
+		unsigned int width = 0;
+		unsigned int height = 0;
 
 		RECT rect;
 		if (GetWindowRect(m_handle, &rect))
 		{
-			m_width = static_cast<uint64_t>(rect.right) - rect.left;
-			m_height = static_cast<uint64_t>(rect.bottom) - rect.top;
+			width = rect.right - rect.left;
+			height = rect.bottom - rect.top;
 		}
 
-		RECT wr;
-		wr.left = 100;
-		wr.right = m_width + wr.left;
-		wr.top = 100;
-		wr.bottom = m_height + wr.top;
-		if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE) == 0)
-		{
-			ENGINE_ERROR("Adjust Window Rect Error");
-		}
+		assert(width != 0 && height != 0);
+		m_initialWidth = width;
+		m_initialHeight = height;
 
 		ShowWindow(m_handle, SW_SHOWDEFAULT);
 		
@@ -80,15 +81,7 @@ LRESULT Engine::Core::Window::WndProc(HWND handle, UINT msg, WPARAM wParam, LPAR
 	return m_handle;
 }
 
- int64_t Engine::Core::Window::GetWidth() const
- {
-	 return m_width;
- }
 
- int64_t Engine::Core::Window::GetHeight() const
- {
-	 return m_height;
- }
 
 bool Engine::Core::Window::Update()
 {
@@ -111,6 +104,16 @@ Engine::Core::Window::~Window()
 	EDITOR_INFO("Unregistering Window");
 	DestroyWindow(m_handle);
 	EDITOR_INFO("Destroying Window");
+}
+
+const int Engine::Core::Window::GetInitialWidth() const
+{
+	return m_initialWidth;
+}
+
+const int Engine::Core::Window::GetInitialHeight() const
+{
+	return m_initialHeight;
 }
 
 LRESULT Engine::Core::Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -159,7 +162,7 @@ LRESULT Engine::Core::Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LP
 			break;
 		}
 		[[fallthrough]];
-	case WM_MOVE:
+	case WM_SIZE:
 	case WM_MOUSELEAVE:
 	case WM_CLOSE:
 		Event* e = new Event(data);
