@@ -36,7 +36,7 @@ bool ChilliEngine::Init(HINSTANCE& hInstance)
 		return false;
 	}
 
-	if (m_window = std::make_unique<Window>(hInstance,m_eventSystem, 1920,1080 ); m_window == nullptr)
+	if (m_window = std::make_unique<Window>(hInstance,m_eventSystem, false ); m_window == nullptr)
 	{
 		ENGINE_ERROR("Failed To Create Window");
 		return false;

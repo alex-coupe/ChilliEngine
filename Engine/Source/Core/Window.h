@@ -10,7 +10,7 @@
 namespace Engine::Core {
 	class Window {
 	public:
-		Window(HINSTANCE& instance, std::shared_ptr<EventSystem> event_system, int64_t width, int64_t height);
+		Window(HINSTANCE& instance, std::shared_ptr<EventSystem> event_system, bool fullscreen);
 		static LRESULT CALLBACK WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam);
 		HWND GetHandle();
 		int64_t GetWidth()const;

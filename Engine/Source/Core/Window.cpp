@@ -2,8 +2,8 @@
 
 Engine::Core::Window* Engine::Core::Window::m_pInstance = nullptr;
 
-Engine::Core::Window::Window(HINSTANCE& instance, std::shared_ptr<EventSystem> event_system, int64_t width, int64_t height)
-	:m_instance(instance), m_width(width), m_height(height), m_eventSystem(event_system)
+Engine::Core::Window::Window(HINSTANCE& instance, std::shared_ptr<EventSystem> event_system, bool fullscreen)
+	:m_instance(instance), m_eventSystem(event_system)
 {
 	m_pInstance = this;
 	WNDCLASSEX wndclass = {};
@@ -31,7 +31,7 @@ Engine::Core::Window::Window(HINSTANCE& instance, std::shared_ptr<EventSystem> e
 		title,
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT,CW_USEDEFAULT,
-		static_cast<int>(m_width), static_cast<int>(m_height),NULL,NULL,m_instance,NULL);
+		CW_USEDEFAULT, CW_USEDEFAULT,NULL,NULL,m_instance,NULL);
 
 
 	if (!m_handle)
@@ -42,12 +42,25 @@ Engine::Core::Window::Window(HINSTANCE& instance, std::shared_ptr<EventSystem> e
 	{
 		EDITOR_INFO("Window Created Successfully");
 		
-		RECT rect;
-		GetWindowRect(m_handle, &rect);		
-	    m_width = static_cast<int64_t>(rect.right) - rect.left;
-	    m_height = static_cast<int64_t>(rect.bottom) - rect.top;
 
-		ShowWindow(m_handle, SW_MAXIMIZE);
+		RECT rect;
+		if (GetWindowRect(m_handle, &rect))
+		{
+			m_width = static_cast<uint64_t>(rect.right) - rect.left;
+			m_height = static_cast<uint64_t>(rect.bottom) - rect.top;
+		}
+
+		RECT wr;
+		wr.left = 100;
+		wr.right = m_width + wr.left;
+		wr.top = 100;
+		wr.bottom = m_height + wr.top;
+		if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE) == 0)
+		{
+			ENGINE_ERROR("Adjust Window Rect Error");
+		}
+
+		ShowWindow(m_handle, SW_SHOWDEFAULT);
 		
 		
 		ImGui_ImplWin32_Init(m_handle);

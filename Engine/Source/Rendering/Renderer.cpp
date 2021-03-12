@@ -141,8 +141,8 @@ void Engine::Rendering::Renderer::HandleWindowResize(int64_t width, int64_t heig
 {
 	if (m_width != width || m_height != height)
 	{
-		m_width = width;
-		m_height = height;
+		//m_width = width;
+		//m_height = height;
 
 		ENGINE_INFO("Window Resize Handled By Renderer - Width: {} Height: {}", m_width, m_height);
 	}
