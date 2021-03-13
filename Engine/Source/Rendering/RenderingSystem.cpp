@@ -19,7 +19,7 @@ Engine::Rendering::RenderingSystem::~RenderingSystem()
 	m_renderer.reset();
 }
 
-int Engine::Rendering::RenderingSystem::GetHash()
+int Engine::Rendering::RenderingSystem::GetHash()const
 {
     return static_cast<int>(Engine::Core::SystemTypes::Renderer);
 	
@@ -31,12 +31,12 @@ bool Engine::Rendering::RenderingSystem::Init()
 
 	if (m_eventSystem == nullptr)
 	{
-		ENGINE_ERROR("Failed To Resolve Event System Dependency");
+		
 		return false;
 	}
 
 	m_eventSystem->Subscribe({ EventType::WindowResized },
-		std::bind(&Renderer::HandleWindowResize, m_renderer, std::ref(m_eventSystem->m_data.screen_width), std::ref(m_eventSystem->m_data.screen_height)));
+		std::bind(&Renderer::HandleWindowResize, m_renderer, std::ref(m_eventSystem->GetScreenWidth()), std::ref(m_eventSystem->GetScreenHeight())));
 
 	return true;
 }

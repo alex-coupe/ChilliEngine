@@ -25,7 +25,8 @@ namespace Engine::Rendering {
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetContext();
 		void GetDXError();
 	private:
-	
+		void SetUpD3D();
+		void ShutdownD3D();
 		Microsoft::WRL::ComPtr<IDXGISwapChain> m_swapChain;
 		Microsoft::WRL::ComPtr<ID3D11Device> m_device;
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_context;

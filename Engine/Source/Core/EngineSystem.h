@@ -10,9 +10,9 @@ namespace Engine::Core {
 
 	class CHILLI_API EngineSystem {
 	public:
-		EngineSystem(std::shared_ptr<DependencyResolver<EngineSystem>> m_resolver) : m_resolver(m_resolver)
+		EngineSystem(const std::shared_ptr<DependencyResolver<EngineSystem>>& m_resolver) : m_resolver(m_resolver)
 		{}
-		virtual int GetHash() = 0;		
+		virtual int GetHash() const = 0;		
 		virtual ~EngineSystem() {};
 		virtual void ProcessFrame() = 0;
 	protected:

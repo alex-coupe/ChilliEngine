@@ -13,7 +13,7 @@ namespace Engine::Rendering {
 	class VertexBuffer {
 	public:
 		template <typename T>
-		VertexBuffer(const std::vector<T>& vertices, std::shared_ptr<Renderer> renderer)
+		VertexBuffer(const std::vector<T>& vertices, const std::shared_ptr<Renderer>& renderer)
 			:m_renderer(renderer), m_stride(sizeof(T))
 		{
 			D3D11_BUFFER_DESC vertex_buffer = {};

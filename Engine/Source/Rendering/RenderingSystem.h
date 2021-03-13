@@ -17,7 +17,7 @@ namespace Engine::Rendering {
 	public:
 		RenderingSystem(std::shared_ptr<DependencyResolver<EngineSystem>> resolver, int64_t width, int64_t height, HWND handle);
 		~RenderingSystem();
-		int GetHash() override;
+		int GetHash() const override;
 		bool Init();
 		void ProcessFrame()override;
 		void CreateTestCube();

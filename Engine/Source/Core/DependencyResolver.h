@@ -13,7 +13,7 @@ namespace Engine::Core {
 		std::shared_ptr<U> ResolveDependency()
 		{	
 			
-			for (const auto& item : m_dependencies)
+			for (auto& item : m_dependencies)
 			{
 				if (std::shared_ptr<U> dependency = std::dynamic_pointer_cast<U>(item); dependency != nullptr)
 					return dependency;
@@ -26,7 +26,7 @@ namespace Engine::Core {
 		std::shared_ptr<U> ResolveDependency(const char* name)
 		{
 
-			for (const auto& item : m_dependencies)
+			for (auto& item : m_dependencies)
 			{
 				if (std::shared_ptr<U> dependency = std::dynamic_pointer_cast<U>(item); dependency != nullptr)
 					return dependency;
@@ -35,12 +35,12 @@ namespace Engine::Core {
 			return nullptr;
 		}
 
-		void Add(std::shared_ptr<T> in)
+		void Add(const std::shared_ptr<T>& in)
 		{
 			m_dependencies.push_back(in);
 		}
 
-		void Add(std::shared_ptr<T> in, const char* name)
+		void Add(const std::shared_ptr<T>& in, const char* name)
 		{
 			m_dependencies.push_back(in);
 			m_cache.emplace( name,m_dependencies.size() - 1 );

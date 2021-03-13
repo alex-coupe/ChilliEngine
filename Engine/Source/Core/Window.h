@@ -10,7 +10,7 @@
 namespace Engine::Core {
 	class Window {
 	public:
-		Window(HINSTANCE& instance, std::shared_ptr<EventSystem> event_system, bool fullscreen);
+		Window(HINSTANCE& instance, const std::shared_ptr<EventSystem>& event_system, bool fullscreen);
 		static LRESULT CALLBACK WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam);
 		HWND GetHandle();
 		bool Update();
@@ -20,8 +20,8 @@ namespace Engine::Core {
 	private:
 		HINSTANCE& m_instance;
 		HWND m_handle = nullptr;
-		int m_initialWidth;
-		int m_initialHeight;
+		int m_initialWidth = 0;
+		int m_initialHeight = 0;
 		static Window* m_pInstance;
 		LRESULT CALLBACK MyWinProc(HWND, UINT, WPARAM, LPARAM);
 		static constexpr wchar_t title[] = L"Chilli Engine";

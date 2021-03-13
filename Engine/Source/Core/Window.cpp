@@ -2,7 +2,7 @@
 #include <cassert>
 Engine::Core::Window* Engine::Core::Window::m_pInstance = nullptr;
 
-Engine::Core::Window::Window(HINSTANCE& instance, std::shared_ptr<EventSystem> event_system, bool fullscreen)
+Engine::Core::Window::Window(HINSTANCE& instance, const std::shared_ptr<EventSystem>& event_system, bool fullscreen)
 	:m_instance(instance), m_eventSystem(event_system)
 {
 	m_pInstance = this;
@@ -21,7 +21,7 @@ Engine::Core::Window::Window(HINSTANCE& instance, std::shared_ptr<EventSystem> e
 	wndclass.lpszMenuName = nullptr;
 	
 	if (!RegisterClassEx(&wndclass))
-		ENGINE_ERROR("Failed To Register Window");
+		MessageBox(m_handle, L"Failed To Register Window", L"Chilli Error", MB_ICONWARNING | MB_OK);
 
 	//Grab Desktop Resolution
 	RECT desktop;
@@ -39,7 +39,7 @@ Engine::Core::Window::Window(HINSTANCE& instance, std::shared_ptr<EventSystem> e
 
 	if (!m_handle)
 	{
-		ENGINE_ERROR("Failed To Create Window");
+		MessageBox(m_handle, L"Failed To Create Handle", L"Chilli Error", MB_ICONWARNING | MB_OK);
 		return;
 	}
 		
@@ -60,9 +60,7 @@ Engine::Core::Window::Window(HINSTANCE& instance, std::shared_ptr<EventSystem> e
 		ShowWindow(m_handle, SW_SHOWDEFAULT);
 		
 		
-		ImGui_ImplWin32_Init(m_handle);
-	
-	
+		ImGui_ImplWin32_Init(m_handle);	
 }
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -92,8 +90,6 @@ bool Engine::Core::Window::Update()
 	}
 
 	return true;
-
-	
 }
 
 Engine::Core::Window::~Window()
@@ -127,11 +123,7 @@ LRESULT Engine::Core::Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LP
 		io = &ImGui::GetIO();
 	}
 	
-	Engine::Core::EventData data = {};
-	data.msg = msg;
-	data.lparam = lParam;
-	data.wparam = wParam;
-	data.handle = handle;
+	
 
 	//Raise Event For The Messages We're Interested In
 	switch (msg)
@@ -167,7 +159,11 @@ LRESULT Engine::Core::Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LP
 		[[fallthrough]];
 	case WM_SIZE:
 	case WM_MOUSELEAVE:
-		Event* e = new Event(data);
+		EventData* const e = new EventData{};
+		e->msg = msg;
+		e->lparam = lParam;
+		e->wparam = wParam;
+		e->handle = handle;
 		m_eventSystem->Push(e);
 		break;
 	}

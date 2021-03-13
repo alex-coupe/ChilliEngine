@@ -4,9 +4,11 @@
 #include "Timer.h"
 #include "DependencyResolver.h"
 #include "EngineSystem.h"
+#include "Window.h"
+
 #include "../ImGui/imgui.h"
 #include "../Rendering/RenderingSystem.h"
-#include "Window.h"
+
 
 using namespace Engine::Core;
 using namespace Engine::Rendering;
@@ -16,6 +18,9 @@ class CHILLI_API ChilliEngine {
 public:
 	ChilliEngine(HINSTANCE& hInstance);
 	~ChilliEngine();
+	ChilliEngine(const ChilliEngine&) = delete;
+	ChilliEngine& operator=(const ChilliEngine&) = delete;
+	ChilliEngine(ChilliEngine&&) = default;
 	void Update();
 private:
 	std::shared_ptr<EventSystem> m_eventSystem;

@@ -12,12 +12,3 @@
 #ifndef NOMINMAX
 	#define NOMINMAX
 #endif
-
-#ifdef DEBUG
-#include <iostream>
-#include <stdlib.h>
-#include <crtdbg.h>
-#define _CRTDBG_MAP_ALLOC
-#define ENGINE_ERROR(...) std::cout << "[ERROR] " << (__VA_ARGS__)
-#define ENGINE_INFO(...) std::cout << (__VA_ARGS__)
-#endif

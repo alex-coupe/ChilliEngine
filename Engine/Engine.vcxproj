@@ -167,7 +167,6 @@
     <ClInclude Include="Source\Core\ChilliEngine.h" />
     <ClInclude Include="Source\Core\DependencyResolver.h" />
     <ClInclude Include="Source\Core\EngineSystem.h" />
-    <ClInclude Include="Source\Core\Event.h" />
     <ClInclude Include="Source\Core\EventSystem.h" />
     <ClInclude Include="Source\Core\Timer.h" />
     <ClInclude Include="Source\Core\Window.h" />
@@ -191,7 +190,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\ChilliEngine.cpp" />
-    <ClCompile Include="Source\Core\Event.cpp" />
     <ClCompile Include="Source\Core\EventSystem.cpp" />
     <ClCompile Include="Source\Core\Timer.cpp" />
     <ClCompile Include="Source\Core\Window.cpp" />
