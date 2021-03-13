@@ -1,8 +1,8 @@
 #pragma once
 #include "ChilliDefinitions.h"
 #include <Windows.h>
-#include "EventSystem.h"
-#include "EngineSystem.h"
+#include "Event.h"
+#include "SubSystem.h"
 
 #include "../ImGui/imgui_impl_win32.h"
 #include "../ImGui/imgui.h"
@@ -10,7 +10,7 @@
 namespace Engine::Core {
 	class Window {
 	public:
-		Window(HINSTANCE& instance, const std::shared_ptr<EventSystem>& event_system, bool fullscreen);
+		Window(HINSTANCE& instance, const std::shared_ptr<Event>& event_in, bool fullscreen);
 		static LRESULT CALLBACK WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam);
 		HWND GetHandle();
 		bool Update();
@@ -26,7 +26,7 @@ namespace Engine::Core {
 		LRESULT CALLBACK MyWinProc(HWND, UINT, WPARAM, LPARAM);
 		static constexpr wchar_t title[] = L"Chilli Engine";
 		static constexpr wchar_t m_className[] = L"WindowClass";
-		std::shared_ptr<EventSystem> m_eventSystem = nullptr;
+		std::shared_ptr<Event> m_event = nullptr;
 	};
 }
 

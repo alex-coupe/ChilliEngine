@@ -6,18 +6,18 @@
 #include <string>
 #include <memory>
 #include <vector>
-#include "Renderer.h"
+#include "Direct3D.h"
 
 namespace Engine::Rendering {
 
 	class CHILLI_API InputLayout {
 	public:
-		InputLayout(const std::vector<D3D11_INPUT_ELEMENT_DESC>& layout, ID3DBlob* vertexByteCode, std::shared_ptr<Renderer> renderer);
-		void Bind();
+		InputLayout(const std::vector<D3D11_INPUT_ELEMENT_DESC>& layout, ID3DBlob* vertexByteCode, const std::shared_ptr<Direct3D>& d3d);
+		void Bind()const;
 	private:
 		Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
 		HRESULT m_hresult = 0;
-		std::shared_ptr<Renderer> m_renderer;
+		std::shared_ptr<Direct3D> m_direct3d;
 	};
 
 }

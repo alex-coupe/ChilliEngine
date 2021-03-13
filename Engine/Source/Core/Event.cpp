@@ -1,4 +1,4 @@
-#include "EventSystem.h"
+#include "Event.h"
 
 
 Engine::Core::EventType operator |(Engine::Core::EventType lhs, Engine::Core::EventType rhs)
@@ -52,7 +52,7 @@ Engine::Core::EventType& operator &=(Engine::Core::EventType& lhs, Engine::Core:
 	return lhs;
 }
 
-void Engine::Core::EventSystem::ProcessFrame()
+void Engine::Core::Event::ProcessFrame()
 {
 	if (m_eventBuffer.size() > 0)
 	{
@@ -72,7 +72,7 @@ void Engine::Core::EventSystem::ProcessFrame()
 	}
 }
 
-void Engine::Core::EventSystem::TrimBuffer()
+void Engine::Core::Event::TrimBuffer()
 {
 	while (m_eventBuffer.size() > 16)
 	{
@@ -82,12 +82,12 @@ void Engine::Core::EventSystem::TrimBuffer()
 	}
 }
 
-Engine::Core::EventSystem::EventSystem(const std::shared_ptr<DependencyResolver<EngineSystem>>& m_resolver)
-	: EngineSystem(m_resolver)
+Engine::Core::Event::Event(const std::shared_ptr<DependencyResolver<SubSystem>>& m_resolver)
+	: SubSystem(m_resolver)
 {
 }
 
-Engine::Core::EventSystem::~EventSystem()
+Engine::Core::Event::~Event()
 {
 	while (!m_eventBuffer.empty())
 	{
@@ -97,12 +97,12 @@ Engine::Core::EventSystem::~EventSystem()
 	}
 }
 
-int Engine::Core::EventSystem::GetHash()const
+int Engine::Core::Event::GetHash()const
 {
 	return static_cast<int>(SystemTypes::EventSystem);
 }
 
-void Engine::Core::EventSystem::ClearBuffer()
+void Engine::Core::Event::ClearBuffer()
 {
 	while (!m_eventBuffer.empty())
 	{
@@ -112,13 +112,13 @@ void Engine::Core::EventSystem::ClearBuffer()
 	}
 }
 
-void Engine::Core::EventSystem::Subscribe(const std::vector<EventType>& types, std::function<void()> callback)
+void Engine::Core::Event::Subscribe(const std::vector<EventType>& types, std::function<void()> callback)
 {
 	m_Subscribers.push_back({ types, callback });
 	
 }
 
-void Engine::Core::EventSystem::TranslateEvent(const EventData* const data_in )
+void Engine::Core::Event::TranslateEvent(const EventData* const data_in )
 {
 	switch (static_cast<EventType>(data_in->msg))
 	{
@@ -147,37 +147,22 @@ void Engine::Core::EventSystem::TranslateEvent(const EventData* const data_in )
 	}
 }
 
-int64_t& Engine::Core::EventSystem::GetMouseX()
+const std::pair<const int64_t&, const int64_t&> Engine::Core::Event::GetMousePosition()const
 {
-	return m_mouseX;
+	return std::make_pair(std::cref(m_mouseX),std::cref(m_mouseY));
 }
 
-int64_t& Engine::Core::EventSystem::GetMouseY()
-{
-	return m_mouseY;
-}
-
-unsigned char& Engine::Core::EventSystem::GetKeyCode()
-{
-	return m_keycode;
-}
-
-int64_t& Engine::Core::EventSystem::GetScreenWidth() 
+const int64_t& Engine::Core::Event::GetScreenWidth() const
 {
 	return m_screenWidth;
 }
 
-int64_t& Engine::Core::EventSystem::GetScreenHeight()
+const int64_t& Engine::Core::Event::GetScreenHeight() const
 {
 	return m_screenHeight;
 }
 
-short& Engine::Core::EventSystem::GetWheelDelta()
-{
-	return m_wheelDelta;
-}
-
-void Engine::Core::EventSystem::Push(const EventData* const e)
+void Engine::Core::Event::Push(const EventData* const e)
 {
 	m_eventBuffer.push(e);
 }

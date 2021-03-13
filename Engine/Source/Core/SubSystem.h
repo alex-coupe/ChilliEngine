@@ -8,15 +8,15 @@ namespace Engine::Core {
 		Timer = 1, EventSystem = 2, Renderer = 3, Window = 4
 	};
 
-	class CHILLI_API EngineSystem {
+	class CHILLI_API SubSystem {
 	public:
-		EngineSystem(const std::shared_ptr<DependencyResolver<EngineSystem>>& m_resolver) : m_resolver(m_resolver)
+		SubSystem(const std::shared_ptr<DependencyResolver<SubSystem>>& m_resolver) : m_resolver(m_resolver)
 		{}
 		virtual int GetHash() const = 0;		
-		virtual ~EngineSystem() {};
+		virtual ~SubSystem() {};
 		virtual void ProcessFrame() = 0;
 	protected:
-		std::shared_ptr<DependencyResolver<EngineSystem>> m_resolver;
+		std::shared_ptr<DependencyResolver<SubSystem>> m_resolver;
 	};
 	
 }

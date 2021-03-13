@@ -2,8 +2,8 @@
 #include <cassert>
 Engine::Core::Window* Engine::Core::Window::m_pInstance = nullptr;
 
-Engine::Core::Window::Window(HINSTANCE& instance, const std::shared_ptr<EventSystem>& event_system, bool fullscreen)
-	:m_instance(instance), m_eventSystem(event_system)
+Engine::Core::Window::Window(HINSTANCE& instance, const std::shared_ptr<Event>& event_in, bool fullscreen)
+	:m_instance(instance), m_event(event_in)
 {
 	m_pInstance = this;
 	WNDCLASSEX wndclass = {};
@@ -164,7 +164,7 @@ LRESULT Engine::Core::Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LP
 		e->lparam = lParam;
 		e->wparam = wParam;
 		e->handle = handle;
-		m_eventSystem->Push(e);
+		m_event->Push(e);
 		break;
 	}
 		

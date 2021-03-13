@@ -6,15 +6,15 @@
 #include <DirectXMath.h>
 #include <vector>
 #include <memory>
-#include "Renderer.h"
+#include "Direct3D.h"
 
 namespace Engine::Rendering {
 
 	class VertexBuffer {
 	public:
 		template <typename T>
-		VertexBuffer(const std::vector<T>& vertices, const std::shared_ptr<Renderer>& renderer)
-			:m_renderer(renderer), m_stride(sizeof(T))
+		VertexBuffer(const std::vector<T>& vertices, const std::shared_ptr<Direct3D>& d3d)
+			:m_direct3d(d3d), m_stride(sizeof(T))
 		{
 			D3D11_BUFFER_DESC vertex_buffer = {};
 
@@ -29,16 +29,16 @@ namespace Engine::Rendering {
 
 			buffer_data.pSysMem = vertices.data();
 
-			if (FAILED(m_hresult = m_renderer->GetDevice()->CreateBuffer(&vertex_buffer, &buffer_data, &m_buffer)))
+			if (FAILED(m_hresult = m_direct3d->GetDevice()->CreateBuffer(&vertex_buffer, &buffer_data, &m_buffer)))
 			{
-				m_renderer->GetDXError();
+				m_direct3d->GetDXError();
 			}
 
 		}
 		void Bind();
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_buffer;
-		std::shared_ptr<Renderer> m_renderer;
+		std::shared_ptr<Direct3D> m_direct3d;
 		HRESULT m_hresult = 0;
 		UINT m_stride;
 	};

@@ -1,10 +1,10 @@
 #include "Timer.h"
 
-Engine::Core::Timer::Timer(const std::shared_ptr<DependencyResolver<EngineSystem>>& resolver)
+Engine::Core::Timer::Timer(const std::shared_ptr<DependencyResolver<SubSystem>>& resolver)
 	: m_frameStart(std::chrono::steady_clock::now()),
 	m_frameEnd(std::chrono::steady_clock::now()),
 	m_appStart(std::chrono::steady_clock::now()),
-	EngineSystem(resolver)
+	SubSystem(resolver)
 {}
 
 void Engine::Core::Timer::ProcessFrame()

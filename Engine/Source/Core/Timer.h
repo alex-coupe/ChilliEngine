@@ -1,15 +1,15 @@
 #pragma once
 #include "ChilliDefinitions.h"
 #include <chrono>
-#include "EngineSystem.h"
+#include "SubSystem.h"
 
 #pragma warning(disable:4251)
 namespace Engine::Core {
 
-	class CHILLI_API Timer : public EngineSystem
+	class CHILLI_API Timer : public SubSystem
 	{
 	public:
-		Timer(const std::shared_ptr<DependencyResolver<EngineSystem>>& resolver);
+		Timer(const std::shared_ptr<DependencyResolver<SubSystem>>& resolver);
 		void ProcessFrame()override;
 		int GetHash()const override;
 		const float GetDeltaTime()const;

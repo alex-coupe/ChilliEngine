@@ -2,7 +2,7 @@
 #include "../Core/ChilliDefinitions.h"
 #include <d3d11.h>
 #include <wrl.h>
-#include "Renderer.h"
+#include "Direct3D.h"
 #include <vector>
 #include <memory>
 
@@ -16,8 +16,8 @@ namespace Engine::Rendering {
 	class CHILLI_API ConstantBuffer {
 	public:
 		//Creates Buffer With No Initial Data
-		ConstantBuffer(const ConstantBufferType type,  std::shared_ptr<Renderer> renderer)
-			:m_type(type), m_renderer(renderer)
+		ConstantBuffer(const ConstantBufferType type,  const std::shared_ptr<Direct3D>& d3d)
+			:m_type(type), m_direct3d(d3d)
 		{
 			D3D11_BUFFER_DESC constant_buffer = {};
 			constant_buffer.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -27,14 +27,14 @@ namespace Engine::Rendering {
 			constant_buffer.MiscFlags = 0u;
 			constant_buffer.StructureByteStride = 0u;
 
-			if (FAILED(m_hresult = m_renderer->GetDevice()->CreateBuffer(&constant_buffer, nullptr, m_constantBuffer.GetAddressOf())))
+			if (FAILED(m_hresult = m_direct3d->GetDevice()->CreateBuffer(&constant_buffer, nullptr, m_constantBuffer.GetAddressOf())))
 			{
-				m_renderer->GetDXError();
+				m_direct3d->GetDXError();
 			}
 		} 
 
-		ConstantBuffer(const ConstantBufferType type, const T& data, std::shared_ptr<Renderer> renderer)
-			: m_type(type), m_renderer(renderer)
+		ConstantBuffer(const ConstantBufferType type, const T& data, const std::shared_ptr<Direct3D>& d3d)
+			: m_type(type), m_direct3d(d3d)
 		{
 			D3D11_BUFFER_DESC constant_buffer = {};
 			constant_buffer.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -47,9 +47,9 @@ namespace Engine::Rendering {
 			D3D11_SUBRESOURCE_DATA constant_data = {};
 			constant_data.pSysMem = &data;
 
-			if (FAILED(m_hresult = m_renderer->GetDevice()->CreateBuffer(&constant_buffer, &constant_data, m_constantBuffer.GetAddressOf())))
+			if (FAILED(m_hresult = m_direct3d->GetDevice()->CreateBuffer(&constant_buffer, &constant_data, m_constantBuffer.GetAddressOf())))
 			{
-				m_renderer->GetDXError();
+				m_direct3d->GetDXError();
 			}
 
 		}
@@ -59,10 +59,10 @@ namespace Engine::Rendering {
 			switch (m_type)
 			{
 			case ConstantBufferType::Vertex:
-				m_renderer->GetContext()->VSSetConstantBuffers(slot, 1u, m_constantBuffer.GetAddressOf());
+				m_direct3d->GetContext()->VSSetConstantBuffers(slot, 1u, m_constantBuffer.GetAddressOf());
 				break;
 			case ConstantBufferType::Pixel:
-				m_renderer->GetContext()->PSSetConstantBuffers(slot, 1u, m_constantBuffer.GetAddressOf());
+				m_direct3d->GetContext()->PSSetConstantBuffers(slot, 1u, m_constantBuffer.GetAddressOf());
 				break;
 			}
 		}
@@ -71,19 +71,19 @@ namespace Engine::Rendering {
 		{
 			D3D11_SUBRESOURCE_DATA constant_data;
 
-			if (FAILED(m_hresult = m_renderer->GetContext()->Map(m_constantBuffer.Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &constant_data)))
+			if (FAILED(m_hresult = m_direct3d->GetContext()->Map(m_constantBuffer.Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &constant_data)))
 			{
-				m_renderer->GetDXError();
+				m_direct3d->GetDXError();
 			}
 
 			memcpy(constant_data.pSysMem, &data, sizeof(data));
 
-			m_renderer->GetContext()->Unmap(m_constantBuffer.Get(), 0u);
+			m_direct3d->GetContext()->Unmap(m_constantBuffer.Get(), 0u);
 		}
 
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_constantBuffer;
-		std::shared_ptr<Renderer> m_renderer;
+		std::shared_ptr<Direct3D> m_direct3d;
 		ConstantBufferType m_type;
 		HRESULT m_hresult = 0;
 	};

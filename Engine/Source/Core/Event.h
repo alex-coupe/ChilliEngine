@@ -2,7 +2,7 @@
 #include "ChilliDefinitions.h"
 #include <queue>
 #include <functional>
-#include "EngineSystem.h"
+#include "SubSystem.h"
 #include <Windows.h>
 #pragma warning(disable:4251)
 namespace Engine::Core {
@@ -27,27 +27,24 @@ namespace Engine::Core {
 	EventType& operator |=(EventType& lhs, EventType rhs);
 	EventType& operator &=(EventType& lhs, EventType rhs);
 	
-	class CHILLI_API EventSystem : public EngineSystem { 
+	class CHILLI_API Event : public SubSystem { 
 	public:
-		EventSystem(const std::shared_ptr<DependencyResolver<EngineSystem>>& m_resolver);
-		~EventSystem();
-		EventSystem(const EventSystem&) = delete;
-		EventSystem& operator=(const EventSystem&) = delete;
-		EventSystem(EventSystem&&)noexcept = default;
+		Event(const std::shared_ptr<DependencyResolver<SubSystem>>& m_resolver);
+		~Event();
+		Event(const Event&) = delete;
+		Event& operator=(const Event&) = delete;
+		Event(Event&&)noexcept = default;
 		int GetHash()const override;
-		void ClearBuffer();
 		void ProcessFrame()override;
-		void TrimBuffer();
 		void Push(const EventData*const e);
 		void Subscribe(const std::vector<EventType>& types, std::function<void()> callback);
-		void TranslateEvent(const EventData* const data_in);
-		int64_t& GetMouseX();
-		int64_t& GetMouseY();
-		unsigned char& GetKeyCode();
-		int64_t& GetScreenWidth();
-		int64_t& GetScreenHeight();
-		short& GetWheelDelta();
+		const std::pair<const int64_t&, const int64_t&> GetMousePosition()const;
+		const int64_t& GetScreenWidth()const;
+		const int64_t& GetScreenHeight()const;
 	private:
+		void ClearBuffer();
+		void TrimBuffer();
+		void TranslateEvent(const EventData* const data_in);
 		int64_t m_screenWidth = 0;
 		int64_t m_screenHeight = 0;
 		int64_t m_mouseX = 0;

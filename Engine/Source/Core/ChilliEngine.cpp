@@ -5,9 +5,9 @@ void ChilliEngine::Update()
 {
 	while (m_window->Update())
 	{
-		m_timerSystem->ProcessFrame();
-		m_eventSystem->ProcessFrame();
-		m_renderingSystem->ProcessFrame();
+		m_timer->ProcessFrame();
+		m_events->ProcessFrame();
+		m_renderer->ProcessFrame();
 	}
 }
 
@@ -18,43 +18,43 @@ ChilliEngine::ChilliEngine(HINSTANCE& hInstance)
 	ImGui::StyleColorsDark();
 	
 	//Create Systems
-	if (m_resolver = std::make_shared<DependencyResolver<EngineSystem>>(); m_resolver == nullptr)
+	if (m_resolver = std::make_shared<DependencyResolver<SubSystem>>(); m_resolver == nullptr)
 		MessageBox(m_window->GetHandle(), L"Failed To Initialize Dependency Resolver", L"Chilli Error", MB_ICONWARNING | MB_OK);
 		
 
-	if (m_eventSystem = std::make_shared<EventSystem>(m_resolver); m_eventSystem == nullptr)
+	if (m_events = std::make_shared<Event>(m_resolver); m_events == nullptr)
 		MessageBox(m_window->GetHandle(), L"Failed To Initialize Event System", L"Chilli Error", MB_ICONWARNING | MB_OK);
 		
 
-	if (m_timerSystem = std::make_shared<Timer>(m_resolver); m_timerSystem == nullptr)
+	if (m_timer = std::make_shared<Timer>(m_resolver); m_timer == nullptr)
 		MessageBox(m_window->GetHandle(), L"Failed To Initialize Timing System", L"Chilli Error", MB_ICONWARNING | MB_OK);
 		
-	if (m_window = std::make_unique<Window>(hInstance, m_eventSystem, false); m_window == nullptr)
+	if (m_window = std::make_unique<Window>(hInstance, m_events, false); m_window == nullptr)
 		MessageBox(m_window->GetHandle(), L"Failed To Create Window", L"Chilli Error", MB_ICONWARNING | MB_OK);
 		
 
-	m_renderingSystem = std::make_shared<RenderingSystem>(m_resolver, m_window->GetInitialWidth(), m_window->GetInitialHeight(), m_window->GetHandle());
+	m_renderer = std::make_shared<Renderer>(m_resolver, m_window->GetInitialWidth(), m_window->GetInitialHeight(), m_window->GetHandle());
 
 
 	//Register Dependencies	
-	m_resolver->Add(m_eventSystem);
-	m_resolver->Add(m_timerSystem);
-	m_resolver->Add(m_renderingSystem);
+	m_resolver->Add(m_events);
+	m_resolver->Add(m_timer);
+	m_resolver->Add(m_renderer);
 
 	//Initialize SubSystems As Required
 
-	if (!m_renderingSystem->Init())
+	if (!m_renderer->Init())
 		MessageBox(m_window->GetHandle(), L"Failed To Initialize Renderer", L"Chilli Error", MB_ICONWARNING |MB_ABORTRETRYIGNORE);
 }
 
 ChilliEngine::~ChilliEngine()
 {
-	m_renderingSystem.reset();
+	m_renderer.reset();
 	m_resolver->Flush();
 	m_resolver.reset();
-	m_timerSystem.reset();
+	m_timer.reset();
 	m_window.reset();
-	m_eventSystem.reset();
+	m_events.reset();
 	ImGui::DestroyContext();
 }
 

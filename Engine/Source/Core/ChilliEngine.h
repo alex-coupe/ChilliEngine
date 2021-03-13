@@ -1,13 +1,13 @@
 #pragma once
 #include "ChilliDefinitions.h"
-#include "EventSystem.h"
+#include "Event.h"
 #include "Timer.h"
 #include "DependencyResolver.h"
-#include "EngineSystem.h"
+#include "SubSystem.h"
 #include "Window.h"
 
 #include "../ImGui/imgui.h"
-#include "../Rendering/RenderingSystem.h"
+#include "../Rendering/Renderer.h"
 
 
 using namespace Engine::Core;
@@ -23,9 +23,9 @@ public:
 	ChilliEngine(ChilliEngine&&) = default;
 	void Update();
 private:
-	std::shared_ptr<EventSystem> m_eventSystem;
-	std::shared_ptr<Timer> m_timerSystem;
-	std::shared_ptr<RenderingSystem> m_renderingSystem;
-	std::shared_ptr<DependencyResolver<EngineSystem>> m_resolver;
+	std::shared_ptr<Event> m_events;
+	std::shared_ptr<Timer> m_timer;
+	std::shared_ptr<Renderer> m_renderer;
+	std::shared_ptr<DependencyResolver<SubSystem>> m_resolver;
 	std::unique_ptr<Window> m_window;
 };
