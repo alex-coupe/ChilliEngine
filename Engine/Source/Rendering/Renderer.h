@@ -17,6 +17,9 @@ namespace Engine::Rendering {
 	public:
 		Renderer(const std::shared_ptr<DependencyResolver<SubSystem>>& resolver, int64_t width, int64_t height, HWND handle);
 		~Renderer();
+		Renderer(const Renderer&) = delete;
+		Renderer& operator=(const Renderer&) = delete;
+		Renderer(Renderer&&)noexcept = default;
 		int GetHash() const override;
 		bool Init();
 		void ProcessFrame()override;

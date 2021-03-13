@@ -14,6 +14,9 @@ namespace Engine::Rendering {
 	public:
 		Direct3D(HWND handle, int64_t window_width, int64_t window_height);
 		~Direct3D();
+		Direct3D(const Direct3D&) = delete;
+		Direct3D& operator=(const Direct3D&) = delete;
+		Direct3D(Direct3D&&)noexcept = default;
 		void BeginFrame();
 		void EndFrame();
 		void Draw(UINT vertexCount, UINT startVertex)const;
