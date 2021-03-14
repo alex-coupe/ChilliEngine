@@ -166,6 +166,14 @@
       <Project>{de0ce664-5ed4-47e2-ac00-f0a5658ffcdd}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Materials\awesomeface.png" />
+    <Image Include="Assets\Materials\blending_transparent_window.png" />
+    <Image Include="Assets\Materials\container.jpg" />
+    <Image Include="Assets\Materials\container2.png" />
+    <Image Include="Assets\Materials\grass.png" />
+    <Image Include="Assets\Materials\wall.jpg" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
