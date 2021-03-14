@@ -4,6 +4,7 @@
 Engine::Rendering::Cube::Cube(const std::shared_ptr<Direct3D>& d3d)
 	:m_direct3d(d3d)
 {
+	m_texture = std::make_unique<Texture>("C:\\Users\\Alexander\\Documents\\Repos\\ChilliEngine\\Application\\Assets\\Materials\\wall.jpg");
 	std::vector<VertexPos> vertices = {
 		{{ -1.0f,-1.0f,-1.0f }},
 		{{ 1.0f,-1.0f,-1.0f }},

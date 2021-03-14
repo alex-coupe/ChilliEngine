@@ -7,6 +7,7 @@
 #include "../Topology.h"
 #include "../IndexBuffer.h"
 #include "../ConstantBuffer.h"
+#include "../Texture.h"
 
 namespace Engine::Rendering {
 	class CHILLI_API Cube {
@@ -23,5 +24,6 @@ namespace Engine::Rendering {
 		std::unique_ptr<Topology> m_topology;
 		std::unique_ptr<IndexBuffer> m_indexBuffer;
 		std::unique_ptr<ConstantBuffer<DirectX::XMMATRIX>> m_constantBuffer;
+		std::unique_ptr<Texture> m_texture;
 	};
 }
