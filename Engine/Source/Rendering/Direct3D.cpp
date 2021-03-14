@@ -187,6 +187,7 @@ void Engine::Rendering::Direct3D::ShutdownD3D()
 	m_device->Release();
 	m_context->Release();
 	m_depthStencil->Release();
+	
 	ImGui_ImplDX11_Shutdown();
 }
 

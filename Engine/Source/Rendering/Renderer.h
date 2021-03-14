@@ -2,12 +2,7 @@
 #include "../Core/ChilliDefinitions.h"
 #include "../Core/SubSystem.h"
 #include "Direct3D.h"
-#include "VertexBuffer.h"
-#include "Shader.h"
-#include "InputLayout.h"
-#include "Topology.h"
-#include "IndexBuffer.h"
-#include "ConstantBuffer.h"
+#include "Primitives/Cube.h"
 
 namespace Engine::Rendering {
 
@@ -26,5 +21,6 @@ namespace Engine::Rendering {
 		void CreateTestCube();
 	private:
 		std::shared_ptr<Direct3D> m_direct3d;
+		std::shared_ptr<Cube> m_testCube;
 	};
 }
