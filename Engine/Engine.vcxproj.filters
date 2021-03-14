@@ -117,6 +117,9 @@
     <ClInclude Include="Source\Rendering\stb\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Rendering\Sampler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Timer.cpp">
@@ -179,9 +182,17 @@
     <ClCompile Include="Source\Rendering\stb\stb_image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Rendering\Sampler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Rendering\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Source\Rendering\shaders\Pixel_Basic.hlsl" />
     <FxCompile Include="Source\Rendering\shaders\Vertex_Basic.hlsl" />
+    <FxCompile Include="Source\Rendering\shaders\Vertex_Texture.hlsl" />
+    <FxCompile Include="Source\Rendering\shaders\Pixel_Texture.hlsl" />
   </ItemGroup>
 </Project>

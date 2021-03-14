@@ -34,16 +34,16 @@
     <Image Include="Assets\Materials\blending_transparent_window.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Assets\Materials\container.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="Assets\Materials\container2.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Assets\Materials\grass.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Assets\Materials\wall.jpg">
+    <Image Include="Assets\Materials\container.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Materials\wall.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
