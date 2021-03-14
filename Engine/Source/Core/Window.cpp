@@ -76,7 +76,6 @@ LRESULT Engine::Core::Window::WndProc(HWND handle, UINT msg, WPARAM wParam, LPAR
 }
 
 
-
 bool Engine::Core::Window::Update()
 {
 	MSG msg = {};

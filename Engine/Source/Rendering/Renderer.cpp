@@ -4,9 +4,6 @@
 #include "../Core/Event.h"
 #include "../Core/Window.h"
 
-#include "../ImGui/imgui_impl_dx11.h"
-#include "../ImGui/imgui_impl_win32.h"
-
 Engine::Rendering::Renderer::Renderer(const std::shared_ptr<DependencyResolver<SubSystem>>& resolver, int64_t width, int64_t height, HWND handle)
 	: SubSystem(resolver)
 {

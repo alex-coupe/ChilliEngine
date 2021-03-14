@@ -1,9 +1,13 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
+#include "../Gui/GuiManager.h"
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <wrl.h>
 #include <DirectXMath.h>
+#include <assert.h>
+#include "../Core/Event.h"
+
 #pragma warning(disable:4251)
 namespace Engine::Rendering {
 

@@ -4,8 +4,7 @@
 #include "Event.h"
 #include "SubSystem.h"
 
-#include "../ImGui/imgui_impl_win32.h"
-#include "../ImGui/imgui.h"
+#include "../Gui/GuiManager.h"
 
 namespace Engine::Core {
 	class Window {

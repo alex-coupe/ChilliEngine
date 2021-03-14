@@ -1,9 +1,5 @@
 #include "Direct3D.h"
-#include "../ImGui/imgui_impl_dx11.h"
-#include "../ImGui/imgui_impl_win32.h"
-#include <assert.h>
 
-#include "../Core/Event.h"
 
 Engine::Rendering::Direct3D::Direct3D(HWND handle, int64_t window_width, int64_t window_height)
 	:  m_handle(handle), m_width(window_width), m_height(window_height)

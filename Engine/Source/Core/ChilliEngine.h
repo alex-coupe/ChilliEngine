@@ -6,7 +6,7 @@
 #include "SubSystem.h"
 #include "Window.h"
 
-#include "../ImGui/imgui.h"
+#include "../Gui/GuiManager.h"
 #include "../Rendering/Renderer.h"
 
 
