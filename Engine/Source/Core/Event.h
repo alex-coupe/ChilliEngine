@@ -34,7 +34,7 @@ namespace Engine::Core {
 		BrowserBack = 166, BrowserForward = 167,BrowserRefresh = 168, BrowserStop = 169, BrowserSearch = 170, BrowserFavourites = 171, BrowserHome = 172, VolumeMute = 173, 
 		VolumeDown = 175, NextTrack = 176, PrevTrack = 177, Stop = 175, Play = 179,LaunchMail = 180, LaunchMedia = 181, LaunchApp1 = 182, LaunchApp2 = 183, Colon = 186, Plus = 187, 
 		Comma = 188, Minus = 189, Period = 190, ForwardSlash = 191, Tilde = 192, OpeningBracket = 219,Pipe = 220, ClosingBracket = 221, Quote = 222, Misc = 223, Misc2 = 225,
-		AngleBracket = 226, Misc3 = 227, Misc4 = 228, Process = 229, Misc4 = 230, Packet = 231, Attn = 246, Crsel = 247,Exsel = 248, Ereof = 249, Play2 = 250, Zoom = 251, Clear = 254
+		AngleBracket = 226, Misc3 = 227, Misc4 = 228, Process = 229, Misc5= 230, Packet = 231, Attn = 246, Crsel = 247,Exsel = 248, Ereof = 249, Play2 = 250, Zoom = 251, Clear2 = 254
 	};
 	
 	class CHILLI_API Event : public SubSystem { 

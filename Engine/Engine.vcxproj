@@ -92,7 +92,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>DEBUG;CHILLI_ENGINE;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Spdlog\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -100,7 +101,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\Spdlog</AdditionalLibraryDirectories>
-      <AdditionalDependencies>spdlog.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -130,7 +131,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>DEBUG;CHILLI_ENGINE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Spdlog\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -138,7 +140,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\Spdlog</AdditionalLibraryDirectories>
-      <AdditionalDependencies>spdlog.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -171,41 +173,47 @@
     <ClInclude Include="Source\Core\Timer.h" />
     <ClInclude Include="Source\Core\Window.h" />
     <ClInclude Include="Source\ECS\Component.h" />
+    <ClInclude Include="Source\ECS\Entity.h" />
     <ClInclude Include="Source\ECS\MeshComponent.h" />
     <ClInclude Include="Source\ECS\TransformComponent.h" />
-    <ClInclude Include="Source\ImGui\imconfig.h" />
-    <ClInclude Include="Source\ImGui\imgui.h" />
-    <ClInclude Include="Source\ImGui\imgui_impl_dx11.h" />
-    <ClInclude Include="Source\ImGui\imgui_impl_win32.h" />
-    <ClInclude Include="Source\ImGui\imgui_internal.h" />
-    <ClInclude Include="Source\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="Source\ImGui\imstb_textedit.h" />
-    <ClInclude Include="Source\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Source\Gui\GuiManager.h" />
+    <ClInclude Include="Source\Gui\ImGui\imconfig.h" />
+    <ClInclude Include="Source\Gui\ImGui\imgui.h" />
+    <ClInclude Include="Source\Gui\ImGui\imgui_impl_dx11.h" />
+    <ClInclude Include="Source\Gui\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="Source\Gui\ImGui\imgui_internal.h" />
+    <ClInclude Include="Source\Gui\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="Source\Gui\ImGui\imstb_textedit.h" />
+    <ClInclude Include="Source\Gui\ImGui\imstb_truetype.h" />
     <ClInclude Include="Source\Rendering\ConstantBuffer.h" />
     <ClInclude Include="Source\Rendering\IndexBuffer.h" />
     <ClInclude Include="Source\Rendering\InputLayout.h" />
     <ClInclude Include="Source\Rendering\Direct3D.h" />
+    <ClInclude Include="Source\Rendering\Primitives\Cube.h" />
     <ClInclude Include="Source\Rendering\Renderer.h" />
     <ClInclude Include="Source\Rendering\Shader.h" />
     <ClInclude Include="Source\Rendering\Topology.h" />
     <ClInclude Include="Source\Rendering\VertexBuffer.h" />
     <ClInclude Include="Source\Rendering\VertexTypes.h" />
+    <ClInclude Include="Source\SceneManager\Scene.h" />
+    <ClInclude Include="Source\SceneManager\SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\ChilliEngine.cpp" />
     <ClCompile Include="Source\Core\Event.cpp" />
     <ClCompile Include="Source\Core\Timer.cpp" />
     <ClCompile Include="Source\Core\Window.cpp" />
-    <ClCompile Include="Source\ImGui\imgui.cpp" />
-    <ClCompile Include="Source\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="Source\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="Source\ImGui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="Source\ImGui\imgui_impl_win32.cpp" />
-    <ClCompile Include="Source\ImGui\imgui_tables.cpp" />
-    <ClCompile Include="Source\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Source\Gui\ImGui\imgui.cpp" />
+    <ClCompile Include="Source\Gui\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Source\Gui\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Source\Gui\ImGui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Source\Gui\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Source\Gui\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="Source\Gui\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\Rendering\IndexBuffer.cpp" />
     <ClCompile Include="Source\Rendering\InputLayout.cpp" />
     <ClCompile Include="Source\Rendering\Direct3D.cpp" />
+    <ClCompile Include="Source\Rendering\Primitives\Cube.cpp" />
     <ClCompile Include="Source\Rendering\Renderer.cpp" />
     <ClCompile Include="Source\Rendering\Shader.cpp" />
     <ClCompile Include="Source\Rendering\Topology.cpp" />
