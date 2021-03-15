@@ -1,7 +1,9 @@
 #pragma once
 #include <memory>
 #include "Core\ChilliEngine.h"
-
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 class Application {
 public:
 	Application(HINSTANCE& hInstance);

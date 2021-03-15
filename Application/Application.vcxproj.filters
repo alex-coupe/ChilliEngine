@@ -47,4 +47,10 @@
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Models\cylinder.glb" />
+    <None Include="Assets\Models\suzanne.glb" />
+    <None Include="Assets\Models\sphere.glb" />
+    <None Include="Assets\Models\cube.glb" />
+  </ItemGroup>
 </Project>
