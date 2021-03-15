@@ -10,7 +10,6 @@ namespace Engine::Rendering {
 	class CHILLI_API Texture {
 	public:
 		Texture(const std::string& path, const std::shared_ptr<Direct3D>& d3d);
-		~Texture();
 		void Bind(UINT slot = 0u)const;
 	private:
 		unsigned char* m_data = nullptr;

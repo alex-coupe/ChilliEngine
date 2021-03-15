@@ -39,14 +39,12 @@ Engine::Rendering::Texture::Texture(const std::string& path, const std::shared_p
 	{
 		
 	}
-}
 
-Engine::Rendering::Texture::~Texture()
-{
 	if (m_data)
 	{
 		stbi_image_free(m_data);
 	}
+
 }
 
 void Engine::Rendering::Texture::Bind(UINT slot) const

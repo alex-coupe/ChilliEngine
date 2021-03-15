@@ -83,7 +83,7 @@ Engine::Rendering::Cube::Cube(const std::shared_ptr<Direct3D>& d3d)
 	m_indexBuffer = std::make_unique<IndexBuffer>(indices, m_direct3d);
 	m_indexBuffer->Bind();
 
-	m_texture = std::make_unique<Texture>("Assets/Materials/container2.png", m_direct3d);
+	m_texture = std::make_unique<Texture>("Assets/Materials/container.png", m_direct3d);
 	m_texture->Bind();
 
 	m_sampler = std::make_unique<Sampler>(m_direct3d);
