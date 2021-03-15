@@ -1,11 +1,5 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
-#include <d3d11.h>
-#include <d3dcompiler.h>
-#include <wrl.h>
-#include <DirectXMath.h>
-#include <vector>
-#include <memory>
 #include "Direct3D.h"
 
 namespace Engine::Rendering {
@@ -29,18 +23,15 @@ namespace Engine::Rendering {
 
 			buffer_data.pSysMem = vertices.data();
 
-			if (FAILED(m_hresult = m_direct3d->GetDevice()->CreateBuffer(&vertex_buffer, &buffer_data, &m_buffer)))
-			{
-				m_direct3d->GetDXError();
-			}
+			GFX_THROW_ERR(m_direct3d->GetDevice()->CreateBuffer(&vertex_buffer, &buffer_data, &m_buffer));
 
 		}
 		void Bind();
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_buffer;
 		std::shared_ptr<Direct3D> m_direct3d;
-		HRESULT m_hresult = 0;
 		UINT m_stride;
+		HRESULT m_result = 0;
 	};
 
 }

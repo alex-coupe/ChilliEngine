@@ -11,6 +11,6 @@ namespace Engine::Rendering {
 	private:
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> m_sampler;
 		std::shared_ptr<Direct3D> m_direct3d;
-		HRESULT m_hresult = 0;
+		HRESULT m_result = 0;
 	};
 }

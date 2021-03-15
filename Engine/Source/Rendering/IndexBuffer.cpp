@@ -15,11 +15,7 @@ Engine::Rendering::IndexBuffer::IndexBuffer(const std::vector<unsigned short>& i
     D3D11_SUBRESOURCE_DATA index_data = {};
     index_data.pSysMem = indices.data();
 
-    if (FAILED(m_hresult = m_direct3d->GetDevice()->CreateBuffer(&index_buffer, &index_data, &m_indexBuffer)))
-    {
-        m_direct3d->GetDXError();
-    }
-
+    GFX_THROW_ERR(m_direct3d->GetDevice()->CreateBuffer(&index_buffer, &index_data, &m_indexBuffer));
 }
 
 void Engine::Rendering::IndexBuffer::Bind() const

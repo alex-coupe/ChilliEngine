@@ -1,10 +1,5 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
-#include <d3d11.h>
-#include <d3dcompiler.h>
-#include <wrl.h>
-#include <string>
-#include <memory>
 #include "Direct3D.h"
 
 namespace Engine::Rendering {
@@ -23,7 +18,7 @@ namespace Engine::Rendering {
 		Microsoft::WRL::ComPtr<ID3D11VertexShader> m_vertexShader = nullptr;
 		Microsoft::WRL::ComPtr<ID3D11GeometryShader> m_geometryShader = nullptr;
 		Microsoft::WRL::ComPtr<ID3DBlob> m_byteCode;
-		HRESULT m_hresult = 0;
+		HRESULT m_result = 0;
 		std::shared_ptr<Direct3D> m_direct3d;
 		ShaderType m_type;
 	};

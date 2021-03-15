@@ -7,12 +7,17 @@
 #include <DirectXMath.h>
 #include <assert.h>
 #include "../Core/Event.h"
+#include <stdexcept>
+#include <sstream>
+#include <memory>
+#include <vector>
 
 #pragma warning(disable:4251)
 namespace Engine::Rendering {
 
 #pragma comment (lib, "d3d11.lib") 
 #pragma comment (lib, "D3DCompiler.lib")
+
 
 	class CHILLI_API Direct3D  {
 	public:
@@ -30,7 +35,6 @@ namespace Engine::Rendering {
 		int64_t GetWindowHeight()const;
 		Microsoft::WRL::ComPtr<ID3D11Device> GetDevice();
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetContext();
-		void GetDXError();
 	private:
 		void SetUpD3D();
 		void ShutdownD3D();
@@ -41,12 +45,22 @@ namespace Engine::Rendering {
 		Microsoft::WRL::ComPtr<ID3D11Resource> m_bufferTexture;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depthStencil;
 		Microsoft::WRL::ComPtr<ID3D11InfoQueue> m_debugInfo;
-		HRESULT m_hresult = 0;
+		HRESULT m_result = 0;
 		HWND m_handle;
 		int64_t m_width;
 		int64_t m_height;
 	};
 
 }
+
+#define GFX_THROW_ERR(call) if (FAILED(m_result = call))\
+{\
+std::stringstream ss;\
+ss << "DirectX Error: " << m_result;\
+ss << "Line: " << __LINE__;\
+ss << "File" << __FILE__;\
+throw std::runtime_error(ss.str());\
+}
+
 
 

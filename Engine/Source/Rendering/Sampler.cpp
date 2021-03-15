@@ -9,10 +9,8 @@ Engine::Rendering::Sampler::Sampler(const std::shared_ptr<Direct3D>& d3d)
 	sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
 	sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 
-	if (FAILED(m_hresult = m_direct3d->GetDevice()->CreateSamplerState(&sampler_desc, &m_sampler)))
-	{
-		
-	}
+	GFX_THROW_ERR(m_direct3d->GetDevice()->CreateSamplerState(&sampler_desc, &m_sampler));
+	
 }
 
 void Engine::Rendering::Sampler::Bind(UINT slot) const

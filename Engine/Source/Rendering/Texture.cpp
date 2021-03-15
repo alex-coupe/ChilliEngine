@@ -25,20 +25,14 @@ Engine::Rendering::Texture::Texture(const std::string& path, const std::shared_p
 
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
 
-	if (FAILED(m_hresult = m_direct3d->GetDevice()->CreateTexture2D(&texture_desc, &sub_resource, texture.GetAddressOf())))
-	{
-		
-	}
-
+	GFX_THROW_ERR(m_direct3d->GetDevice()->CreateTexture2D(&texture_desc, &sub_resource, texture.GetAddressOf()));
+	
 	D3D11_SHADER_RESOURCE_VIEW_DESC resource_view = {};
 	resource_view.Format = texture_desc.Format;
 	resource_view.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	resource_view.Texture2D.MostDetailedMip = 0;
 	resource_view.Texture2D.MipLevels = 1;
-	if (FAILED(m_hresult = m_direct3d->GetDevice()->CreateShaderResourceView(texture.Get(), &resource_view, &m_textureView)))
-	{
-		
-	}
+	GFX_THROW_ERR(m_direct3d->GetDevice()->CreateShaderResourceView(texture.Get(), &resource_view, &m_textureView));
 
 	if (m_data)
 	{

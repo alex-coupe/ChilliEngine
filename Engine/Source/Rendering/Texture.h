@@ -1,8 +1,6 @@
 #pragma once
-
 #include "../Core/ChilliDefinitions.h"
 #include "stb/stb_image.h"
-#include <string>
 #include "Direct3D.h"
 
 namespace Engine::Rendering {
@@ -16,6 +14,6 @@ namespace Engine::Rendering {
 		int m_width = 0, m_height = 0, m_colors = 0;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_textureView;
 		std::shared_ptr<Direct3D> m_direct3d;
-		HRESULT m_hresult;
+		HRESULT m_result = 0;
 	};
 }

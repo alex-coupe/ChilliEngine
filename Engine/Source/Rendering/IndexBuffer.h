@@ -1,10 +1,6 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
-#include <d3d11.h>
-#include <wrl.h>
 #include "Direct3D.h"
-#include <vector>
-#include <memory>
 
 namespace Engine::Rendering {
 
@@ -17,7 +13,7 @@ namespace Engine::Rendering {
 		std::shared_ptr<Direct3D> m_direct3d;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_indexBuffer = nullptr;
 		UINT m_count;
-		HRESULT m_hresult =0;
+		HRESULT m_result = 0;
 	};
 
 }

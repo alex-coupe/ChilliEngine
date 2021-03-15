@@ -1,10 +1,6 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
-#include <d3d11.h>
-#include <wrl.h>
 #include "Direct3D.h"
-#include <vector>
-#include <memory>
 
 namespace Engine::Rendering {
 
@@ -27,10 +23,8 @@ namespace Engine::Rendering {
 			constant_buffer.MiscFlags = 0u;
 			constant_buffer.StructureByteStride = 0u;
 
-			if (FAILED(m_hresult = m_direct3d->GetDevice()->CreateBuffer(&constant_buffer, nullptr, m_constantBuffer.GetAddressOf())))
-			{
-				m_direct3d->GetDXError();
-			}
+			GFX_THROW_ERR(m_direct3d->GetDevice()->CreateBuffer(&constant_buffer, nullptr, m_constantBuffer.GetAddressOf()));
+			
 		} 
 
 		ConstantBuffer(const ConstantBufferType type, const T& data, const std::shared_ptr<Direct3D>& d3d)
@@ -47,11 +41,8 @@ namespace Engine::Rendering {
 			D3D11_SUBRESOURCE_DATA constant_data = {};
 			constant_data.pSysMem = &data;
 
-			if (FAILED(m_hresult = m_direct3d->GetDevice()->CreateBuffer(&constant_buffer, &constant_data, m_constantBuffer.GetAddressOf())))
-			{
-				m_direct3d->GetDXError();
-			}
-
+			GFX_THROW_ERR(m_direct3d->GetDevice()->CreateBuffer(&constant_buffer, &constant_data, m_constantBuffer.GetAddressOf()));
+			
 		}
 
 		void Bind(UINT slot = 0u)
@@ -71,11 +62,8 @@ namespace Engine::Rendering {
 		{
 			D3D11_SUBRESOURCE_DATA constant_data;
 
-			if (FAILED(m_hresult = m_direct3d->GetContext()->Map(m_constantBuffer.Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &constant_data)))
-			{
-				m_direct3d->GetDXError();
-			}
-
+			GFX_THROW_ERR(m_direct3d->GetContext()->Map(m_constantBuffer.Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &constant_data));
+			
 			memcpy(constant_data.pSysMem, &data, sizeof(data));
 
 			m_direct3d->GetContext()->Unmap(m_constantBuffer.Get(), 0u);
@@ -85,7 +73,7 @@ namespace Engine::Rendering {
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_constantBuffer;
 		std::shared_ptr<Direct3D> m_direct3d;
 		ConstantBufferType m_type;
-		HRESULT m_hresult = 0;
+		HRESULT m_result = 0;
 	};
 
 }
