@@ -174,9 +174,18 @@
     <Image Include="Assets\Materials\container2.png" />
     <Image Include="Assets\Materials\grass.png" />
     <Image Include="Assets\Materials\wall.png" />
+    <Image Include="Assets\Models\ao.jpg" />
+    <Image Include="Assets\Models\diffuse.jpg" />
+    <Image Include="Assets\Models\normal.png" />
+    <Image Include="Assets\Models\roughness.jpg" />
+    <Image Include="Assets\Models\specular.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Models\backpack.mtl" />
+    <None Include="Assets\Models\cone.fbx" />
     <None Include="Assets\Models\cube.fbx" />
+    <None Include="Assets\Models\cube.mtl" />
+    <None Include="Assets\Models\sphere.mtl" />
     <None Include="Assets\Models\stacked.fbx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

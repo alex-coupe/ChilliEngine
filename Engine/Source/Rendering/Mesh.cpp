@@ -4,7 +4,7 @@ Engine::Rendering::Mesh::Mesh(const std::string& filepath, const std::shared_ptr
 	: m_filepath(filepath), m_direct3d(d3d)
 {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(m_filepath, aiProcess_Triangulate);
+	const aiScene* scene = importer.ReadFile(m_filepath, aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
 
 	ProcessSubMesh(scene->mRootNode,scene);
 
@@ -36,13 +36,13 @@ void Engine::Rendering::Mesh::Draw() const
 
 void Engine::Rendering::Mesh::ProcessSubMesh(aiNode* node, const aiScene* scene)
 {
-	for (unsigned int i = 0; i < node->mNumMeshes; i++)
+	for (UINT i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		m_subMeshes.emplace_back(SubMesh(mesh, scene,m_direct3d));
+		m_subMeshes.push_back(SubMesh(mesh, scene,m_direct3d));
 	}
-	
-	for (unsigned int i = 0; i < node->mNumChildren; i++)
+
+	for (UINT i = 0; i < node->mNumChildren; i++)
 	{
 		ProcessSubMesh(node->mChildren[i], scene);
 	}
@@ -51,18 +51,24 @@ void Engine::Rendering::Mesh::ProcessSubMesh(aiNode* node, const aiScene* scene)
 Engine::Rendering::Mesh::SubMesh::SubMesh(aiMesh* mesh, const aiScene* scene, const std::shared_ptr<Direct3D>& d3d)
 	:m_direct3d(d3d)
 {
-    for (unsigned int i = 0; i < mesh->mNumVertices; i++)
-    {
-        m_vertices.push_back({ { mesh->mVertices[i].x,mesh->mVertices[i].y, mesh->mVertices[i].z } });
-    }
-   
-    for (unsigned int i = 0; i < mesh->mNumFaces; i++)
-    {
-        aiFace face = mesh->mFaces[i];
-       
-        for (unsigned int j = 0; j < face.mNumIndices; j++)
-            m_indices.push_back(face.mIndices[j]);
-    }
+	for (UINT i = 0; i < mesh->mNumVertices; i++)
+	{
+		VertexPos vertex;
+
+		vertex.position.x = mesh->mVertices[i].x;
+		vertex.position.y = mesh->mVertices[i].y;
+		vertex.position.z = mesh->mVertices[i].z;
+
+		m_vertices.push_back(vertex);
+	}
+
+	for (UINT i = 0; i < mesh->mNumFaces; i++)
+	{
+		aiFace face = mesh->mFaces[i];
+
+		for (UINT j = 0; j < face.mNumIndices; j++)
+			m_indices.push_back(face.mIndices[j]);
+	}
 }
 
 
