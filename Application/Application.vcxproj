@@ -176,10 +176,8 @@
     <Image Include="Assets\Materials\wall.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Models\cube.glb" />
-    <None Include="Assets\Models\cylinder.glb" />
-    <None Include="Assets\Models\sphere.glb" />
-    <None Include="Assets\Models\suzanne.glb" />
+    <None Include="Assets\Models\cube.fbx" />
+    <None Include="Assets\Models\stacked.fbx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

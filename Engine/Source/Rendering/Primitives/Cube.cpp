@@ -5,7 +5,7 @@ Engine::Rendering::Cube::Cube(const std::shared_ptr<Direct3D>& d3d)
 	:m_direct3d(d3d)
 {
 	
-	m_mesh = std::make_unique<Mesh>("Assets/Models/cube.glb", m_direct3d);
+	m_mesh = std::make_unique<Mesh>("Assets/Models/stacked.fbx", m_direct3d);
 
 	const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 	{

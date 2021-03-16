@@ -13,9 +13,16 @@ Engine::Rendering::Mesh::Mesh(const std::string& filepath, const std::shared_ptr
 
 	for(const auto& subMesh : m_subMeshes)
 	{
+		int offset = vertices.size();
+		
 		std::copy(subMesh.GetVertices().cbegin(), subMesh.GetVertices().cend(), std::back_inserter(vertices));
-		std::copy(subMesh.GetIndices().cbegin(), subMesh.GetIndices().cend(), std::back_inserter(indices));
+		for (auto i : subMesh.GetIndices())
+		{
+			indices.push_back(i + offset);
+		}
 	}
+		
+	
 	m_indexBuffer = std::make_unique<IndexBuffer>(indices, m_direct3d);
 	m_indexBuffer->Bind();
 	m_vertexBuffer = std::make_unique<VertexBuffer>(vertices, m_direct3d);
