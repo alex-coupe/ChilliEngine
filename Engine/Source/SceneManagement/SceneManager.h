@@ -3,7 +3,10 @@
 #include "../Core/SubSystem.h"
 #include "../Core/DependencyResolver.h"
 #include "Scene.h"
-
+#include "rapidjson/document.h"
+#include "rapidjson/prettywriter.h"
+#include <fstream>
+#include <sstream>
 namespace Engine::SceneManagement {
 
 	class CHILLI_API SceneManager : public Engine::Core::SubSystem {
@@ -24,5 +27,7 @@ namespace Engine::SceneManagement {
 		std::vector<std::shared_ptr<Scene>> m_scenes;
 		std::shared_ptr<Scene> m_currentScene;
 		unsigned int m_currentSceneId = 0;
+		std::stringstream ss;
+		std::string m_projectName = "untitled";
 	};
 }

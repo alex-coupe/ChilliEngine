@@ -5,9 +5,25 @@ Engine::ECS::Entity::Entity(const std::string& name, const unsigned int id)
 {
 }
 
-std::shared_ptr<Engine::ECS::Component*>  Engine::ECS::Entity::GetComponent(const char* name)
+Engine::ECS::Entity::Entity(const std::string& name, const unsigned int id, const rapidjson::Value& components)
+	: m_name(name), m_id(id)
 {
-	return std::shared_ptr<Engine::ECS::Component*>();
+	for (unsigned int i = 0; i < components.Size(); i++)
+	{
+		
+		if (components[i]["Type"].GetInt() == static_cast<unsigned int>(ComponentTypes::Transform))
+		{
+			//m_components.emplace(std::make_shared<TransformComponent>( 0.0f,0.0f,0.0f ,  0.0f,0.0f,0.0f , 0.0f,0.0f,0.0f ));
+
+		}
+		
+		
+	}
+}
+
+std::shared_ptr<Engine::ECS::Component>  Engine::ECS::Entity::GetComponent(const char* name)
+{
+	return std::shared_ptr<Engine::ECS::Component>();
 }
 
 void Engine::ECS::Entity::AddComponent(const char* name)

@@ -1,5 +1,6 @@
 #include "SceneManager.h"
 #include "../Gui/GuiManager.h"
+#include <Windows.h>
 
 Engine::SceneManagement::SceneManager::SceneManager(const std::shared_ptr<Engine::Core::DependencyResolver<SubSystem>>& resolver)
     : SubSystem(resolver)
@@ -33,6 +34,49 @@ void Engine::SceneManagement::SceneManager::DrawGui() const
     ImGui::End();
    
    
+}
+
+void Engine::SceneManagement::SceneManager::LoadProject(const std::string& filename)
+{
+    std::ifstream json;
+    json.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+
+   
+    json.open(filename);
+    try
+    {
+        ss << json.rdbuf();
+    }
+    catch (std::ifstream::failure&)
+    {
+        throw std::runtime_error("Loading JSON File Failed");
+    }
+
+    rapidjson::Document document;
+
+    auto payload = ss.str();
+     
+    if (document.Parse(payload.c_str()).HasParseError())
+        return;
+
+    if (document.HasMember("ProjectName"))
+    {
+        m_projectName = document["ProjectName"].GetString();
+    }
+    if (document.HasMember("Scenes"))
+    {
+        m_scenes.clear();
+        for (const auto& scene : document["Scenes"].GetArray())
+        {
+            m_scenes.emplace_back(std::make_shared<Scene>(scene["Id"].GetInt(), scene["SceneName"].GetString(), scene["Entities"].GetArray()));
+        }
+    }
+   
+
+}
+
+void Engine::SceneManagement::SceneManager::SaveProject(const std::string& filename)
+{
 }
 
 void Engine::SceneManagement::SceneManager::AddScene(const std::string& name)

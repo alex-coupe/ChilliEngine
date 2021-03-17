@@ -7,16 +7,15 @@ namespace Engine::ECS {
 
 	class CHILLI_API TransformComponent : public Component {
 	public:
-		TransformComponent(DirectX::XMVECTORF32 translation, DirectX::XMVECTORF32 rotation, DirectX::XMVECTORF32 scale);
+		TransformComponent(float position[3], float rot[3], float scale[3]);
 		virtual void Serialize(const std::string& filename)override;
 		virtual void Deserialize(const std::string& filename)override;
 		virtual void DrawGui()const override;
 		DirectX::XMMATRIX GetTransformMatrix()const;
 	private:
-		DirectX::XMVECTORF32 m_translation;
-		DirectX::XMVECTORF32 m_rotation;
-		DirectX::XMVECTORF32 m_scale;
-		DirectX::XMMATRIX m_transformationMatrix;
+		DirectX::XMFLOAT3 m_translation;
+		DirectX::XMFLOAT3 m_rotation;
+		DirectX::XMFLOAT3 m_scale;
 	};
 
 }

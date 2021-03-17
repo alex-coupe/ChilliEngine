@@ -10,6 +10,7 @@ namespace Engine::SceneManagement {
 	class CHILLI_API Scene {
 	public:
 		Scene(unsigned int id, const std::string& name);
+		Scene(unsigned int id, const std::string& name, const rapidjson::Value& entities);
 		void Serialize(const std::string& filename);
 		void Deserialize(const std::string& filename);
 		void AddEntity();
@@ -22,6 +23,6 @@ namespace Engine::SceneManagement {
 	private:
 		std::string m_name;
 		const unsigned int m_id;
-		//std::unique_ptr<Entity> m_entities;
+		std::vector<std::shared_ptr<Entity>> m_entities;
 	};
 }

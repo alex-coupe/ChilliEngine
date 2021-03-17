@@ -5,6 +5,15 @@ Engine::SceneManagement::Scene::Scene(unsigned int id, const std::string& name)
 {
 }
 
+Engine::SceneManagement::Scene::Scene(unsigned int id, const std::string& name, const rapidjson::Value& entities)
+    : m_id(id), m_name(name)
+{
+    for (unsigned int i = 0; i < entities.Size(); i++)
+    {
+        m_entities.emplace_back(std::make_shared<Entity>(entities[i]["Name"].GetString(), entities[i]["Id"].GetInt(), entities[i]["Components"].GetArray()));
+    }
+}
+
 void Engine::SceneManagement::Scene::Serialize(const std::string& filename)
 {
 }
