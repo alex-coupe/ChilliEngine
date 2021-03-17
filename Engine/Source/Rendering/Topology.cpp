@@ -1,11 +1,11 @@
 #include "Topology.h"
 
-Engine::Rendering::Topology::Topology(D3D11_PRIMITIVE_TOPOLOGY type, std::shared_ptr<Renderer> renderer)
-	:m_type(type), m_renderer(renderer)
+Engine::Rendering::Topology::Topology(D3D11_PRIMITIVE_TOPOLOGY type, const std::shared_ptr<Direct3D>& d3d)
+	:m_type(type), m_direct3d(d3d)
 {
 }
 
 void Engine::Rendering::Topology::Bind()const
 {
-	m_renderer->GetContext()->IASetPrimitiveTopology(m_type);
+	m_direct3d->GetContext()->IASetPrimitiveTopology(m_type);
 }

@@ -90,17 +90,17 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>CHILLI_ENGINE;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DEBUG;CHILLI_ENGINE;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Spdlog\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Assimp\Include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\Spdlog</AdditionalLibraryDirectories>
-      <AdditionalDependencies>spdlog.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies/Assimp;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>zlib.lib;assimp-vc142-mt.lib;IrrXML.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -128,17 +128,17 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>CHILLI_ENGINE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DEBUG;CHILLI_ENGINE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Spdlog\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Assimp\Include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\Spdlog</AdditionalLibraryDirectories>
-      <AdditionalDependencies>spdlog.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies/Assimp;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>zlib.lib;assimp-vc142-mt.lib;IrrXML.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -166,53 +166,73 @@
     <ClInclude Include="Source\Core\ChilliDefinitions.h" />
     <ClInclude Include="Source\Core\ChilliEngine.h" />
     <ClInclude Include="Source\Core\DependencyResolver.h" />
-    <ClInclude Include="Source\Core\EngineSystem.h" />
+    <ClInclude Include="Source\Core\SubSystem.h" />
     <ClInclude Include="Source\Core\Event.h" />
-    <ClInclude Include="Source\Core\EventSystem.h" />
-    <ClInclude Include="Source\Core\Logger.h" />
     <ClInclude Include="Source\Core\Timer.h" />
     <ClInclude Include="Source\Core\Window.h" />
-    <ClInclude Include="Source\ImGui\imconfig.h" />
-    <ClInclude Include="Source\ImGui\imgui.h" />
-    <ClInclude Include="Source\ImGui\imgui_impl_dx11.h" />
-    <ClInclude Include="Source\ImGui\imgui_impl_win32.h" />
-    <ClInclude Include="Source\ImGui\imgui_internal.h" />
-    <ClInclude Include="Source\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="Source\ImGui\imstb_textedit.h" />
-    <ClInclude Include="Source\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Source\ECS\Component.h" />
+    <ClInclude Include="Source\ECS\Entity.h" />
+    <ClInclude Include="Source\ECS\MeshComponent.h" />
+    <ClInclude Include="Source\ECS\TransformComponent.h" />
+    <ClInclude Include="Source\Gui\GuiManager.h" />
+    <ClInclude Include="Source\Gui\ImGui\imconfig.h" />
+    <ClInclude Include="Source\Gui\ImGui\imgui.h" />
+    <ClInclude Include="Source\Gui\ImGui\imgui_impl_dx11.h" />
+    <ClInclude Include="Source\Gui\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="Source\Gui\ImGui\imgui_internal.h" />
+    <ClInclude Include="Source\Gui\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="Source\Gui\ImGui\imstb_textedit.h" />
+    <ClInclude Include="Source\Gui\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Source\Rendering\ConstantBuffer.h" />
     <ClInclude Include="Source\Rendering\IndexBuffer.h" />
     <ClInclude Include="Source\Rendering\InputLayout.h" />
+    <ClInclude Include="Source\Rendering\Direct3D.h" />
+    <ClInclude Include="Source\Rendering\Mesh.h" />
+    <ClInclude Include="Source\Rendering\Primitives\Cube.h" />
     <ClInclude Include="Source\Rendering\Renderer.h" />
-    <ClInclude Include="Source\Rendering\RenderingSystem.h" />
+    <ClInclude Include="Source\Rendering\Sampler.h" />
     <ClInclude Include="Source\Rendering\Shader.h" />
+    <ClInclude Include="Source\Rendering\stb\stb_image.h" />
+    <ClInclude Include="Source\Rendering\Texture.h" />
     <ClInclude Include="Source\Rendering\Topology.h" />
     <ClInclude Include="Source\Rendering\VertexBuffer.h" />
     <ClInclude Include="Source\Rendering\VertexTypes.h" />
+    <ClInclude Include="Source\SceneManager\Scene.h" />
+    <ClInclude Include="Source\SceneManager\SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\ChilliEngine.cpp" />
     <ClCompile Include="Source\Core\Event.cpp" />
-    <ClCompile Include="Source\Core\EventSystem.cpp" />
     <ClCompile Include="Source\Core\Timer.cpp" />
-    <ClCompile Include="Source\Core\Logger.cpp" />
     <ClCompile Include="Source\Core\Window.cpp" />
-    <ClCompile Include="Source\ImGui\imgui.cpp" />
-    <ClCompile Include="Source\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="Source\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="Source\ImGui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="Source\ImGui\imgui_impl_win32.cpp" />
-    <ClCompile Include="Source\ImGui\imgui_tables.cpp" />
-    <ClCompile Include="Source\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Source\Gui\ImGui\imgui.cpp" />
+    <ClCompile Include="Source\Gui\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Source\Gui\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Source\Gui\ImGui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Source\Gui\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Source\Gui\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="Source\Gui\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\Rendering\IndexBuffer.cpp" />
     <ClCompile Include="Source\Rendering\InputLayout.cpp" />
+    <ClCompile Include="Source\Rendering\Direct3D.cpp" />
+    <ClCompile Include="Source\Rendering\Mesh.cpp" />
+    <ClCompile Include="Source\Rendering\Primitives\Cube.cpp" />
     <ClCompile Include="Source\Rendering\Renderer.cpp" />
-    <ClCompile Include="Source\Rendering\RenderingSystem.cpp" />
+    <ClCompile Include="Source\Rendering\Sampler.cpp" />
     <ClCompile Include="Source\Rendering\Shader.cpp" />
+    <ClCompile Include="Source\Rendering\stb\stb_image.cpp" />
+    <ClCompile Include="Source\Rendering\Texture.cpp" />
     <ClCompile Include="Source\Rendering\Topology.cpp" />
     <ClCompile Include="Source\Rendering\VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Source\Rendering\shaders\Pixel_Basic.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Rendering\shaders\Pixel_Texture.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
@@ -224,11 +244,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Dependencies\ImGui\ImGui.vcxproj">
-      <Project>{c3122c2e-58ae-41b7-99a1-f12c7db7a629}</Project>
-    </ProjectReference>
+    <FxCompile Include="Source\Rendering\shaders\Vertex_Texture.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,11 +1,6 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
-#include <d3d11.h>
-#include <d3dcompiler.h>
-#include <wrl.h>
-#include <string>
-#include <memory>
-#include "Renderer.h"
+#include "Direct3D.h"
 
 namespace Engine::Rendering {
 
@@ -15,7 +10,7 @@ namespace Engine::Rendering {
 
 	class CHILLI_API Shader {
 	public:
-		Shader(ShaderType type, const std::wstring& path, std::shared_ptr<Renderer> renderer);
+		Shader(ShaderType type, const std::wstring& path, const std::shared_ptr<Direct3D>& d3d);
 		ID3DBlob* GetByteCode()const;
 		void Bind()const;
 	private:
@@ -23,8 +18,8 @@ namespace Engine::Rendering {
 		Microsoft::WRL::ComPtr<ID3D11VertexShader> m_vertexShader = nullptr;
 		Microsoft::WRL::ComPtr<ID3D11GeometryShader> m_geometryShader = nullptr;
 		Microsoft::WRL::ComPtr<ID3DBlob> m_byteCode;
-		HRESULT m_hresult = 0;
-		std::shared_ptr<Renderer> m_renderer;
+		HRESULT m_result = 0;
+		std::shared_ptr<Direct3D> m_direct3d;
 		ShaderType m_type;
 	};
 

@@ -27,4 +27,30 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Materials\awesomeface.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Materials\blending_transparent_window.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Materials\container2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Materials\grass.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Materials\container.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Materials\wall.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Models\cube.fbx" />
+    <None Include="Assets\Models\cone.fbx" />
+    <None Include="Assets\Models\cylinder.fbx" />
+    <None Include="Assets\Models\sphere.fbx" />
+  </ItemGroup>
 </Project>

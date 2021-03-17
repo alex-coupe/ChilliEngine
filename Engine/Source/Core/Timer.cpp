@@ -1,10 +1,10 @@
 #include "Timer.h"
 
-Engine::Core::Timer::Timer(std::shared_ptr<DependencyResolver<EngineSystem>> resolver)
+Engine::Core::Timer::Timer(const std::shared_ptr<DependencyResolver<SubSystem>>& resolver)
 	: m_frameStart(std::chrono::steady_clock::now()),
 	m_frameEnd(std::chrono::steady_clock::now()),
 	m_appStart(std::chrono::steady_clock::now()),
-	EngineSystem(resolver)
+	SubSystem(resolver)
 {}
 
 void Engine::Core::Timer::ProcessFrame()
@@ -18,17 +18,17 @@ void Engine::Core::Timer::ProcessFrame()
 
 }
 
-int Engine::Core::Timer::GetHash()
+int Engine::Core::Timer::GetHash()const
 {
 	return static_cast<int>(SystemTypes::Timer);
 }
 
-const float Engine::Core::Timer::GetDeltaTime()
+const float Engine::Core::Timer::GetDeltaTime()const
 {
 	return m_deltaTime;
 }
 
-const float Engine::Core::Timer::GetElapsedTime()
+const float Engine::Core::Timer::GetElapsedTime()const
 {
 	const auto currentTime = std::chrono::steady_clock::now();
 	const std::chrono::duration<float> elapsedTime = currentTime - m_appStart;

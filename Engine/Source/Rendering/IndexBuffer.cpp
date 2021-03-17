@@ -1,7 +1,7 @@
 #include "IndexBuffer.h"
 
-Engine::Rendering::IndexBuffer::IndexBuffer(const std::vector<unsigned short>& indices, std::shared_ptr<Renderer> renderer)
-    : m_count(static_cast<UINT>(indices.size())), m_renderer(renderer)
+Engine::Rendering::IndexBuffer::IndexBuffer(const std::vector<unsigned short>& indices, const std::shared_ptr<Direct3D>& d3d)
+    : m_count(static_cast<UINT>(indices.size())), m_direct3d(d3d)
 {
     D3D11_BUFFER_DESC index_buffer = {};
 
@@ -15,16 +15,12 @@ Engine::Rendering::IndexBuffer::IndexBuffer(const std::vector<unsigned short>& i
     D3D11_SUBRESOURCE_DATA index_data = {};
     index_data.pSysMem = indices.data();
 
-    if (FAILED(m_hresult = m_renderer->GetDevice()->CreateBuffer(&index_buffer, &index_data, &m_indexBuffer)))
-    {
-        m_renderer->GetDXError();
-    }
-
+    GFX_THROW_ERR(m_direct3d->GetDevice()->CreateBuffer(&index_buffer, &index_data, &m_indexBuffer));
 }
 
 void Engine::Rendering::IndexBuffer::Bind() const
 {
-    m_renderer->GetContext()->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
+    m_direct3d->GetContext()->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
 }
 
 UINT Engine::Rendering::IndexBuffer::GetCount() const

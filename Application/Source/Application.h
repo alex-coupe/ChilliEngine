@@ -1,11 +1,17 @@
 #pragma once
 #include <memory>
 #include "Core\ChilliEngine.h"
-
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 class Application {
 public:
-	bool Init(HINSTANCE& hInstance);
-	bool Update();
+	Application(HINSTANCE& hInstance);
+	~Application();
+	Application(const Application&) = delete;
+	Application& operator=(const Application&) = delete;
+	Application(Application&&) = default;
+	void Update();
 private:
 	std::unique_ptr<ChilliEngine> m_engine = nullptr;
 };
