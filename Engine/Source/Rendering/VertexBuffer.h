@@ -13,7 +13,7 @@ namespace Engine::Rendering {
 			D3D11_BUFFER_DESC vertex_buffer = {};
 
 			vertex_buffer.Usage = D3D11_USAGE_DEFAULT;
-			vertex_buffer.ByteWidth = m_stride * sizeof(vertices);
+			vertex_buffer.ByteWidth = m_stride * static_cast<UINT>(vertices.size());
 			vertex_buffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 			vertex_buffer.CPUAccessFlags = 0u;
 			vertex_buffer.MiscFlags = 0u;
