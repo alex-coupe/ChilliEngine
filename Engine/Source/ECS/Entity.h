@@ -1,8 +1,6 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
-#include "Component.h"
-//#include "TransformComponent.h"
-//#include "MeshComponent.h"
+#include "TransformComponent.h"
 #include <memory>
 #include <set>
 #include <vector>

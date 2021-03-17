@@ -7,9 +7,8 @@ namespace Engine::ECS {
 
 	class CHILLI_API TransformComponent : public Component {
 	public:
-		TransformComponent(float position[3], float rot[3], float scale[3]);
-		virtual void Serialize(const std::string& filename)override;
-		virtual void Deserialize(const std::string& filename)override;
+		TransformComponent(DirectX::XMFLOAT3 translation, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 scale);
+		virtual const std::string Serialize()const override;
 		virtual void DrawGui()const override;
 		DirectX::XMMATRIX GetTransformMatrix()const;
 	private:

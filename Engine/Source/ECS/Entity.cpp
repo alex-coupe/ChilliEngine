@@ -11,13 +11,17 @@ Engine::ECS::Entity::Entity(const std::string& name, const unsigned int id, cons
 	for (unsigned int i = 0; i < components.Size(); i++)
 	{
 		
-		if (components[i]["Type"].GetInt() == static_cast<unsigned int>(ComponentTypes::Transform))
+		switch (components[i]["Type"].GetInt())
 		{
-			//m_components.emplace(std::make_shared<TransformComponent>( 0.0f,0.0f,0.0f ,  0.0f,0.0f,0.0f , 0.0f,0.0f,0.0f ));
-
+			case (int)ComponentTypes::Transform:
+			{
+				DirectX::XMFLOAT3 translation = { components[i]["PosX"].GetFloat(),components[i]["PosY"].GetFloat(), components[i]["PosZ"].GetFloat() };
+				DirectX::XMFLOAT3 rotation = { components[i]["RotX"].GetFloat(),components[i]["RotY"].GetFloat(), components[i]["RotZ"].GetFloat() };
+				DirectX::XMFLOAT3 scale = { components[i]["ScaleX"].GetFloat(),components[i]["ScaleY"].GetFloat(), components[i]["ScaleZ"].GetFloat() };
+				m_components.emplace(std::make_shared<TransformComponent>(translation, rotation, scale));
+				break;
+			}
 		}
-		
-		
 	}
 }
 

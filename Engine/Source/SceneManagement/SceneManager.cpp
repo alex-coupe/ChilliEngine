@@ -1,5 +1,4 @@
 #include "SceneManager.h"
-#include "../Gui/GuiManager.h"
 #include <Windows.h>
 
 Engine::SceneManagement::SceneManager::SceneManager(const std::shared_ptr<Engine::Core::DependencyResolver<SubSystem>>& resolver)
@@ -41,7 +40,6 @@ void Engine::SceneManagement::SceneManager::LoadProject(const std::string& filen
     std::ifstream json;
     json.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
-   
     json.open(filename);
     try
     {

@@ -1,19 +1,20 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
+#include "../Gui/GuiManager.h"
 #include "rapidjson/document.h"
 #include "rapidjson/prettywriter.h"
 #include <string>
 namespace Engine::ECS {
 
-	enum class ComponentTypes {
+	enum class ComponentTypes : int {
 		Transform=1, Mesh=2
 	};
 
 	class CHILLI_API Component {
 	public:
+		Component(ComponentTypes type) :m_type(type) {}
 		virtual ~Component() {};
-		virtual void Serialize(const std::string& filename) = 0;
-		virtual void Deserialize(const std::string& filename) = 0;
+		virtual const std::string Serialize()const = 0;
 		virtual void DrawGui()const = 0;
 		unsigned int GetComponentType()const
 		{
