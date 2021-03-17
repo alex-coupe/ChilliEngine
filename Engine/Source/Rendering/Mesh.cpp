@@ -13,7 +13,7 @@ Engine::Rendering::Mesh::Mesh(const std::string& filepath, const std::shared_ptr
 
 	for(const auto& subMesh : m_subMeshes)
 	{
-		int offset = vertices.size();
+		int offset = static_cast<UINT>(vertices.size());
 		
 		std::copy(subMesh.GetVertices().cbegin(), subMesh.GetVertices().cend(), std::back_inserter(vertices));
 		for (auto i : subMesh.GetIndices())
