@@ -4,10 +4,12 @@
 #include "../Core/Event.h"
 #include "../Core/Window.h"
 
-Engine::Rendering::Renderer::Renderer(const std::shared_ptr<DependencyResolver<SubSystem>>& resolver, int64_t width, int64_t height, HWND handle)
+
+Engine::Rendering::Renderer::Renderer(const std::shared_ptr<DependencyResolver<SubSystem>>& resolver, int64_t width, int64_t height, HWND handle, 
+	const std::shared_ptr<Engine::Gui::GuiManager>& gui_man)
 	: SubSystem(resolver)
 {
-	m_direct3d = std::make_shared<Direct3D>(handle, width, height);
+	m_direct3d = std::make_shared<Direct3D>(handle, width, height, gui_man);
 	m_testCube = std::make_shared<Cube>(m_direct3d);
 }
 
@@ -24,7 +26,9 @@ int Engine::Rendering::Renderer::GetHash()const
 
 bool Engine::Rendering::Renderer::Init()
 {
-	auto m_event = m_resolver->ResolveDependency<Event>();
+	auto m_event = m_resolver->ResolveDependency<Engine::Core::Event>();
+
+	m_sceneManager = m_resolver->ResolveDependency<SceneManager>();
 
 	if (m_event == nullptr)
 	{
@@ -41,18 +45,6 @@ bool Engine::Rendering::Renderer::Init()
 void Engine::Rendering::Renderer::ProcessFrame()
 {
 	m_direct3d->BeginFrame();
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-	{
-
-		ImGui::Begin("Debug");
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
-			1000.0 / float(ImGui::GetIO().Framerate), float(ImGui::GetIO().Framerate));
-
-		ImGui::End();
-
-	}
 	CreateTestCube();
 	m_direct3d->EndFrame();
 	

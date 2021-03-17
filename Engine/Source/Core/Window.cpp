@@ -2,8 +2,8 @@
 #include <cassert>
 Engine::Core::Window* Engine::Core::Window::m_pInstance = nullptr;
 
-Engine::Core::Window::Window(HINSTANCE& instance, const std::shared_ptr<Event>& event_in, bool fullscreen)
-	:m_instance(instance), m_event(event_in)
+Engine::Core::Window::Window(HINSTANCE& instance, const std::shared_ptr<Event>& event_dispatcher, std::shared_ptr<Gui::GuiManager>& gui_man)
+	:m_instance(instance), m_event(event_dispatcher), m_gui(gui_man)
 {
 	m_pInstance = this;
 	WNDCLASSEX wndclass = {};
@@ -60,10 +60,10 @@ Engine::Core::Window::Window(HINSTANCE& instance, const std::shared_ptr<Event>& 
 		ShowWindow(m_handle, SW_SHOWDEFAULT);
 		
 		
-		ImGui_ImplWin32_Init(m_handle);	
+		m_gui->InitWindowsHook(m_handle);
 }
 
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 
 LRESULT Engine::Core::Window::WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
 {	
@@ -93,7 +93,6 @@ bool Engine::Core::Window::Update()
 
 Engine::Core::Window::~Window()
 {
-	ImGui_ImplWin32_Shutdown();
 	UnregisterClass(m_className,m_instance);
 	DestroyWindow(m_handle);
 }
@@ -111,18 +110,8 @@ const int Engine::Core::Window::GetInitialHeight() const
 LRESULT Engine::Core::Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	
-	if (ImGui_ImplWin32_WndProcHandler(handle, msg, wParam, lParam))
-	{
-		return true;
-	}
-	const ImGuiIO* io = nullptr;
-	
-	if (ImGui::GetCurrentContext())
-	{
-		io = &ImGui::GetIO();
-	}
-	
-	
+	m_gui->WndProcHandler(handle,msg,wParam,lParam);
+	const auto io = m_gui->GetIO();	
 
 	//Raise Event For The Messages We're Interested In
 	switch (msg)

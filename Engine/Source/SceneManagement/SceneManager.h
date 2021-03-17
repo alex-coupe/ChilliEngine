@@ -1,0 +1,28 @@
+#pragma once
+#include "../Core/ChilliDefinitions.h"
+#include "../Core/SubSystem.h"
+#include "../Core/DependencyResolver.h"
+#include "Scene.h"
+
+namespace Engine::SceneManagement {
+
+	class CHILLI_API SceneManager : public Engine::Core::SubSystem {
+	public:
+		SceneManager(const std::shared_ptr<Engine::Core::DependencyResolver<SubSystem>>& resolver);
+		void DrawGui()const override;
+		void LoadProject(const std::string& filename);
+		void SaveProject(const std::string& filename);
+		void AddScene(const std::string& name);
+		void RemoveScene(unsigned int scene_id);
+		unsigned int GetCurrentSceneId()const;
+		std::shared_ptr<Scene> GetCurrentScene()const;
+		void SetCurrentScene(unsigned int scene_id);
+		void DrawCurrentScene()const;
+		virtual int GetHash()const;
+		virtual void ProcessFrame();
+	private:
+		std::vector<std::shared_ptr<Scene>> m_scenes;
+		std::shared_ptr<Scene> m_currentScene;
+		unsigned int m_currentSceneId = 0;
+	};
+}

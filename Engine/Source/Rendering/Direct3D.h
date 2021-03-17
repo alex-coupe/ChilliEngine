@@ -21,8 +21,7 @@ namespace Engine::Rendering {
 
 	class CHILLI_API Direct3D  {
 	public:
-		Direct3D(HWND handle, int64_t window_width, int64_t window_height);
-		~Direct3D();
+		Direct3D(HWND handle, int64_t window_width, int64_t window_height,const std::shared_ptr<Gui::GuiManager>& gui_man);
 		Direct3D(const Direct3D&) = delete;
 		Direct3D& operator=(const Direct3D&) = delete;
 		Direct3D(Direct3D&&)noexcept = default;
@@ -38,6 +37,7 @@ namespace Engine::Rendering {
 	private:
 		void SetUpD3D();
 		void ShutdownD3D();
+		std::shared_ptr<Gui::GuiManager> m_gui;
 		Microsoft::WRL::ComPtr<IDXGISwapChain> m_swapChain;
 		Microsoft::WRL::ComPtr<ID3D11Device> m_device;
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_context;

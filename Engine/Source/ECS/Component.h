@@ -9,12 +9,12 @@ namespace Engine::ECS {
 		virtual void Serialize(const std::string& filename) = 0;
 		virtual void Deserialize(const std::string& filename) = 0;
 		virtual void DrawGui()const = 0;
-		virtual std::string GetName()const
+		std::string GetName()const
 		{
 			return m_name;
 		}
 	protected:
-		mutable std::string m_name;
+		std::string m_name;
 		const unsigned int m_id;
 	};
 

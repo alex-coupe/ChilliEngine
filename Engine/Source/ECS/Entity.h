@@ -2,6 +2,7 @@
 #include "../Core/ChilliDefinitions.h"
 #include "Component.h"
 #include <memory>
+#include <set>
 #include <vector>
 
 namespace Engine::ECS {
@@ -9,7 +10,7 @@ namespace Engine::ECS {
 	class CHILLI_API Entity {
 	public:
 		Entity(const std::string& name, const unsigned int id);
-		Component* GetComponent(const char* name);
+		std::shared_ptr<Component*> GetComponent(const char* name);
 		void AddComponent(const char* name);
 		void RemoveComponent(const char* name);
 		void Serialize(const std::string& filename)const;
@@ -17,9 +18,9 @@ namespace Engine::ECS {
 		void DrawGui()const;
 		void Draw()const;
 	private:
-		mutable std::string m_name;
+		std::string m_name;
 		const unsigned int m_id;
 		bool m_hasMesh = false;
-		std::vector<std::unique_ptr<Component*>> m_components;
+		std::set<std::shared_ptr<Component*>> m_components;
 	};
 }

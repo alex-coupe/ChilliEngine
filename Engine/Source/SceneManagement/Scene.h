@@ -3,13 +3,13 @@
 #include <string>
 #include "../ECS/Entity.h"
 
-namespace Engine::SceneManager {
+namespace Engine::SceneManagement {
 
 	using namespace Engine::ECS;
 
 	class CHILLI_API Scene {
 	public:
-		Scene();
+		Scene(unsigned int id, const std::string& name);
 		void Serialize(const std::string& filename);
 		void Deserialize(const std::string& filename);
 		void AddEntity();
@@ -17,9 +17,11 @@ namespace Engine::SceneManager {
 		void Update(float dt);
 		void DrawGui()const;
 		void Draw()const;
+		unsigned int GetID()const;
+		const std::string& GetName()const;
 	private:
-		mutable std::string m_name;
+		std::string m_name;
 		const unsigned int m_id;
-		std::unique_ptr<Entity> m_entities;
+		//std::unique_ptr<Entity> m_entities;
 	};
 }

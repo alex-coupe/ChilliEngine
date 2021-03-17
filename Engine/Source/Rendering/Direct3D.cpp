@@ -1,16 +1,13 @@
 #include "Direct3D.h"
 
 
-Engine::Rendering::Direct3D::Direct3D(HWND handle, int64_t window_width, int64_t window_height)
-	:  m_handle(handle), m_width(window_width), m_height(window_height)
+Engine::Rendering::Direct3D::Direct3D(HWND handle, int64_t window_width, int64_t window_height, const std::shared_ptr<Gui::GuiManager>& gui_man)
+	:  m_handle(handle), m_width(window_width), m_height(window_height), m_gui(gui_man)
 {
 	SetUpD3D();
 }
 
-Engine::Rendering::Direct3D::~Direct3D()
-{
-	ImGui_ImplDX11_Shutdown();
-}
+
 
 void Engine::Rendering::Direct3D::BeginFrame()
 {
@@ -20,8 +17,7 @@ void Engine::Rendering::Direct3D::BeginFrame()
 
 void Engine::Rendering::Direct3D::EndFrame()
 {
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	m_gui->Draw();
 	m_swapChain->Present(0u, 0u);
 }
 
@@ -153,7 +149,7 @@ void Engine::Rendering::Direct3D::SetUpD3D()
 	//Set the Viewport
 	m_context->RSSetViewports(1, &view_port);
 
-	ImGui_ImplDX11_Init(m_device.Get(), m_context.Get());
+	m_gui->InitDxHook(m_device.Get(), m_context.Get());
 }
 
 void Engine::Rendering::Direct3D::ShutdownD3D()
@@ -163,7 +159,6 @@ void Engine::Rendering::Direct3D::ShutdownD3D()
 	m_device->Release();
 	m_context->Release();
 	m_depthStencil->Release();
-	ImGui_ImplDX11_Shutdown();
 }
 
 
