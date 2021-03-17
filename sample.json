@@ -1,0 +1,55 @@
+{
+    "ProjectName":"My Cool Project",
+    "Scenes" : [
+        {
+            "SceneName":"Scene One",
+            "Entities": [
+                {
+                    "Name": "Entity One",
+                    "Id":1,
+                    "Components":[
+                        {
+                            "Name":"Transform",
+                            "PosX":12.33,
+                            "PosY":1.99,
+                            "PosZ":11.56,
+                            "RotX":0,
+                            "RotY":0,
+                            "RotZ":0,
+                            "ScaleX":1,
+                            "ScaleY":1,
+                            "ScaleZ":1                   
+                        },
+                        {
+                            "Name":"Mesh",
+                            "Filename": "Assets/Cube.fbx"
+                        }
+                    ]
+                },
+                {
+                    "Name": "Entity Two",
+                    "Id":2,
+                    "Components":[
+                        {
+                            "Name":"Transform",
+                            "PosX":12.33,
+                            "PosY":1.99,
+                            "PosZ":11.56,
+                            "RotX":0,
+                            "RotY":0,
+                            "RotZ":0,
+                            "ScaleX":1,
+                            "ScaleY":1,
+                            "ScaleZ":1                   
+                        },
+                        {
+                            "Name":"Mesh",
+                            "Filename": "Assets/Cube.fbx"
+                        }
+                    ]
+                }
+            ]
+        }
+
+    ]
+}
