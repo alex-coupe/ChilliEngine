@@ -19,6 +19,7 @@ namespace Engine::Rendering {
 		bool Init();
 		void ProcessFrame()override;
 		void CreateTestCube();
+		const std::shared_ptr<Direct3D>& GetD3D()const;
 	private:
 		std::shared_ptr<Direct3D> m_direct3d;
 		std::shared_ptr<Cube> m_testCube;

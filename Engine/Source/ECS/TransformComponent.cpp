@@ -9,10 +9,10 @@ const std::string Engine::ECS::TransformComponent::Serialize()const
 {
 
 	std::stringstream ss;
-	ss << "{ \"Type\":" << static_cast<int>(m_type) << ",\n \"PosX\":" << m_translation.x << ",\n \"PosY\":"<< m_translation.y 
-		<< ",\n \"PosZ\":" << m_translation.z << ",\n \"RotX\":" << m_rotation.x << ",\n \"RotY\":" << m_rotation.y
-		<< ",\n \"RotZ\":" << m_rotation.z << ",\n \"ScaleX\":" << m_scale.x << ",\n \"ScaleY\":" << m_scale.y
-		<< ",\n \"ScaleZ\":" << m_scale.z << "\n}";
+	ss << "{ \"Type\":" << static_cast<int>(m_type) << ", \"PosX\":" << m_translation.x << ", \"PosY\":"<< m_translation.y 
+		<< ", \"PosZ\":" << m_translation.z << ", \"RotX\":" << m_rotation.x << ", \"RotY\":" << m_rotation.y
+		<< ",\"RotZ\":" << m_rotation.z << ", \"ScaleX\":" << m_scale.x << ", \"ScaleY\":" << m_scale.y
+		<< ", \"ScaleZ\":" << m_scale.z << "}";
 	return  ss.str();
 }
 

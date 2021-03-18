@@ -16,23 +16,26 @@ namespace Engine::Rendering {
 	class CHILLI_API Mesh {
 	public:
 		Mesh(const std::string& filepath, const std::shared_ptr<Direct3D>& d3d);
+		~Mesh();
 		void Draw()const;
 		void ProcessSubMesh(aiNode* node, const aiScene* scene);
+		const std::string& GetFilePath()const;
 	private:
 		class SubMesh {
 		public:
 			SubMesh(aiMesh* mesh, const aiScene* scene, const std::shared_ptr<Direct3D>& d3d);
+			~SubMesh();
 			const std::vector<VertexPos>& GetVertices()const;
 			const std::vector<unsigned short>& GetIndices()const;
 		private:
 			std::vector<VertexPos> m_vertices;
 			std::vector<unsigned short> m_indices;
-			const std::shared_ptr<Direct3D>& m_direct3d;
+			std::shared_ptr<Direct3D> m_direct3d;
 		};
 		std::vector<SubMesh> m_subMeshes;
 		std::unique_ptr<VertexBuffer> m_vertexBuffer;
 		std::unique_ptr<IndexBuffer> m_indexBuffer;
 		std::string m_filepath;
-		const std::shared_ptr<Direct3D>& m_direct3d;
+		std::shared_ptr<Direct3D> m_direct3d;
 	};
 }

@@ -1,16 +1,25 @@
 #include "SceneManager.h"
 #include <Windows.h>
+#include "../Rendering/Renderer.h"
 
 Engine::SceneManagement::SceneManager::SceneManager(const std::shared_ptr<Engine::Core::DependencyResolver<SubSystem>>& resolver)
     : SubSystem(resolver)
 {
     m_scenes.emplace_back(std::make_shared<Scene>(1, "Scene 1"));
+
+    //auto d3d = m_resolver->ResolveDependency<Engine::Rendering::Renderer>()->GetD3D();
+   // m_meshLibrary = std::make_unique<MeshLibrary>(d3d);
+}
+
+Engine::SceneManagement::SceneManager::~SceneManager()
+{
+   // m_meshLibrary.reset();
 }
 
 void Engine::SceneManagement::SceneManager::DrawGui() const
 {
-    bool drawMenu = true;
-    ImGui::Begin("Scene Manager",&drawMenu,  ImGuiWindowFlags_MenuBar);
+    bool m_drawGui = true;
+    ImGui::Begin("Scene Manager",&m_drawGui,  ImGuiWindowFlags_MenuBar);
     if (ImGui::BeginMenuBar())
     {
         if (ImGui::BeginMenu("File"))
@@ -31,6 +40,9 @@ void Engine::SceneManagement::SceneManager::DrawGui() const
         ImGui::EndCombo();
     }
     ImGui::End();
+
+   
+    //m_meshLibrary->DrawGui();
    
    
 }
@@ -61,6 +73,18 @@ void Engine::SceneManagement::SceneManager::LoadProject(const std::string& filen
     {
         m_projectName = document["ProjectName"].GetString();
     }
+
+    if (document.HasMember("ProjectName"))
+    {
+        m_projectName = document["ProjectName"].GetString();
+    }
+
+    if (document.HasMember("Meshes"))
+    {
+        auto d3d = m_resolver->ResolveDependency<Engine::Rendering::Renderer>()->GetD3D();
+        m_meshLibrary = std::make_shared<MeshLibrary>(document["Meshes"].GetArray(),d3d);
+    }
+
     if (document.HasMember("Scenes"))
     {
         m_scenes.clear();
@@ -69,7 +93,6 @@ void Engine::SceneManagement::SceneManager::LoadProject(const std::string& filen
             m_scenes.emplace_back(std::make_shared<Scene>(scene["Id"].GetInt(), scene["SceneName"].GetString(), scene["Entities"].GetArray()));
         }
     }
-   
 
 }
 

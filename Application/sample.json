@@ -2,8 +2,8 @@
     "ProjectName":"My Cool Project",
     "Meshes":[
         {
-            "Filename": "Assets/Cube.fbx",
-            "Id":1
+            "Filepath": "Assets/Models/Cube.fbx",
+            "Name":"Cube"
         }
     ],
     "Scenes" : [

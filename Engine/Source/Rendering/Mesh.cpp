@@ -29,6 +29,14 @@ Engine::Rendering::Mesh::Mesh(const std::string& filepath, const std::shared_ptr
 	m_vertexBuffer->Bind();
 }
 
+Engine::Rendering::Mesh::~Mesh()
+{
+	m_subMeshes.clear();
+	m_vertexBuffer.reset();
+	m_direct3d.reset();
+	m_indexBuffer.reset();
+}
+
 void Engine::Rendering::Mesh::Draw() const
 {
 	m_direct3d->DrawIndexed(m_indexBuffer->GetCount());
@@ -46,6 +54,11 @@ void Engine::Rendering::Mesh::ProcessSubMesh(aiNode* node, const aiScene* scene)
 	{
 		ProcessSubMesh(node->mChildren[i], scene);
 	}
+}
+
+const std::string& Engine::Rendering::Mesh::GetFilePath() const
+{
+	return m_filepath;
 }
 
 Engine::Rendering::Mesh::SubMesh::SubMesh(aiMesh* mesh, const aiScene* scene, const std::shared_ptr<Direct3D>& d3d)
@@ -69,6 +82,11 @@ Engine::Rendering::Mesh::SubMesh::SubMesh(aiMesh* mesh, const aiScene* scene, co
 		for (UINT j = 0; j < face.mNumIndices; j++)
 			m_indices.push_back(face.mIndices[j]);
 	}
+}
+
+Engine::Rendering::Mesh::SubMesh::~SubMesh()
+{
+	m_direct3d.reset();
 }
 
 

@@ -54,3 +54,8 @@ void Engine::Rendering::Renderer::CreateTestCube()
 {
 	m_testCube->Draw();
 }
+
+const std::shared_ptr<Engine::Rendering::Direct3D>& Engine::Rendering::Renderer::GetD3D() const
+{
+	return m_direct3d;
+}

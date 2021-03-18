@@ -197,6 +197,7 @@
     <ClInclude Include="Source\Rendering\Topology.h" />
     <ClInclude Include="Source\Rendering\VertexBuffer.h" />
     <ClInclude Include="Source\Rendering\VertexTypes.h" />
+    <ClInclude Include="Source\SceneManagement\MeshLibrary.h" />
     <ClInclude Include="Source\SceneManagement\Scene.h" />
     <ClInclude Include="Source\SceneManagement\SceneManager.h" />
   </ItemGroup>
@@ -227,6 +228,7 @@
     <ClCompile Include="Source\Rendering\Texture.cpp" />
     <ClCompile Include="Source\Rendering\Topology.cpp" />
     <ClCompile Include="Source\Rendering\VertexBuffer.cpp" />
+    <ClCompile Include="Source\SceneManagement\MeshLibrary.cpp" />
     <ClCompile Include="Source\SceneManagement\Scene.cpp" />
     <ClCompile Include="Source\SceneManagement\SceneManager.cpp" />
   </ItemGroup>
