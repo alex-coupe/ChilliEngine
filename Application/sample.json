@@ -4,6 +4,10 @@
         {
             "Filepath": "Assets/Models/Cube.fbx",
             "Name":"Cube"
+        },
+        {
+            "Filepath": "Assets/Models/Cone.fbx",
+            "Name":"Cone"
         }
     ],
     "Scenes" : [
@@ -29,7 +33,7 @@
                         },
                         {
                             "Type":2,
-                            "MeshId":1
+                            "MeshName":"Cube"
                         }
                     ]
                 },
@@ -51,7 +55,7 @@
                         },
                         {
                             "Type":2,
-                            "MeshId":1
+                            "MeshName":"Cone"
                         }
                     ]
                 }

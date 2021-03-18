@@ -6,10 +6,11 @@ namespace Engine::ECS {
 
 	class CHILLI_API MeshComponent : public Component {
 	public:
-		MeshComponent();
+		MeshComponent(bool editor_only, const std::string& mesh_name);
 		virtual const std::string Serialize()const override;
 		virtual void DrawGui()const override;
 	private:
-		bool m_editorOnly = false;
+		bool m_editorOnly;
+		std::string m_meshName;
 	};
 }

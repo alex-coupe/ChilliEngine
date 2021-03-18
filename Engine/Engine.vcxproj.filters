@@ -209,6 +209,9 @@
     <ClCompile Include="Source\SceneManagement\Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ECS\MeshComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Source\Rendering\shaders\Pixel_Basic.hlsl" />
