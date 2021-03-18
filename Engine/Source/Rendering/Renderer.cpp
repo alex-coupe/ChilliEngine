@@ -10,7 +10,7 @@ Engine::Rendering::Renderer::Renderer(const std::shared_ptr<DependencyResolver<S
 	: SubSystem(resolver)
 {
 	m_direct3d = std::make_shared<Direct3D>(handle, width, height, gui_man);
-	m_testCube = std::make_shared<Cube>(m_direct3d);
+//_testCube = std::make_shared<Cube>(m_direct3d);
 }
 
 Engine::Rendering::Renderer::~Renderer()
@@ -45,14 +45,14 @@ bool Engine::Rendering::Renderer::Init()
 void Engine::Rendering::Renderer::ProcessFrame()
 {
 	m_direct3d->BeginFrame();
-	CreateTestCube();
+	//CreateTestCube();
 	m_direct3d->EndFrame();
 	
 }
 
 void Engine::Rendering::Renderer::CreateTestCube()
 {
-	m_testCube->Draw();
+	//m_testCube->Draw();
 }
 
 const std::shared_ptr<Engine::Rendering::Direct3D>& Engine::Rendering::Renderer::GetD3D() const

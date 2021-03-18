@@ -2,8 +2,8 @@
 #include "../Core/ChilliDefinitions.h"
 #include "../Core/SubSystem.h"
 #include "Direct3D.h"
-#include "Primitives/Cube.h"
 #include "../SceneManagement/SceneManager.h"
+
 namespace Engine::Rendering {
 
 	using namespace Engine::Core;
@@ -22,7 +22,7 @@ namespace Engine::Rendering {
 		const std::shared_ptr<Direct3D>& GetD3D()const;
 	private:
 		std::shared_ptr<Direct3D> m_direct3d;
-		std::shared_ptr<Cube> m_testCube;
+		//std::shared_ptr<Cube> m_testCube;
 		std::shared_ptr<SceneManager> m_sceneManager;
 	};
 }

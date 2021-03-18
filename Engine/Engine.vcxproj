@@ -187,8 +187,6 @@
     <ClInclude Include="Source\Rendering\IndexBuffer.h" />
     <ClInclude Include="Source\Rendering\InputLayout.h" />
     <ClInclude Include="Source\Rendering\Direct3D.h" />
-    <ClInclude Include="Source\Rendering\Mesh.h" />
-    <ClInclude Include="Source\Rendering\Primitives\Cube.h" />
     <ClInclude Include="Source\Rendering\Renderer.h" />
     <ClInclude Include="Source\Rendering\Sampler.h" />
     <ClInclude Include="Source\Rendering\Shader.h" />
@@ -197,6 +195,7 @@
     <ClInclude Include="Source\Rendering\Topology.h" />
     <ClInclude Include="Source\Rendering\VertexBuffer.h" />
     <ClInclude Include="Source\Rendering\VertexTypes.h" />
+    <ClInclude Include="Source\SceneManagement\Mesh.h" />
     <ClInclude Include="Source\SceneManagement\MeshLibrary.h" />
     <ClInclude Include="Source\SceneManagement\Scene.h" />
     <ClInclude Include="Source\SceneManagement\SceneManager.h" />
@@ -219,8 +218,6 @@
     <ClCompile Include="Source\Rendering\IndexBuffer.cpp" />
     <ClCompile Include="Source\Rendering\InputLayout.cpp" />
     <ClCompile Include="Source\Rendering\Direct3D.cpp" />
-    <ClCompile Include="Source\Rendering\Mesh.cpp" />
-    <ClCompile Include="Source\Rendering\Primitives\Cube.cpp" />
     <ClCompile Include="Source\Rendering\Renderer.cpp" />
     <ClCompile Include="Source\Rendering\Sampler.cpp" />
     <ClCompile Include="Source\Rendering\Shader.cpp" />
@@ -228,6 +225,7 @@
     <ClCompile Include="Source\Rendering\Texture.cpp" />
     <ClCompile Include="Source\Rendering\Topology.cpp" />
     <ClCompile Include="Source\Rendering\VertexBuffer.cpp" />
+    <ClCompile Include="Source\SceneManagement\Mesh.cpp" />
     <ClCompile Include="Source\SceneManagement\MeshLibrary.cpp" />
     <ClCompile Include="Source\SceneManagement\Scene.cpp" />
     <ClCompile Include="Source\SceneManagement\SceneManager.cpp" />

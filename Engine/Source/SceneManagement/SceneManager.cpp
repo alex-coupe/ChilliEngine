@@ -6,14 +6,7 @@ Engine::SceneManagement::SceneManager::SceneManager(const std::shared_ptr<Engine
     : SubSystem(resolver)
 {
     m_scenes.emplace_back(std::make_shared<Scene>(1, "Scene 1"));
-
-    //auto d3d = m_resolver->ResolveDependency<Engine::Rendering::Renderer>()->GetD3D();
-   // m_meshLibrary = std::make_unique<MeshLibrary>(d3d);
-}
-
-Engine::SceneManagement::SceneManager::~SceneManager()
-{
-   // m_meshLibrary.reset();
+    m_meshLibrary = std::make_unique<MeshLibrary>();
 }
 
 void Engine::SceneManagement::SceneManager::DrawGui() const
@@ -42,7 +35,7 @@ void Engine::SceneManagement::SceneManager::DrawGui() const
     ImGui::End();
 
    
-    //m_meshLibrary->DrawGui();
+    m_meshLibrary->DrawGui();
    
    
 }
@@ -81,8 +74,8 @@ void Engine::SceneManagement::SceneManager::LoadProject(const std::string& filen
 
     if (document.HasMember("Meshes"))
     {
-        auto d3d = m_resolver->ResolveDependency<Engine::Rendering::Renderer>()->GetD3D();
-        m_meshLibrary = std::make_shared<MeshLibrary>(document["Meshes"].GetArray(),d3d);
+        m_meshLibrary.reset();
+        m_meshLibrary = std::make_shared<MeshLibrary>(document["Meshes"].GetArray());
     }
 
     if (document.HasMember("Scenes"))
@@ -93,6 +86,8 @@ void Engine::SceneManagement::SceneManager::LoadProject(const std::string& filen
             m_scenes.emplace_back(std::make_shared<Scene>(scene["Id"].GetInt(), scene["SceneName"].GetString(), scene["Entities"].GetArray()));
         }
     }
+
+    m_meshLibrary->AddMesh("Cone", "Assets/Models/Cone.fbx");
 
 }
 
