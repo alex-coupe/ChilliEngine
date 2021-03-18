@@ -48,6 +48,13 @@ void Engine::ECS::Entity::Deserialize(const std::string& filename)
 
 void Engine::ECS::Entity::DrawGui() const
 {
+	ImGui::Begin(m_name.c_str());
+	for (const auto& components : m_components)
+	{
+		components->DrawGui();
+		ImGui::Separator();
+	}
+	ImGui::End();
 }
 
 void Engine::ECS::Entity::Draw() const

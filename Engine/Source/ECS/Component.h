@@ -4,6 +4,7 @@
 #include "rapidjson/document.h"
 #include "rapidjson/prettywriter.h"
 #include <string>
+#include <sstream>
 namespace Engine::ECS {
 
 	enum class ComponentTypes : int {

@@ -8,15 +8,20 @@ Engine::ECS::TransformComponent::TransformComponent(DirectX::XMFLOAT3 translatio
 const std::string Engine::ECS::TransformComponent::Serialize()const
 {
 
-	
-	return  "{ \"Type\": ,\n \"PosX\":";
+	std::stringstream ss;
+	ss << "{ \"Type\":" << static_cast<int>(m_type) << ",\n \"PosX\":" << m_translation.x << ",\n \"PosY\":"<< m_translation.y 
+		<< ",\n \"PosZ\":" << m_translation.z << ",\n \"RotX\":" << m_rotation.x << ",\n \"RotY\":" << m_rotation.y
+		<< ",\n \"RotZ\":" << m_rotation.z << ",\n \"ScaleX\":" << m_scale.x << ",\n \"ScaleY\":" << m_scale.y
+		<< ",\n \"ScaleZ\":" << m_scale.z << "\n}";
+	return  ss.str();
 }
 
 void Engine::ECS::TransformComponent::DrawGui() const
 {
-	//ImGui::InputFloat3("Translation", m_translation);
-	//ImGui::InputFloat3("Rotation", &m_rotation);
-	//ImGui::InputFloat3("Scale", &m_scale);
+	
+	ImGui::InputFloat3("Translation", m_translationRemote[0]);
+	ImGui::InputFloat3("Rotation", m_rotationRemote[0]);
+	ImGui::InputFloat3("Scale", m_scaleRemote[0]);
 	
 }
 
