@@ -13,7 +13,7 @@ namespace Engine::ECS {
 
 	class CHILLI_API Component {
 	public:
-		Component(ComponentTypes type) :m_type(type) {}
+		Component(ComponentTypes type, const std::string& name) :m_type(type), m_name(name) {}
 		virtual ~Component() {};
 		virtual const std::string Serialize()const = 0;
 		virtual void DrawGui()const = 0;
@@ -21,12 +21,12 @@ namespace Engine::ECS {
 		{
 			return static_cast<unsigned int>(m_type);
 		}
-		std::string GetName()const
+		const std::string& GetName()const
 		{
 			return m_name;
 		}
 	protected:
-		std::string m_name;
+		const std::string m_name;
 		const ComponentTypes m_type;
 	};
 

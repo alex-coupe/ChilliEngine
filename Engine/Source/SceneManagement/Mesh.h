@@ -14,6 +14,8 @@ namespace Engine::SceneManagement {
 		Mesh(const std::string& filepath);
 		void ProcessSubMesh(aiNode* node, const aiScene* scene);
 		const std::string& GetFilePath()const;
+		const std::vector<Engine::Rendering::VertexPos>& GetVertices()const;
+		const std::vector<unsigned short>& GetIndices()const;
 	private:
 		class SubMesh {
 		public:
@@ -25,6 +27,8 @@ namespace Engine::SceneManagement {
 			std::vector<unsigned short> m_indices;
 		};
 		std::vector<SubMesh> m_subMeshes;
+		std::vector<Engine::Rendering::VertexPos> m_vertices;
+		std::vector<unsigned short> m_indices;
 		std::string m_filepath;
 	};
 }

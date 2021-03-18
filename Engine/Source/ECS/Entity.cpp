@@ -21,13 +21,23 @@ Engine::ECS::Entity::Entity(const std::string& name, const unsigned int id, cons
 				m_components.emplace(std::make_shared<TransformComponent>(translation, rotation, scale));
 				break;
 			}
+			case (int)ComponentTypes::Mesh:
+			{
+				m_components.emplace(std::make_shared<MeshComponent>(components[i]["EditorOnly"].GetBool(), components[i]["MeshName"].GetString(), components[i]["Filepath"].GetString()));
+				m_hasMesh = true;
+				break;
+			}
 		}
 	}
 }
 
-std::shared_ptr<Engine::ECS::Component>  Engine::ECS::Entity::GetComponent(const char* name)
+std::shared_ptr<Engine::ECS::Component>  Engine::ECS::Entity::GetComponent(const std::string& name)
 {
-	return std::shared_ptr<Engine::ECS::Component>();
+	for (const auto& comp : m_components)
+	{
+		if (comp->GetName() == name)
+			return comp;
+	}
 }
 
 void Engine::ECS::Entity::AddComponent(const char* name)

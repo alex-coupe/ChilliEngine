@@ -1,15 +1,5 @@
 {
     "ProjectName":"My Cool Project",
-    "Meshes":[
-        {
-            "Filepath": "Assets/Models/Cube.fbx",
-            "Name":"Cube"
-        },
-        {
-            "Filepath": "Assets/Models/Cone.fbx",
-            "Name":"Cone"
-        }
-    ],
     "Scenes" : [
         {
             "SceneName":"Scene One",
@@ -21,19 +11,21 @@
                     "Components":[
                         {
                             "Type":1,
-                            "PosX":12.33,
-                            "PosY":1.99,
+                            "PosX":0.33,
+                            "PosY":0.99,
                             "PosZ":11.56,
-                            "RotX":0,
-                            "RotY":0,
-                            "RotZ":0,
-                            "ScaleX":1,
-                            "ScaleY":1,
-                            "ScaleZ":1                   
+                            "RotX":1.5,
+                            "RotY":0.0,
+                            "RotZ":0.0,
+                            "ScaleX":2.0,
+                            "ScaleY":2.0,
+                            "ScaleZ":2.0                   
                         },
                         {
                             "Type":2,
-                            "MeshName":"Cube"
+                            "MeshName":"Cube",
+                            "Filepath": "Assets/Models/Cube.fbx",
+                            "EditorOnly":false
                         }
                     ]
                 },
@@ -43,19 +35,21 @@
                     "Components":[
                         {
                             "Type":1,
-                            "PosX":12.33,
-                            "PosY":1.99,
+                            "PosX":0.33,
+                            "PosY":-3.99,
                             "PosZ":11.56,
-                            "RotX":0,
-                            "RotY":0,
-                            "RotZ":0,
-                            "ScaleX":1,
-                            "ScaleY":1,
-                            "ScaleZ":1                   
+                            "RotX":1.5,
+                            "RotY":0.0,
+                            "RotZ":0.0,
+                            "ScaleX":1.0,
+                            "ScaleY":1.0,
+                            "ScaleZ":1.0                   
                         },
                         {
                             "Type":2,
-                            "MeshName":"Cone"
+                            "MeshName":"Cone",
+                            "Filepath": "Assets/Models/Cone.fbx",
+                            "EditorOnly":false
                         }
                     ]
                 }

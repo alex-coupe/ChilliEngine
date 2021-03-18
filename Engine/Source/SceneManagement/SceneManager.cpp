@@ -6,7 +6,7 @@ Engine::SceneManagement::SceneManager::SceneManager(const std::shared_ptr<Engine
     : SubSystem(resolver)
 {
     m_scenes.emplace_back(std::make_shared<Scene>(1, "Scene 1"));
-    m_meshLibrary = std::make_unique<MeshLibrary>();
+    m_currentScene = m_scenes.front();
 }
 
 void Engine::SceneManagement::SceneManager::DrawGui() const
@@ -32,12 +32,7 @@ void Engine::SceneManagement::SceneManager::DrawGui() const
                 current_item = scene->GetName().c_str();
         ImGui::EndCombo();
     }
-    ImGui::End();
-
-   
-    m_meshLibrary->DrawGui();
-   
-   
+    ImGui::End();   
 }
 
 void Engine::SceneManagement::SceneManager::LoadProject(const std::string& filename)
@@ -72,23 +67,16 @@ void Engine::SceneManagement::SceneManager::LoadProject(const std::string& filen
         m_projectName = document["ProjectName"].GetString();
     }
 
-    if (document.HasMember("Meshes"))
-    {
-        m_meshLibrary.reset();
-        m_meshLibrary = std::make_shared<MeshLibrary>(document["Meshes"].GetArray());
-    }
-
     if (document.HasMember("Scenes"))
     {
         m_scenes.clear();
+        m_currentScene.reset();
         for (const auto& scene : document["Scenes"].GetArray())
         {
             m_scenes.emplace_back(std::make_shared<Scene>(scene["Id"].GetInt(), scene["SceneName"].GetString(), scene["Entities"].GetArray()));
         }
+        m_currentScene = m_scenes.front();
     }
-
-    m_meshLibrary->AddMesh("Cone", "Assets/Models/Cone.fbx");
-
 }
 
 void Engine::SceneManagement::SceneManager::SaveProject(const std::string& filename)
@@ -138,3 +126,5 @@ void Engine::SceneManagement::SceneManager::ProcessFrame()
 {
    // m_currentScene->Update(0.1f);
 }
+
+

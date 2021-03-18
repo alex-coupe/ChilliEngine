@@ -27,7 +27,6 @@ namespace Engine::SceneManagement {
 	private:
 		std::vector<std::shared_ptr<Scene>> m_scenes;
 		std::shared_ptr<Scene> m_currentScene;
-		std::shared_ptr<MeshLibrary> m_meshLibrary;
 		unsigned int m_currentSceneId = 0;
 		std::stringstream ss;
 		std::string m_projectName = "untitled";

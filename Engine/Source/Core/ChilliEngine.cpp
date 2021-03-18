@@ -40,12 +40,12 @@ ChilliEngine::ChilliEngine(HINSTANCE& hInstance)
 	m_guiManager->AddGuiElement(std::bind(&SceneManager::DrawGui, m_sceneManager));
 
 
-	//Initialize SubSystems As Required
+	m_sceneManager->LoadProject("sample.json");
 
 	if (!m_renderer->Init())
 		MessageBox(m_window->GetHandle(), L"Failed To Initialize Renderer", L"Chilli Error", MB_ICONWARNING |MB_ABORTRETRYIGNORE);
 
-	m_sceneManager->LoadProject("sample.json");
+	
 }
 
 ChilliEngine::~ChilliEngine()

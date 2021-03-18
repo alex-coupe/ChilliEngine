@@ -1,7 +1,7 @@
 #include "TransformComponent.h"
 
 Engine::ECS::TransformComponent::TransformComponent(DirectX::XMFLOAT3 translation, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 scale)
-	:Component(ComponentTypes::Transform), m_translation(translation), m_rotation(rotation), m_scale(scale)
+	:Component(ComponentTypes::Transform, "Transform"), m_translation(translation), m_rotation(rotation), m_scale(scale)
 {
 }
 

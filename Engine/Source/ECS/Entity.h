@@ -1,6 +1,7 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
 #include "TransformComponent.h"
+#include "MeshComponent.h"
 #include <memory>
 #include <set>
 #include <vector>
@@ -11,7 +12,7 @@ namespace Engine::ECS {
 	public:
 		Entity(const std::string& name, const unsigned int id);
 		Entity(const std::string& name, const unsigned int id, const rapidjson::Value& components);
-		std::shared_ptr<Component> GetComponent(const char* name);
+		std::shared_ptr<Component> GetComponent(const std::string& name);
 		void AddComponent(const char* name);
 		void RemoveComponent(const char* name);
 		void Serialize(const std::string& filename)const;

@@ -184,6 +184,7 @@
     <ClInclude Include="Source\Gui\ImGui\imstb_textedit.h" />
     <ClInclude Include="Source\Gui\ImGui\imstb_truetype.h" />
     <ClInclude Include="Source\Rendering\ConstantBuffer.h" />
+    <ClInclude Include="Source\Rendering\Drawable.h" />
     <ClInclude Include="Source\Rendering\IndexBuffer.h" />
     <ClInclude Include="Source\Rendering\InputLayout.h" />
     <ClInclude Include="Source\Rendering\Direct3D.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="Source\Gui\ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="Source\Gui\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Source\Gui\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Source\Rendering\Drawable.cpp" />
     <ClCompile Include="Source\Rendering\IndexBuffer.cpp" />
     <ClCompile Include="Source\Rendering\InputLayout.cpp" />
     <ClCompile Include="Source\Rendering\Direct3D.cpp" />

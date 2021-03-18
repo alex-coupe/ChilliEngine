@@ -15,6 +15,7 @@ namespace Engine::SceneManagement {
 		void Deserialize(const std::string& filename);
 		void AddEntity();
 		void RemoveEntity();
+		const std::vector<std::shared_ptr<Entity>>& GetEntities()const;
 		void Update(float dt);
 		void DrawGui()const;
 		void Draw()const;

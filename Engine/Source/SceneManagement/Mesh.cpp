@@ -8,17 +8,14 @@ Engine::SceneManagement::Mesh::Mesh(const std::string& filepath)
 
 	ProcessSubMesh(scene->mRootNode,scene);
 
-	std::vector<Engine::Rendering::VertexPos> vertices;
-	std::vector<unsigned short> indices;
-
 	for(const auto& subMesh : m_subMeshes)
 	{
-		int offset = static_cast<unsigned int>(vertices.size());
+		int offset = static_cast<unsigned int>(m_vertices.size());
 		
-		std::copy(subMesh.GetVertices().cbegin(), subMesh.GetVertices().cend(), std::back_inserter(vertices));
+		std::copy(subMesh.GetVertices().cbegin(), subMesh.GetVertices().cend(), std::back_inserter(m_vertices));
 		for (auto i : subMesh.GetIndices())
 		{
-			indices.push_back(i + offset);
+			m_indices.push_back(i + offset);
 		}
 	}
 }
@@ -42,11 +39,21 @@ const std::string& Engine::SceneManagement::Mesh::GetFilePath() const
 	return m_filepath;
 }
 
+const std::vector<Engine::Rendering::VertexPos>& Engine::SceneManagement::Mesh::GetVertices() const
+{
+	return m_vertices;
+}
+
+const std::vector<unsigned short>& Engine::SceneManagement::Mesh::GetIndices() const
+{
+	return m_indices;
+}
+
 Engine::SceneManagement::Mesh::SubMesh::SubMesh(aiMesh* mesh, const aiScene* scene)
 {
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
-		Engine::Rendering::VertexPos vertex;
+		Engine::Rendering::VertexPos vertex = {};
 
 		vertex.position.x = mesh->mVertices[i].x;
 		vertex.position.y = mesh->mVertices[i].y;

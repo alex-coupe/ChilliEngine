@@ -30,6 +30,11 @@ void Engine::SceneManagement::Scene::RemoveEntity()
 {
 }
 
+const std::vector<std::shared_ptr<Engine::SceneManagement::Entity>>& Engine::SceneManagement::Scene::GetEntities() const
+{
+    return m_entities;
+}
+
 void Engine::SceneManagement::Scene::Update(float dt)
 {
 }
