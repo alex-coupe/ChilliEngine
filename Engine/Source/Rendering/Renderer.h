@@ -30,5 +30,6 @@ namespace Engine::Rendering {
 		std::vector<std::unique_ptr<Drawable>> m_drawables;
 		std::unique_ptr<ConstantBuffer<DirectX::XMMATRIX>> m_transformationCBuff;
 		std::unique_ptr<Camera> m_camera;
+		std::shared_ptr<Gui::GuiManager> m_gui;
 	};
 }

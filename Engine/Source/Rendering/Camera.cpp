@@ -12,3 +12,11 @@ DirectX::XMMATRIX Engine::Rendering::Camera::GetViewMatrix()
 	DirectX::FXMVECTOR up = DirectX::XMVectorSet(m_up.x, m_up.y, m_up.z, 1.0f);
 	return DirectX::XMMatrixLookAtLH(viewPosition,target,up);
 }
+
+void Engine::Rendering::Camera::DrawGui()
+{
+	ImGui::Begin("Camera");
+	ImGui::SliderFloat3("Position", m_positionRemote[0],-80.0f,80.0f);
+	
+	ImGui::End();
+}

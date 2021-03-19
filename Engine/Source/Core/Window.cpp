@@ -2,7 +2,7 @@
 #include <cassert>
 Engine::Core::Window* Engine::Core::Window::m_pInstance = nullptr;
 
-Engine::Core::Window::Window(HINSTANCE& instance, const std::shared_ptr<Event>& event_dispatcher, std::shared_ptr<Gui::GuiManager>& gui_man)
+Engine::Core::Window::Window(HINSTANCE& instance, const std::shared_ptr<Event>& event_dispatcher, std::shared_ptr<Gui::GuiManager>& gui_man, int width, int height)
 	:m_instance(instance), m_event(event_dispatcher), m_gui(gui_man)
 {
 	m_pInstance = this;
@@ -24,9 +24,13 @@ Engine::Core::Window::Window(HINSTANCE& instance, const std::shared_ptr<Event>& 
 		MessageBox(m_handle, L"Failed To Register Window", L"Chilli Error", MB_ICONWARNING | MB_OK);
 
 	//Grab Desktop Resolution
-	RECT desktop;
-	const HWND hDesktop = GetDesktopWindow();
-	GetWindowRect(hDesktop, &desktop);
+	RECT wr;
+	wr.left = 100;
+	wr.right = width + wr.left;
+	wr.top = 100;
+	wr.bottom = height + wr.top;
+	if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE) == 0)
+		MessageBox(m_handle, L"Failed To Adjust Window Rect", L"Chilli Error", MB_ICONWARNING | MB_OK);
 
 	m_handle = CreateWindowEx(
 		WS_EX_CLIENTEDGE,
@@ -34,7 +38,7 @@ Engine::Core::Window::Window(HINSTANCE& instance, const std::shared_ptr<Event>& 
 		title,
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT,CW_USEDEFAULT,
-		desktop.right, desktop.bottom,NULL,NULL,m_instance,NULL);
+		wr.right - wr.left, wr.bottom - wr.top,NULL,NULL,m_instance,NULL);
 
 
 	if (!m_handle)
@@ -42,17 +46,7 @@ Engine::Core::Window::Window(HINSTANCE& instance, const std::shared_ptr<Event>& 
 		MessageBox(m_handle, L"Failed To Create Handle", L"Chilli Error", MB_ICONWARNING | MB_OK);
 		return;
 	}
-		
-		unsigned int width = 0;
-		unsigned int height = 0;
-
-		RECT rect;
-		if (GetWindowRect(m_handle, &rect))
-		{
-			width = rect.right - rect.left;
-			height = rect.bottom - rect.top;
-		}
-
+	
 		assert(width != 0 && height != 0);
 		m_initialWidth = width;
 		m_initialHeight = height;

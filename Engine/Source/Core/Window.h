@@ -9,7 +9,7 @@
 namespace Engine::Core {
 	class Window {
 	public:
-		Window(HINSTANCE& instance, const std::shared_ptr<Event>& event_in,std::shared_ptr<Gui::GuiManager>& gui_man);
+		Window(HINSTANCE& instance, const std::shared_ptr<Event>& event_in,std::shared_ptr<Gui::GuiManager>& gui_man, int width, int height);
 		static LRESULT CALLBACK WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam);
 		HWND GetHandle();
 		bool Update();

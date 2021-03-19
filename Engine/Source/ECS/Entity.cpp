@@ -38,6 +38,7 @@ std::shared_ptr<Engine::ECS::Component>  Engine::ECS::Entity::GetComponent(const
 		if (comp->GetName() == name)
 			return comp;
 	}
+	return nullptr;
 }
 
 void Engine::ECS::Entity::AddComponent(const char* name)

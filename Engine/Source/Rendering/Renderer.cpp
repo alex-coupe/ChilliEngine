@@ -8,7 +8,7 @@
 
 Engine::Rendering::Renderer::Renderer(const std::shared_ptr<DependencyResolver<SubSystem>>& resolver, int64_t width, int64_t height, HWND handle, 
 	const std::shared_ptr<Engine::Gui::GuiManager>& gui_man)
-	: SubSystem(resolver), m_aspectRatio((float)height/(float)width)
+	: SubSystem(resolver), m_aspectRatio((float)height/(float)width), m_gui(gui_man)
 {
 	m_direct3d = std::make_shared<Direct3D>(handle, width, height, gui_man);
 	m_projMatrix = DirectX::XMMatrixPerspectiveLH(1.0f, m_aspectRatio, 0.5f, 100.0f);
@@ -74,7 +74,13 @@ void Engine::Rendering::Renderer::ProcessFrame()
 		m_transformationCBuff->Update(transform);
 		drawable->Draw();
 	}
-
+	m_gui->BeginFrame();
+	{
+		m_gui->Draw();
+		m_camera->DrawGui();
+		
+	}
+	m_gui->EndFrame();
 	m_direct3d->EndFrame();
 	
 }

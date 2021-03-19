@@ -8,6 +8,7 @@ void ChilliEngine::Update()
 		m_timer->ProcessFrame();
 		m_events->ProcessFrame();
 		m_renderer->ProcessFrame();
+		m_sceneManager->ProcessFrame();
 	}
 }
 
@@ -28,7 +29,7 @@ ChilliEngine::ChilliEngine(HINSTANCE& hInstance)
 		MessageBox(m_window->GetHandle(), L"Failed To Initialize Timing System", L"Chilli Error", MB_ICONWARNING | MB_OK);
 	m_resolver->Add(m_timer);
 
-	if (m_window = std::make_unique<Window>(hInstance, m_events, m_guiManager); m_window == nullptr)
+	if (m_window = std::make_unique<Window>(hInstance, m_events, m_guiManager, 1900, 1020); m_window == nullptr)
 		MessageBox(m_window->GetHandle(), L"Failed To Create Window", L"Chilli Error", MB_ICONWARNING | MB_OK);
 		
 	m_renderer = std::make_shared<Renderer>(m_resolver, m_window->GetInitialWidth(), m_window->GetInitialHeight(), m_window->GetHandle(), m_guiManager);

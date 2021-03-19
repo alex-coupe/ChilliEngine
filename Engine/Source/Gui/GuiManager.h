@@ -13,6 +13,8 @@ namespace Engine::Gui {
 	public:
 		GuiManager();
 		~GuiManager();
+		void BeginFrame()const;
+		void EndFrame()const;
 		void Draw()const;
 		bool WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 		void InitWindowsHook(void* handle);

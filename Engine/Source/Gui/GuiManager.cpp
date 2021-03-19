@@ -15,20 +15,27 @@ Engine::Gui::GuiManager::~GuiManager()
 	ImGui::DestroyContext();
 }
 
-void Engine::Gui::GuiManager::Draw() const
+void Engine::Gui::GuiManager::BeginFrame() const
 {
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	{
+}
+
+void Engine::Gui::GuiManager::EndFrame() const
+{
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+}
+
+void Engine::Gui::GuiManager::Draw() const
+{
+	
 		for (const auto& callback: m_guiFunctions)
 		{
 			callback();
 		}
 
-	}
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
