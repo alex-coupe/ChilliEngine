@@ -12,8 +12,10 @@ Engine::Rendering::Renderer::Renderer(const std::shared_ptr<DependencyResolver<S
 {
 	m_direct3d = std::make_shared<Direct3D>(handle, width, height, gui_man);
 	m_projMatrix = DirectX::XMMatrixPerspectiveLH(1.0f, m_aspectRatio, 0.5f, 100.0f);
-	m_modelProjMatrix = std::make_unique<ConstantBuffer<DirectX::XMMATRIX>>(ConstantBufferType::Vertex, m_direct3d);
-	m_modelProjMatrix->Bind();
+	m_transformationCBuff = std::make_unique<ConstantBuffer<DirectX::XMMATRIX>>(ConstantBufferType::Vertex, m_direct3d);
+	m_transformationCBuff->Bind();
+	DirectX::XMFLOAT3 camPosition = { 0.0f,0.0f,0.0f };
+	m_camera = std::make_unique<Camera>(camPosition, (float)width, (float)height);
 }
 
 Engine::Rendering::Renderer::~Renderer()
@@ -56,7 +58,7 @@ bool Engine::Rendering::Renderer::Init()
 	}
 
 //	m_event->Subscribe({ EventType::WindowResized },std::bind(&Direct3D::HandleWindowResize, m_direct3d, std::cref(m_event->GetScreenWidth()), std::cref(m_event->GetScreenHeight())));
-//	m_event->Subscribe({ EventType::WindowResized },std::bind(&Cube::Rebind, m_testCube));
+
 
 	return true;
 }
@@ -68,8 +70,8 @@ void Engine::Rendering::Renderer::ProcessFrame()
 	for (const auto& drawable : m_drawables)
 	{
 		drawable->Update();
-		auto transform = DirectX::XMMatrixTranspose(drawable->GetTransform() * GetProjectionMatrix());
-		m_modelProjMatrix->Update(transform);
+		auto transform = DirectX::XMMatrixTranspose(drawable->GetTransform() * m_camera->GetViewMatrix() * GetProjectionMatrix());
+		m_transformationCBuff->Update(transform);
 		drawable->Draw();
 	}
 

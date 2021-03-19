@@ -4,6 +4,7 @@
 #include "Direct3D.h"
 #include "../SceneManagement/SceneManager.h"
 #include "Drawable.h"
+#include "Camera.h"
 
 namespace Engine::Rendering {
 
@@ -27,6 +28,7 @@ namespace Engine::Rendering {
 		std::shared_ptr<SceneManager> m_sceneManager;
 		DirectX::XMMATRIX m_projMatrix;
 		std::vector<std::unique_ptr<Drawable>> m_drawables;
-		std::unique_ptr<ConstantBuffer<DirectX::XMMATRIX>> m_modelProjMatrix;
+		std::unique_ptr<ConstantBuffer<DirectX::XMMATRIX>> m_transformationCBuff;
+		std::unique_ptr<Camera> m_camera;
 	};
 }

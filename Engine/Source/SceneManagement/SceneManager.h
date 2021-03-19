@@ -12,7 +12,7 @@ namespace Engine::SceneManagement {
 	class CHILLI_API SceneManager : public Engine::Core::SubSystem {
 	public:
 		SceneManager(const std::shared_ptr<Engine::Core::DependencyResolver<SubSystem>>& resolver);
-		void DrawGui()const;
+		void DrawGui();
 		void LoadProject(const std::string& filename);
 		void SaveProject(const std::string& filename);
 		void AddScene(const std::string& name);

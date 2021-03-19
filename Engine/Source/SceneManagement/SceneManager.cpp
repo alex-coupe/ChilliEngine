@@ -9,8 +9,20 @@ Engine::SceneManagement::SceneManager::SceneManager(const std::shared_ptr<Engine
     m_currentScene = m_scenes.front();
 }
 
-void Engine::SceneManagement::SceneManager::DrawGui() const
+void Engine::SceneManagement::SceneManager::DrawGui()
 {
+    ImGui::Begin("Debug");
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
+        1000.0 / float(ImGui::GetIO().Framerate), float(ImGui::GetIO().Framerate));
+    if (ImGui::Button("Save Project"))
+    {
+        SaveProject("sample.json");
+    }
+    if (ImGui::Button("Load Project"))
+    {
+        LoadProject("sample.json");
+    }
+    ImGui::End();
     for (const auto& scene : m_scenes)
         scene->DrawGui();                 
 }
@@ -61,6 +73,7 @@ void Engine::SceneManagement::SceneManager::LoadProject(const std::string& filen
 
 void Engine::SceneManagement::SceneManager::SaveProject(const std::string& filename)
 {
+    
 }
 
 void Engine::SceneManagement::SceneManager::AddScene(const std::string& name)

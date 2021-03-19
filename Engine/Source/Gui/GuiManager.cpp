@@ -21,12 +21,6 @@ void Engine::Gui::GuiManager::Draw() const
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	{
-
-		ImGui::Begin("Debug");
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
-			1000.0 / float(ImGui::GetIO().Framerate), float(ImGui::GetIO().Framerate));
-		ImGui::End();
-
 		for (const auto& callback: m_guiFunctions)
 		{
 			callback();
