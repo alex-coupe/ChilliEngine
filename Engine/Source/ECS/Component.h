@@ -17,9 +17,9 @@ namespace Engine::ECS {
 		virtual ~Component() {};
 		virtual const std::string Serialize()const = 0;
 		virtual void DrawGui()const = 0;
-		unsigned int GetComponentType()const
+		ComponentTypes GetComponentType()const
 		{
-			return static_cast<unsigned int>(m_type);
+			return m_type;
 		}
 		const std::string& GetName()const
 		{

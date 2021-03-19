@@ -14,12 +14,14 @@ Engine::SceneManagement::Scene::Scene(unsigned int id, const std::string& name, 
     }
 }
 
-void Engine::SceneManagement::Scene::Serialize(const std::string& filename)
+const std::string Engine::SceneManagement::Scene::Serialize()
 {
-}
-
-void Engine::SceneManagement::Scene::Deserialize(const std::string& filename)
-{
+    std::stringstream ss;
+    for (const auto& entity : m_entities)
+    {
+        ss << entity->Serialize();
+    }
+    return ss.str();
 }
 
 void Engine::SceneManagement::Scene::AddEntity()

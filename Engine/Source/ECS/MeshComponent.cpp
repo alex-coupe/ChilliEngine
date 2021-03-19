@@ -6,6 +6,11 @@ Engine::ECS::MeshComponent::MeshComponent(bool editor_only, const std::string& m
 	m_mesh = std::make_shared<Engine::SceneManagement::Mesh>(filepath);
 }
 
+Engine::ECS::MeshComponent::MeshComponent(bool editor_only)
+	:m_editorOnly(editor_only), Component(ComponentTypes::Mesh, "Mesh")
+{
+}
+
 const std::string Engine::ECS::MeshComponent::Serialize() const
 {
 	std::stringstream ss;

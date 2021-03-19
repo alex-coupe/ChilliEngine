@@ -11,8 +11,7 @@ namespace Engine::SceneManagement {
 	public:
 		Scene(unsigned int id, const std::string& name);
 		Scene(unsigned int id, const std::string& name, const rapidjson::Value& entities);
-		void Serialize(const std::string& filename);
-		void Deserialize(const std::string& filename);
+		const std::string Serialize();
 		void AddEntity();
 		void RemoveEntity();
 		const std::vector<std::shared_ptr<Entity>>& GetEntities()const;

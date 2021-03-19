@@ -5,6 +5,9 @@
 #include <memory>
 #include <set>
 #include <vector>
+/// <summary>
+/// TODO - Entity factor to make prefabs such as point lights, actors, game objects etc that come with the relevent components
+/// </summary>
 
 namespace Engine::ECS {
 
@@ -12,13 +15,11 @@ namespace Engine::ECS {
 	public:
 		Entity(const std::string& name, const unsigned int id);
 		Entity(const std::string& name, const unsigned int id, const rapidjson::Value& components);
-		std::shared_ptr<Component> GetComponent(const std::string& name);
-		void AddComponent(const char* name);
-		void RemoveComponent(const char* name);
-		void Serialize(const std::string& filename)const;
-		void Deserialize(const std::string& filename);
+		std::shared_ptr<Component> GetComponent(ComponentTypes type);
+		void AddComponent(ComponentTypes type);
+		void RemoveComponent(ComponentTypes type);
+		const std::string Serialize()const;
 		void DrawGui()const;
-		void Draw()const;
 	private:
 		std::string m_name;
 		const unsigned int m_id;

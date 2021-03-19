@@ -37,12 +37,8 @@ int Engine::Rendering::Renderer::GetHash()const
 bool Engine::Rendering::Renderer::Init()
 {
 	auto m_event = m_resolver->ResolveDependency<Engine::Core::Event>();
-
-	//////////This should be moved out of renderer
 	m_sceneManager = m_resolver->ResolveDependency<SceneManager>();
 	
-	
-	/////////////
 
 	if (m_event == nullptr)
 	{

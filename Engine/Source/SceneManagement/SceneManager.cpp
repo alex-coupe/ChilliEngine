@@ -22,9 +22,14 @@ void Engine::SceneManagement::SceneManager::DrawGui()
     {
         LoadProject("sample.json");
     }
-    ImGui::End();
     for (const auto& scene : m_scenes)
-        scene->DrawGui();                 
+    {
+        ImGui::Button(scene->GetName().c_str());
+    }
+
+    ImGui::End();
+    m_currentScene->DrawGui();
+                        
 }
 
 void Engine::SceneManagement::SceneManager::LoadProject(const std::string& filename)
@@ -73,12 +78,21 @@ void Engine::SceneManagement::SceneManager::LoadProject(const std::string& filen
 
 void Engine::SceneManagement::SceneManager::SaveProject(const std::string& filename)
 {
-    
+    std::stringstream ss;
+    std::ofstream outputStream;
+    for (const auto& scene : m_scenes)
+    {
+        ss << scene->Serialize();
+    }
+
+    outputStream.open(filename);
+    outputStream << ss.str();
+    outputStream.close();
 }
 
 void Engine::SceneManagement::SceneManager::AddScene(const std::string& name)
 {
-    m_scenes.emplace_back(std::make_shared<Scene>(1, name));
+    m_scenes.emplace_back(std::make_shared<Scene>((unsigned int)m_scenes.size(), name));
 }
 
 void Engine::SceneManagement::SceneManager::RemoveScene(unsigned int scene_id)
