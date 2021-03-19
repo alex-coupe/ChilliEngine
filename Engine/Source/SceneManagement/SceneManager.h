@@ -3,7 +3,6 @@
 #include "../Core/SubSystem.h"
 #include "../Core/DependencyResolver.h"
 #include "Scene.h"
-#include "MeshLibrary.h"
 #include "rapidjson/document.h"
 #include "rapidjson/prettywriter.h"
 #include <fstream>

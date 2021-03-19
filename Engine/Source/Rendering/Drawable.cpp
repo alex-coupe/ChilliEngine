@@ -7,9 +7,9 @@ Engine::Rendering::Drawable::Drawable(const std::shared_ptr<Direct3D>& d3d, cons
 	auto mesh = std::dynamic_pointer_cast<Engine::ECS::MeshComponent>(m_entity->GetComponent("Mesh"));
 	m_transform = transform->GetTransformMatrix();
 	m_vertexBuffer = std::make_unique<VertexBuffer>(mesh->GetVertices(), m_direct3d);
-	m_vertexBuffer->Bind();
+	
 	m_indexBuffer = std::make_unique<IndexBuffer>(mesh->GetIndices(), m_direct3d);
-	m_indexBuffer->Bind();
+	
 	const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 	{
 		{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -36,6 +36,8 @@ const DirectX::XMMATRIX& Engine::Rendering::Drawable::GetTransform() const
 
 void Engine::Rendering::Drawable::Draw() const
 {
+	m_vertexBuffer->Bind();
+	m_indexBuffer->Bind();
 	m_direct3d->DrawIndexed(m_indexBuffer->GetCount());
 }
 
