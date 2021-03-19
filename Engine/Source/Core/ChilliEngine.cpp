@@ -16,7 +16,6 @@ ChilliEngine::ChilliEngine(HINSTANCE& hInstance)
 {
 	m_guiManager = std::make_shared<GuiManager>();
 	
-	//Create Systems
 	if (m_resolver = std::make_shared<DependencyResolver<SubSystem>>(); m_resolver == nullptr)
 		MessageBox(m_window->GetHandle(), L"Failed To Initialize Dependency Resolver", L"Chilli Error", MB_ICONWARNING | MB_OK);
 		
@@ -40,13 +39,8 @@ ChilliEngine::ChilliEngine(HINSTANCE& hInstance)
 
 	m_guiManager->AddGuiElement(std::bind(&SceneManager::DrawGui, m_sceneManager));
 
-
-	m_sceneManager->LoadProject("sample.json");
-
 	if (!m_renderer->Init())
 		MessageBox(m_window->GetHandle(), L"Failed To Initialize Renderer", L"Chilli Error", MB_ICONWARNING |MB_ABORTRETRYIGNORE);
-
-	
 }
 
 ChilliEngine::~ChilliEngine()

@@ -40,15 +40,8 @@ bool Engine::Rendering::Renderer::Init()
 
 	//////////This should be moved out of renderer
 	m_sceneManager = m_resolver->ResolveDependency<SceneManager>();
-
-	auto &entities = m_sceneManager->GetCurrentScene()->GetEntities();
-
-	for (const auto& entity : entities)
-	{	
-		std::unique_ptr<Drawable> drawable = std::make_unique<Drawable>(m_direct3d, entity);
-		
-		m_drawables.push_back(std::move(drawable));
-	}
+	
+	
 	/////////////
 
 	if (m_event == nullptr)
@@ -65,6 +58,18 @@ bool Engine::Rendering::Renderer::Init()
 
 void Engine::Rendering::Renderer::ProcessFrame()
 {
+	auto& entities = m_sceneManager->GetCurrentScene()->GetEntities();
+	if (m_drawables.size() != m_sceneManager->GetCurrentScene()->GetEntities().size())
+	{
+		m_drawables.clear();
+		for (const auto& entity : entities)
+		{
+			std::unique_ptr<Drawable> drawable = std::make_unique<Drawable>(m_direct3d, entity);
+
+			m_drawables.push_back(std::move(drawable));
+		}
+	}
+
 	m_direct3d->BeginFrame();
 	
 	for (const auto& drawable : m_drawables)

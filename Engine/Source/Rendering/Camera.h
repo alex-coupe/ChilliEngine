@@ -14,7 +14,7 @@ namespace Engine::Rendering {
 		DirectX::XMFLOAT3 m_up;
 		float m_fov = 45.0f;
 		float m_pitch = 0.0f;
-		float m_yaw = -90.0f;
+		float m_yaw = 0.0f;
 		float m_speed = 2.5f;
 		float* m_positionRemote[3] = { &m_position.x, &m_position.y, &m_position.z };
 		

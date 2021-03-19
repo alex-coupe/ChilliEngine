@@ -15,8 +15,9 @@ DirectX::XMMATRIX Engine::Rendering::Camera::GetViewMatrix()
 
 void Engine::Rendering::Camera::DrawGui()
 {
-	ImGui::Begin("Camera");
+	ImGui::Begin("Editor Camera");
 	ImGui::SliderFloat3("Position", m_positionRemote[0],-80.0f,80.0f);
-	
+	ImGui::SliderFloat("Yaw", &m_yaw, -30.0f, 30.0f);
+	ImGui::SliderFloat("Pitch", &m_pitch, -30.0f, 30.0f);
 	ImGui::End();
 }
