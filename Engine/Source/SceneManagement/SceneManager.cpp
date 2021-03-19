@@ -11,28 +11,8 @@ Engine::SceneManagement::SceneManager::SceneManager(const std::shared_ptr<Engine
 
 void Engine::SceneManagement::SceneManager::DrawGui() const
 {
-    bool m_drawGui = true;
-    ImGui::Begin("Scene Manager",&m_drawGui,  ImGuiWindowFlags_MenuBar);
-    if (ImGui::BeginMenuBar())
-    {
-        if (ImGui::BeginMenu("File"))
-        {
-            if (ImGui::MenuItem("Open..", "Ctrl+O")) { /* Do stuff */ }
-            if (ImGui::MenuItem("Save", "Ctrl+S")) { /* Do stuff */ }
-            if (ImGui::MenuItem("Close", "Ctrl+W")) {}
-            ImGui::EndMenu();
-        }
-        ImGui::EndMenuBar();
-    }
-    static const char* current_item = NULL;
-    if (ImGui::BeginCombo("Scenes", current_item, ImGuiComboFlags_NoArrowButton & ImGuiComboFlags_NoPreview))
-    {
-        for (const auto& scene : m_scenes)
-            if (ImGui::Selectable(scene->GetName().c_str(), false))
-                current_item = scene->GetName().c_str();
-        ImGui::EndCombo();
-    }
-    ImGui::End();   
+    for (const auto& scene : m_scenes)
+        scene->DrawGui();                 
 }
 
 void Engine::SceneManagement::SceneManager::LoadProject(const std::string& filename)
@@ -90,10 +70,7 @@ void Engine::SceneManagement::SceneManager::AddScene(const std::string& name)
 
 void Engine::SceneManagement::SceneManager::RemoveScene(unsigned int scene_id)
 {
-    /*
-    std::remove_if(m_scenes.begin(), m_scenes.end(), [this, scene_id](const Scene& rhs) {
-        return rhs.GetID() == scene_id && scene_id != m_currentSceneId;
-        });*/
+    
 }
 
 unsigned int Engine::SceneManagement::SceneManager::GetCurrentSceneId() const

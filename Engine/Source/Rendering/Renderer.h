@@ -27,5 +27,6 @@ namespace Engine::Rendering {
 		std::shared_ptr<SceneManager> m_sceneManager;
 		DirectX::XMMATRIX m_projMatrix;
 		std::vector<std::unique_ptr<Drawable>> m_drawables;
+		std::unique_ptr<ConstantBuffer<DirectX::XMMATRIX>> m_modelProjMatrix;
 	};
 }

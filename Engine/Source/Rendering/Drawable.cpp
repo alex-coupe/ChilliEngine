@@ -1,12 +1,14 @@
 #include "Drawable.h"
 
-Engine::Rendering::Drawable::Drawable(const std::shared_ptr<Direct3D>& d3d, const std::vector<VertexPos>& vertices, const std::vector<unsigned short>& indices,
-	DirectX::XMMATRIX model, DirectX::XMMATRIX proj)
-	:m_direct3d(d3d)
+Engine::Rendering::Drawable::Drawable(const std::shared_ptr<Direct3D>& d3d, const std::shared_ptr<Engine::ECS::Entity>& entity)
+	:m_direct3d(d3d), m_entity(entity)
 {
-	m_vertexBuffer = std::make_unique<VertexBuffer>(vertices, m_direct3d);
+	auto transform = std::dynamic_pointer_cast<Engine::ECS::TransformComponent>(m_entity->GetComponent("Transform"));
+	auto mesh = std::dynamic_pointer_cast<Engine::ECS::MeshComponent>(m_entity->GetComponent("Mesh"));
+	m_transform = transform->GetTransformMatrix();
+	m_vertexBuffer = std::make_unique<VertexBuffer>(mesh->GetVertices(), m_direct3d);
 	m_vertexBuffer->Bind();
-	m_indexBuffer = std::make_unique<IndexBuffer>(indices, m_direct3d);
+	m_indexBuffer = std::make_unique<IndexBuffer>(mesh->GetIndices(), m_direct3d);
 	m_indexBuffer->Bind();
 	const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 	{
@@ -25,13 +27,11 @@ Engine::Rendering::Drawable::Drawable(const std::shared_ptr<Direct3D>& d3d, cons
 	m_topology = std::make_unique<Topology>(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, m_direct3d);
 	m_topology->Bind();
 
-	m_transform =  DirectX::XMMatrixTranspose(
-		model * proj
-	);
+}
 
-	m_modelProjMatrix = std::make_unique<ConstantBuffer<DirectX::XMMATRIX>>(ConstantBufferType::Vertex, m_transform, m_direct3d);
-	m_modelProjMatrix->Bind();
-
+const DirectX::XMMATRIX& Engine::Rendering::Drawable::GetTransform() const
+{
+	return m_transform;
 }
 
 void Engine::Rendering::Drawable::Draw() const
@@ -41,4 +41,9 @@ void Engine::Rendering::Drawable::Draw() const
 
 void Engine::Rendering::Drawable::Rebind()
 {
+}
+
+void Engine::Rendering::Drawable::Update()
+{
+	m_transform =  std::dynamic_pointer_cast<Engine::ECS::TransformComponent>(m_entity->GetComponent("Transform"))->GetTransformMatrix();
 }

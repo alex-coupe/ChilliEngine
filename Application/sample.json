@@ -48,7 +48,7 @@
                         {
                             "Type":2,
                             "MeshName":"Cone",
-                            "Filepath": "Assets/Models/Cone.fbx",
+                            "Filepath": "Assets/Models/Cube.fbx",
                             "EditorOnly":false
                         }
                     ]

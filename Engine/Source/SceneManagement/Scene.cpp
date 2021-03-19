@@ -41,6 +41,10 @@ void Engine::SceneManagement::Scene::Update(float dt)
 
 void Engine::SceneManagement::Scene::DrawGui() const
 {
+    for (const auto& ent : m_entities)
+    {
+        ent->DrawGui();
+    }
 }
 
 void Engine::SceneManagement::Scene::Draw() const

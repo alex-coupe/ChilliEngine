@@ -15,7 +15,9 @@ const std::string Engine::ECS::MeshComponent::Serialize() const
 
 void Engine::ECS::MeshComponent::DrawGui() const
 {
+	ImGui::Text(m_name.c_str());
 	ImGui::Text(m_meshName.c_str());
+	
 }
 
 const std::vector<Engine::Rendering::VertexPos>& Engine::ECS::MeshComponent::GetVertices() const

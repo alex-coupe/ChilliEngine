@@ -12,7 +12,8 @@ Engine::Rendering::Renderer::Renderer(const std::shared_ptr<DependencyResolver<S
 {
 	m_direct3d = std::make_shared<Direct3D>(handle, width, height, gui_man);
 	m_projMatrix = DirectX::XMMatrixPerspectiveLH(1.0f, m_aspectRatio, 0.5f, 100.0f);
-
+	m_modelProjMatrix = std::make_unique<ConstantBuffer<DirectX::XMMATRIX>>(ConstantBufferType::Vertex, m_direct3d);
+	m_modelProjMatrix->Bind();
 }
 
 Engine::Rendering::Renderer::~Renderer()
@@ -35,19 +36,18 @@ bool Engine::Rendering::Renderer::Init()
 {
 	auto m_event = m_resolver->ResolveDependency<Engine::Core::Event>();
 
+	//////////This should be moved out of renderer
 	m_sceneManager = m_resolver->ResolveDependency<SceneManager>();
 
 	auto &entities = m_sceneManager->GetCurrentScene()->GetEntities();
 
 	for (const auto& entity : entities)
-	{
-		auto transform = std::dynamic_pointer_cast<Engine::ECS::TransformComponent>(entity->GetComponent("Transform"));
-		auto mesh = std::dynamic_pointer_cast<Engine::ECS::MeshComponent>(entity->GetComponent("Mesh"));
-		auto x = mesh->GetVertices();
-		std::unique_ptr<Drawable> drawable = std::make_unique<Drawable>(m_direct3d, x, mesh->GetIndices(), transform->GetTransformMatrix(), m_projMatrix);
+	{	
+		std::unique_ptr<Drawable> drawable = std::make_unique<Drawable>(m_direct3d, entity);
 		
 		m_drawables.push_back(std::move(drawable));
 	}
+	/////////////
 
 	if (m_event == nullptr)
 	{
@@ -67,6 +67,9 @@ void Engine::Rendering::Renderer::ProcessFrame()
 	
 	for (const auto& drawable : m_drawables)
 	{
+		drawable->Update();
+		auto transform = DirectX::XMMatrixTranspose(drawable->GetTransform() * GetProjectionMatrix());
+		m_modelProjMatrix->Update(transform);
 		drawable->Draw();
 	}
 
