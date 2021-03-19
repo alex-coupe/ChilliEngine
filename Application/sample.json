@@ -1,9 +1,11 @@
 {
     "ProjectName":"My Cool Project",
+    "LastSceneId":1,
     "Scenes" : [
         {
             "SceneName":"Scene One",
             "Id":1,
+            "LastEntityId":2,
             "Entities": [
                 {
                     "Name": "Entity One",

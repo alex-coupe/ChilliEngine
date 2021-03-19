@@ -7,11 +7,12 @@ Engine::SceneManagement::SceneManager::SceneManager(const std::shared_ptr<Engine
 {
     m_scenes.emplace_back(std::make_shared<Scene>(1, "Scene 1"));
     m_currentScene = m_scenes.front();
+    m_timer = m_resolver->ResolveDependency<Engine::Core::Timer>();
 }
 
 void Engine::SceneManagement::SceneManager::DrawGui()
 {
-    ImGui::Begin("Debug");
+    ImGui::Begin(m_projectName.c_str());
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
         1000.0 / float(ImGui::GetIO().Framerate), float(ImGui::GetIO().Framerate));
     if (ImGui::Button("Save Project"))
@@ -22,6 +23,7 @@ void Engine::SceneManagement::SceneManager::DrawGui()
     {
         LoadProject("sample.json");
     }
+    ImGui::Separator();
     for (const auto& scene : m_scenes)
     {
         ImGui::Button(scene->GetName().c_str());
@@ -61,7 +63,7 @@ void Engine::SceneManagement::SceneManager::LoadProject(const std::string& filen
 
     if (document.HasMember("ProjectName"))
     {
-        m_projectName = document["ProjectName"].GetString();
+        m_lastSceneId = document["LastSceneId"].GetInt();
     }
 
     if (document.HasMember("Scenes"))
@@ -70,7 +72,7 @@ void Engine::SceneManagement::SceneManager::LoadProject(const std::string& filen
         m_currentScene.reset();
         for (const auto& scene : document["Scenes"].GetArray())
         {
-            m_scenes.emplace_back(std::make_shared<Scene>(scene["Id"].GetInt(), scene["SceneName"].GetString(), scene["Entities"].GetArray()));
+            m_scenes.emplace_back(std::make_shared<Scene>(scene["Id"].GetInt(), scene["SceneName"].GetString(), scene["LastEntityId"].GetInt(), scene["Entities"].GetArray()));
         }
         m_currentScene = m_scenes.front();
     }
@@ -80,11 +82,13 @@ void Engine::SceneManagement::SceneManager::SaveProject(const std::string& filen
 {
     std::stringstream ss;
     std::ofstream outputStream;
+
+    ss << "{ \"ProjectName\":\"" << m_projectName << "\", \"LastSceneId\":" << m_lastSceneId << ", \"Scenes\":[ ";
     for (const auto& scene : m_scenes)
     {
         ss << scene->Serialize();
     }
-
+    ss << "]}";
     outputStream.open(filename);
     outputStream << ss.str();
     outputStream.close();
@@ -92,12 +96,18 @@ void Engine::SceneManagement::SceneManager::SaveProject(const std::string& filen
 
 void Engine::SceneManagement::SceneManager::AddScene(const std::string& name)
 {
-    m_scenes.emplace_back(std::make_shared<Scene>((unsigned int)m_scenes.size(), name));
+    m_scenes.emplace_back(std::make_shared<Scene>(m_lastSceneId++, name));
 }
 
 void Engine::SceneManagement::SceneManager::RemoveScene(unsigned int scene_id)
 {
-    
+    if (auto m_sceneIterator = std::find_if(m_scenes.begin(), m_scenes.end(), [scene_id](const std::shared_ptr<Scene> rhs)
+        {
+            return rhs->GetId() == scene_id;
+        }); m_sceneIterator != m_scenes.end() && m_scenes.size() > 1)
+    {
+        m_scenes.erase(m_sceneIterator);
+    }
 }
 
 unsigned int Engine::SceneManagement::SceneManager::GetCurrentSceneId() const
@@ -112,13 +122,7 @@ std::shared_ptr<Engine::SceneManagement::Scene> Engine::SceneManagement::SceneMa
 
 void Engine::SceneManagement::SceneManager::SetCurrentScene(unsigned int scene_id)
 {
-    //Maybe check the scene exists first?
     m_currentSceneId = scene_id;
-}
-
-void Engine::SceneManagement::SceneManager::DrawCurrentScene() const
-{
-    m_currentScene->Draw();
 }
 
 int Engine::SceneManagement::SceneManager::GetHash() const
@@ -128,7 +132,7 @@ int Engine::SceneManagement::SceneManager::GetHash() const
 
 void Engine::SceneManagement::SceneManager::ProcessFrame()
 {
-   // m_currentScene->Update(0.1f);
+    m_currentScene->Update(m_timer->GetDeltaTime());
 }
 
 

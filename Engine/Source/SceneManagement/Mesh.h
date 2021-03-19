@@ -29,6 +29,6 @@ namespace Engine::SceneManagement {
 		std::vector<SubMesh> m_subMeshes;
 		std::vector<Engine::Rendering::VertexPos> m_vertices;
 		std::vector<unsigned short> m_indices;
-		std::string m_filepath;
+		const std::string m_filepath;
 	};
 }

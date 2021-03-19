@@ -99,7 +99,12 @@ void Engine::ECS::Entity::DrawGui() const
 		components->DrawGui();
 		ImGui::Separator();
 	}
-	ImGui::End();
+	
+}
+
+const unsigned int Engine::ECS::Entity::GetId() const
+{
+	return m_id;
 }
 
 

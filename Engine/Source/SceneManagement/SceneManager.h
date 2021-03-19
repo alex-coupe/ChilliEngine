@@ -2,12 +2,17 @@
 #include "../Core/ChilliDefinitions.h"
 #include "../Core/SubSystem.h"
 #include "../Core/DependencyResolver.h"
+#include "../Core/Timer.h"
 #include "Scene.h"
 #include "rapidjson/document.h"
 #include "rapidjson/prettywriter.h"
 #include <fstream>
 #include <sstream>
 namespace Engine::SceneManagement {
+
+	/// <summary>
+	/// TODO - Mesh codex to avoid loading meshes twice
+	/// </summary>
 
 	class CHILLI_API SceneManager : public Engine::Core::SubSystem {
 	public:
@@ -26,9 +31,10 @@ namespace Engine::SceneManagement {
 	private:
 		std::vector<std::shared_ptr<Scene>> m_scenes;
 		std::shared_ptr<Scene> m_currentScene;
-		unsigned int m_currentSceneId = 0;
+		unsigned int m_currentSceneId = 1;
+		unsigned int m_lastSceneId = 1;
 		std::stringstream ss;
 		std::string m_projectName = "untitled";
-	
+		std::shared_ptr<Engine::Core::Timer> m_timer;
 	};
 }

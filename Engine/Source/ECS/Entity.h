@@ -20,6 +20,7 @@ namespace Engine::ECS {
 		void RemoveComponent(ComponentTypes type);
 		const std::string Serialize()const;
 		void DrawGui()const;
+		const unsigned int GetId()const;
 	private:
 		std::string m_name;
 		const unsigned int m_id;
