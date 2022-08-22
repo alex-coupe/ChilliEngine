@@ -1,10 +1,9 @@
 #include "Timer.h"
 
-Engine::Core::Timer::Timer(const std::shared_ptr<DependencyResolver<SubSystem>>& resolver)
+Engine::Core::Timer::Timer()
 	: m_frameStart(std::chrono::steady_clock::now()),
 	m_frameEnd(std::chrono::steady_clock::now()),
-	m_appStart(std::chrono::steady_clock::now()),
-	SubSystem(resolver)
+	m_appStart(std::chrono::steady_clock::now())
 {}
 
 void Engine::Core::Timer::ProcessFrame()
@@ -18,7 +17,7 @@ void Engine::Core::Timer::ProcessFrame()
 
 }
 
-int Engine::Core::Timer::GetHash()const
+int Engine::Core::Timer::GetSystemType()const
 {
 	return static_cast<int>(SystemTypes::Timer);
 }

@@ -8,6 +8,7 @@
 #include "rapidjson/prettywriter.h"
 #include <fstream>
 #include <sstream>
+
 namespace Engine::SceneManagement {
 
 	/// <summary>
@@ -16,7 +17,7 @@ namespace Engine::SceneManagement {
 
 	class CHILLI_API SceneManager : public Engine::Core::SubSystem {
 	public:
-		SceneManager(const std::shared_ptr<Engine::Core::DependencyResolver<SubSystem>>& resolver);
+		SceneManager();
 		void DrawGui();
 		void LoadProject(const std::string& filename);
 		void SaveProject(const std::string& filename);
@@ -26,7 +27,7 @@ namespace Engine::SceneManagement {
 		std::shared_ptr<Scene> GetCurrentScene()const;
 		void SetCurrentScene(unsigned int scene_id);
 		void DrawCurrentScene()const;
-		virtual int GetHash()const;
+		virtual int GetSystemType()const;
 		virtual void ProcessFrame();
 	private:
 		std::vector<std::shared_ptr<Scene>> m_scenes;

@@ -203,6 +203,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\ChilliEngine.cpp" />
+    <ClCompile Include="Source\Core\DependencyResolver.cpp" />
     <ClCompile Include="Source\Core\Event.cpp" />
     <ClCompile Include="Source\Core\Timer.cpp" />
     <ClCompile Include="Source\Core\Window.cpp" />

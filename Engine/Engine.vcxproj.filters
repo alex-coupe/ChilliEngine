@@ -218,6 +218,9 @@
     <ClCompile Include="Source\Rendering\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\DependencyResolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Source\Rendering\shaders\Pixel_Basic.hlsl" />

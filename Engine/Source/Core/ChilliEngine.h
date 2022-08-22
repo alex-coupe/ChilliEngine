@@ -29,7 +29,6 @@ private:
 	std::shared_ptr<Event> m_events;
 	std::shared_ptr<Timer> m_timer;
 	std::shared_ptr<Renderer> m_renderer;
-	std::shared_ptr<DependencyResolver<SubSystem>> m_resolver;
 	std::unique_ptr<Window> m_window;
 	std::shared_ptr<SceneManager> m_sceneManager;
 	std::shared_ptr<GuiManager> m_guiManager;

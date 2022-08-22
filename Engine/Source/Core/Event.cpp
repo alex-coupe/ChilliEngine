@@ -35,11 +35,6 @@ void Engine::Core::Event::ResetKeyboard()
 	m_keys.reset();
 }
 
-Engine::Core::Event::Event(const std::shared_ptr<DependencyResolver<SubSystem>>& m_resolver)
-	: SubSystem(m_resolver)
-{
-}
-
 Engine::Core::Event::~Event()
 {
 	while (!m_eventBuffer.empty())
@@ -50,7 +45,7 @@ Engine::Core::Event::~Event()
 	}
 }
 
-int Engine::Core::Event::GetHash()const
+int Engine::Core::Event::GetSystemType()const
 {
 	return static_cast<int>(SystemTypes::EventSystem);
 }

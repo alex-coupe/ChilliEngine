@@ -39,12 +39,12 @@ namespace Engine::Core {
 	
 	class CHILLI_API Event : public SubSystem { 
 	public:
-		Event(const std::shared_ptr<DependencyResolver<SubSystem>>& m_resolver);
+		Event() = default;
 		~Event();
 		Event(const Event&) = delete;
 		Event& operator=(const Event&) = delete;
 		Event(Event&&)noexcept = default;
-		int GetHash()const override;
+		int GetSystemType()const override;
 		void ProcessFrame()override;
 		void Push(const EventData*const e);
 		void Subscribe(const std::vector<EventType>& types, std::function<void()> callback);

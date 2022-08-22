@@ -6,9 +6,9 @@
 #include "../ECS/MeshComponent.h"
 #include "../ECS/TransformComponent.h"
 
-Engine::Rendering::Renderer::Renderer(const std::shared_ptr<DependencyResolver<SubSystem>>& resolver, int64_t width, int64_t height, HWND handle, 
+Engine::Rendering::Renderer::Renderer(int64_t width, int64_t height, HWND handle, 
 	const std::shared_ptr<Engine::Gui::GuiManager>& gui_man)
-	: SubSystem(resolver), m_aspectRatio((float)height/(float)width), m_gui(gui_man)
+	: m_aspectRatio((float)height/(float)width), m_gui(gui_man)
 {
 	m_direct3d = std::make_shared<Direct3D>(handle, width, height, gui_man);
 	m_projMatrix = DirectX::XMMatrixPerspectiveLH(1.0f, m_aspectRatio, 0.5f, 100.0f);
@@ -28,7 +28,7 @@ const DirectX::XMMATRIX& Engine::Rendering::Renderer::GetProjectionMatrix() cons
 	return m_projMatrix;
 }
 
-int Engine::Rendering::Renderer::GetHash()const
+int Engine::Rendering::Renderer::GetSystemType()const
 {
     return static_cast<int>(Engine::Core::SystemTypes::Renderer);
 	
@@ -36,8 +36,8 @@ int Engine::Rendering::Renderer::GetHash()const
 
 bool Engine::Rendering::Renderer::Init()
 {
-	auto m_event = m_resolver->ResolveDependency<Engine::Core::Event>();
-	m_sceneManager = m_resolver->ResolveDependency<SceneManager>();
+	auto m_event = DependencyResolver::ResolveDependency<Engine::Core::Event>();
+	m_sceneManager = DependencyResolver::ResolveDependency<SceneManager>();
 	
 
 	if (m_event == nullptr)

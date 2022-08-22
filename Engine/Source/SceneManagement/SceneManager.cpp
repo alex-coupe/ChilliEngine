@@ -1,13 +1,13 @@
 #include "SceneManager.h"
 #include <Windows.h>
 #include "../Rendering/Renderer.h"
+#include "../Core/DependencyResolver.h"
 
-Engine::SceneManagement::SceneManager::SceneManager(const std::shared_ptr<Engine::Core::DependencyResolver<SubSystem>>& resolver)
-    : SubSystem(resolver)
+Engine::SceneManagement::SceneManager::SceneManager()
 {
     m_scenes.emplace_back(std::make_shared<Scene>(1, "Scene 1"));
     m_currentScene = m_scenes.front();
-    m_timer = m_resolver->ResolveDependency<Engine::Core::Timer>();
+    m_timer = Engine::Core::DependencyResolver::ResolveDependency<Engine::Core::Timer>();
 }
 
 void Engine::SceneManagement::SceneManager::DrawGui()
@@ -125,7 +125,7 @@ void Engine::SceneManagement::SceneManager::SetCurrentScene(unsigned int scene_i
     m_currentSceneId = scene_id;
 }
 
-int Engine::SceneManagement::SceneManager::GetHash() const
+int Engine::SceneManagement::SceneManager::GetSystemType() const
 {
     return static_cast<int>(Engine::Core::SystemTypes::SceneManager);
 }

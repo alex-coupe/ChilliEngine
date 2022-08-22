@@ -12,13 +12,13 @@ namespace Engine::Rendering {
 	using namespace Engine::SceneManagement;
 	class CHILLI_API Renderer : public SubSystem{
 	public:
-		Renderer(const std::shared_ptr<DependencyResolver<SubSystem>>& resolver, int64_t width, int64_t height, HWND handle, const std::shared_ptr<Engine::Gui::GuiManager>& gui_man);
+		Renderer(int64_t width, int64_t height, HWND handle, const std::shared_ptr<Engine::Gui::GuiManager>& gui_man);
 		~Renderer();
 		Renderer(const Renderer&) = delete;
 		Renderer& operator=(const Renderer&) = delete;
 		Renderer(Renderer&&)noexcept = default;
 		const DirectX::XMMATRIX& GetProjectionMatrix()const;
-		int GetHash() const override;
+		int GetSystemType() const override;
 		bool Init();
 		void ProcessFrame()override;
 		const std::shared_ptr<Direct3D>& GetD3D()const;

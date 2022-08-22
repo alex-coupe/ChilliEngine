@@ -1,6 +1,5 @@
 #pragma once
 #include "ChilliDefinitions.h"
-#include "DependencyResolver.h"
 #pragma warning(disable:4251)
 namespace Engine::Core {
 
@@ -10,13 +9,11 @@ namespace Engine::Core {
 
 	class CHILLI_API SubSystem {
 	public:
-		SubSystem(const std::shared_ptr<DependencyResolver<SubSystem>>& m_resolver) : m_resolver(m_resolver)
+		SubSystem()
 		{}
-		virtual int GetHash() const = 0;		
+		virtual int GetSystemType() const = 0;		
 		virtual ~SubSystem() {};
 		virtual void ProcessFrame() = 0;
-	protected:
-		std::shared_ptr<DependencyResolver<SubSystem>> m_resolver;
 	};
 	
 }

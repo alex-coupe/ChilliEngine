@@ -3,14 +3,14 @@
 #include <vector>
 #include <map>
 #include <memory>
+#include "SubSystem.h"
 
 namespace Engine::Core {
 
-	template <typename T>
 	class DependencyResolver {
 	public:
 		template<typename U>
-		std::shared_ptr<U> ResolveDependency()
+		static std::shared_ptr<U> ResolveDependency()
 		{	
 			
 			for (auto& item : m_dependencies)
@@ -23,7 +23,7 @@ namespace Engine::Core {
 		}
 
 		template<typename U>
-		std::shared_ptr<U> ResolveDependency(const char* name)
+		static std::shared_ptr<U> ResolveDependency(const char* name)
 		{
 
 			for (auto& item : m_dependencies)
@@ -35,18 +35,18 @@ namespace Engine::Core {
 			return nullptr;
 		}
 
-		void Add(const std::shared_ptr<T>& in)
+		static void Add(const std::shared_ptr<SubSystem>& in)
 		{
 			m_dependencies.push_back(in);
 		}
 
-		void Add(const std::shared_ptr<T>& in, const char* name)
+		static void Add(const std::shared_ptr<SubSystem>& in, const char* name)
 		{
 			m_dependencies.push_back(in);
 			m_cache.emplace( name,m_dependencies.size() - 1 );
 		}
 
-		bool Remove(const char* name)
+		static bool Remove(const char* name)
 		{
 			if (m_cache.size() < 1 || m_dependencies.size() < 1)
 				return false;
@@ -64,12 +64,12 @@ namespace Engine::Core {
 			return false;
 		}
 
-		void Flush()
+		static void Flush()
 		{
 			m_dependencies = {};
 		}
 	private:
-		std::vector<std::shared_ptr<T>> m_dependencies = {};
-		std::map<const char*, size_t> m_cache = {};
+		static std::vector<std::shared_ptr<SubSystem>> m_dependencies;
+		static std::map<const char*, size_t> m_cache;
 	};
 }
