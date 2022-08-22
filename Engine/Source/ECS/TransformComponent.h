@@ -7,16 +7,19 @@ namespace Engine::ECS {
 
 	class CHILLI_API TransformComponent : public Component {
 	public:
-		TransformComponent(DirectX::XMVECTORF32 translation, DirectX::XMVECTORF32 rotation, DirectX::XMVECTORF32 scale);
-		virtual void Serialize(const std::string& filename)override;
-		virtual void Deserialize(const std::string& filename)override;
+		TransformComponent(DirectX::XMFLOAT3 translation, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 scale);
+		virtual const std::string Serialize()const override;
 		virtual void DrawGui()const override;
 		DirectX::XMMATRIX GetTransformMatrix()const;
 	private:
-		DirectX::XMVECTORF32 m_translation;
-		DirectX::XMVECTORF32 m_rotation;
-		DirectX::XMVECTORF32 m_scale;
-		DirectX::XMMATRIX m_transformationMatrix;
+		DirectX::XMFLOAT3 m_translation;
+		DirectX::XMFLOAT3 m_rotation;
+		DirectX::XMFLOAT3 m_scale;
+		//For ImGui
+		float* m_translationRemote[3] = {&m_translation.x, &m_translation.y, &m_translation.z};
+		float* m_rotationRemote[3] = { &m_rotation.x, &m_rotation.y, &m_rotation.z };
+		float* m_scaleRemote[3] = { &m_scale.x, &m_scale.y, &m_scale.z };
+		
 	};
 
 }

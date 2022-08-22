@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning(disable:4251)
 
 #ifdef CHILLI_ENGINE
 	#define CHILLI_API _declspec(dllexport)

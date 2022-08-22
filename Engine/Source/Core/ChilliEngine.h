@@ -7,11 +7,14 @@
 #include "Window.h"
 
 #include "../Gui/GuiManager.h"
+#include "../SceneManagement/SceneManager.h"
 #include "../Rendering/Renderer.h"
 
 
 using namespace Engine::Core;
 using namespace Engine::Rendering;
+using namespace Engine::SceneManagement;
+using namespace Engine::Gui;
 
 class CHILLI_API ChilliEngine {
 
@@ -28,4 +31,6 @@ private:
 	std::shared_ptr<Renderer> m_renderer;
 	std::shared_ptr<DependencyResolver<SubSystem>> m_resolver;
 	std::unique_ptr<Window> m_window;
+	std::shared_ptr<SceneManager> m_sceneManager;
+	std::shared_ptr<GuiManager> m_guiManager;
 };

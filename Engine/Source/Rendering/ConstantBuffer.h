@@ -58,13 +58,13 @@ namespace Engine::Rendering {
 			}
 		}
 
-		void Update(const T& data)const
+		void Update(const T& data)
 		{
-			D3D11_SUBRESOURCE_DATA constant_data;
+			D3D11_MAPPED_SUBRESOURCE constant_data;
 
 			GFX_THROW_ERR(m_direct3d->GetContext()->Map(m_constantBuffer.Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &constant_data));
 			
-			memcpy(constant_data.pSysMem, &data, sizeof(data));
+			memcpy(constant_data.pData, &data, sizeof(data));
 
 			m_direct3d->GetContext()->Unmap(m_constantBuffer.Get(), 0u);
 		}

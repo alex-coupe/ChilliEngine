@@ -92,7 +92,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>DEBUG;CHILLI_ENGINE;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Assimp\Include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -130,7 +130,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>DEBUG;CHILLI_ENGINE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Assimp\Include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -183,12 +183,12 @@
     <ClInclude Include="Source\Gui\ImGui\imstb_rectpack.h" />
     <ClInclude Include="Source\Gui\ImGui\imstb_textedit.h" />
     <ClInclude Include="Source\Gui\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Source\Rendering\Camera.h" />
     <ClInclude Include="Source\Rendering\ConstantBuffer.h" />
+    <ClInclude Include="Source\Rendering\Drawable.h" />
     <ClInclude Include="Source\Rendering\IndexBuffer.h" />
     <ClInclude Include="Source\Rendering\InputLayout.h" />
     <ClInclude Include="Source\Rendering\Direct3D.h" />
-    <ClInclude Include="Source\Rendering\Mesh.h" />
-    <ClInclude Include="Source\Rendering\Primitives\Cube.h" />
     <ClInclude Include="Source\Rendering\Renderer.h" />
     <ClInclude Include="Source\Rendering\Sampler.h" />
     <ClInclude Include="Source\Rendering\Shader.h" />
@@ -197,14 +197,19 @@
     <ClInclude Include="Source\Rendering\Topology.h" />
     <ClInclude Include="Source\Rendering\VertexBuffer.h" />
     <ClInclude Include="Source\Rendering\VertexTypes.h" />
-    <ClInclude Include="Source\SceneManager\Scene.h" />
-    <ClInclude Include="Source\SceneManager\SceneManager.h" />
+    <ClInclude Include="Source\SceneManagement\Mesh.h" />
+    <ClInclude Include="Source\SceneManagement\Scene.h" />
+    <ClInclude Include="Source\SceneManagement\SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\ChilliEngine.cpp" />
     <ClCompile Include="Source\Core\Event.cpp" />
     <ClCompile Include="Source\Core\Timer.cpp" />
     <ClCompile Include="Source\Core\Window.cpp" />
+    <ClCompile Include="Source\ECS\Entity.cpp" />
+    <ClCompile Include="Source\ECS\MeshComponent.cpp" />
+    <ClCompile Include="Source\ECS\TransformComponent.cpp" />
+    <ClCompile Include="Source\Gui\GuiManager.cpp" />
     <ClCompile Include="Source\Gui\ImGui\imgui.cpp" />
     <ClCompile Include="Source\Gui\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Source\Gui\ImGui\imgui_draw.cpp" />
@@ -212,11 +217,11 @@
     <ClCompile Include="Source\Gui\ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="Source\Gui\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Source\Gui\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Source\Rendering\Camera.cpp" />
+    <ClCompile Include="Source\Rendering\Drawable.cpp" />
     <ClCompile Include="Source\Rendering\IndexBuffer.cpp" />
     <ClCompile Include="Source\Rendering\InputLayout.cpp" />
     <ClCompile Include="Source\Rendering\Direct3D.cpp" />
-    <ClCompile Include="Source\Rendering\Mesh.cpp" />
-    <ClCompile Include="Source\Rendering\Primitives\Cube.cpp" />
     <ClCompile Include="Source\Rendering\Renderer.cpp" />
     <ClCompile Include="Source\Rendering\Sampler.cpp" />
     <ClCompile Include="Source\Rendering\Shader.cpp" />
@@ -224,6 +229,9 @@
     <ClCompile Include="Source\Rendering\Texture.cpp" />
     <ClCompile Include="Source\Rendering\Topology.cpp" />
     <ClCompile Include="Source\Rendering\VertexBuffer.cpp" />
+    <ClCompile Include="Source\SceneManagement\Mesh.cpp" />
+    <ClCompile Include="Source\SceneManagement\Scene.cpp" />
+    <ClCompile Include="Source\SceneManagement\SceneManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Source\Rendering\shaders\Pixel_Basic.hlsl">
