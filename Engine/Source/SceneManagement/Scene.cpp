@@ -53,12 +53,12 @@ void Engine::SceneManagement::Scene::Update(float dt)
 
 void Engine::SceneManagement::Scene::DrawGui()
 {
-    for (const auto& ent : m_entities)
+    for (int i = 0; i < m_entities.size(); i++)
     {
-        ent->DrawGui();
+        m_entities[i]->DrawGui();
         if (ImGui::Button("Remove Entity"))
         {
-            RemoveEntity(ent->GetId());
+            RemoveEntity(m_entities[i]->GetId());
         }
         ImGui::End();
     }
