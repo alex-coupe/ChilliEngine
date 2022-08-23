@@ -51,7 +51,7 @@
     <ClInclude Include="Source\Rendering\ConstantBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Event.h">
+    <ClInclude Include="Source\Core\Events.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\SubSystem.h">
@@ -152,7 +152,7 @@
     <ClCompile Include="Source\Rendering\IndexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Event.cpp">
+    <ClCompile Include="Source\Core\Events.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Rendering\Direct3D.cpp">

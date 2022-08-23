@@ -1,8 +1,8 @@
 #include "Application.h"
 
-Application::Application(HINSTANCE& hInstance)
+Application::Application()
 {
-	m_engine = std::make_unique<ChilliEngine>(hInstance);
+	m_engine = std::make_unique<ChilliEngine>();
 }
 
 Application::~Application()
@@ -10,9 +10,9 @@ Application::~Application()
 	m_engine.reset();
 }
 
-void Application::Update()
+void Application::Run()
 {
-	return m_engine->Update();
+	return m_engine->Run();
 }
 
 

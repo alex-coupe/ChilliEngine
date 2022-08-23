@@ -1,7 +1,7 @@
 #include "Renderer.h"
 #include <Windows.h>
 
-#include "../Core/Event.h"
+#include "../Core/Events.h"
 #include "../Core/Window.h"
 #include "../ECS/MeshComponent.h"
 #include "../ECS/TransformComponent.h"
@@ -36,7 +36,7 @@ int Engine::Rendering::Renderer::GetSystemType()const
 
 bool Engine::Rendering::Renderer::Init()
 {
-	auto m_event = DependencyResolver::ResolveDependency<Engine::Core::Event>();
+	auto m_event = DependencyResolver::ResolveDependency<Engine::Core::Events>();
 	m_sceneManager = DependencyResolver::ResolveDependency<SceneManager>();
 	
 

@@ -1,9 +1,10 @@
 #include "Window.h"
 #include <cassert>
+
 Engine::Core::Window* Engine::Core::Window::m_pInstance = nullptr;
 
-Engine::Core::Window::Window(HINSTANCE& instance, const std::shared_ptr<Event>& event_dispatcher, std::shared_ptr<Gui::GuiManager>& gui_man)
-	:m_instance(instance), m_event(event_dispatcher), m_gui(gui_man)
+Engine::Core::Window::Window(std::shared_ptr<Gui::GuiManager>& gui_man)
+	:m_gui(gui_man)
 {
 	m_pInstance = this;
 	WNDCLASSEX wndclass = {};
@@ -12,12 +13,12 @@ Engine::Core::Window::Window(HINSTANCE& instance, const std::shared_ptr<Event>& 
 	wndclass.style = 0;
 	wndclass.cbClsExtra = 0;
 	wndclass.cbWndExtra = 0;
-	wndclass.hInstance = m_instance;
+	wndclass.hInstance = GetModuleHandle(nullptr);
 	wndclass.lpszClassName = m_className;
 	wndclass.lpfnWndProc = WndProc;
-	wndclass.hCursor = LoadCursor(m_instance, IDC_ARROW);
-	wndclass.hIcon = LoadIcon(instance, IDI_APPLICATION);
-	wndclass.hIconSm = LoadIcon(instance, IDI_APPLICATION);
+	wndclass.hCursor = LoadCursor(GetModuleHandle(nullptr), IDC_ARROW);
+	wndclass.hIcon = LoadIcon(GetModuleHandle(nullptr), IDI_APPLICATION);
+	wndclass.hIconSm = LoadIcon(GetModuleHandle(nullptr), IDI_APPLICATION);
 	wndclass.lpszMenuName = nullptr;
 	
 	if (!RegisterClassEx(&wndclass))
@@ -29,7 +30,7 @@ Engine::Core::Window::Window(HINSTANCE& instance, const std::shared_ptr<Event>& 
 		title,
 		WS_OVERLAPPEDWINDOW | WS_MAXIMIZE,
 		CW_USEDEFAULT, CW_USEDEFAULT,
-		CW_USEDEFAULT, CW_USEDEFAULT,NULL,NULL,m_instance,NULL);
+		CW_USEDEFAULT, CW_USEDEFAULT,NULL,NULL, GetModuleHandle(nullptr),NULL);
 
 	if (!m_handle)
 	{
@@ -85,7 +86,7 @@ bool Engine::Core::Window::Update()
 
 Engine::Core::Window::~Window()
 {
-	UnregisterClass(m_className,m_instance);
+	UnregisterClass(m_className, GetModuleHandle(nullptr));
 	DestroyWindow(m_handle);
 }
 
@@ -144,7 +145,7 @@ LRESULT Engine::Core::Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LP
 		e->lparam = lParam;
 		e->wparam = wParam;
 		e->handle = handle;
-		m_event->Push(e);
+		DependencyResolver::ResolveDependency<Events>()->Push(e);
 		break;
 	}
 		

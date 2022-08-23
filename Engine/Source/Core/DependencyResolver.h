@@ -12,26 +12,24 @@ namespace Engine::Core {
 		template<typename U>
 		static std::shared_ptr<U> ResolveDependency()
 		{	
-			
 			for (auto& item : m_dependencies)
 			{
 				if (std::shared_ptr<U> dependency = std::dynamic_pointer_cast<U>(item); dependency != nullptr)
 					return dependency;
 			}
-
+			CHILLI_WARN("Failed to resolve dependency {}");
 			return nullptr;
 		}
 
 		template<typename U>
 		static std::shared_ptr<U> ResolveDependency(const char* name)
 		{
-
 			for (auto& item : m_dependencies)
 			{
 				if (std::shared_ptr<U> dependency = std::dynamic_pointer_cast<U>(item); dependency != nullptr)
 					return dependency;
 			}
-
+			CHILLI_WARN("Failed to resolve dependency {}", name);
 			return nullptr;
 		}
 
@@ -66,6 +64,7 @@ namespace Engine::Core {
 
 		static void Flush()
 		{
+			CHILLI_INFO("Dependencies flushed");
 			m_dependencies = {};
 		}
 	private:

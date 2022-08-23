@@ -6,12 +6,12 @@
 #endif
 class Application {
 public:
-	Application(HINSTANCE& hInstance);
+	Application();
 	~Application();
 	Application(const Application&) = delete;
 	Application& operator=(const Application&) = delete;
 	Application(Application&&) = default;
-	void Update();
+	void Run();
 private:
 	std::unique_ptr<ChilliEngine> m_engine = nullptr;
 };

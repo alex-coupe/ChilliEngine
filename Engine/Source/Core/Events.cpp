@@ -1,6 +1,6 @@
-#include "Event.h"
+#include "Events.h"
 
-void Engine::Core::Event::ProcessFrame()
+void Engine::Core::Events::ProcessFrame()
 {
 	if (m_eventBuffer.size() > 0)
 	{
@@ -20,7 +20,7 @@ void Engine::Core::Event::ProcessFrame()
 	}
 }
 
-void Engine::Core::Event::TrimBuffer()
+void Engine::Core::Events::TrimBuffer()
 {
 	while (m_eventBuffer.size() > 16)
 	{
@@ -30,12 +30,12 @@ void Engine::Core::Event::TrimBuffer()
 	}
 }
 
-void Engine::Core::Event::ResetKeyboard()
+void Engine::Core::Events::ResetKeyboard()
 {
 	m_keys.reset();
 }
 
-Engine::Core::Event::~Event()
+Engine::Core::Events::~Events()
 {
 	while (!m_eventBuffer.empty())
 	{
@@ -45,17 +45,17 @@ Engine::Core::Event::~Event()
 	}
 }
 
-int Engine::Core::Event::GetSystemType()const
+int Engine::Core::Events::GetSystemType()const
 {
-	return static_cast<int>(SystemTypes::EventSystem);
+	return static_cast<int>(SystemTypes::Events);
 }
 
-bool Engine::Core::Event::GetInWindow() const
+bool Engine::Core::Events::GetInWindow() const
 {
 	return m_inWindow;
 }
 
-void Engine::Core::Event::ClearBuffer()
+void Engine::Core::Events::ClearBuffer()
 {
 	while (!m_eventBuffer.empty())
 	{
@@ -65,13 +65,13 @@ void Engine::Core::Event::ClearBuffer()
 	}
 }
 
-void Engine::Core::Event::Subscribe(const std::vector<EventType>& types, std::function<void()> callback)
+void Engine::Core::Events::Subscribe(const std::vector<EventType>& types, std::function<void()> callback)
 {
 	m_Subscribers.push_back({ types, callback });
 	
 }
 
-void Engine::Core::Event::ReadEvent(const EventData* const data_in )
+void Engine::Core::Events::ReadEvent(const EventData* const data_in )
 {
 	switch (static_cast<EventType>(data_in->msg))
 	{
@@ -123,49 +123,49 @@ void Engine::Core::Event::ReadEvent(const EventData* const data_in )
 	}
 }
 
-const std::pair<const int64_t&, const int64_t&> Engine::Core::Event::GetMousePosition()const
+const std::pair<const int64_t&, const int64_t&> Engine::Core::Events::GetMousePosition()const
 {
 	return std::make_pair(std::cref(m_mouseX),std::cref(m_mouseY));
 }
 
-const int64_t& Engine::Core::Event::GetScreenWidth() const
+const int64_t& Engine::Core::Events::GetScreenWidth() const
 {
 	return m_screenWidth;
 }
 
-const int64_t& Engine::Core::Event::GetScreenHeight() const
+const int64_t& Engine::Core::Events::GetScreenHeight() const
 {
 	return m_screenHeight;
 }
 
-bool Engine::Core::Event::GetMouseLeftPressed() const
+bool Engine::Core::Events::GetMouseLeftPressed() const
 {
 	return m_leftMousePressed;
 }
 
-bool Engine::Core::Event::GetMouseRightPressed() const
+bool Engine::Core::Events::GetMouseRightPressed() const
 {
 	return m_rightMousePressed;
 }
 
-short Engine::Core::Event::GetMouseWheelDelta() const
+short Engine::Core::Events::GetMouseWheelDelta() const
 {
 	return m_wheelDelta;
 }
 
-bool Engine::Core::Event::GetKeyPressed(Key key) const
+bool Engine::Core::Events::GetKeyPressed(Key key) const
 {
 	auto code = static_cast<unsigned int>(key);
 	return m_keys[code];
 }
 
-bool Engine::Core::Event::GetKeyReleased(Key key) const
+bool Engine::Core::Events::GetKeyReleased(Key key) const
 {
 	auto code = static_cast<unsigned int>(key);
 	return m_keys[code];
 }
 
-void Engine::Core::Event::Push(const EventData* const e)
+void Engine::Core::Events::Push(const EventData* const e)
 {
 	m_eventBuffer.push(e);
 }
