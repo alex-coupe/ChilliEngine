@@ -9,18 +9,18 @@
 namespace Engine::Core {
 	class Window {
 	public:
-		Window(HINSTANCE& instance, const std::shared_ptr<Event>& event_in,std::shared_ptr<Gui::GuiManager>& gui_man, int width, int height);
+		Window(HINSTANCE& instance, const std::shared_ptr<Event>& event_in,std::shared_ptr<Gui::GuiManager>& gui_man);
 		static LRESULT CALLBACK WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam);
 		HWND GetHandle();
 		bool Update();
 		~Window();
-		const int GetInitialWidth()const;
-		const int GetInitialHeight()const;
+		const int GetWidth()const;
+		const int GetHeight()const;
 	private:
 		HINSTANCE& m_instance;
 		HWND m_handle = nullptr;
-		int m_initialWidth = 0;
-		int m_initialHeight = 0;
+		int m_width = 0;
+		int m_height = 0;
 		static Window* m_pInstance;
 		LRESULT CALLBACK MyWinProc(HWND, UINT, WPARAM, LPARAM);
 		static constexpr wchar_t title[] = L"Chilli Engine";

@@ -2,7 +2,7 @@
 #include <cassert>
 Engine::Core::Window* Engine::Core::Window::m_pInstance = nullptr;
 
-Engine::Core::Window::Window(HINSTANCE& instance, const std::shared_ptr<Event>& event_dispatcher, std::shared_ptr<Gui::GuiManager>& gui_man, int width, int height)
+Engine::Core::Window::Window(HINSTANCE& instance, const std::shared_ptr<Event>& event_dispatcher, std::shared_ptr<Gui::GuiManager>& gui_man)
 	:m_instance(instance), m_event(event_dispatcher), m_gui(gui_man)
 {
 	m_pInstance = this;
@@ -22,39 +22,37 @@ Engine::Core::Window::Window(HINSTANCE& instance, const std::shared_ptr<Event>& 
 	
 	if (!RegisterClassEx(&wndclass))
 		MessageBox(m_handle, L"Failed To Register Window", L"Chilli Error", MB_ICONWARNING | MB_OK);
-
-	//Grab Desktop Resolution
-	RECT wr;
-	wr.left = 100;
-	wr.right = width + wr.left;
-	wr.top = 100;
-	wr.bottom = height + wr.top;
-	if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE) == 0)
-		MessageBox(m_handle, L"Failed To Adjust Window Rect", L"Chilli Error", MB_ICONWARNING | MB_OK);
-
+	
 	m_handle = CreateWindowEx(
 		WS_EX_CLIENTEDGE,
 		m_className,
 		title,
-		WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT,CW_USEDEFAULT,
-		wr.right - wr.left, wr.bottom - wr.top,NULL,NULL,m_instance,NULL);
-
+		WS_OVERLAPPEDWINDOW | WS_MAXIMIZE,
+		CW_USEDEFAULT, CW_USEDEFAULT,
+		CW_USEDEFAULT, CW_USEDEFAULT,NULL,NULL,m_instance,NULL);
 
 	if (!m_handle)
 	{
 		MessageBox(m_handle, L"Failed To Create Handle", L"Chilli Error", MB_ICONWARNING | MB_OK);
 		return;
 	}
-	
-		assert(width != 0 && height != 0);
-		m_initialWidth = width;
-		m_initialHeight = height;
 
-		ShowWindow(m_handle, SW_SHOWDEFAULT);
+	RECT rect = {};
+
+	if (!GetWindowRect(m_handle, &rect))
+		MessageBox(m_handle, L"Failed To Get Window Rect", L"Chilli Error", MB_ICONWARNING | MB_OK);
+
+	m_width = rect.right - rect.left;
+	m_height = rect.bottom - rect.top;
+
+	assert(m_width != 0 && m_height != 0);
+
+	if (!MoveWindow(m_handle,0,0,m_width,m_height,false))
+		MessageBox(m_handle, L"Failed To Resize Window", L"Chilli Error", MB_ICONWARNING | MB_OK);
+
+	ShowWindow(m_handle, SW_SHOWMAXIMIZED);
 		
-		
-		m_gui->InitWindowsHook(m_handle);
+	m_gui->InitWindowsHook(m_handle);
 }
 
 
@@ -91,14 +89,14 @@ Engine::Core::Window::~Window()
 	DestroyWindow(m_handle);
 }
 
-const int Engine::Core::Window::GetInitialWidth() const
+const int Engine::Core::Window::GetWidth() const
 {
-	return m_initialWidth;
+	return m_width;
 }
 
-const int Engine::Core::Window::GetInitialHeight() const
+const int Engine::Core::Window::GetHeight() const
 {
-	return m_initialHeight;
+	return m_height;
 }
 
 LRESULT Engine::Core::Window::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
