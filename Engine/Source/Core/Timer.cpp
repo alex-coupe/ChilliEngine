@@ -14,7 +14,6 @@ void Engine::Core::Timer::ProcessFrame()
     std::chrono::duration<float> deltaTime = m_frameEnd - previousFrame;
 	std::chrono::duration<float> deltaMilli = std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime);
 	m_deltaTime = deltaMilli.count();
-
 }
 
 int Engine::Core::Timer::GetSystemType()const
