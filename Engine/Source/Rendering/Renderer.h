@@ -12,7 +12,7 @@ namespace Engine::Rendering {
 	using namespace Engine::SceneManagement;
 	class CHILLI_API Renderer : public SubSystem{
 	public:
-		Renderer(int64_t width, int64_t height, HWND handle, const std::shared_ptr<Engine::Gui::GuiManager>& gui_man);
+		Renderer(int64_t width, int64_t height, void* handle, const std::shared_ptr<Engine::Gui::GuiManager>& gui_man);
 		~Renderer();
 		Renderer(const Renderer&) = delete;
 		Renderer& operator=(const Renderer&) = delete;

@@ -6,11 +6,11 @@
 #include "../ECS/MeshComponent.h"
 #include "../ECS/TransformComponent.h"
 
-Engine::Rendering::Renderer::Renderer(int64_t width, int64_t height, HWND handle, 
+Engine::Rendering::Renderer::Renderer(int64_t width, int64_t height, void* handle, 
 	const std::shared_ptr<Engine::Gui::GuiManager>& gui_man)
 	: m_aspectRatio((float)height/(float)width), m_gui(gui_man)
 {
-	m_direct3d = std::make_shared<Direct3D>(handle, width, height, gui_man);
+	m_direct3d = std::make_shared<Direct3D>((HWND)handle, width, height, gui_man);
 	m_projMatrix = DirectX::XMMatrixPerspectiveLH(1.0f, m_aspectRatio, 0.5f, 100.0f);
 	m_transformationCBuff = std::make_unique<ConstantBuffer<DirectX::XMMATRIX>>(ConstantBufferType::Vertex, m_direct3d);
 	m_transformationCBuff->Bind();
