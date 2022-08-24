@@ -90,8 +90,6 @@ Engine::Rendering::Direct3D::Direct3D(HWND handle, int64_t window_width, int64_t
 	gui_man->InitDxHook(m_device.Get(), m_context.Get());
 }
 
-
-
 void Engine::Rendering::Direct3D::BeginFrame()
 {
 	m_context->ClearRenderTargetView(m_backBuffer.Get(), DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f, 1.0f });
@@ -115,14 +113,8 @@ void Engine::Rendering::Direct3D::DrawIndexed(UINT count)const
 
 void Engine::Rendering::Direct3D::HandleWindowResize(const int64_t width, const int64_t height)
 {
-	if (m_swapChain && (m_width != width || m_height != height) )
-	{
-		m_width = width;
-		m_height = height;
+	CHILLI_INFO("Calling HandleWindowResize");
 
-		ShutdownD3D();
-		SetUpD3D();
-	}
 	
 }
 

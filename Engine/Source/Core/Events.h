@@ -47,10 +47,10 @@ namespace Engine::Core {
 		int GetSystemType()const override;
 		void ProcessFrame()override;
 		void Push(const EventData*const e);
-		void Subscribe(const std::vector<EventType>& types, std::function<void()> callback);
+		void Subscribe(const EventType type, std::function<void()> callback);
 		const std::pair<const int64_t&, const int64_t&> GetMousePosition()const;
-		const int64_t& GetScreenWidth()const;
-		const int64_t& GetScreenHeight()const;
+		const int64_t GetScreenWidth()const;
+		const int64_t GetScreenHeight()const;
 		bool GetMouseLeftPressed()const;
 		bool GetMouseRightPressed()const;
 		short GetMouseWheelDelta()const;
@@ -72,7 +72,7 @@ namespace Engine::Core {
 		unsigned char m_keycode = 0;
 		short m_wheelDelta = 0;
 		std::queue<const EventData*> m_eventBuffer;
-		std::vector<std::pair<std::vector<EventType>, std::function<void()>>> m_Subscribers;
+		std::vector<std::pair<const EventType, std::function<void()>>> m_subscribers;
 		std::bitset<256> m_keys;
 	};
 }

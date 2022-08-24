@@ -46,7 +46,9 @@ bool Engine::Rendering::Renderer::Init()
 		return false;
 	}
 
-//	m_event->Subscribe({ EventType::WindowResized },std::bind(&Direct3D::HandleWindowResize, m_direct3d, std::cref(m_event->GetScreenWidth()), std::cref(m_event->GetScreenHeight())));
+	m_event->Subscribe(EventType::WindowResized, [this]() {
+		m_direct3d->HandleWindowResize(m_direct3d->GetWindowWidth(), m_direct3d->GetWindowWidth());
+		});
 
 
 	return true;

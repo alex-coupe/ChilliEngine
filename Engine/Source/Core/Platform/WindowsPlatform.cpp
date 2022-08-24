@@ -24,7 +24,7 @@ WindowsPlatform::WindowsPlatform(std::shared_ptr<Gui::GuiManager>& gui_man, int&
 	wndclass.lpszMenuName = nullptr;
 
 	if (!RegisterClassEx(&wndclass))
-		MessageBox(m_handle, L"Failed To Register Window", L"Chilli Error", MB_ICONWARNING | MB_OK);
+		CHILLI_WARN("Failed to register window class");
 
 	m_handle = CreateWindowEx(
 		WS_EX_CLIENTEDGE,
@@ -36,7 +36,7 @@ WindowsPlatform::WindowsPlatform(std::shared_ptr<Gui::GuiManager>& gui_man, int&
 
 	if (!m_handle)
 	{
-		MessageBox(m_handle, L"Failed To Create Handle", L"Chilli Error", MB_ICONWARNING | MB_OK);
+		CHILLI_WARN("Failed to create window handle");
 		return;
 	}
 
@@ -91,11 +91,9 @@ bool WindowsPlatform::Update()
 
 LRESULT WindowsPlatform::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-
 	m_gui->WndProcHandler(handle, msg, wParam, lParam);
 	const auto io = m_gui->GetIO();
 
-	//Raise Event For The Messages We're Interested In
 	switch (msg)
 	{
 	case WM_CLOSE:

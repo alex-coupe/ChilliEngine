@@ -8,14 +8,14 @@ void Engine::Core::Events::ProcessFrame()
 		const auto& e = m_eventBuffer.front();
 		m_eventBuffer.pop();
 		ReadEvent(e);
-		for (const auto& subscriber : m_Subscribers)
+		for (const auto& subscriber : m_subscribers)
 		{
-			if (std::find(subscriber.first.begin(), subscriber.first.end(), static_cast<EventType>(e->msg)) != subscriber.first.end())
+			if (subscriber.first == static_cast<EventType>(e->msg))
 			{
-				subscriber.second();
+				if (subscriber.second != nullptr)
+					subscriber.second();
 			}
 		}
-
 		delete e;
 	}
 }
@@ -65,10 +65,9 @@ void Engine::Core::Events::ClearBuffer()
 	}
 }
 
-void Engine::Core::Events::Subscribe(const std::vector<EventType>& types, std::function<void()> callback)
+void Engine::Core::Events::Subscribe(const EventType type, std::function<void()> callback)
 {
-	m_Subscribers.push_back({ types, callback });
-	
+	m_subscribers.push_back({ type, callback });
 }
 
 void Engine::Core::Events::ReadEvent(const EventData* const data_in )
@@ -128,12 +127,12 @@ const std::pair<const int64_t&, const int64_t&> Engine::Core::Events::GetMousePo
 	return std::make_pair(std::cref(m_mouseX),std::cref(m_mouseY));
 }
 
-const int64_t& Engine::Core::Events::GetScreenWidth() const
+const int64_t Engine::Core::Events::GetScreenWidth() const
 {
 	return m_screenWidth;
 }
 
-const int64_t& Engine::Core::Events::GetScreenHeight() const
+const int64_t Engine::Core::Events::GetScreenHeight() const
 {
 	return m_screenHeight;
 }
