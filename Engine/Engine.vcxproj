@@ -92,7 +92,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>DEBUG;CHILLI_ENGINE;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Uuid\include;$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -111,7 +111,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>CHILLI_ENGINE;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Uuid\include;$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -130,7 +130,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>DEBUG;CHILLI_ENGINE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Uuid\include;$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -149,7 +149,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>CHILLI_ENGINE;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Uuid\include;$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -172,6 +172,7 @@
     <ClInclude Include="Source\Core\Timer.h" />
     <ClInclude Include="Source\Core\Window.h" />
     <ClInclude Include="Source\ECS\Component.h" />
+    <ClInclude Include="Source\ECS\ComponentFactory.h" />
     <ClInclude Include="Source\ECS\Entity.h" />
     <ClInclude Include="Source\ECS\MeshComponent.h" />
     <ClInclude Include="Source\ECS\TransformComponent.h" />
@@ -209,6 +210,7 @@
     <ClCompile Include="Source\Core\Platform\WindowsPlatform.cpp" />
     <ClCompile Include="Source\Core\Timer.cpp" />
     <ClCompile Include="Source\Core\Window.cpp" />
+    <ClCompile Include="Source\ECS\ComponentFactory.cpp" />
     <ClCompile Include="Source\ECS\Entity.cpp" />
     <ClCompile Include="Source\ECS\MeshComponent.cpp" />
     <ClCompile Include="Source\ECS\TransformComponent.cpp" />

@@ -12,7 +12,7 @@ namespace Engine::ECS {
 	class CHILLI_API Entity {
 	public:
 		Entity(const std::string& name);
-		Entity(const std::string& name, const rapidjson::Value& components);
+		Entity(const std::string& name, uuids::uuid m_uuid, const rapidjson::Value& components);
 		std::shared_ptr<Component> GetComponentByType(ComponentTypes type);
 		std::shared_ptr<Component> GetComponentByName(const char* name);
 		void AddComponent(ComponentTypes type);
