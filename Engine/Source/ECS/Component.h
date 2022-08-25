@@ -5,6 +5,7 @@
 #include "rapidjson/prettywriter.h"
 #include <string>
 #include <sstream>
+
 namespace Engine::ECS {
 
 	enum class ComponentTypes : int {
@@ -16,7 +17,6 @@ namespace Engine::ECS {
 		Component(ComponentTypes type, const std::string& name) :m_type(type), m_name(name) {}
 		virtual ~Component() {};
 		virtual const std::string Serialize()const = 0;
-		virtual void DrawGui()const = 0;
 		ComponentTypes GetComponentType()const
 		{
 			return m_type;

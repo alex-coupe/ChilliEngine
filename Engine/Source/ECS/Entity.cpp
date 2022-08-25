@@ -1,16 +1,18 @@
 #include "Entity.h"
 
-Engine::ECS::Entity::Entity(const std::string& name, const unsigned int id)
-	: m_name(name), m_id(id)
+Engine::ECS::Entity::Entity(const std::string& name)
+	: m_name(name)
 {
+	m_uuid = uuids::uuid_system_generator{}();
 }
 
-Engine::ECS::Entity::Entity(const std::string& name, const unsigned int id, const rapidjson::Value& components)
-	: m_name(name), m_id(id)
+Engine::ECS::Entity::Entity(const std::string& name, const rapidjson::Value& components)
+	: m_name(name)
 {
+	m_uuid = uuids::uuid_system_generator{}();
+
 	for (unsigned int i = 0; i < components.Size(); i++)
 	{
-		
 		switch (components[i]["Type"].GetInt())
 		{
 			case (int)ComponentTypes::Transform:
@@ -18,20 +20,19 @@ Engine::ECS::Entity::Entity(const std::string& name, const unsigned int id, cons
 				DirectX::XMFLOAT3 translation = { components[i]["PosX"].GetFloat(),components[i]["PosY"].GetFloat(), components[i]["PosZ"].GetFloat() };
 				DirectX::XMFLOAT3 rotation = { components[i]["RotX"].GetFloat(),components[i]["RotY"].GetFloat(), components[i]["RotZ"].GetFloat() };
 				DirectX::XMFLOAT3 scale = { components[i]["ScaleX"].GetFloat(),components[i]["ScaleY"].GetFloat(), components[i]["ScaleZ"].GetFloat() };
-				m_components.emplace(std::make_shared<TransformComponent>(translation, rotation, scale));
+				m_components.emplace(ComponentFactory::MakeTransformComponent(translation, rotation, scale));
 				break;
 			}
 			case (int)ComponentTypes::Mesh:
 			{
-				m_components.emplace(std::make_shared<MeshComponent>(components[i]["EditorOnly"].GetBool(), components[i]["MeshName"].GetString(), components[i]["Filepath"].GetString()));
-				m_hasMesh = true;
+				m_components.emplace(std::make_shared<MeshComponent>(components[i]["MeshName"].GetString()));
 				break;
 			}
 		}
 	}
 }
 
-std::shared_ptr<Engine::ECS::Component>  Engine::ECS::Entity::GetComponent(ComponentTypes type)
+std::shared_ptr<Engine::ECS::Component>  Engine::ECS::Entity::GetComponentByType(ComponentTypes type)
 {
 	for (const auto& comp : m_components)
 	{
@@ -47,22 +48,14 @@ void Engine::ECS::Entity::AddComponent(ComponentTypes type)
 		return rhs->GetComponentType() == type;
 		}); contains == m_components.cend())
 	{
-		//Replace this with a component factory
 		switch (type)
 		{
-		case ComponentTypes::Transform:
-		{
-			DirectX::XMFLOAT3 posRot = { 0.0f,0.0f,0.0f };
-			DirectX::XMFLOAT3 scale = { 1.0f,1.0f,1.0f };
-			m_components.emplace(std::make_shared<TransformComponent>(posRot, posRot, scale));
-		}
-			break;
-		case ComponentTypes::Mesh:
-		{
-			m_components.emplace(std::make_shared<MeshComponent>(false));
-			m_hasMesh = false;
-		}
-			break;
+			case ComponentTypes::Transform:
+				m_components.emplace(ComponentFactory::MakeTransformComponent({ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f }));
+				break;
+			case ComponentTypes::Mesh:
+				m_components.emplace(ComponentFactory::MakeMeshComponent());
+				break;
 		}
 	}
 }
@@ -90,21 +83,19 @@ const std::string Engine::ECS::Entity::Serialize() const
 	return ss.str();
 }
 
-
-void Engine::ECS::Entity::DrawGui() const
+uuids::uuid Engine::ECS::Entity::GetUUID() const
 {
-	ImGui::Begin(m_name.c_str());
-	for (const auto& components : m_components)
-	{
-		components->DrawGui();
-		ImGui::Separator();
-	}
-	
+	return m_uuid;
 }
 
-const unsigned int Engine::ECS::Entity::GetId() const
+std::shared_ptr<Engine::ECS::Component> Engine::ECS::Entity::GetComponentByName(const char* name)
 {
-	return m_id;
+	for (const auto& comp : m_components)
+	{
+		if (comp->GetName() == name)
+			return comp;
+	}
+	return nullptr;
 }
 
 

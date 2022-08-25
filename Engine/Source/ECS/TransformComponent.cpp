@@ -16,15 +16,6 @@ const std::string Engine::ECS::TransformComponent::Serialize()const
 	return  ss.str();
 }
 
-void Engine::ECS::TransformComponent::DrawGui() const
-{
-	
-	ImGui::InputFloat3("Translation", m_translationRemote[0]);
-	ImGui::InputFloat3("Rotation", m_rotationRemote[0]);
-	ImGui::InputFloat3("Scale", m_scaleRemote[0]);
-	
-}
-
 DirectX::XMMATRIX Engine::ECS::TransformComponent::GetTransformMatrix() const
 {
 	return DirectX::XMMatrixRotationRollPitchYaw(m_rotation.x, m_rotation.y, m_rotation.z) *
