@@ -9,33 +9,23 @@
 #include <fstream>
 #include <sstream>
 
-namespace Engine::SceneManagement {
-
-	/// <summary>
-	/// TODO - Mesh codex to avoid loading meshes twice
-	/// </summary>
+namespace Engine::ResourceSystem {
 
 	class CHILLI_API SceneManager : public Engine::Core::SubSystem {
 	public:
 		SceneManager();
-		void DrawGui();
 		void LoadProject(const std::string& filename);
 		void SaveProject(const std::string& filename);
 		void AddScene(const std::string& name);
-		void RemoveScene(unsigned int scene_id);
-		unsigned int GetCurrentSceneId()const;
+		void RemoveScene(Engine::Utilities::UUID& uuid);
 		std::shared_ptr<Scene> GetCurrentScene()const;
-		void SetCurrentScene(unsigned int scene_id);
-		void DrawCurrentScene()const;
+		void SetCurrentScene(Engine::Utilities::UUID& uuid);
 		virtual int GetSystemType()const;
 		virtual void ProcessFrame();
 	private:
 		std::vector<std::shared_ptr<Scene>> m_scenes;
 		std::shared_ptr<Scene> m_currentScene;
-		unsigned int m_currentSceneId = 1;
-		unsigned int m_lastSceneId = 1;
 		std::stringstream ss;
 		std::string m_projectName = "untitled";
-		std::shared_ptr<Engine::Core::Timer> m_timer;
 	};
 }

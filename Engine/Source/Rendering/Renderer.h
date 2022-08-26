@@ -2,14 +2,14 @@
 #include "../Core/ChilliDefinitions.h"
 #include "../Core/SubSystem.h"
 #include "Direct3D.h"
-#include "../SceneManagement/SceneManager.h"
+#include "../ResourceSystem/SceneManager.h"
 #include "Drawable.h"
 #include "Camera.h"
 
 namespace Engine::Rendering {
 
 	using namespace Engine::Core;
-	using namespace Engine::SceneManagement;
+	using namespace Engine::ResourceSystem;
 	class CHILLI_API Renderer : public SubSystem{
 	public:
 		Renderer(int64_t width, int64_t height, void* handle, const std::shared_ptr<Engine::Gui::GuiManager>& gui_man);

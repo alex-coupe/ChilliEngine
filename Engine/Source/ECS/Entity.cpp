@@ -1,12 +1,11 @@
 #include "Entity.h"
 
 Engine::ECS::Entity::Entity(const std::string& name)
-	: m_name(name)
+	: m_name(name), m_uuid()
 {
-	m_uuid = uuids::uuid_system_generator{}();
 }
 
-Engine::ECS::Entity::Entity(const std::string& name, uuids::uuid uuid, const rapidjson::Value& components)
+Engine::ECS::Entity::Entity(const std::string& name, Engine::Utilities::UUID uuid, const rapidjson::Value& components)
 	: m_name(name), m_uuid(uuid)
 {
 	for (unsigned int i = 0; i < components.Size(); i++)
@@ -72,7 +71,7 @@ void Engine::ECS::Entity::RemoveComponent(ComponentTypes type)
 const std::string Engine::ECS::Entity::Serialize() const
 {
 	std::stringstream ss;
-	ss << "\"Name\":\"" << m_name << "\", \"Uuid\":\"" << m_uuid << "\", \"Components\":[";
+	ss << "\"Name\":\"" << m_name << "\", \"Uuid\":\"" << m_uuid.GetUUID() << "\", \"Components\":[";
 	for (const auto& compo : m_components)
 	{
 		ss << compo->Serialize();
@@ -81,7 +80,7 @@ const std::string Engine::ECS::Entity::Serialize() const
 	return ss.str();
 }
 
-uuids::uuid Engine::ECS::Entity::GetUUID() const
+const Engine::Utilities::UUID& Engine::ECS::Entity::GetUUID() const
 {
 	return m_uuid;
 }

@@ -43,8 +43,6 @@ ChilliEngine::ChilliEngine()
 		CHILLI_ERROR("Failed to create scene manager");
 	DependencyResolver::Add(m_sceneManager);
 
-	m_guiManager->AddGuiElement(std::bind(&SceneManager::DrawGui, m_sceneManager));
-
 	if (!m_renderer->Init())
 		CHILLI_ERROR("Renderer could not init");
 }

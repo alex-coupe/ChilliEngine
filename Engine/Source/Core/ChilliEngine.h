@@ -6,12 +6,12 @@
 #include "SubSystem.h"
 #include "Window.h"
 #include "../Gui/GuiManager.h"
-#include "../SceneManagement/SceneManager.h"
+#include "../ResourceSystem/SceneManager.h"
 #include "../Rendering/Renderer.h"
 
 using namespace Engine::Core;
 using namespace Engine::Rendering;
-using namespace Engine::SceneManagement;
+using namespace Engine::ResourceSystem;
 using namespace Engine::Gui;
 
 class CHILLI_API ChilliEngine {

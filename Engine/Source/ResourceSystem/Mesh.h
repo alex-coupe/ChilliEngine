@@ -6,14 +6,15 @@
 #include "assimp\Importer.hpp"
 #include "assimp\scene.h"
 #include "assimp\postprocess.h"
+#include "Asset.h"
 
-namespace Engine::SceneManagement {
+namespace Engine::ResourceSystem {
 
-	class CHILLI_API Mesh {
+	class CHILLI_API Mesh : public Asset {
 	public:
 		Mesh(const std::string& filepath);
 		void ProcessSubMesh(aiNode* node, const aiScene* scene);
-		const std::string& GetFilePath()const;
+		virtual const std::string Serialize()const override;
 		const std::vector<Engine::Rendering::VertexPos>& GetVertices()const;
 		const std::vector<unsigned short>& GetIndices()const;
 	private:
@@ -29,6 +30,5 @@ namespace Engine::SceneManagement {
 		std::vector<SubMesh> m_subMeshes;
 		std::vector<Engine::Rendering::VertexPos> m_vertices;
 		std::vector<unsigned short> m_indices;
-		const std::string m_filepath;
 	};
 }

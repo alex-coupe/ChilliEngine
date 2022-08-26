@@ -1,7 +1,7 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
 #include "Component.h"
-#include "../SceneManagement/Mesh.h"
+#include "../ResourceSystem/Mesh.h"
 
 namespace Engine::ECS {
 
@@ -14,6 +14,6 @@ namespace Engine::ECS {
 		const std::string& GetMeshName()const;
 	private:
 		std::string m_meshName;
-		std::shared_ptr<Engine::SceneManagement::Mesh> m_mesh;
+		std::shared_ptr<Engine::ResourceSystem::Mesh> m_mesh;
 	};
 }

@@ -1,10 +1,10 @@
 #include "Mesh.h"
 
-Engine::SceneManagement::Mesh::Mesh(const std::string& filepath)
-	: m_filepath(filepath)
+Engine::ResourceSystem::Mesh::Mesh(const std::string& filepath)
+	: Asset(Engine::ResourceSystem::AssetTypes::Mesh, std::filesystem::path(filepath), Engine::Utilities::UUID())
 {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(m_filepath, aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
+	const aiScene* scene = importer.ReadFile(m_filePath.string(), aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
 
 	ProcessSubMesh(scene->mRootNode,scene);
 
@@ -20,7 +20,14 @@ Engine::SceneManagement::Mesh::Mesh(const std::string& filepath)
 	}
 }
 
-void Engine::SceneManagement::Mesh::ProcessSubMesh(aiNode* node, const aiScene* scene)
+const std::string Engine::ResourceSystem::Mesh::Serialize() const
+{
+	std::stringstream ss;
+	ss << "{ \"UUID\":\"" << m_uuid.GetUUID() << "\", \"Type\":" << static_cast<int>(m_type) << ", \"FilePath\":\"" << m_filePath << "\"}";
+	return  ss.str();
+}
+
+void Engine::ResourceSystem::Mesh::ProcessSubMesh(aiNode* node, const aiScene* scene)
 {
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
@@ -33,23 +40,18 @@ void Engine::SceneManagement::Mesh::ProcessSubMesh(aiNode* node, const aiScene* 
 		ProcessSubMesh(node->mChildren[i], scene);
 	}
 }
-
-const std::string& Engine::SceneManagement::Mesh::GetFilePath() const
-{
-	return m_filepath;
-}
-
-const std::vector<Engine::Rendering::VertexPos>& Engine::SceneManagement::Mesh::GetVertices() const
+	
+const std::vector<Engine::Rendering::VertexPos>& Engine::ResourceSystem::Mesh::GetVertices() const
 {
 	return m_vertices;
 }
 
-const std::vector<unsigned short>& Engine::SceneManagement::Mesh::GetIndices() const
+const std::vector<unsigned short>& Engine::ResourceSystem::Mesh::GetIndices() const
 {
 	return m_indices;
 }
 
-Engine::SceneManagement::Mesh::SubMesh::SubMesh(aiMesh* mesh, const aiScene* scene)
+Engine::ResourceSystem::Mesh::SubMesh::SubMesh(aiMesh* mesh, const aiScene* scene)
 {
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
@@ -71,12 +73,12 @@ Engine::SceneManagement::Mesh::SubMesh::SubMesh(aiMesh* mesh, const aiScene* sce
 	}
 }
 
-const std::vector<Engine::Rendering::VertexPos>& Engine::SceneManagement::Mesh::SubMesh::GetVertices() const
+const std::vector<Engine::Rendering::VertexPos>& Engine::ResourceSystem::Mesh::SubMesh::GetVertices() const
 {
 	return m_vertices;
 }
 
-const std::vector<unsigned short>& Engine::SceneManagement::Mesh::SubMesh::GetIndices() const
+const std::vector<unsigned short>& Engine::ResourceSystem::Mesh::SubMesh::GetIndices() const
 {
 	return m_indices;
 }
