@@ -37,7 +37,7 @@ int Engine::Rendering::Renderer::GetSystemType()const
 bool Engine::Rendering::Renderer::Init()
 {
 	auto m_event = DependencyResolver::ResolveDependency<Engine::Core::Events>();
-	m_sceneManager = DependencyResolver::ResolveDependency<SceneManager>();
+	m_sceneManager = DependencyResolver::ResolveDependency<ProjectManager>();
 	
 
 	if (m_event == nullptr)

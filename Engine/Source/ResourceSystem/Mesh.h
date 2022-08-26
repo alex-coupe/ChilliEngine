@@ -12,7 +12,7 @@ namespace Engine::ResourceSystem {
 
 	class CHILLI_API Mesh : public Asset {
 	public:
-		Mesh(const std::string& filepath);
+		Mesh(const std::string& filepath, const std::string& name, const Engine::Utilities::UUID& uuid);
 		void ProcessSubMesh(aiNode* node, const aiScene* scene);
 		virtual const std::string Serialize()const override;
 		const std::vector<Engine::Rendering::VertexPos>& GetVertices()const;

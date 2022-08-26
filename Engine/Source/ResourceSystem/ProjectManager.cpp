@@ -1,16 +1,14 @@
-#include "SceneManager.h"
-#include <Windows.h>
+#include "ProjectManager.h"
 #include "../Rendering/Renderer.h"
 #include "../Core/DependencyResolver.h"
 
-Engine::ResourceSystem::SceneManager::SceneManager()
+Engine::ResourceSystem::ProjectManager::ProjectManager()
 {
     m_scenes.emplace_back(std::make_shared<Scene>("Scene 1"));
     m_currentScene = m_scenes.front();
-    LoadProject("sample.json");
 }
 
-void Engine::ResourceSystem::SceneManager::LoadProject(const std::string& filename)
+void Engine::ResourceSystem::ProjectManager::LoadProject(const std::string& filename)
 {
     std::ifstream json;
     json.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -37,6 +35,23 @@ void Engine::ResourceSystem::SceneManager::LoadProject(const std::string& filena
         m_projectName = document["ProjectName"].GetString();
     }
 
+    if (document.HasMember("Assets"))
+    {
+        m_assets.clear();
+        for (const auto& asset : document["Assets"].GetArray())
+        {
+            switch (asset["Type"].GetInt())
+            {
+                case (int)AssetTypes::Mesh:
+                    m_assets.emplace_back(std::make_shared<Mesh>(asset["FilePath"].GetString(), 
+                        asset["Name"].GetString(), asset["Uuid"].GetString()));
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
     if (document.HasMember("Scenes"))
     {
         m_scenes.clear();
@@ -49,7 +64,7 @@ void Engine::ResourceSystem::SceneManager::LoadProject(const std::string& filena
     }
 }
 
-void Engine::ResourceSystem::SceneManager::SaveProject(const std::string& filename)
+void Engine::ResourceSystem::ProjectManager::SaveProject(const std::string& filename)
 {
     std::stringstream ss;
     std::ofstream outputStream;
@@ -65,12 +80,36 @@ void Engine::ResourceSystem::SceneManager::SaveProject(const std::string& filena
     outputStream.close();
 }
 
-void Engine::ResourceSystem::SceneManager::AddScene(const std::string& name)
+void Engine::ResourceSystem::ProjectManager::AddScene(const std::string& name)
 {
     m_scenes.emplace_back(std::make_shared<Scene>(name));
 }
 
-void Engine::ResourceSystem::SceneManager::RemoveScene(Engine::Utilities::UUID& uuid)
+void Engine::ResourceSystem::ProjectManager::AddAsset(const std::string& filename, const std::string& name, AssetTypes type)
+{
+    switch (type)
+    {
+        case AssetTypes::Mesh:
+            m_assets.emplace_back(std::make_shared<Mesh>(filename, name, Engine::Utilities::UUID()));
+            break;
+        default:
+            break;
+    }
+}
+
+void Engine::ResourceSystem::ProjectManager::RemoveAsset(Engine::Utilities::UUID& uuid)
+{
+    if (auto m_assetIterator = std::find_if(m_assets.begin(), m_assets.end(), [uuid](const std::shared_ptr<Asset> rhs)
+        {
+            return rhs->GetUUID() == uuid;
+        }); m_assetIterator != m_assets.end() && m_assets.size() > 1)
+    {
+        m_assets.erase(m_assetIterator);
+    }
+}
+
+
+void Engine::ResourceSystem::ProjectManager::RemoveScene(Engine::Utilities::UUID& uuid)
 {
     if (auto m_sceneIterator = std::find_if(m_scenes.begin(), m_scenes.end(), [uuid](const std::shared_ptr<Scene> rhs)
         {
@@ -81,12 +120,12 @@ void Engine::ResourceSystem::SceneManager::RemoveScene(Engine::Utilities::UUID& 
     }
 }
 
-std::shared_ptr<Engine::ResourceSystem::Scene> Engine::ResourceSystem::SceneManager::GetCurrentScene() const
+std::shared_ptr<Engine::ResourceSystem::Scene> Engine::ResourceSystem::ProjectManager::GetCurrentScene() const
 {
     return m_currentScene;
 }
 
-void Engine::ResourceSystem::SceneManager::SetCurrentScene(Engine::Utilities::UUID& uuid)
+void Engine::ResourceSystem::ProjectManager::SetCurrentScene(Engine::Utilities::UUID& uuid)
 {
     if (auto m_sceneIterator = std::find_if(m_scenes.begin(), m_scenes.end(), [uuid](const std::shared_ptr<Scene> rhs)
         {
@@ -97,12 +136,12 @@ void Engine::ResourceSystem::SceneManager::SetCurrentScene(Engine::Utilities::UU
     }
 }
 
-int Engine::ResourceSystem::SceneManager::GetSystemType() const
+int Engine::ResourceSystem::ProjectManager::GetSystemType() const
 {
-    return static_cast<int>(Engine::Core::SystemTypes::SceneManager);
+    return static_cast<int>(Engine::Core::SystemTypes::ProjectManager);
 }
 
-void Engine::ResourceSystem::SceneManager::ProcessFrame()
+void Engine::ResourceSystem::ProjectManager::ProcessFrame()
 {
     m_currentScene->Update(Engine::Core::DependencyResolver::ResolveDependency<Engine::Core::Timer>()->GetDeltaTime());
 }

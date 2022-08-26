@@ -6,7 +6,7 @@
 #include "SubSystem.h"
 #include "Window.h"
 #include "../Gui/GuiManager.h"
-#include "../ResourceSystem/SceneManager.h"
+#include "../ResourceSystem/ProjectManager.h"
 #include "../Rendering/Renderer.h"
 
 using namespace Engine::Core;
@@ -28,6 +28,6 @@ private:
 	std::shared_ptr<Timer> m_timer;
 	std::shared_ptr<Renderer> m_renderer;
 	std::unique_ptr<Window> m_window;
-	std::shared_ptr<SceneManager> m_sceneManager;
+	std::shared_ptr<ProjectManager> m_sceneManager;
 	std::shared_ptr<GuiManager> m_guiManager;
 };

@@ -38,7 +38,7 @@ ChilliEngine::ChilliEngine()
 
 	DependencyResolver::Add(m_renderer);
 
-	m_sceneManager = std::make_shared<SceneManager>();
+	m_sceneManager = std::make_shared<ProjectManager>();
 	if (m_sceneManager == nullptr)
 		CHILLI_ERROR("Failed to create scene manager");
 	DependencyResolver::Add(m_sceneManager);

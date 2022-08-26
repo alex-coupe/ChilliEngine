@@ -2,7 +2,7 @@
 #include "../Core/ChilliDefinitions.h"
 #include "../Core/SubSystem.h"
 #include "Direct3D.h"
-#include "../ResourceSystem/SceneManager.h"
+#include "../ResourceSystem/ProjectManager.h"
 #include "Drawable.h"
 #include "Camera.h"
 
@@ -25,7 +25,7 @@ namespace Engine::Rendering {
 	private:
 		std::shared_ptr<Direct3D> m_direct3d;
 		float m_aspectRatio;
-		std::shared_ptr<SceneManager> m_sceneManager;
+		std::shared_ptr<ProjectManager> m_sceneManager;
 		DirectX::XMMATRIX m_projMatrix;
 		std::vector<std::unique_ptr<Drawable>> m_drawables;
 		std::unique_ptr<ConstantBuffer<DirectX::XMMATRIX>> m_transformationCBuff;

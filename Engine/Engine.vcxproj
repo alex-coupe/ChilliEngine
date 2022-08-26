@@ -202,7 +202,7 @@
     <ClInclude Include="Source\ResourceSystem\Asset.h" />
     <ClInclude Include="Source\ResourceSystem\Mesh.h" />
     <ClInclude Include="Source\ResourceSystem\Scene.h" />
-    <ClInclude Include="Source\ResourceSystem\SceneManager.h" />
+    <ClInclude Include="Source\ResourceSystem\ProjectManager.h" />
     <ClInclude Include="Source\Utilities\Utils.h" />
     <ClInclude Include="Source\Utilities\UUID.h" />
   </ItemGroup>
@@ -239,7 +239,7 @@
     <ClCompile Include="Source\Rendering\VertexBuffer.cpp" />
     <ClCompile Include="Source\ResourceSystem\Mesh.cpp" />
     <ClCompile Include="Source\ResourceSystem\Scene.cpp" />
-    <ClCompile Include="Source\ResourceSystem\SceneManager.cpp" />
+    <ClCompile Include="Source\ResourceSystem\ProjectManager.cpp" />
     <ClCompile Include="Source\Utilities\UUID.cpp" />
   </ItemGroup>
   <ItemGroup>

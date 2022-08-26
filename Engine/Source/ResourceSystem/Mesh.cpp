@@ -1,7 +1,7 @@
 #include "Mesh.h"
 
-Engine::ResourceSystem::Mesh::Mesh(const std::string& filepath)
-	: Asset(Engine::ResourceSystem::AssetTypes::Mesh, std::filesystem::path(filepath), Engine::Utilities::UUID())
+Engine::ResourceSystem::Mesh::Mesh(const std::string& filepath, const std::string& name, const Engine::Utilities::UUID& uuid)
+	: Asset(Engine::ResourceSystem::AssetTypes::Mesh, std::filesystem::path(filepath), uuid, name)
 {
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(m_filePath.string(), aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
