@@ -44,7 +44,7 @@ Engine::Utilities::UUID::UUID()
     {
         hash += StringToInt(parts[i]);
     }
-    m_hash = hash += parts.size();
+    m_hash = hash += (int)parts.size();
 }   
 
 Engine::Utilities::UUID::UUID(const char* uuid)
@@ -56,7 +56,7 @@ Engine::Utilities::UUID::UUID(const char* uuid)
     {
         hash+= StringToInt(parts[i]);
     }
-    m_hash = hash+=parts.size();
+    m_hash = hash+=(int)parts.size();
 }
 
 const std::string& Engine::Utilities::UUID::GetUUID() const    

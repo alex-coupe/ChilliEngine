@@ -11,17 +11,13 @@ namespace Engine::Gui {
 
 	class CHILLI_API GuiManager {
 	public:
-		GuiManager();
-		~GuiManager();
-		void BeginFrame()const;
-		void EndFrame()const;
-		void Draw()const;
-		bool WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-		void InitWindowsHook(void* handle);
-		void AddGuiElement(std::function<void()> callback);
-		ImGuiIO* GetIO();
-		void InitDxHook(ID3D11Device* device, ID3D11DeviceContext* context);
+		static void Init();
+		static void Shutdown();
+		static void DrawEditorGui();
+		static bool WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+		static ImGuiIO* GetIO();
 	private:
-		std::vector<std::function<void()>> m_guiFunctions;
+		static void BeginFrame();
+		static void EndFrame();
 	};
 }

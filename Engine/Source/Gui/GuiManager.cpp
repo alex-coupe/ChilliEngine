@@ -1,41 +1,37 @@
 #include "GuiManager.h"
 
-
-Engine::Gui::GuiManager::GuiManager()
+void Engine::Gui::GuiManager::Init()
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
 }
 
-Engine::Gui::GuiManager::~GuiManager()
+void Engine::Gui::GuiManager::Shutdown()
 {
 	ImGui_ImplWin32_Shutdown();
 	ImGui_ImplDX11_Shutdown();
 	ImGui::DestroyContext();
 }
 
-void Engine::Gui::GuiManager::BeginFrame() const
+void Engine::Gui::GuiManager::DrawEditorGui()
+{
+	BeginFrame();
+	ImGui::ShowDemoWindow();
+	EndFrame();
+}
+
+void Engine::Gui::GuiManager::BeginFrame()
 {
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 }
 
-void Engine::Gui::GuiManager::EndFrame() const
+void Engine::Gui::GuiManager::EndFrame()
 {
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-}
-
-void Engine::Gui::GuiManager::Draw() const
-{
-	
-		for (const auto& callback: m_guiFunctions)
-		{
-			callback();
-		}
-
 }
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -43,16 +39,6 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 bool Engine::Gui::GuiManager::WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	return ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
-}
-
-void Engine::Gui::GuiManager::InitWindowsHook(void* handle)
-{
-	ImGui_ImplWin32_Init(handle);
-}
-
-void Engine::Gui::GuiManager::AddGuiElement(std::function<void()> callback)
-{
-	m_guiFunctions.push_back(callback);
 }
 
 ImGuiIO* Engine::Gui::GuiManager::GetIO()
@@ -64,9 +50,5 @@ ImGuiIO* Engine::Gui::GuiManager::GetIO()
 	return nullptr;
 }
 
-void Engine::Gui::GuiManager::InitDxHook(ID3D11Device* device, ID3D11DeviceContext* context)
-{
-	ImGui_ImplDX11_Init(device, context);
-}
 
 

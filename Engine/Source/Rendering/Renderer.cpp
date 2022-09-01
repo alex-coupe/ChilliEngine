@@ -76,6 +76,7 @@ void Engine::Rendering::Renderer::ProcessFrame()
 		m_transformationCBuff->Update(transform);
 		drawable->Draw();
 	}
+	Engine::Gui::GuiManager::DrawEditorGui();
 	m_direct3d->EndFrame();
 	
 }

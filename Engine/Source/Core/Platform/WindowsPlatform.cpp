@@ -5,8 +5,7 @@ using namespace Engine::Core::Platform;
 
 WindowsPlatform* WindowsPlatform::m_pInstance = nullptr;
 
-WindowsPlatform::WindowsPlatform(std::shared_ptr<Gui::GuiManager>& gui_man, int& width, int& height)
-	:m_gui(gui_man)
+WindowsPlatform::WindowsPlatform(int& width, int& height)
 {
 	m_pInstance = this;
 	WNDCLASSEX wndclass = {};
@@ -55,7 +54,7 @@ WindowsPlatform::WindowsPlatform(std::shared_ptr<Gui::GuiManager>& gui_man, int&
 
 	ShowWindow(m_handle, SW_SHOWMAXIMIZED);
 
-	m_gui->InitWindowsHook(m_handle);
+	ImGui_ImplWin32_Init(m_handle);
 }
 
 LRESULT WindowsPlatform::WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -91,8 +90,8 @@ bool WindowsPlatform::Update()
 
 LRESULT WindowsPlatform::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	m_gui->WndProcHandler(handle, msg, wParam, lParam);
-	const auto io = m_gui->GetIO();
+	Engine::Gui::GuiManager::WndProcHandler(handle, msg, wParam, lParam);
+	const auto io = Engine::Gui::GuiManager::GetIO();
 
 	switch (msg)
 	{

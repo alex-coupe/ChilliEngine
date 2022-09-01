@@ -15,9 +15,7 @@ ChilliEngine::ChilliEngine()
 {	
 	CHILLI_INFO("Booting Engine");
 
-	m_guiManager = std::make_shared<GuiManager>();
-	if (m_guiManager == nullptr)
-		CHILLI_ERROR("Failed to create GUI manager");
+	GuiManager::Init();
 
 	if (m_events = std::make_shared<Events>(); m_events == nullptr)
 		CHILLI_ERROR("Failed to create events system");
@@ -29,7 +27,7 @@ ChilliEngine::ChilliEngine()
 
 	DependencyResolver::Add(m_timer);
 
-	if (m_window = std::make_unique<Window>(m_guiManager); m_window == nullptr)
+	if (m_window = std::make_unique<Window>(); m_window == nullptr)
 		CHILLI_ERROR("Failed to create window");
 		
 	m_renderer = std::make_shared<Renderer>(m_window->GetWidth(), m_window->GetHeight(), m_window->GetWindowHandle());
@@ -54,7 +52,7 @@ ChilliEngine::~ChilliEngine()
 	m_timer.reset();
 	m_window.reset();
 	m_events.reset();
-	m_guiManager.reset();
+	GuiManager::Shutdown();
 	DependencyResolver::Flush();
 }
 

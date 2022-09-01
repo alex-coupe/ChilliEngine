@@ -1,11 +1,10 @@
 #include "Window.h"
 #include <cassert>
 
-Engine::Core::Window::Window(std::shared_ptr<Gui::GuiManager>& gui_man)
-	:m_gui(gui_man)
+Engine::Core::Window::Window()
 {
 #ifdef _WIN32
-	m_platform = std::make_unique<Platform::WindowsPlatform>(gui_man, m_width, m_height);
+	m_platform = std::make_unique<Platform::WindowsPlatform>(m_width, m_height);
 #endif 
 }
 
