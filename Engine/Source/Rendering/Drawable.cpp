@@ -3,8 +3,8 @@
 Engine::Rendering::Drawable::Drawable(const std::shared_ptr<Direct3D>& d3d, const std::shared_ptr<Engine::ECS::Entity>& entity)
 	:m_direct3d(d3d), m_entity(entity)
 {
-	auto transform = std::dynamic_pointer_cast<Engine::ECS::TransformComponent>(m_entity->GetComponent(Engine::ECS::ComponentTypes::Transform));
-	auto mesh = std::dynamic_pointer_cast<Engine::ECS::MeshComponent>(m_entity->GetComponent(Engine::ECS::ComponentTypes::Mesh));
+	auto transform = std::dynamic_pointer_cast<Engine::ECS::TransformComponent>(m_entity->GetComponentByType(Engine::ECS::ComponentTypes::Transform));
+	auto mesh = std::dynamic_pointer_cast<Engine::ECS::MeshComponent>(m_entity->GetComponentByType(Engine::ECS::ComponentTypes::Mesh));
 	m_transform = transform->GetTransformMatrix();
 	m_vertexBuffer = std::make_unique<VertexBuffer>(mesh->GetVertices(), m_direct3d);
 	
@@ -47,5 +47,5 @@ void Engine::Rendering::Drawable::Rebind()
 
 void Engine::Rendering::Drawable::Update()
 {
-	m_transform =  std::dynamic_pointer_cast<Engine::ECS::TransformComponent>(m_entity->GetComponent(Engine::ECS::ComponentTypes::Transform))->GetTransformMatrix();
+	m_transform =  std::static_pointer_cast<Engine::ECS::TransformComponent>(m_entity->GetComponentByType(Engine::ECS::ComponentTypes::Transform))->GetTransformMatrix();
 }

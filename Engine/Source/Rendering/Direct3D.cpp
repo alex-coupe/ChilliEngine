@@ -1,8 +1,64 @@
 #include "Direct3D.h"
 
 
-Engine::Rendering::Direct3D::Direct3D(HWND handle, int64_t window_width, int64_t window_height, const std::shared_ptr<Engine::Gui::GuiManager>& gui_man)
+Engine::Rendering::Direct3D::Direct3D(HWND handle, int64_t window_width, int64_t window_height)
 	:  m_handle(handle), m_width(window_width), m_height(window_height)
+{
+	
+	SetUpD3D();
+	ImGui_ImplDX11_Init(m_device.Get(), m_context.Get());
+}
+
+void Engine::Rendering::Direct3D::BeginFrame()
+{
+	m_context->ClearRenderTargetView(m_backBuffer.Get(), DirectX::XMVECTORF32{ 1.0f, 0.3f, 0.2f, 1.0f });
+	m_context->ClearDepthStencilView(m_depthStencil.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
+}
+
+void Engine::Rendering::Direct3D::EndFrame()
+{
+	m_swapChain->Present(0u, 0u);
+}
+
+void Engine::Rendering::Direct3D::Draw(UINT vertexCount, UINT startVertex)const
+{
+	m_context->Draw(vertexCount, startVertex);
+}
+
+void Engine::Rendering::Direct3D::DrawIndexed(UINT count)const
+{
+	m_context->DrawIndexed(count, 0u, 0u);
+}
+
+void Engine::Rendering::Direct3D::HandleWindowResize(const int64_t width, const int64_t height)
+{
+	if (width == m_width && height == m_height)
+		return;
+
+	CHILLI_INFO("Calling HandleWindowResize");
+}
+
+int64_t Engine::Rendering::Direct3D::GetWindowWidth() const
+{
+	return m_width;
+}
+
+int64_t Engine::Rendering::Direct3D::GetWindowHeight() const
+{
+	return m_height;
+}
+
+Microsoft::WRL::ComPtr<ID3D11Device> Engine::Rendering::Direct3D::GetDevice()
+{
+	return m_device;
+}
+
+Microsoft::WRL::ComPtr<ID3D11DeviceContext> Engine::Rendering::Direct3D::GetContext()
+{
+	return m_context;
+}
+
+void Engine::Rendering::Direct3D::SetUpD3D()
 {
 	assert(m_handle != nullptr);
 
@@ -86,69 +142,6 @@ Engine::Rendering::Direct3D::Direct3D(HWND handle, int64_t window_width, int64_t
 
 	//Set the Viewport
 	m_context->RSSetViewports(1, &view_port);
-
-	gui_man->InitDxHook(m_device.Get(), m_context.Get());
-}
-
-
-
-void Engine::Rendering::Direct3D::BeginFrame()
-{
-	m_context->ClearRenderTargetView(m_backBuffer.Get(), DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f, 1.0f });
-	m_context->ClearDepthStencilView(m_depthStencil.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
-}
-
-void Engine::Rendering::Direct3D::EndFrame()
-{
-	m_swapChain->Present(0u, 0u);
-}
-
-void Engine::Rendering::Direct3D::Draw(UINT vertexCount, UINT startVertex)const
-{
-	m_context->Draw(vertexCount, startVertex);
-}
-
-void Engine::Rendering::Direct3D::DrawIndexed(UINT count)const
-{
-	m_context->DrawIndexed(count, 0u, 0u);
-}
-
-void Engine::Rendering::Direct3D::HandleWindowResize(const int64_t width, const int64_t height)
-{
-	if (m_swapChain && (m_width != width || m_height != height) )
-	{
-		m_width = width;
-		m_height = height;
-
-		ShutdownD3D();
-		SetUpD3D();
-	}
-	
-}
-
-int64_t Engine::Rendering::Direct3D::GetWindowWidth() const
-{
-	return m_width;
-}
-
-int64_t Engine::Rendering::Direct3D::GetWindowHeight() const
-{
-	return m_height;
-}
-
-Microsoft::WRL::ComPtr<ID3D11Device> Engine::Rendering::Direct3D::GetDevice()
-{
-	return m_device;
-}
-
-Microsoft::WRL::ComPtr<ID3D11DeviceContext> Engine::Rendering::Direct3D::GetContext()
-{
-	return m_context;
-}
-
-void Engine::Rendering::Direct3D::SetUpD3D()
-{
-	
 }
 
 void Engine::Rendering::Direct3D::ShutdownD3D()

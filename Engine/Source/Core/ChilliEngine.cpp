@@ -1,7 +1,6 @@
 #include "ChilliEngine.h"
-#include <Windows.h>
 
-void ChilliEngine::Update()
+void ChilliEngine::Run()
 {
 	while (m_window->Update())
 	{
@@ -12,47 +11,51 @@ void ChilliEngine::Update()
 	}
 }
 
-ChilliEngine::ChilliEngine(HINSTANCE& hInstance)
-{
+ChilliEngine::ChilliEngine()
+{	
+	CHILLI_INFO("Booting Engine");
+
 	m_guiManager = std::make_shared<GuiManager>();
+	if (m_guiManager == nullptr)
+		CHILLI_ERROR("Failed to create GUI manager");
+
+	if (m_events = std::make_shared<Events>(); m_events == nullptr)
+		CHILLI_ERROR("Failed to create events system");
 	
-	if (m_resolver = std::make_shared<DependencyResolver<SubSystem>>(); m_resolver == nullptr)
-		MessageBox(m_window->GetHandle(), L"Failed To Initialize Dependency Resolver", L"Chilli Error", MB_ICONWARNING | MB_OK);
+	DependencyResolver::Add(m_events);
+
+	if (m_timer = std::make_shared<Timer>(); m_timer == nullptr)
+		CHILLI_ERROR("Failed to create timer system");
+
+	DependencyResolver::Add(m_timer);
+
+	if (m_window = std::make_unique<Window>(m_guiManager); m_window == nullptr)
+		CHILLI_ERROR("Failed to create window");
 		
+	m_renderer = std::make_shared<Renderer>(m_window->GetWidth(), m_window->GetHeight(), m_window->GetWindowHandle());
+	if (m_renderer == nullptr)
+		CHILLI_ERROR("Failed to create renderer");
 
-	if (m_events = std::make_shared<Event>(m_resolver); m_events == nullptr)
-		MessageBox(m_window->GetHandle(), L"Failed To Initialize Event System", L"Chilli Error", MB_ICONWARNING | MB_OK);
-	m_resolver->Add(m_events);
+	DependencyResolver::Add(m_renderer);
 
-	if (m_timer = std::make_shared<Timer>(m_resolver); m_timer == nullptr)
-		MessageBox(m_window->GetHandle(), L"Failed To Initialize Timing System", L"Chilli Error", MB_ICONWARNING | MB_OK);
-	m_resolver->Add(m_timer);
-
-	if (m_window = std::make_unique<Window>(hInstance, m_events, m_guiManager, 900, 700); m_window == nullptr)
-		MessageBox(m_window->GetHandle(), L"Failed To Create Window", L"Chilli Error", MB_ICONWARNING | MB_OK);
-		
-	m_renderer = std::make_shared<Renderer>(m_resolver, m_window->GetInitialWidth(), m_window->GetInitialHeight(), m_window->GetHandle(), m_guiManager);
-	m_resolver->Add(m_renderer);
-
-	m_sceneManager = std::make_shared<SceneManager>(m_resolver);
-	m_resolver->Add(m_sceneManager);
-
-	m_guiManager->AddGuiElement(std::bind(&SceneManager::DrawGui, m_sceneManager));
+	m_sceneManager = std::make_shared<ProjectManager>();
+	if (m_sceneManager == nullptr)
+		CHILLI_ERROR("Failed to create scene manager");
+	DependencyResolver::Add(m_sceneManager);
 
 	if (!m_renderer->Init())
-		MessageBox(m_window->GetHandle(), L"Failed To Initialize Renderer", L"Chilli Error", MB_ICONWARNING |MB_ABORTRETRYIGNORE);
+		CHILLI_ERROR("Renderer could not init");
 }
 
 ChilliEngine::~ChilliEngine()
 {
 	m_sceneManager.reset();
 	m_renderer.reset();
-	m_resolver->Flush();
-	m_resolver.reset();
 	m_timer.reset();
 	m_window.reset();
 	m_events.reset();
 	m_guiManager.reset();
+	DependencyResolver::Flush();
 }
 
 

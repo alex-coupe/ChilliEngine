@@ -51,7 +51,7 @@
     <ClInclude Include="Source\Rendering\ConstantBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Event.h">
+    <ClInclude Include="Source\Core\Events.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\SubSystem.h">
@@ -111,19 +111,34 @@
     <ClInclude Include="Source\Rendering\Sampler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SceneManagement\Scene.h">
+    <ClInclude Include="Source\ResourceSystem\Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SceneManagement\SceneManager.h">
+    <ClInclude Include="Source\ResourceSystem\ProjectManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SceneManagement\Mesh.h">
+    <ClInclude Include="Source\ResourceSystem\Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Rendering\Drawable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Rendering\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Platform\WindowsPlatform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ECS\ComponentFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utilities\UUID.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utilities\Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ResourceSystem\Asset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -152,7 +167,7 @@
     <ClCompile Include="Source\Rendering\IndexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Event.cpp">
+    <ClCompile Include="Source\Core\Events.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Rendering\Direct3D.cpp">
@@ -194,10 +209,10 @@
     <ClCompile Include="Source\ECS\Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SceneManagement\Scene.cpp">
+    <ClCompile Include="Source\ResourceSystem\Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SceneManagement\SceneManager.cpp">
+    <ClCompile Include="Source\ResourceSystem\ProjectManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Gui\GuiManager.cpp">
@@ -206,7 +221,7 @@
     <ClCompile Include="Source\ECS\TransformComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SceneManagement\Mesh.cpp">
+    <ClCompile Include="Source\ResourceSystem\Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\ECS\MeshComponent.cpp">
@@ -216,6 +231,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Rendering\Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\DependencyResolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Platform\WindowsPlatform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ECS\ComponentFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Utilities\UUID.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

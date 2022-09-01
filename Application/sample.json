@@ -1,15 +1,14 @@
 {
     "ProjectName":"My Cool Project",
-    "LastSceneId":1,
+    "LastSceneId":"12345678-abcd-ef1-234-5678910abcdef",
     "Scenes" : [
         {
             "SceneName":"Scene One",
-            "Id":1,
-            "LastEntityId":2,
+            "Uuid":"12345678-abcd-ef1-234-5678910abcdef",
             "Entities": [
                 {
                     "Name": "Entity One",
-                    "Id":1,
+                    "Uuid":"22345678-abcd-ef1-234-5678910abcdef",
                     "Components":[
                         {
                             "Type":1,
@@ -26,14 +25,13 @@
                         {
                             "Type":2,
                             "MeshName":"Cube",
-                            "Filepath": "Assets/Models/Cube.fbx",
-                            "EditorOnly":false
+                            "Filepath": "Assets/Models/Cube.fbx"
                         }
                     ]
                 },
                 {
                     "Name": "Entity Two",
-                    "Id":2,
+                    "Uuid":"32345678-abcd-ef1-234-5678910abcdef",
                     "Components":[
                         {
                             "Type":1,
@@ -50,8 +48,7 @@
                         {
                             "Type":2,
                             "MeshName":"Cone",
-                            "Filepath": "Assets/Models/Cone.fbx",
-                            "EditorOnly":false
+                            "Filepath": "Assets/Models/Cone.fbx"
                         }
                     ]
                 }

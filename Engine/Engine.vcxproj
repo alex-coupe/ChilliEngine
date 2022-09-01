@@ -92,7 +92,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>DEBUG;CHILLI_ENGINE;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -111,7 +111,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>CHILLI_ENGINE;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Spdlog\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -130,7 +130,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>DEBUG;CHILLI_ENGINE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -149,7 +149,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>CHILLI_ENGINE;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Spdlog\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -166,11 +166,13 @@
     <ClInclude Include="Source\Core\ChilliDefinitions.h" />
     <ClInclude Include="Source\Core\ChilliEngine.h" />
     <ClInclude Include="Source\Core\DependencyResolver.h" />
+    <ClInclude Include="Source\Core\Platform\WindowsPlatform.h" />
     <ClInclude Include="Source\Core\SubSystem.h" />
-    <ClInclude Include="Source\Core\Event.h" />
+    <ClInclude Include="Source\Core\Events.h" />
     <ClInclude Include="Source\Core\Timer.h" />
     <ClInclude Include="Source\Core\Window.h" />
     <ClInclude Include="Source\ECS\Component.h" />
+    <ClInclude Include="Source\ECS\ComponentFactory.h" />
     <ClInclude Include="Source\ECS\Entity.h" />
     <ClInclude Include="Source\ECS\MeshComponent.h" />
     <ClInclude Include="Source\ECS\TransformComponent.h" />
@@ -197,15 +199,21 @@
     <ClInclude Include="Source\Rendering\Topology.h" />
     <ClInclude Include="Source\Rendering\VertexBuffer.h" />
     <ClInclude Include="Source\Rendering\VertexTypes.h" />
-    <ClInclude Include="Source\SceneManagement\Mesh.h" />
-    <ClInclude Include="Source\SceneManagement\Scene.h" />
-    <ClInclude Include="Source\SceneManagement\SceneManager.h" />
+    <ClInclude Include="Source\ResourceSystem\Asset.h" />
+    <ClInclude Include="Source\ResourceSystem\Mesh.h" />
+    <ClInclude Include="Source\ResourceSystem\Scene.h" />
+    <ClInclude Include="Source\ResourceSystem\ProjectManager.h" />
+    <ClInclude Include="Source\Utilities\Utils.h" />
+    <ClInclude Include="Source\Utilities\UUID.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\ChilliEngine.cpp" />
-    <ClCompile Include="Source\Core\Event.cpp" />
+    <ClCompile Include="Source\Core\DependencyResolver.cpp" />
+    <ClCompile Include="Source\Core\Events.cpp" />
+    <ClCompile Include="Source\Core\Platform\WindowsPlatform.cpp" />
     <ClCompile Include="Source\Core\Timer.cpp" />
     <ClCompile Include="Source\Core\Window.cpp" />
+    <ClCompile Include="Source\ECS\ComponentFactory.cpp" />
     <ClCompile Include="Source\ECS\Entity.cpp" />
     <ClCompile Include="Source\ECS\MeshComponent.cpp" />
     <ClCompile Include="Source\ECS\TransformComponent.cpp" />
@@ -229,9 +237,10 @@
     <ClCompile Include="Source\Rendering\Texture.cpp" />
     <ClCompile Include="Source\Rendering\Topology.cpp" />
     <ClCompile Include="Source\Rendering\VertexBuffer.cpp" />
-    <ClCompile Include="Source\SceneManagement\Mesh.cpp" />
-    <ClCompile Include="Source\SceneManagement\Scene.cpp" />
-    <ClCompile Include="Source\SceneManagement\SceneManager.cpp" />
+    <ClCompile Include="Source\ResourceSystem\Mesh.cpp" />
+    <ClCompile Include="Source\ResourceSystem\Scene.cpp" />
+    <ClCompile Include="Source\ResourceSystem\ProjectManager.cpp" />
+    <ClCompile Include="Source\Utilities\UUID.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Source\Rendering\shaders\Pixel_Basic.hlsl">

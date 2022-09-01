@@ -3,55 +3,37 @@
 #include <vector>
 #include <map>
 #include <memory>
+#include "SubSystem.h"
 
 namespace Engine::Core {
 
-	template <typename T>
 	class DependencyResolver {
 	public:
 		template<typename U>
-		std::shared_ptr<U> ResolveDependency()
-		{	
-			
-			for (auto& item : m_dependencies)
-			{
-				if (std::shared_ptr<U> dependency = std::dynamic_pointer_cast<U>(item); dependency != nullptr)
-					return dependency;
-			}
-
-			return nullptr;
-		}
-
-		template<typename U>
-		std::shared_ptr<U> ResolveDependency(const char* name)
+		static std::shared_ptr<U> ResolveDependency()
 		{
-
-			for (auto& item : m_dependencies)
+			U type;
+			auto itr = m_cache.find(type.GetSystemType());
+			if (itr == m_cache.end()) 
 			{
-				if (std::shared_ptr<U> dependency = std::dynamic_pointer_cast<U>(item); dependency != nullptr)
-					return dependency;
+				CHILLI_WARN("Failed to resolve dependency");
+				return nullptr;
 			}
-
-			return nullptr;
+			return std::static_pointer_cast<U>(m_dependencies.at(itr->second));
 		}
 
-		void Add(const std::shared_ptr<T>& in)
+		static void Add(const std::shared_ptr<SubSystem>& in)
 		{
 			m_dependencies.push_back(in);
+			m_cache.emplace(in->GetSystemType(), m_dependencies.size() - 1);
 		}
 
-		void Add(const std::shared_ptr<T>& in, const char* name)
-		{
-			m_dependencies.push_back(in);
-			m_cache.emplace( name,m_dependencies.size() - 1 );
-		}
-
-		bool Remove(const char* name)
+		static bool Remove(const std::shared_ptr<SubSystem>& in)
 		{
 			if (m_cache.size() < 1 || m_dependencies.size() < 1)
 				return false;
 
-			auto iterator = m_cache.find(name);
+			auto iterator = m_cache.find(in->GetSystemType());
 
 			if (iterator != m_cache.end())
 			{
@@ -64,12 +46,14 @@ namespace Engine::Core {
 			return false;
 		}
 
-		void Flush()
+		static void Flush()
 		{
+			CHILLI_INFO("Dependencies flushed");
 			m_dependencies = {};
+			m_cache = {};
 		}
 	private:
-		std::vector<std::shared_ptr<T>> m_dependencies = {};
-		std::map<const char*, size_t> m_cache = {};
+		static std::vector<std::shared_ptr<SubSystem>> m_dependencies;
+		static std::map<int, size_t> m_cache;
 	};
 }

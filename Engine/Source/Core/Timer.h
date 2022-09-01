@@ -9,9 +9,9 @@ namespace Engine::Core {
 	class CHILLI_API Timer : public SubSystem
 	{
 	public:
-		Timer(const std::shared_ptr<DependencyResolver<SubSystem>>& resolver);
+		Timer();
 		void ProcessFrame()override;
-		int GetHash()const override;
+		int GetSystemType()const override;
 		const float GetDeltaTime()const;
 		const float GetElapsedTime()const;
 	private:

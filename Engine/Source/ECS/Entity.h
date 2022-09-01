@@ -1,30 +1,26 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
-#include "TransformComponent.h"
-#include "MeshComponent.h"
 #include <memory>
 #include <set>
 #include <vector>
-/// <summary>
-/// TODO - Entity factor to make prefabs such as point lights, actors, game objects etc that come with the relevent components
-/// </summary>
+#include "ComponentFactory.h"
+#include "../Utilities/UUID.h"
 
 namespace Engine::ECS {
 
 	class CHILLI_API Entity {
 	public:
-		Entity(const std::string& name, const unsigned int id);
-		Entity(const std::string& name, const unsigned int id, const rapidjson::Value& components);
-		std::shared_ptr<Component> GetComponent(ComponentTypes type);
+		Entity(const std::string& name);
+		Entity(const std::string& name, Engine::Utilities::UUID uuid, const rapidjson::Value& components);
+		std::shared_ptr<Component> GetComponentByType(ComponentTypes type);
+		std::shared_ptr<Component> GetComponentByName(const char* name);
 		void AddComponent(ComponentTypes type);
 		void RemoveComponent(ComponentTypes type);
 		const std::string Serialize()const;
-		void DrawGui()const;
-		const unsigned int GetId()const;
+		const Engine::Utilities::UUID& GetUUID()const;
 	private:
 		std::string m_name;
-		const unsigned int m_id;
-		bool m_hasMesh = false;
+		Engine::Utilities::UUID m_uuid;
 		std::set<std::shared_ptr<Component>> m_components;
 	};
 }

@@ -1,16 +1,15 @@
 #include "Renderer.h"
 #include <Windows.h>
-
-#include "../Core/Event.h"
+#include "../Gui/GuiManager.h"
+#include "../Core/Events.h"
 #include "../Core/Window.h"
 #include "../ECS/MeshComponent.h"
 #include "../ECS/TransformComponent.h"
 
-Engine::Rendering::Renderer::Renderer(const std::shared_ptr<DependencyResolver<SubSystem>>& resolver, int64_t width, int64_t height, HWND handle, 
-	const std::shared_ptr<Engine::Gui::GuiManager>& gui_man)
-	: SubSystem(resolver), m_aspectRatio((float)height/(float)width), m_gui(gui_man)
+Engine::Rendering::Renderer::Renderer(int64_t width, int64_t height, void* handle)
+	: m_aspectRatio((float)height/(float)width)
 {
-	m_direct3d = std::make_shared<Direct3D>(handle, width, height, gui_man);
+	m_direct3d = std::make_shared<Direct3D>((HWND)handle, width, height);
 	m_projMatrix = DirectX::XMMatrixPerspectiveLH(1.0f, m_aspectRatio, 0.5f, 100.0f);
 	m_transformationCBuff = std::make_unique<ConstantBuffer<DirectX::XMMATRIX>>(ConstantBufferType::Vertex, m_direct3d);
 	m_transformationCBuff->Bind();
@@ -28,7 +27,7 @@ const DirectX::XMMATRIX& Engine::Rendering::Renderer::GetProjectionMatrix() cons
 	return m_projMatrix;
 }
 
-int Engine::Rendering::Renderer::GetHash()const
+int Engine::Rendering::Renderer::GetSystemType()const
 {
     return static_cast<int>(Engine::Core::SystemTypes::Renderer);
 	
@@ -36,8 +35,8 @@ int Engine::Rendering::Renderer::GetHash()const
 
 bool Engine::Rendering::Renderer::Init()
 {
-	auto m_event = m_resolver->ResolveDependency<Engine::Core::Event>();
-	m_sceneManager = m_resolver->ResolveDependency<SceneManager>();
+	auto m_event = DependencyResolver::ResolveDependency<Engine::Core::Events>();
+	m_sceneManager = DependencyResolver::ResolveDependency<ProjectManager>();
 	
 
 	if (m_event == nullptr)
@@ -46,7 +45,9 @@ bool Engine::Rendering::Renderer::Init()
 		return false;
 	}
 
-//	m_event->Subscribe({ EventType::WindowResized },std::bind(&Direct3D::HandleWindowResize, m_direct3d, std::cref(m_event->GetScreenWidth()), std::cref(m_event->GetScreenHeight())));
+	m_event->Subscribe(EventType::WindowResized, [this]() {
+		m_direct3d->HandleWindowResize(m_direct3d->GetWindowWidth(), m_direct3d->GetWindowWidth());
+		});
 
 
 	return true;
@@ -75,13 +76,6 @@ void Engine::Rendering::Renderer::ProcessFrame()
 		m_transformationCBuff->Update(transform);
 		drawable->Draw();
 	}
-	m_gui->BeginFrame();
-	{
-		m_gui->Draw();
-		m_camera->DrawGui();
-		
-	}
-	m_gui->EndFrame();
 	m_direct3d->EndFrame();
 	
 }
