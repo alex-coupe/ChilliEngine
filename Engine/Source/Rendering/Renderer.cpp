@@ -1,16 +1,15 @@
 #include "Renderer.h"
 #include <Windows.h>
-
+#include "../Gui/GuiManager.h"
 #include "../Core/Events.h"
 #include "../Core/Window.h"
 #include "../ECS/MeshComponent.h"
 #include "../ECS/TransformComponent.h"
 
-Engine::Rendering::Renderer::Renderer(int64_t width, int64_t height, void* handle, 
-	const std::shared_ptr<Engine::Gui::GuiManager>& gui_man)
-	: m_aspectRatio((float)height/(float)width), m_gui(gui_man)
+Engine::Rendering::Renderer::Renderer(int64_t width, int64_t height, void* handle)
+	: m_aspectRatio((float)height/(float)width)
 {
-	m_direct3d = std::make_shared<Direct3D>((HWND)handle, width, height, gui_man);
+	m_direct3d = std::make_shared<Direct3D>((HWND)handle, width, height);
 	m_projMatrix = DirectX::XMMatrixPerspectiveLH(1.0f, m_aspectRatio, 0.5f, 100.0f);
 	m_transformationCBuff = std::make_unique<ConstantBuffer<DirectX::XMMATRIX>>(ConstantBufferType::Vertex, m_direct3d);
 	m_transformationCBuff->Bind();
@@ -77,13 +76,6 @@ void Engine::Rendering::Renderer::ProcessFrame()
 		m_transformationCBuff->Update(transform);
 		drawable->Draw();
 	}
-	m_gui->BeginFrame();
-	{
-		m_gui->Draw();
-		m_camera->DrawGui();
-		
-	}
-	m_gui->EndFrame();
 	m_direct3d->EndFrame();
 	
 }

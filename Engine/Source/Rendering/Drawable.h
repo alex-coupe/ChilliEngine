@@ -1,6 +1,5 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
-
 #include "Direct3D.h"
 #include "VertexBuffer.h"
 #include "Shader.h"

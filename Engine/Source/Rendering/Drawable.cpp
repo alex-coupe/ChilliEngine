@@ -47,5 +47,5 @@ void Engine::Rendering::Drawable::Rebind()
 
 void Engine::Rendering::Drawable::Update()
 {
-	m_transform =  std::dynamic_pointer_cast<Engine::ECS::TransformComponent>(m_entity->GetComponentByType(Engine::ECS::ComponentTypes::Transform))->GetTransformMatrix();
+	m_transform =  std::static_pointer_cast<Engine::ECS::TransformComponent>(m_entity->GetComponentByType(Engine::ECS::ComponentTypes::Transform))->GetTransformMatrix();
 }

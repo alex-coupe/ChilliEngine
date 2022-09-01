@@ -1,7 +1,7 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
-#include "../Gui/GuiManager.h"
 #include <d3d11.h>
+#include "../Gui/GuiManager.h"
 #include <d3dcompiler.h>
 #include <wrl.h>
 #include <DirectXMath.h>
@@ -21,7 +21,7 @@ namespace Engine::Rendering {
 
 	class CHILLI_API Direct3D  {
 	public:
-		Direct3D(HWND handle, int64_t window_width, int64_t window_height, const std::shared_ptr<Engine::Gui::GuiManager>& gui_man);
+		Direct3D(HWND handle, int64_t window_width, int64_t window_height);
 		Direct3D(const Direct3D&) = delete;
 		Direct3D& operator=(const Direct3D&) = delete;
 		Direct3D(Direct3D&&)noexcept = default;
@@ -59,7 +59,7 @@ std::stringstream ss;\
 ss << "DirectX Error: " << m_result;\
 ss << "Line: " << __LINE__;\
 ss << "File" << __FILE__;\
-throw std::runtime_error(ss.str());\
+CHILLI_ERROR(ss.str());\
 }
 
 

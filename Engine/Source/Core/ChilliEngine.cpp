@@ -32,7 +32,7 @@ ChilliEngine::ChilliEngine()
 	if (m_window = std::make_unique<Window>(m_guiManager); m_window == nullptr)
 		CHILLI_ERROR("Failed to create window");
 		
-	m_renderer = std::make_shared<Renderer>(m_window->GetWidth(), m_window->GetHeight(), m_window->GetWindowHandle(), m_guiManager);
+	m_renderer = std::make_shared<Renderer>(m_window->GetWidth(), m_window->GetHeight(), m_window->GetWindowHandle());
 	if (m_renderer == nullptr)
 		CHILLI_ERROR("Failed to create renderer");
 

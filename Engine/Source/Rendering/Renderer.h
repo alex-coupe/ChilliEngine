@@ -12,7 +12,7 @@ namespace Engine::Rendering {
 	using namespace Engine::ResourceSystem;
 	class CHILLI_API Renderer : public SubSystem{
 	public:
-		Renderer(int64_t width, int64_t height, void* handle, const std::shared_ptr<Engine::Gui::GuiManager>& gui_man);
+		Renderer(int64_t width, int64_t height, void* handle);
 		~Renderer();
 		Renderer(const Renderer&) = delete;
 		Renderer& operator=(const Renderer&) = delete;
@@ -30,6 +30,5 @@ namespace Engine::Rendering {
 		std::vector<std::unique_ptr<Drawable>> m_drawables;
 		std::unique_ptr<ConstantBuffer<DirectX::XMMATRIX>> m_transformationCBuff;
 		std::unique_ptr<Camera> m_camera;
-		std::shared_ptr<Gui::GuiManager> m_gui;
 	};
 }

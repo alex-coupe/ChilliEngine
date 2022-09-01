@@ -12,12 +12,3 @@ DirectX::XMMATRIX Engine::Rendering::Camera::GetViewMatrix()
 	DirectX::FXMVECTOR up = DirectX::XMVectorSet(m_up.x, m_up.y, m_up.z, 1.0f);
 	return DirectX::XMMatrixLookAtLH(viewPosition,target,up) * DirectX::XMMatrixRotationRollPitchYaw(m_pitch,m_yaw,0.0f);
 }
-
-void Engine::Rendering::Camera::DrawGui()
-{
-	ImGui::Begin("Editor Camera");
-	ImGui::SliderFloat3("Position", m_positionRemote[0],-80.0f,80.0f);
-	ImGui::SliderFloat("Yaw", &m_yaw, -10.0f, 10.0f);
-	ImGui::SliderFloat("Pitch", &m_pitch, -10.0f, 10.0f);
-	ImGui::End();
-}

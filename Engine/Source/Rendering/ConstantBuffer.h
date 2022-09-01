@@ -11,7 +11,7 @@ namespace Engine::Rendering {
 	template <typename T>
 	class CHILLI_API ConstantBuffer {
 	public:
-		//Creates Buffer With No Initial Data
+		
 		ConstantBuffer(const ConstantBufferType type,  const std::shared_ptr<Direct3D>& d3d)
 			:m_type(type), m_direct3d(d3d)
 		{
