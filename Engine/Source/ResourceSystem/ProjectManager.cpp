@@ -80,6 +80,13 @@ void Engine::ResourceSystem::ProjectManager::SaveProject(const std::string& file
     outputStream.close();
 }
 
+void Engine::ResourceSystem::ProjectManager::NewProject()
+{
+    m_scenes.clear();
+    m_scenes.emplace_back(std::make_shared<Scene>("Scene 1"));
+    m_currentScene = m_scenes.front();
+}
+
 void Engine::ResourceSystem::ProjectManager::AddScene(const std::string& name)
 {
     m_scenes.emplace_back(std::make_shared<Scene>(name));

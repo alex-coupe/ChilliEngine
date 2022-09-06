@@ -39,18 +39,15 @@ WindowsPlatform::WindowsPlatform(int& width, int& height)
 		return;
 	}
 
-	RECT rect = {};
+	RECT rect = { 0, 0, 0, 0 };
 
-	if (!GetWindowRect(m_handle, &rect))
+	if (!GetClientRect(m_handle, &rect))
 		MessageBox(m_handle, L"Failed To Get Window Rect", L"Chilli Error", MB_ICONWARNING | MB_OK);
 
 	width = rect.right - rect.left;
 	height = rect.bottom - rect.top;
 
 	assert(width != 0 && height != 0);
-
-	if (!MoveWindow(m_handle, 0, 0, width, height, false))
-		MessageBox(m_handle, L"Failed To Resize Window", L"Chilli Error", MB_ICONWARNING | MB_OK);
 
 	ShowWindow(m_handle, SW_SHOWMAXIMIZED);
 
@@ -86,6 +83,12 @@ bool WindowsPlatform::Update()
 	}
 
 	return true;
+}
+
+void Engine::Core::Platform::WindowsPlatform::SetTitle(const char* title)
+{
+	if (!SetWindowTextA(m_handle, title))
+		CHILLI_WARN("Failed setting window title");
 }
 
 LRESULT WindowsPlatform::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)

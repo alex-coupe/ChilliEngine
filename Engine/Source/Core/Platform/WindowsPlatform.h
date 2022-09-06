@@ -14,11 +14,12 @@ namespace Engine::Core::Platform {
 		HWND GetHandle();
 		~WindowsPlatform();
 		bool Update();
+		void SetTitle(const char* title);
 	private:
 		HWND m_handle = nullptr;
 		static WindowsPlatform* m_pInstance;
 		LRESULT CALLBACK MyWinProc(HWND, UINT, WPARAM, LPARAM);
-		static constexpr wchar_t title[] = L"Chilli Engine";
+		static constexpr wchar_t title[] = L"Chilli Engine | Untitled Project";
 		static constexpr wchar_t m_className[] = L"WindowClass";
 	};
 }

@@ -18,6 +18,7 @@ namespace Engine::Core {
 		~Window();
 		const int GetWidth()const;
 		const int GetHeight()const;
+		void SetTitle(const char* title);
 	private:
 		int m_width = 0;
 		int m_height = 0;

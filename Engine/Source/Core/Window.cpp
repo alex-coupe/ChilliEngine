@@ -37,3 +37,8 @@ const int Engine::Core::Window::GetHeight() const
 {
 	return m_height;
 }
+
+void Engine::Core::Window::SetTitle(const char* title)
+{
+	m_platform->SetTitle(title);
+}

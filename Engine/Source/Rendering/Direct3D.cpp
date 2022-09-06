@@ -36,6 +36,7 @@ void Engine::Rendering::Direct3D::HandleWindowResize(const int64_t width, const 
 		return;
 
 	CHILLI_INFO("Calling HandleWindowResize");
+
 }
 
 int64_t Engine::Rendering::Direct3D::GetWindowWidth() const

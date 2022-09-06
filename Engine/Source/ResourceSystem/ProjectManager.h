@@ -16,6 +16,7 @@ namespace Engine::ResourceSystem {
 		ProjectManager();
 		void LoadProject(const std::string& filename);
 		void SaveProject(const std::string& filename);
+		void NewProject();
 		void AddScene(const std::string& name);
 		void RemoveScene(Engine::Utilities::UUID& uuid);
 		void AddAsset(const std::string& filename, const std::string& name, AssetTypes type);
@@ -29,6 +30,6 @@ namespace Engine::ResourceSystem {
 		std::vector<std::shared_ptr<Asset>> m_assets;
 		std::shared_ptr<Scene> m_currentScene;
 		std::stringstream ss;
-		std::string m_projectName = "untitled";
+		std::string m_projectName = "untitled project";
 	};
 }

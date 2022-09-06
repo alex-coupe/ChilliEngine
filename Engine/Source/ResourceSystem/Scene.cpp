@@ -17,7 +17,7 @@ Engine::ResourceSystem::Scene::Scene(const std::string& name, Engine::Utilities:
 const std::string Engine::ResourceSystem::Scene::Serialize()
 {
     std::stringstream ss;
-    ss << "{ \"SceneName\":\"" << m_name << "\", \"Uuid\":" << m_uuid.GetUUID() << ", \"Entities\": [";
+    ss << "{ \"SceneName\":\"" << m_name << "\", \"Uuid\": \"" << m_uuid.GetUUID() << "\", \"Entities\": [";
     for (const auto& entity : m_entities)
     {
         ss << entity->Serialize();

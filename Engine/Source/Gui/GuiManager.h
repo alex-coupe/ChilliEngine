@@ -6,6 +6,8 @@
 #include <vector>
 #include <functional>
 #include <Windows.h>
+#include "../Nfd/include/nfd.h"
+#include "../Core/DependencyResolver.h"
 
 namespace Engine::Gui {
 
@@ -19,5 +21,10 @@ namespace Engine::Gui {
 	private:
 		static void BeginFrame();
 		static void EndFrame();
+		static void BuildMenuBar();
+		static void BuildAssetManager();
+		static void BuildSceneHierarchy();
+		static void BuildEntityInspector();
+		static void BuildScenePreviewWindow();
 	};
 }
