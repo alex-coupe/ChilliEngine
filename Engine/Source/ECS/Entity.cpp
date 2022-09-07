@@ -29,6 +29,11 @@ Engine::ECS::Entity::Entity(const std::string& name, Engine::Utilities::UUID uui
 	}
 }
 
+const std::string& Engine::ECS::Entity::GetName()const
+{
+	return m_name;
+}
+
 std::shared_ptr<Engine::ECS::Component>  Engine::ECS::Entity::GetComponentByType(ComponentTypes type)
 {
 	for (const auto& comp : m_components)
@@ -37,6 +42,14 @@ std::shared_ptr<Engine::ECS::Component>  Engine::ECS::Entity::GetComponentByType
 			return comp;
 	}
 	return nullptr;
+}
+
+bool Engine::ECS::Entity::HasComponent(ComponentTypes type)
+{
+	auto contains = std::find_if(m_components.cbegin(), m_components.cend(), [type](const std::shared_ptr<Component> rhs) {
+		return rhs->GetComponentType() == type;
+		});
+	return contains != m_components.cend();
 }
 
 void Engine::ECS::Entity::AddComponent(ComponentTypes type)

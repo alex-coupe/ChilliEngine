@@ -11,6 +11,11 @@
 #include "../Core/DependencyResolver.h"
 #include "../ResourceSystem/Asset.h"
 
+
+namespace Engine::ECS {
+	class Entity;
+}
+
 namespace Engine::Gui {
 
 	class CHILLI_API GuiManager {
@@ -24,7 +29,9 @@ namespace Engine::Gui {
 		static int assetDropdownSelected;
 		static const char* assetDropdownList[4];
 		static int assetFrameSelected;
+		static int hierarchySelected;
 		static std::shared_ptr<Engine::ResourceSystem::Asset> selectedAsset;
+		static std::shared_ptr<Engine::ECS::Entity> selectedEntity;
 		static void BeginFrame();
 		static void EndFrame();
 		static void BuildMenuBar();

@@ -61,9 +61,13 @@ void Engine::Rendering::Renderer::ProcessFrame()
 		m_drawables.clear();
 		for (const auto& entity : entities)
 		{
-			std::unique_ptr<Drawable> drawable = std::make_unique<Drawable>(m_direct3d, entity);
+			if (entity->HasComponent(Engine::ECS::ComponentTypes::Mesh) 
+				&& entity->HasComponent(Engine::ECS::ComponentTypes::Transform))
+			{
+				std::unique_ptr<Drawable> drawable = std::make_unique<Drawable>(m_direct3d, entity);
 
-			m_drawables.push_back(std::move(drawable));
+				m_drawables.push_back(std::move(drawable));
+			}
 		}
 	}
 

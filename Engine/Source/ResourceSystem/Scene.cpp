@@ -33,7 +33,7 @@ void Engine::ResourceSystem::Scene::AddEntity(const std::string& name)
     m_entities.emplace_back(std::make_shared<Entity>(name));
 }
 
-void Engine::ResourceSystem::Scene::RemoveEntity(Engine::Utilities::UUID& uuid)
+void Engine::ResourceSystem::Scene::RemoveEntity(const Engine::Utilities::UUID& uuid)
 {
     if (auto m_entIterator = std::find_if(m_entities.begin(), m_entities.end(), [uuid](const std::shared_ptr<Entity> rhs)
         {

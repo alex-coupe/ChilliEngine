@@ -1,10 +1,13 @@
 #include "GuiManager.h"
 #include "../ResourceSystem/ProjectManager.h"
+#include "../ECS/Entity.h"
 
 const char* Engine::Gui::GuiManager::assetDropdownList[4] = {"Meshes", "Sounds", "Materials", "Scripts"};
 int Engine::Gui::GuiManager::assetDropdownSelected = 0;
 int Engine::Gui::GuiManager::assetFrameSelected = 0;
+int Engine::Gui::GuiManager::hierarchySelected = 0;
 std::shared_ptr<Engine::ResourceSystem::Asset> Engine::Gui::GuiManager::selectedAsset = nullptr;
+std::shared_ptr<Engine::ECS::Entity> Engine::Gui::GuiManager::selectedEntity = nullptr;
 
 void Engine::Gui::GuiManager::Init()
 {
@@ -168,6 +171,36 @@ void Engine::Gui::GuiManager::BuildSceneHierarchy()
 	window_flags |= ImGuiWindowFlags_NoResize;
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 	ImGui::Begin("Scene Hierarchy", 0, window_flags);
+	const auto& scenes = Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetScenes();
+	for (const auto& scene : scenes)
+	{
+		if (ImGui::TreeNode(scene->GetName().c_str()))
+		{
+			for (const auto& entity : scene->GetEntities()) 
+			{
+				if (ImGui::Selectable(entity->GetName().c_str(), hierarchySelected == entity->GetUUID().GetUUIDHash()))
+				{
+					hierarchySelected = entity->GetUUID().GetUUIDHash();
+					selectedEntity = entity;
+				}
+			}
+			ImGui::TreePop();
+		}
+	}
+	if (selectedEntity != nullptr)
+	{
+		if (ImGui::Button("Remove Entity"))
+		{
+			Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetCurrentScene()->RemoveEntity(selectedEntity->GetUUID());
+		}
+	}
+	ImGui::Separator();
+	static char entityName[128] = "";
+	ImGui::InputText("Entity Name", entityName, IM_ARRAYSIZE(entityName));
+	if (ImGui::Button("Add Entity"))
+	{
+		Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetCurrentScene()->AddEntity(entityName);
+	}
 	ImGui::End();
 }
 

@@ -19,6 +19,7 @@ namespace Engine::ResourceSystem {
 		void NewProject();
 		void AddScene(const std::string& name);
 		void RemoveScene(Engine::Utilities::UUID& uuid);
+		std::vector<std::shared_ptr<Scene>> GetScenes()const;
 		void AddAsset(const std::filesystem::path& filename, AssetTypes type);
 		void RemoveAsset(const Engine::Utilities::UUID& uuid);
 		std::shared_ptr<Scene> GetCurrentScene()const;

@@ -14,7 +14,7 @@ namespace Engine::ResourceSystem {
 		Scene(const std::string& name, Engine::Utilities::UUID uuid, const rapidjson::Value& entities);
 		const std::string Serialize();
 		void AddEntity(const std::string& name);
-		void RemoveEntity(Engine::Utilities::UUID& uuid);
+		void RemoveEntity(const Engine::Utilities::UUID& uuid);
 		const std::vector<std::shared_ptr<Entity>>& GetEntities()const;
 		void Update(float dt);
 		const Engine::Utilities::UUID& GetUUID()const;

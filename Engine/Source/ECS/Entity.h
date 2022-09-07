@@ -15,8 +15,10 @@ namespace Engine::ECS {
 		std::shared_ptr<Component> GetComponentByName(const char* name);
 		void AddComponent(ComponentTypes type);
 		void RemoveComponent(ComponentTypes type);
+		bool HasComponent(ComponentTypes type);
 		const std::string Serialize()const;
 		const Engine::Utilities::UUID& GetUUID()const;
+		const std::string& GetName()const;
 	private:
 		std::string m_name;
 		Engine::Utilities::UUID m_uuid;

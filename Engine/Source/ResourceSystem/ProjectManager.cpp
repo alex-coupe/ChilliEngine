@@ -101,6 +101,11 @@ void Engine::ResourceSystem::ProjectManager::AddScene(const std::string& name)
     m_scenes.emplace_back(std::make_shared<Scene>(name));
 }
 
+std::vector<std::shared_ptr<Engine::ResourceSystem::Scene>> Engine::ResourceSystem::ProjectManager::GetScenes() const
+{
+    return m_scenes;
+}
+
 void Engine::ResourceSystem::ProjectManager::AddAsset(const std::filesystem::path& filename, AssetTypes type)
 {
     switch (type)
