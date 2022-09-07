@@ -187,20 +187,6 @@ void Engine::Gui::GuiManager::BuildSceneHierarchy()
 			ImGui::TreePop();
 		}
 	}
-	if (selectedEntity != nullptr)
-	{
-		if (ImGui::Button("Remove Entity"))
-		{
-			Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetCurrentScene()->RemoveEntity(selectedEntity->GetUUID());
-		}
-	}
-	ImGui::Separator();
-	static char entityName[128] = "";
-	ImGui::InputText("Entity Name", entityName, IM_ARRAYSIZE(entityName));
-	if (ImGui::Button("Add Entity"))
-	{
-		Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetCurrentScene()->AddEntity(entityName);
-	}
 	ImGui::End();
 }
 
