@@ -43,8 +43,8 @@ void Engine::ResourceSystem::ProjectManager::LoadProject(const std::string& file
             switch (asset["Type"].GetInt())
             {
                 case (int)AssetTypes::Mesh:
-                    m_assets.emplace_back(std::make_shared<Mesh>(asset["FilePath"].GetString(), 
-                        asset["Name"].GetString(), asset["Uuid"].GetString()));
+                    m_assets.emplace_back(std::make_shared<Mesh>(asset["FilePath"].GetString(),
+                        asset["Uuid"].GetString()));
                     break;
                 default:
                     break;
@@ -69,10 +69,19 @@ void Engine::ResourceSystem::ProjectManager::SaveProject(const std::string& file
     std::stringstream ss;
     std::ofstream outputStream;
 
-    ss << "{ \"ProjectName\":\"" << m_projectName << "\", \"Scenes\":[ ";
-    for (const auto& scene : m_scenes)
+    ss << "{ \"ProjectName\":\"" << m_projectName << "\", \"Assets\":[";
+    for (size_t i = 0; i < m_assets.size(); i++)
     {
-        ss << scene->Serialize();
+        ss << m_assets[i]->Serialize();
+        if (i != m_assets.size() - 1)
+            ss << ",";
+    }
+    ss << "], \"Scenes\":[ ";
+    for (size_t i = 0; i < m_scenes.size(); i++)
+    {
+        ss << m_scenes[i]->Serialize();
+        if (i != m_scenes.size() - 1)
+            ss << ",";
     }
     ss << "]}";
     outputStream.open(filename);
@@ -92,24 +101,24 @@ void Engine::ResourceSystem::ProjectManager::AddScene(const std::string& name)
     m_scenes.emplace_back(std::make_shared<Scene>(name));
 }
 
-void Engine::ResourceSystem::ProjectManager::AddAsset(const std::string& filename, const std::string& name, AssetTypes type)
+void Engine::ResourceSystem::ProjectManager::AddAsset(const std::filesystem::path& filename, AssetTypes type)
 {
     switch (type)
     {
         case AssetTypes::Mesh:
-            m_assets.emplace_back(std::make_shared<Mesh>(filename, name, Engine::Utilities::UUID()));
+            m_assets.emplace_back(std::make_shared<Mesh>(filename, Engine::Utilities::UUID()));
             break;
         default:
             break;
     }
 }
 
-void Engine::ResourceSystem::ProjectManager::RemoveAsset(Engine::Utilities::UUID& uuid)
+void Engine::ResourceSystem::ProjectManager::RemoveAsset(const Engine::Utilities::UUID& uuid)
 {
     if (auto m_assetIterator = std::find_if(m_assets.begin(), m_assets.end(), [uuid](const std::shared_ptr<Asset> rhs)
         {
             return rhs->GetUUID() == uuid;
-        }); m_assetIterator != m_assets.end() && m_assets.size() > 1)
+        }); m_assetIterator != m_assets.end() && m_assets.size() > 0)
     {
         m_assets.erase(m_assetIterator);
     }
@@ -121,7 +130,7 @@ void Engine::ResourceSystem::ProjectManager::RemoveScene(Engine::Utilities::UUID
     if (auto m_sceneIterator = std::find_if(m_scenes.begin(), m_scenes.end(), [uuid](const std::shared_ptr<Scene> rhs)
         {
             return rhs->GetUUID() == uuid;
-        }); m_sceneIterator != m_scenes.end() && m_scenes.size() > 1)
+        }); m_sceneIterator != m_scenes.end() && m_scenes.size() > 0)
     {
         m_scenes.erase(m_sceneIterator);
     }
@@ -134,13 +143,34 @@ std::shared_ptr<Engine::ResourceSystem::Scene> Engine::ResourceSystem::ProjectMa
 
 void Engine::ResourceSystem::ProjectManager::SetCurrentScene(Engine::Utilities::UUID& uuid)
 {
-    if (auto m_sceneIterator = std::find_if(m_scenes.begin(), m_scenes.end(), [uuid](const std::shared_ptr<Scene> rhs)
+    if (auto m_sceneIterator = std::find_if(m_scenes.begin(), m_scenes.end(), [&uuid](const std::shared_ptr<Scene> rhs)
         {
             return rhs->GetUUID() == uuid;
-        }); m_sceneIterator != m_scenes.end() && m_scenes.size() > 1)
+        }); m_sceneIterator != m_scenes.end() && m_scenes.size() > 0)
     {
         m_currentScene = *m_sceneIterator;
     }
+}
+
+std::shared_ptr<Engine::ResourceSystem::Asset> Engine::ResourceSystem::ProjectManager::GetAssetByUUID(Engine::Utilities::UUID& uuid)
+{
+    if (auto m_assetsIterator = std::find_if(m_assets.begin(), m_assets.end(), [&uuid](const std::shared_ptr<Engine::ResourceSystem::Asset> rhs)
+        {
+            return rhs->GetUUID() == uuid;
+        }); m_assetsIterator != m_assets.end() && m_assets.size() > 0)
+    {
+        return *m_assetsIterator;
+    }
+    return nullptr;
+}
+
+std::vector<std::shared_ptr<Engine::ResourceSystem::Asset>> Engine::ResourceSystem::ProjectManager::GetAssetsByType(AssetTypes type)
+{
+    std::vector<std::shared_ptr<Asset>> assets;
+    std::copy_if(m_assets.begin(), m_assets.end(), std::back_inserter(assets), [&type](const std::shared_ptr<Asset> rhs) {
+        return rhs->GetAssetType() == type;
+        });
+    return assets;
 }
 
 int Engine::ResourceSystem::ProjectManager::GetSystemType() const

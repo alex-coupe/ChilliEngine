@@ -6,17 +6,15 @@
 namespace Engine::ResourceSystem {
 
 	enum class AssetTypes : int {
-		Mesh = 1, Sound = 2, Surface = 3, Script = 4
+		Mesh = 0, Sound = 1, Material = 2, Script = 3
 	};
 
 	class CHILLI_API Asset {
 	public:
-		Asset(AssetTypes type,std::filesystem::path filepath, Engine::Utilities::UUID uuid, 
-			const std::string& name) 
+		Asset(AssetTypes type,std::filesystem::path filepath, Engine::Utilities::UUID uuid) 
 			:m_type(type)
 			,m_filePath(filepath),
-			m_uuid(uuid),
-			m_name(name)
+			m_uuid(uuid)
 		{}
 		AssetTypes GetAssetType()const
 		{
@@ -30,12 +28,15 @@ namespace Engine::ResourceSystem {
 		{
 			return m_uuid;
 		}
+		const std::filesystem::path& GetName()const
+		{
+			return m_filePath;
+		}
 		virtual ~Asset() {};
 		virtual const std::string Serialize()const = 0;
 	protected:
 		Engine::Utilities::UUID m_uuid;
 		const std::filesystem::path m_filePath;
 		const AssetTypes m_type;
-		const std::string m_name;
 	};
 }

@@ -19,10 +19,12 @@ namespace Engine::ResourceSystem {
 		void NewProject();
 		void AddScene(const std::string& name);
 		void RemoveScene(Engine::Utilities::UUID& uuid);
-		void AddAsset(const std::string& filename, const std::string& name, AssetTypes type);
-		void RemoveAsset(Engine::Utilities::UUID& uuid);
+		void AddAsset(const std::filesystem::path& filename, AssetTypes type);
+		void RemoveAsset(const Engine::Utilities::UUID& uuid);
 		std::shared_ptr<Scene> GetCurrentScene()const;
 		void SetCurrentScene(Engine::Utilities::UUID& uuid);
+		std::shared_ptr<Asset> GetAssetByUUID(Engine::Utilities::UUID& uuid);
+		std::vector<std::shared_ptr<Asset>> GetAssetsByType(AssetTypes type);
 		virtual int GetSystemType()const;
 		virtual void ProcessFrame();
 	private:

@@ -17,12 +17,12 @@ Engine::ECS::Entity::Entity(const std::string& name, Engine::Utilities::UUID uui
 				DirectX::XMFLOAT3 translation = { components[i]["PosX"].GetFloat(),components[i]["PosY"].GetFloat(), components[i]["PosZ"].GetFloat() };
 				DirectX::XMFLOAT3 rotation = { components[i]["RotX"].GetFloat(),components[i]["RotY"].GetFloat(), components[i]["RotZ"].GetFloat() };
 				DirectX::XMFLOAT3 scale = { components[i]["ScaleX"].GetFloat(),components[i]["ScaleY"].GetFloat(), components[i]["ScaleZ"].GetFloat() };
-				m_components.emplace(ComponentFactory::MakeTransformComponent(translation, rotation, scale));
+				m_components.emplace_back(ComponentFactory::MakeTransformComponent(translation, rotation, scale));
 				break;
 			}
 			case (int)ComponentTypes::Mesh:
 			{
-				m_components.emplace(std::make_shared<MeshComponent>(components[i]["MeshName"].GetString()));
+				m_components.emplace_back(std::make_shared<MeshComponent>(components[i]["MeshUuid"].GetString()));
 				break;
 			}
 		}
@@ -48,10 +48,10 @@ void Engine::ECS::Entity::AddComponent(ComponentTypes type)
 		switch (type)
 		{
 			case ComponentTypes::Transform:
-				m_components.emplace(ComponentFactory::MakeTransformComponent({ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f }));
+				m_components.emplace_back(ComponentFactory::MakeTransformComponent({ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f }));
 				break;
 			case ComponentTypes::Mesh:
-				m_components.emplace(ComponentFactory::MakeMeshComponent());
+				m_components.emplace_back(ComponentFactory::MakeMeshComponent());
 				break;
 		}
 	}
@@ -71,12 +71,14 @@ void Engine::ECS::Entity::RemoveComponent(ComponentTypes type)
 const std::string Engine::ECS::Entity::Serialize() const
 {
 	std::stringstream ss;
-	ss << "\"Name\":\"" << m_name << "\", \"Uuid\":\"" << m_uuid.GetUUID() << "\", \"Components\":[";
-	for (const auto& compo : m_components)
+	ss << "{\"Name\":\"" << m_name << "\", \"Uuid\":\"" << m_uuid.GetUUID() << "\", \"Components\":[";
+	for (size_t i = 0; i < m_components.size(); i++)
 	{
-		ss << compo->Serialize();
+		ss << m_components[i]->Serialize();
+		if (i != m_components.size() - 1)
+			ss << ",";
 	}
-	ss << "]";
+	ss << "]}";
 	return ss.str();
 }
 

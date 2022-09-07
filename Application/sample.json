@@ -1,6 +1,26 @@
 {
     "ProjectName":"My Cool Project",
-    "LastSceneId":"12345678-abcd-ef1-234-5678910abcdef",
+  "LastSceneId": "12345678-abcd-ef1-234-5678910abcdef",
+  "Assets": [
+    {
+      "Type": 0,
+      "FilePath": "Assets/Models/Cube.fbx",
+      "Name": "Cube",
+      "Uuid": "1234"
+    },
+    {
+      "Type": 0,
+      "FilePath": "Assets/Models/Cone.fbx",
+      "Name": "Cone",
+      "Uuid": "1235"
+    },
+    {
+      "Type": 0,
+      "FilePath": "Assets/Models/Sphere.fbx",
+      "Name": "Cone",
+      "Uuid": "1236"
+    }
+  ],
     "Scenes" : [
         {
             "SceneName":"Scene One",
@@ -23,9 +43,8 @@
                             "ScaleZ":2.0                   
                         },
                         {
-                            "Type":2,
-                            "MeshName":"Cube",
-                            "Filepath": "Assets/Models/Cube.fbx"
+                          "Type": 2,
+                          "MeshUuid":  "1234"
                         }
                     ]
                 },
@@ -45,11 +64,10 @@
                             "ScaleY":1.0,
                             "ScaleZ":1.0                   
                         },
-                        {
-                            "Type":2,
-                            "MeshName":"Cone",
-                            "Filepath": "Assets/Models/Cone.fbx"
-                        }
+                      {
+                        "Type": 2,
+                        "MeshUuid": "1234"
+                      }
                     ]
                 }
             ]

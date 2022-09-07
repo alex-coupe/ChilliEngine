@@ -1,6 +1,11 @@
 #include "GuiManager.h"
 #include "../ResourceSystem/ProjectManager.h"
 
+const char* Engine::Gui::GuiManager::assetDropdownList[4] = {"Meshes", "Sounds", "Materials", "Scripts"};
+int Engine::Gui::GuiManager::assetDropdownSelected = 0;
+int Engine::Gui::GuiManager::assetFrameSelected = 0;
+std::shared_ptr<Engine::ResourceSystem::Asset> Engine::Gui::GuiManager::selectedAsset = nullptr;
+
 void Engine::Gui::GuiManager::Init()
 {
 	IMGUI_CHECKVERSION();
@@ -19,6 +24,9 @@ void Engine::Gui::GuiManager::DrawEditorGui()
 {
 	BeginFrame();
 	BuildMenuBar();
+	BuildAssetManager();
+	BuildSceneHierarchy();
+	BuildEntityInspector();
 	EndFrame();
 }
 
@@ -82,6 +90,95 @@ void Engine::Gui::GuiManager::BuildMenuBar()
 		}
 		ImGui::EndMainMenuBar();
 	}
+}
+
+void Engine::Gui::GuiManager::BuildAssetManager()
+{
+	ImGuiWindowFlags window_flags = 0;
+	window_flags |= ImGuiWindowFlags_NoMove;
+    window_flags |= ImGuiWindowFlags_NoResize;
+	window_flags |= ImGuiWindowFlags_NoCollapse;
+
+	ImGui::Begin("Assets",0, window_flags);
+	ImGui::BeginChild("left pane", ImVec2(300, 0), true);
+	ImGui::Combo("", &assetDropdownSelected, assetDropdownList, IM_ARRAYSIZE(assetDropdownList));
+	if (ImGui::Button("Add"))
+	{
+		nfdchar_t* outPath = NULL;
+		nfdresult_t result = NFD_ERROR;
+		switch (assetDropdownSelected) {
+		case 0:
+			result = NFD_OpenDialog("gltf,fbx", NULL, &outPath);
+			break;
+		case 1:
+			result = NFD_OpenDialog("wav,mp3", NULL, &outPath);
+			break;
+		case 2:
+			result = NFD_OpenDialog("png,jpg,jpeg,bmp", NULL, &outPath);
+			break;
+		case 3:
+			result = NFD_OpenDialog("cs", NULL, &outPath);
+			break;
+		}
+		
+		if (result == NFD_OKAY)
+		{
+			Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->AddAsset(outPath,(Engine::ResourceSystem::AssetTypes)assetDropdownSelected);
+			free(outPath);
+		}
+	}
+	const auto assets = Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetAssetsByType((Engine::ResourceSystem::AssetTypes)assetDropdownSelected);
+	for (const auto& asset : assets)
+	{
+		if (ImGui::Selectable(asset->GetName().filename().generic_string().c_str(), assetFrameSelected == asset->GetUUID().GetUUIDHash()))
+		{
+			selectedAsset = asset;
+			assetFrameSelected = selectedAsset->GetUUID().GetUUIDHash();
+		}
+	}
+	ImGui::EndChild();
+	ImGui::SameLine();
+	ImGui::BeginGroup();
+	ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing()));
+	
+	ImGui::Separator();
+	if (ImGui::BeginTabBar("##Tabs", ImGuiTabBarFlags_None))
+	{
+		if (ImGui::BeginTabItem("Description") && selectedAsset != nullptr)
+		{
+			ImGui::TextWrapped("UUID : %s",selectedAsset->GetUUID().GetUUID().c_str());
+		}
+		ImGui::EndTabItem();
+		ImGui::EndTabBar();
+	}
+	ImGui::EndChild();
+	if (ImGui::Button("Remove Asset")) 
+	{
+		Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->RemoveAsset(selectedAsset->GetUUID());
+	}
+	ImGui::SameLine();
+	ImGui::EndGroup();
+	ImGui::End();
+}
+
+void Engine::Gui::GuiManager::BuildSceneHierarchy()
+{
+	ImGuiWindowFlags window_flags = 0;
+	window_flags |= ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoResize;
+	window_flags |= ImGuiWindowFlags_NoCollapse;
+	ImGui::Begin("Scene Hierarchy", 0, window_flags);
+	ImGui::End();
+}
+
+void Engine::Gui::GuiManager::BuildEntityInspector()
+{
+	ImGuiWindowFlags window_flags = 0;
+	window_flags |= ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoResize;
+	window_flags |= ImGuiWindowFlags_NoCollapse;
+	ImGui::Begin("Inspector",0,window_flags);
+	ImGui::End();
 }
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);

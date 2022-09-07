@@ -14,7 +14,8 @@ namespace Engine::ECS {
 
 	class CHILLI_API Component {
 	public:
-		Component(ComponentTypes type, const std::string& name) :m_type(type), m_name(name) {}
+		Component(ComponentTypes type, const std::string& name) :
+			m_type(type), m_name(name) {}
 		virtual ~Component() {};
 		virtual const std::string Serialize()const = 0;
 		ComponentTypes GetComponentType()const

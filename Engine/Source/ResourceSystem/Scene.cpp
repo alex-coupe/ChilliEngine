@@ -18,9 +18,11 @@ const std::string Engine::ResourceSystem::Scene::Serialize()
 {
     std::stringstream ss;
     ss << "{ \"SceneName\":\"" << m_name << "\", \"Uuid\": \"" << m_uuid.GetUUID() << "\", \"Entities\": [";
-    for (const auto& entity : m_entities)
+    for (size_t i = 0; i < m_entities.size(); i++)
     {
-        ss << entity->Serialize();
+        ss << m_entities[i]->Serialize();
+        if (i != m_entities.size() - 1)
+            ss << ",";
     }
     ss << "]}";
     return ss.str();

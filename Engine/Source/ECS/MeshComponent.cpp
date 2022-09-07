@@ -1,20 +1,16 @@
 #include "MeshComponent.h"
+#include "../ResourceSystem/ProjectManager.h"
 
-Engine::ECS::MeshComponent::MeshComponent(const char* mesh_name)
-	:m_meshName(mesh_name), Component(ComponentTypes::Mesh, "Mesh")
+Engine::ECS::MeshComponent::MeshComponent(Engine::Utilities::UUID uuid)
+	: m_meshUuid(uuid),Component(ComponentTypes::Mesh, "Mesh")
 {
-	//Link to mesh from asset manager
-}
-
-const std::string& Engine::ECS::MeshComponent::GetMeshName()const
-{
-	return m_meshName;
+	m_mesh = std::static_pointer_cast<Engine::ResourceSystem::Mesh>(Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetAssetByUUID(m_meshUuid));
 }
 
 const std::string Engine::ECS::MeshComponent::Serialize() const
 {
 	std::stringstream ss;
-	ss << "{ \"Type\":" << static_cast<int>(m_type) << ", \"MeshName\":\"" << m_meshName <<"\"}";
+	ss << "{ \"Type\":" << static_cast<int>(m_type) << ", \"MeshUuid\":\"" << m_meshUuid.GetUUID() << "\"}";
 	return  ss.str();
 }
 

@@ -1,7 +1,6 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
 #include <memory>
-#include <set>
 #include <vector>
 #include "ComponentFactory.h"
 #include "../Utilities/UUID.h"
@@ -21,6 +20,6 @@ namespace Engine::ECS {
 	private:
 		std::string m_name;
 		Engine::Utilities::UUID m_uuid;
-		std::set<std::shared_ptr<Component>> m_components;
+		std::vector<std::shared_ptr<Component>> m_components;
 	};
 }

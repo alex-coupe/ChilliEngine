@@ -3,11 +3,13 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_dx11.h"
 #include "ImGui/imgui_impl_win32.h"
+#include <memory>
 #include <vector>
 #include <functional>
 #include <Windows.h>
 #include "../Nfd/include/nfd.h"
 #include "../Core/DependencyResolver.h"
+#include "../ResourceSystem/Asset.h"
 
 namespace Engine::Gui {
 
@@ -19,6 +21,10 @@ namespace Engine::Gui {
 		static bool WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 		static ImGuiIO* GetIO();
 	private:
+		static int assetDropdownSelected;
+		static const char* assetDropdownList[4];
+		static int assetFrameSelected;
+		static std::shared_ptr<Engine::ResourceSystem::Asset> selectedAsset;
 		static void BeginFrame();
 		static void EndFrame();
 		static void BuildMenuBar();
