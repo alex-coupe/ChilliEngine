@@ -3,6 +3,7 @@
 Engine::ECS::Entity::Entity(const std::string& name)
 	: m_name(name), m_uuid()
 {
+	m_components.emplace_back(ComponentFactory::MakeTransformComponent({ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f }));
 }
 
 Engine::ECS::Entity::Entity(const std::string& name, Engine::Utilities::UUID uuid, const rapidjson::Value& components)
@@ -34,6 +35,11 @@ const std::string& Engine::ECS::Entity::GetName()const
 	return m_name;
 }
 
+const std::vector<std::shared_ptr<Engine::ECS::Component>>& Engine::ECS::Entity::GetComponents()const
+{
+	return m_components;
+}
+
 std::shared_ptr<Engine::ECS::Component>  Engine::ECS::Entity::GetComponentByType(ComponentTypes type)
 {
 	for (const auto& comp : m_components)
@@ -60,9 +66,6 @@ void Engine::ECS::Entity::AddComponent(ComponentTypes type)
 	{
 		switch (type)
 		{
-			case ComponentTypes::Transform:
-				m_components.emplace_back(ComponentFactory::MakeTransformComponent({ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f }));
-				break;
 			case ComponentTypes::Mesh:
 				m_components.emplace_back(ComponentFactory::MakeMeshComponent());
 				break;

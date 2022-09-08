@@ -6,7 +6,7 @@
 namespace Engine::ResourceSystem {
 
 	enum class AssetTypes : int {
-		Mesh = 0, Sound = 1, Material = 2, Script = 3
+		Mesh = 0, Audio = 1, Material = 2, Script = 3
 	};
 
 	class CHILLI_API Asset {

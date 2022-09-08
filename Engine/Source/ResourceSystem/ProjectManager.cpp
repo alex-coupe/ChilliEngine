@@ -10,6 +10,7 @@ Engine::ResourceSystem::ProjectManager::ProjectManager()
 
 void Engine::ResourceSystem::ProjectManager::LoadProject(const std::string& filename)
 {
+    std::stringstream ss;
     std::ifstream json;
     json.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
@@ -20,7 +21,7 @@ void Engine::ResourceSystem::ProjectManager::LoadProject(const std::string& file
     }
     catch (std::ifstream::failure&)
     {
-        throw std::runtime_error("Loading JSON File Failed");
+        CHILLI_ERROR("Loading JSON File Failed");
     }
 
     rapidjson::Document document;
@@ -161,7 +162,7 @@ std::shared_ptr<Engine::ResourceSystem::Asset> Engine::ResourceSystem::ProjectMa
 {
     if (auto m_assetsIterator = std::find_if(m_assets.begin(), m_assets.end(), [&uuid](const std::shared_ptr<Engine::ResourceSystem::Asset> rhs)
         {
-            return rhs->GetUUID() == uuid;
+            return rhs->GetUUID().GetUUIDHash() == uuid.GetUUIDHash();
         }); m_assetsIterator != m_assets.end() && m_assets.size() > 0)
     {
         return *m_assetsIterator;

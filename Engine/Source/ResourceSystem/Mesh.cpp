@@ -23,7 +23,7 @@ Engine::ResourceSystem::Mesh::Mesh(const std::filesystem::path& filepath, const 
 const std::string Engine::ResourceSystem::Mesh::Serialize() const
 {
 	std::stringstream ss;
-	ss << "{ \"Uuid\":\"" << m_uuid.GetUUID() << "\", \"Type\":" << static_cast<int>(m_type) << ", \"FilePath\":" << m_filePath.relative_path() << "}";
+	ss << "{ \"Uuid\":\"" << m_uuid.GetUUID() << "\", \"Type\":" << static_cast<int>(m_type) << ", \"FilePath\": \"Assets/Models/" << m_filePath.filename() << "}";
 	return  ss.str();
 }
 

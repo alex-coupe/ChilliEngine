@@ -32,7 +32,6 @@ namespace Engine::ResourceSystem {
 		std::vector<std::shared_ptr<Scene>> m_scenes;
 		std::vector<std::shared_ptr<Asset>> m_assets;
 		std::shared_ptr<Scene> m_currentScene;
-		std::stringstream ss;
 		std::string m_projectName = "untitled project";
 	};
 }

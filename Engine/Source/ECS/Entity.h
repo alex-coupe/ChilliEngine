@@ -14,6 +14,7 @@ namespace Engine::ECS {
 		std::shared_ptr<Component> GetComponentByType(ComponentTypes type);
 		std::shared_ptr<Component> GetComponentByName(const char* name);
 		void AddComponent(ComponentTypes type);
+		const std::vector<std::shared_ptr<Component>>& GetComponents()const;
 		void RemoveComponent(ComponentTypes type);
 		bool HasComponent(ComponentTypes type);
 		const std::string Serialize()const;

@@ -31,7 +31,7 @@
                     "Uuid":"22345678-abcd-ef1-234-5678910abcdef",
                     "Components":[
                         {
-                            "Type":1,
+                            "Type":-1,
                             "PosX":0.33,
                             "PosY":0.99,
                             "PosZ":11.56,
@@ -43,7 +43,7 @@
                             "ScaleZ":2.0                   
                         },
                         {
-                          "Type": 2,
+                          "Type": 0,
                           "MeshUuid":  "1234"
                         }
                     ]
@@ -53,7 +53,7 @@
                     "Uuid":"32345678-abcd-ef1-234-5678910abcdef",
                     "Components":[
                         {
-                            "Type":1,
+                            "Type":-1,
                             "PosX":0.33,
                             "PosY":-3.99,
                             "PosZ":11.56,
@@ -65,7 +65,7 @@
                             "ScaleZ":1.0                   
                         },
                       {
-                        "Type": 2,
+                        "Type": 0,
                         "MeshUuid": "1234"
                       }
                     ]

@@ -10,6 +10,9 @@ namespace Engine::ECS {
 		TransformComponent(DirectX::XMFLOAT3 translation, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 scale);
 		virtual const std::string Serialize()const override;
 		DirectX::XMMATRIX GetTransformMatrix()const;
+		DirectX::XMFLOAT3& GetTranslation();
+		DirectX::XMFLOAT3& GetRotation();
+		DirectX::XMFLOAT3& GetScale();
 	private:
 		DirectX::XMFLOAT3 m_translation;
 		DirectX::XMFLOAT3 m_rotation;

@@ -9,7 +9,7 @@
 namespace Engine::ECS {
 
 	enum class ComponentTypes : int {
-		Transform=1, Mesh=2
+		Transform=-1, Mesh=0, Collider2D=1, Camera=2,PointLight=3,Script=4
 	};
 
 	class CHILLI_API Component {
