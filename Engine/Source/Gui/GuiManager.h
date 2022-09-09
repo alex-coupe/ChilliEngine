@@ -11,9 +11,12 @@
 #include "../Core/DependencyResolver.h"
 #include "../ResourceSystem/Asset.h"
 
-
 namespace Engine::ECS {
 	class Entity;
+}
+
+namespace Engine::ResourceSystem {
+	class Scene;
 }
 
 namespace Engine::Gui {
@@ -31,8 +34,11 @@ namespace Engine::Gui {
 		static const char* componentsList[5];
 		static int assetFrameSelected;
 		static int hierarchySelected;
+		static int sceneSelected;
+		static int entitySelected;
 		static std::shared_ptr<Engine::ResourceSystem::Asset> selectedAsset;
 		static std::shared_ptr<Engine::ECS::Entity> selectedEntity;
+		static std::shared_ptr<Engine::ResourceSystem::Scene> selectedScene;
 		static void BeginFrame();
 		static void EndFrame();
 		static void BuildMenuBar();

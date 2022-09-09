@@ -131,7 +131,7 @@ void Engine::ResourceSystem::ProjectManager::RemoveAsset(const Engine::Utilities
 }
 
 
-void Engine::ResourceSystem::ProjectManager::RemoveScene(Engine::Utilities::UUID& uuid)
+void Engine::ResourceSystem::ProjectManager::RemoveScene(const Engine::Utilities::UUID& uuid)
 {
     if (auto m_sceneIterator = std::find_if(m_scenes.begin(), m_scenes.end(), [uuid](const std::shared_ptr<Scene> rhs)
         {

@@ -8,7 +8,10 @@ const char* Engine::Gui::GuiManager::componentsList[5] =
 int Engine::Gui::GuiManager::assetDropdownSelected = 0;
 int Engine::Gui::GuiManager::assetFrameSelected = 0;
 int Engine::Gui::GuiManager::hierarchySelected = 0;
+int Engine::Gui::GuiManager::sceneSelected = 0;
+int Engine::Gui::GuiManager::entitySelected = 0;
 std::shared_ptr<Engine::ResourceSystem::Asset> Engine::Gui::GuiManager::selectedAsset = nullptr;
+std::shared_ptr<Engine::ResourceSystem::Scene> Engine::Gui::GuiManager::selectedScene = nullptr;
 std::shared_ptr<Engine::ECS::Entity> Engine::Gui::GuiManager::selectedEntity = nullptr;
 
 void Engine::Gui::GuiManager::Init()
@@ -110,63 +113,135 @@ void Engine::Gui::GuiManager::BuildAssetManager()
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 
 	ImGui::Begin("Assets",0, window_flags);
-	ImGui::BeginChild("left pane", ImVec2(300, 0), true);
-	ImGui::Combo("", &assetDropdownSelected, assetDropdownList, IM_ARRAYSIZE(assetDropdownList));
-	if (ImGui::Button("Add"))
-	{
-		nfdchar_t* outPath = NULL;
-		nfdresult_t result = NFD_ERROR;
-		switch (assetDropdownSelected) {
-		case 0:
-			result = NFD_OpenDialog("gltf,fbx", NULL, &outPath);
-			break;
-		case 1:
-			result = NFD_OpenDialog("wav,mp3", NULL, &outPath);
-			break;
-		case 2:
-			result = NFD_OpenDialog("png,jpg,jpeg,bmp", NULL, &outPath);
-			break;
-		case 3:
-			result = NFD_OpenDialog("cs", NULL, &outPath);
-			break;
-		}
-		
-		if (result == NFD_OKAY)
-		{
-			Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->AddAsset(outPath,(Engine::ResourceSystem::AssetTypes)assetDropdownSelected);
-			free(outPath);
-		}
-	}
-	const auto assets = Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetAssetsByType((Engine::ResourceSystem::AssetTypes)assetDropdownSelected);
-	for (const auto& asset : assets)
-	{
-		if (ImGui::Selectable(asset->GetName().stem().generic_string().c_str(), assetFrameSelected == asset->GetUUID().GetUUIDHash()))
-		{
-			selectedAsset = asset;
-			assetFrameSelected = selectedAsset->GetUUID().GetUUIDHash();
-		}
-	}
-	ImGui::EndChild();
-	ImGui::SameLine();
 	ImGui::BeginGroup();
-	ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing()));
-	
-	ImGui::Separator();
 	if (ImGui::BeginTabBar("##Tabs", ImGuiTabBarFlags_None))
 	{
-		if (ImGui::BeginTabItem("Description") && selectedAsset != nullptr)
+		if (ImGui::BeginTabItem("Assets"))
 		{
-			ImGui::TextWrapped("UUID : %s",selectedAsset->GetUUID().GetUUID().c_str());
+			for (int i = 0; i < IM_ARRAYSIZE(assetDropdownList); i++)
+			{
+				if (ImGui::Selectable(assetDropdownList[i], assetDropdownSelected == i))
+				{
+					assetDropdownSelected = i;
+				}
+
+			}
+			if (ImGui::Button("Add"))
+			{
+				nfdchar_t* outPath = NULL;
+				nfdresult_t result = NFD_ERROR;
+				switch (assetDropdownSelected) {
+				case 0:
+					result = NFD_OpenDialog("gltf,fbx", NULL, &outPath);
+					break;
+				case 1:
+					result = NFD_OpenDialog("wav,mp3", NULL, &outPath);
+					break;
+				case 2:
+					result = NFD_OpenDialog("png,jpg,jpeg,bmp", NULL, &outPath);
+					break;
+				case 3:
+					result = NFD_OpenDialog("cs", NULL, &outPath);
+					break;
+				}
+
+				if (result == NFD_OKAY)
+				{
+					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->AddAsset(outPath, (Engine::ResourceSystem::AssetTypes)assetDropdownSelected);
+					free(outPath);
+				}
+			}
+			ImGui::Separator();
+			const auto& assets = Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetAssetsByType((Engine::ResourceSystem::AssetTypes)assetDropdownSelected);
+			for (const auto& asset : assets)
+			{
+				if (ImGui::Selectable(asset->GetName().stem().generic_string().c_str(), assetFrameSelected == asset->GetUUID().GetUUIDHash()))
+				{
+					selectedAsset = asset;
+					assetFrameSelected = selectedAsset->GetUUID().GetUUIDHash();
+				}
+			}
+			if (selectedAsset)
+			{
+				ImGui::TextWrapped("UUID : %s", selectedAsset->GetUUID().GetUUID().c_str());
+				if (ImGui::Button("Remove Asset"))
+				{
+					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->RemoveAsset(selectedAsset->GetUUID());
+					selectedAsset = nullptr;
+				}
+			}
+			ImGui::EndTabItem();
 		}
-		ImGui::EndTabItem();
+		
+		if (ImGui::BeginTabItem("Scenes"))
+		{
+			static char buffer[128] = "";
+			ImGui::InputText("Name", buffer, IM_ARRAYSIZE(buffer));
+			if (ImGui::Button("Add Scene"))
+			{
+				if (buffer != "")
+					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->AddScene(buffer);
+			}
+			ImGui::Separator();
+			const auto& scenes = Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetScenes();
+			for (const auto& scene : scenes)
+			{
+				if (ImGui::Selectable(scene->GetName().c_str(), sceneSelected == scene->GetUUID().GetUUIDHash()))
+				{
+					selectedScene = scene;
+					selectedEntity = nullptr;
+					sceneSelected = selectedScene->GetUUID().GetUUIDHash();
+				}
+			}
+			if (selectedScene)
+			{
+				ImGui::TextWrapped("UUID : %s", selectedScene->GetUUID().GetUUID().c_str());
+				if (ImGui::Button("Remove Scene"))
+				{
+					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->RemoveScene(selectedScene->GetUUID());
+					selectedScene = nullptr;
+					selectedEntity = nullptr;
+				}
+			}
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Entities"))
+		{
+			if (selectedScene)
+			{
+				static char buffer[128] = "";
+				ImGui::InputText("Name", buffer, IM_ARRAYSIZE(buffer));
+				if (ImGui::Button("Add Entity"))
+				{
+					if (buffer != "")
+						selectedScene->AddEntity(buffer);
+				}
+
+				const auto& entities = selectedScene->GetEntities();
+				for (const auto& entity : entities)
+				{
+					if (ImGui::Selectable(entity->GetName().c_str(), entitySelected == entity->GetUUID().GetUUIDHash()))
+					{
+						selectedEntity = entity;
+						entitySelected = selectedEntity->GetUUID().GetUUIDHash();
+					}
+
+				}
+				if (selectedEntity && selectedScene)
+				{
+					ImGui::TextWrapped("UUID : %s", selectedEntity->GetUUID().GetUUID().c_str());
+					if (ImGui::Button("Remove Entity"))
+					{
+						selectedScene->RemoveEntity(selectedEntity->GetUUID());
+						selectedEntity = nullptr;
+					}
+				}
+
+			}
+			ImGui::EndTabItem();
+		}
 		ImGui::EndTabBar();
 	}
-	ImGui::EndChild();
-	if (ImGui::Button("Remove Asset")) 
-	{
-		Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->RemoveAsset(selectedAsset->GetUUID());
-	}
-	ImGui::SameLine();
 	ImGui::EndGroup();
 	ImGui::End();
 }
@@ -178,7 +253,7 @@ void Engine::Gui::GuiManager::BuildSceneHierarchy()
 	window_flags |= ImGuiWindowFlags_NoResize;
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 	ImGui::Begin("Scene Hierarchy", 0, window_flags);
-	const auto& scenes = Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetScenes();
+	const auto& scenes = Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetScenes();		
 	for (const auto& scene : scenes)
 	{
 		if (ImGui::TreeNode(scene->GetName().c_str()))
