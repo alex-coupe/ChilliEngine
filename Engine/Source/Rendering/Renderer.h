@@ -1,7 +1,7 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
 #include "../Core/SubSystem.h"
-#include "Direct3D.h"
+#include "FrameBuffer.h"
 #include "../ResourceSystem/ProjectManager.h"
 #include "Drawable.h"
 #include "Camera.h"
@@ -19,6 +19,7 @@ namespace Engine::Rendering {
 		Renderer(Renderer&&)noexcept = default;
 		const DirectX::XMMATRIX& GetProjectionMatrix()const;
 		int GetSystemType() const override;
+		const std::unique_ptr<FrameBuffer>& GetFrameBuffer()const;
 		bool Init();
 		void ProcessFrame()override;
 		const std::shared_ptr<Direct3D>& GetD3D()const;
@@ -30,5 +31,6 @@ namespace Engine::Rendering {
 		std::vector<std::unique_ptr<Drawable>> m_drawables;
 		std::unique_ptr<ConstantBuffer<DirectX::XMMATRIX>> m_transformationCBuff;
 		std::unique_ptr<Camera> m_camera;
+		std::unique_ptr<FrameBuffer> m_frameBuffer;
 	};
 }

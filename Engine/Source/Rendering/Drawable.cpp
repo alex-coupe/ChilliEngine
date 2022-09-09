@@ -6,12 +6,13 @@ Engine::Rendering::Drawable::Drawable(const std::shared_ptr<Direct3D>& d3d, cons
 	auto transform = std::static_pointer_cast<Engine::ECS::TransformComponent>(m_entity->GetComponentByType(Engine::ECS::ComponentTypes::Transform));
 	auto mesh = std::static_pointer_cast<Engine::ECS::MeshComponent>(m_entity->GetComponentByType(Engine::ECS::ComponentTypes::Mesh));
 	
-	if (transform != nullptr && mesh != nullptr)
+	if (transform != nullptr && mesh->GetMesh() != nullptr)
 	{
 		m_transform = transform->GetTransformMatrix();
 		m_vertexBuffer = std::make_unique<VertexBuffer>(mesh->GetVertices(), m_direct3d);
 
 		m_indexBuffer = std::make_unique<IndexBuffer>(mesh->GetIndices(), m_direct3d);
+	}
 
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
@@ -29,7 +30,7 @@ Engine::Rendering::Drawable::Drawable(const std::shared_ptr<Direct3D>& d3d, cons
 
 		m_topology = std::make_unique<Topology>(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, m_direct3d);
 		m_topology->Bind();
-	}
+	
 
 }
 
@@ -40,9 +41,12 @@ const DirectX::XMMATRIX& Engine::Rendering::Drawable::GetTransform() const
 
 void Engine::Rendering::Drawable::Draw() const
 {
-	m_vertexBuffer->Bind();
-	m_indexBuffer->Bind();
-	m_direct3d->DrawIndexed(m_indexBuffer->GetCount());
+	if (m_vertexBuffer && m_indexBuffer)
+	{
+		m_vertexBuffer->Bind();
+		m_indexBuffer->Bind();
+		m_direct3d->DrawIndexed(m_indexBuffer->GetCount());
+	}
 }
 
 void Engine::Rendering::Drawable::Rebind()
@@ -53,14 +57,22 @@ void Engine::Rendering::Drawable::Update()
 {
 	auto mesh = std::static_pointer_cast<Engine::ECS::MeshComponent>
 		(m_entity->GetComponentByType(Engine::ECS::ComponentTypes::Mesh));
-	if (mesh->GetIndices().size()
-		!= m_indexBuffer->GetCount())
-	{
-		m_vertexBuffer.release();
-		m_indexBuffer.release();
-		m_vertexBuffer = std::make_unique<VertexBuffer>(mesh->GetVertices(), m_direct3d);
-		m_indexBuffer = std::make_unique<IndexBuffer>(mesh->GetIndices(), m_direct3d);
 
+	if (mesh->GetMesh())
+	{
+		if (m_indexBuffer == nullptr)
+			m_indexBuffer = std::make_unique<IndexBuffer>(mesh->GetIndices(), m_direct3d);
+
+		if (m_vertexBuffer == nullptr)
+			m_vertexBuffer = std::make_unique<VertexBuffer>(mesh->GetVertices(), m_direct3d);
+
+		if (mesh->GetIndices().size() != m_indexBuffer->GetCount())
+		{
+			m_vertexBuffer.release();
+			m_indexBuffer.release();
+			m_vertexBuffer = std::make_unique<VertexBuffer>(mesh->GetVertices(), m_direct3d);
+			m_indexBuffer = std::make_unique<IndexBuffer>(mesh->GetIndices(), m_direct3d);
+		}
 	}
 	auto tranformComp = std::static_pointer_cast<Engine::ECS::TransformComponent>(m_entity->GetComponentByType(Engine::ECS::ComponentTypes::Transform));
 	if (tranformComp)

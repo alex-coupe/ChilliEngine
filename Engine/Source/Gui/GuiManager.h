@@ -19,13 +19,17 @@ namespace Engine::ResourceSystem {
 	class Scene;
 }
 
+namespace Engine::Rendering {
+	class Renderer;
+}
+
 namespace Engine::Gui {
 
 	class CHILLI_API GuiManager {
 	public:
 		static void Init();
 		static void Shutdown();
-		static void DrawEditorGui();
+		static void DrawEditorGui(Engine::Rendering::Renderer* renderer);
 		static bool WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 		static ImGuiIO* GetIO();
 	private:
@@ -45,6 +49,6 @@ namespace Engine::Gui {
 		static void BuildAssetManager();
 		static void BuildSceneHierarchy();
 		static void BuildEntityInspector();
-		static void BuildScenePreviewWindow();
+		static void BuildScenePreviewWindow(Engine::Rendering::Renderer* renderer);
 	};
 }

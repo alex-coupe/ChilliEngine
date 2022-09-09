@@ -188,6 +188,7 @@
     <ClInclude Include="Source\Rendering\Camera.h" />
     <ClInclude Include="Source\Rendering\ConstantBuffer.h" />
     <ClInclude Include="Source\Rendering\Drawable.h" />
+    <ClInclude Include="Source\Rendering\FrameBuffer.h" />
     <ClInclude Include="Source\Rendering\IndexBuffer.h" />
     <ClInclude Include="Source\Rendering\InputLayout.h" />
     <ClInclude Include="Source\Rendering\Direct3D.h" />
@@ -227,6 +228,7 @@
     <ClCompile Include="Source\Gui\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\Rendering\Camera.cpp" />
     <ClCompile Include="Source\Rendering\Drawable.cpp" />
+    <ClCompile Include="Source\Rendering\FrameBuffer.cpp" />
     <ClCompile Include="Source\Rendering\IndexBuffer.cpp" />
     <ClCompile Include="Source\Rendering\InputLayout.cpp" />
     <ClCompile Include="Source\Rendering\Direct3D.cpp" />

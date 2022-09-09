@@ -1,6 +1,7 @@
 #include "GuiManager.h"
 #include "../ResourceSystem/ProjectManager.h"
 #include "../ECS/Entity.h"
+#include "../Rendering/Renderer.h"
 
 const char* Engine::Gui::GuiManager::assetDropdownList[4] = {"Meshes", "Audio", "Materials", "Scripts"};
 const char* Engine::Gui::GuiManager::componentsList[5] = 
@@ -28,13 +29,14 @@ void Engine::Gui::GuiManager::Shutdown()
 	ImGui::DestroyContext();
 }
 
-void Engine::Gui::GuiManager::DrawEditorGui()
+void Engine::Gui::GuiManager::DrawEditorGui(Engine::Rendering::Renderer* renderer)
 {
 	BeginFrame();
 	BuildMenuBar();
 	BuildAssetManager();
 	BuildSceneHierarchy();
 	BuildEntityInspector();
+	BuildScenePreviewWindow(renderer);
 	EndFrame();
 }
 
@@ -51,6 +53,17 @@ void Engine::Gui::GuiManager::EndFrame()
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
+void Engine::Gui::GuiManager::BuildScenePreviewWindow(Engine::Rendering::Renderer* renderer)
+{
+	ImGuiWindowFlags window_flags = 0;
+	window_flags |= ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoResize;
+	window_flags |= ImGuiWindowFlags_NoCollapse;
+	ImGui::Begin("Scene Preview", 0, window_flags);
+	ImGui::Image(renderer->GetFrameBuffer()->GetShaderResourceView().Get(), ImVec2(1200, 620));
+	ImGui::End();
+}
+
 void Engine::Gui::GuiManager::BuildMenuBar()
 {
 	if (ImGui::BeginMainMenuBar())
@@ -59,6 +72,9 @@ void Engine::Gui::GuiManager::BuildMenuBar()
 		{
 			if (ImGui::MenuItem("New")) 
 			{
+				selectedAsset = nullptr;
+				selectedEntity = nullptr;
+				selectedScene = nullptr;
 				Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->NewProject();
 			}
 
@@ -179,8 +195,7 @@ void Engine::Gui::GuiManager::BuildAssetManager()
 			ImGui::InputText("Name", buffer, IM_ARRAYSIZE(buffer));
 			if (ImGui::Button("Add Scene"))
 			{
-				if (buffer != "")
-					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->AddScene(buffer);
+				Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->AddScene(buffer);
 			}
 			ImGui::Separator();
 			const auto& scenes = Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetScenes();
@@ -213,8 +228,7 @@ void Engine::Gui::GuiManager::BuildAssetManager()
 				ImGui::InputText("Name", buffer, IM_ARRAYSIZE(buffer));
 				if (ImGui::Button("Add Entity"))
 				{
-					if (buffer != "")
-						selectedScene->AddEntity(buffer);
+					selectedScene->AddEntity(buffer);
 				}
 
 				const auto& entities = selectedScene->GetEntities();
