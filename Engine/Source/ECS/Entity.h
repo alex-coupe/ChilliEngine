@@ -20,6 +20,7 @@ namespace Engine::ECS {
 		const std::string Serialize()const;
 		const Engine::Utilities::UUID& GetUUID()const;
 		const std::string& GetName()const;
+		void Update(float dt, bool isEditor)const;
 	private:
 		std::string m_name;
 		Engine::Utilities::UUID m_uuid;

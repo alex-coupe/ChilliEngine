@@ -18,6 +18,7 @@ namespace Engine::ECS {
 			m_type(type), m_name(name) {}
 		virtual ~Component() {};
 		virtual const std::string Serialize()const = 0;
+		virtual void Update(float dt, bool isEditor) = 0;
 		ComponentTypes GetComponentType()const
 		{
 			return m_type;

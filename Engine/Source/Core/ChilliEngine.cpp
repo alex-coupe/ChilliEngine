@@ -7,7 +7,7 @@ void ChilliEngine::Run()
 		m_timer->ProcessFrame();
 		m_events->ProcessFrame();
 		m_renderer->ProcessFrame();
-		m_sceneManager->ProcessFrame();
+		m_projectManager->ProcessFrame();
 	}
 }
 
@@ -36,10 +36,10 @@ ChilliEngine::ChilliEngine()
 
 	DependencyResolver::Add(m_renderer);
 
-	m_sceneManager = std::make_shared<ProjectManager>();
-	if (m_sceneManager == nullptr)
+	m_projectManager = std::make_shared<ProjectManager>();
+	if (m_projectManager == nullptr)
 		CHILLI_ERROR("Failed to create scene manager");
-	DependencyResolver::Add(m_sceneManager);
+	DependencyResolver::Add(m_projectManager);
 
 	if (!m_renderer->Init())
 		CHILLI_ERROR("Renderer could not init");
@@ -47,7 +47,7 @@ ChilliEngine::ChilliEngine()
 
 ChilliEngine::~ChilliEngine()
 {
-	m_sceneManager.reset();
+	m_projectManager.reset();
 	m_renderer.reset();
 	m_timer.reset();
 	m_window.reset();

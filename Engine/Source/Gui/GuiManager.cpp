@@ -64,7 +64,9 @@ void Engine::Gui::GuiManager::BuildScenePreviewWindow(Engine::Rendering::Rendere
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 	ImGui::Begin("Scene Preview", 0, window_flags);
 	ImGui::Image(renderer->GetFrameBuffer()->GetShaderResourceView().Get(), ImVec2(1200, 620));
-	if (ImGui::IsMouseDown(ImGuiMouseButton_Right) && ImGui::IsWindowHovered())
+	if (ImGui::IsMouseDown(ImGuiMouseButton_Right) && ImGui::IsWindowHovered() 
+		&& Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>
+		()->GetCurrentScene()->GetSceneState() == Engine::ResourceSystem::SceneState::Edit)
 	{
 		if (initialMousePos)
 		{
@@ -155,14 +157,42 @@ void Engine::Gui::GuiManager::BuildMenuBar()
 			}
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Edit"))
+		if (ImGui::BeginMenu("Scene"))
 		{
-			if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
-			if (ImGui::MenuItem("Redo", "CTRL+Y")) {} 
-			ImGui::Separator();
-			if (ImGui::MenuItem("Cut", "CTRL+X")) {}
-			if (ImGui::MenuItem("Copy", "CTRL+C")) {}
-			if (ImGui::MenuItem("Paste", "CTRL+V")) {}
+
+			auto sceneState = Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetCurrentScene()->GetSceneState();
+			
+			if (sceneState == Engine::ResourceSystem::SceneState::Edit)
+			{
+				if (ImGui::MenuItem("Play"))
+				{
+					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetCurrentScene()->SetSceneState(Engine::ResourceSystem::SceneState::Play);
+				}
+			}
+
+			if (sceneState == Engine::ResourceSystem::SceneState::Play)
+			{
+				if (ImGui::MenuItem("Stop"))
+				{
+					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetCurrentScene()->SetSceneState(Engine::ResourceSystem::SceneState::Edit);
+				}
+			}
+
+			if (sceneState == Engine::ResourceSystem::SceneState::Edit)
+			{
+				if (ImGui::MenuItem("Simulate"))
+				{
+					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetCurrentScene()->SetSceneState(Engine::ResourceSystem::SceneState::Simulate);
+				}
+			}
+
+			if (sceneState == Engine::ResourceSystem::SceneState::Play)
+			{
+				if (ImGui::MenuItem("Pause"))
+				{
+					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetCurrentScene()->SetSceneState(Engine::ResourceSystem::SceneState::Pause);
+				}
+			}
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
@@ -252,6 +282,7 @@ void Engine::Gui::GuiManager::BuildAssetManager()
 				if (ImGui::Selectable(scene->GetName().c_str(), sceneSelected == scene->GetUUID().GetUUIDHash()))
 				{
 					selectedScene = scene;
+					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->SetCurrentScene(scene->GetUUID());
 					selectedEntity = nullptr;
 					sceneSelected = selectedScene->GetUUID().GetUUIDHash();
 				}

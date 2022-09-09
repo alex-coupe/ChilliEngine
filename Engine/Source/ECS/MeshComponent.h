@@ -9,6 +9,7 @@ namespace Engine::ECS {
 	public:
 		MeshComponent(Engine::Utilities::UUID uuid);
 		virtual const std::string Serialize()const override;
+		virtual void Update(float dt, bool isEditor)override;
 		const std::vector<Engine::Rendering::VertexPos>& GetVertices()const;
 		const std::vector<unsigned short>& GetIndices()const;
 		const std::shared_ptr<Engine::ResourceSystem::Mesh>& GetMesh()const;

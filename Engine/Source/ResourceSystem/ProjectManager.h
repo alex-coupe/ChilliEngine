@@ -23,7 +23,7 @@ namespace Engine::ResourceSystem {
 		void AddAsset(const std::filesystem::path& filename, AssetTypes type);
 		void RemoveAsset(const Engine::Utilities::UUID& uuid);
 		std::shared_ptr<Scene> GetCurrentScene()const;
-		void SetCurrentScene(Engine::Utilities::UUID& uuid);
+		void SetCurrentScene(const Engine::Utilities::UUID& uuid);
 		std::shared_ptr<Asset> GetAssetByUUID(Engine::Utilities::UUID& uuid);
 		std::vector<std::shared_ptr<Asset>> GetAssetsByType(AssetTypes type);
 		virtual int GetSystemType()const;

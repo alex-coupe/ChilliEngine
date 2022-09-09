@@ -147,7 +147,7 @@ std::shared_ptr<Engine::ResourceSystem::Scene> Engine::ResourceSystem::ProjectMa
     return m_currentScene;
 }
 
-void Engine::ResourceSystem::ProjectManager::SetCurrentScene(Engine::Utilities::UUID& uuid)
+void Engine::ResourceSystem::ProjectManager::SetCurrentScene(const Engine::Utilities::UUID& uuid)
 {
     if (auto m_sceneIterator = std::find_if(m_scenes.begin(), m_scenes.end(), [&uuid](const std::shared_ptr<Scene> rhs)
         {
@@ -186,5 +186,9 @@ int Engine::ResourceSystem::ProjectManager::GetSystemType() const
 
 void Engine::ResourceSystem::ProjectManager::ProcessFrame()
 {
-    m_currentScene->Update(Engine::Core::DependencyResolver::ResolveDependency<Engine::Core::Timer>()->GetDeltaTime());
+    if (m_currentScene->GetSceneState() == SceneState::Play)
+        m_currentScene->Update(Engine::Core::DependencyResolver::ResolveDependency<Engine::Core::Timer>()->GetDeltaTime(), false);
+
+    if (m_currentScene->GetSceneState() == SceneState::Edit)
+        m_currentScene->Update(Engine::Core::DependencyResolver::ResolveDependency<Engine::Core::Timer>()->GetDeltaTime(), true);
 }

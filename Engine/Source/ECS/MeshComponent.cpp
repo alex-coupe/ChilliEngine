@@ -34,3 +34,8 @@ void Engine::ECS::MeshComponent::SetMesh(std::shared_ptr<Engine::ResourceSystem:
 	m_mesh = mesh;
 	m_meshUuid = mesh->GetUUID();
 }
+
+void Engine::ECS::MeshComponent::Update(float dt, bool isEditor)
+{
+	return;
+}

@@ -49,8 +49,22 @@ const std::vector<std::shared_ptr<Engine::ResourceSystem::Entity>>& Engine::Reso
     return m_entities;
 }
 
-void Engine::ResourceSystem::Scene::Update(float dt)
+const Engine::ResourceSystem::SceneState Engine::ResourceSystem::Scene::GetSceneState()const
 {
+    return m_sceneState;
+}
+
+void Engine::ResourceSystem::Scene::Update(float dt, bool isEditor)
+{
+    for (const auto& entity : m_entities)
+    {
+        entity->Update(dt, isEditor);
+    }
+}
+
+void Engine::ResourceSystem::Scene::SetSceneState(SceneState state)
+{
+    m_sceneState = state;
 }
 
 const Engine::Utilities::UUID& Engine::ResourceSystem::Scene::GetUUID() const

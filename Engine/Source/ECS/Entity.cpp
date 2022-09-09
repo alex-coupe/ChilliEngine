@@ -113,6 +113,14 @@ std::shared_ptr<Engine::ECS::Component> Engine::ECS::Entity::GetComponentByName(
 	return nullptr;
 }
 
+void Engine::ECS::Entity::Update(float dt, bool isEditor)const
+{
+	for (const auto& component : m_components)
+	{
+		component->Update(dt, isEditor);
+	}
+}
+
 
 
 
