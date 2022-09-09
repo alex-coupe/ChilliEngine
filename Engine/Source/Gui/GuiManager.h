@@ -40,6 +40,9 @@ namespace Engine::Gui {
 		static int hierarchySelected;
 		static int sceneSelected;
 		static int entitySelected;
+		static bool initialMousePos;
+		static float mouseX;
+		static float mouseY;
 		static std::shared_ptr<Engine::ResourceSystem::Asset> selectedAsset;
 		static std::shared_ptr<Engine::ECS::Entity> selectedEntity;
 		static std::shared_ptr<Engine::ResourceSystem::Scene> selectedScene;

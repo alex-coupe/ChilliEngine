@@ -7,6 +7,8 @@ namespace Engine::Rendering {
 	public:
 		Camera(DirectX::XMFLOAT3 position, float screen_width, float screen_height);
 		DirectX::XMMATRIX GetViewMatrix();
+		void UpdatePosition(DirectX::XMFLOAT3 delta);
+		void UpdateRotation(float pitch, float yaw);
 	private:
 		DirectX::XMFLOAT3 m_position;
 		DirectX::XMFLOAT3 m_direction;

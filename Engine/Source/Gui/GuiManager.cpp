@@ -11,6 +11,9 @@ int Engine::Gui::GuiManager::assetFrameSelected = 0;
 int Engine::Gui::GuiManager::hierarchySelected = 0;
 int Engine::Gui::GuiManager::sceneSelected = 0;
 int Engine::Gui::GuiManager::entitySelected = 0;
+bool Engine::Gui::GuiManager::initialMousePos = true;
+float Engine::Gui::GuiManager::mouseX = 0.0f;
+float Engine::Gui::GuiManager::mouseY = 0.0f;
 std::shared_ptr<Engine::ResourceSystem::Asset> Engine::Gui::GuiManager::selectedAsset = nullptr;
 std::shared_ptr<Engine::ResourceSystem::Scene> Engine::Gui::GuiManager::selectedScene = nullptr;
 std::shared_ptr<Engine::ECS::Entity> Engine::Gui::GuiManager::selectedEntity = nullptr;
@@ -61,6 +64,51 @@ void Engine::Gui::GuiManager::BuildScenePreviewWindow(Engine::Rendering::Rendere
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 	ImGui::Begin("Scene Preview", 0, window_flags);
 	ImGui::Image(renderer->GetFrameBuffer()->GetShaderResourceView().Get(), ImVec2(1200, 620));
+	if (ImGui::IsMouseDown(ImGuiMouseButton_Right) && ImGui::IsWindowHovered())
+	{
+		if (initialMousePos)
+		{
+			auto pos = ImGui::GetMousePos();
+			mouseX = pos.x;
+			mouseY = pos.y;
+			initialMousePos = false;
+		}
+		else 
+		{
+			auto pos = ImGui::GetMousePos();
+			auto deltaX = mouseX - pos.x;
+			auto deltaY = mouseY - pos.y;
+
+			mouseX = pos.x;
+			mouseY = pos.y;
+			renderer->GetEditorCamera()->UpdateRotation(deltaY, deltaX);
+		}
+		
+		if (ImGui::IsKeyDown((int)Engine::Core::Key::W))
+		{
+			renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ 0.00f,0.00f,0.01f });
+		}
+
+		if (ImGui::IsKeyDown((int)Engine::Core::Key::A))
+		{
+			renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ -0.01f,0.00f,0.0f });
+		}
+
+		if (ImGui::IsKeyDown((int)Engine::Core::Key::S))
+		{
+			renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ 0.00f,0.00f,-0.01f });
+		}
+
+		if (ImGui::IsKeyDown((int)Engine::Core::Key::D))
+		{
+			renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ 0.01f,0.00f,0.0f });
+		}
+				
+		if (ImGui::IsKeyDown((int)Engine::Core::Key::Space))
+		{
+			renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ 0.00f,0.01f,0.0f });
+		}
+	}
 	ImGui::End();
 }
 

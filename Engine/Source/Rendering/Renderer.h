@@ -21,6 +21,7 @@ namespace Engine::Rendering {
 		int GetSystemType() const override;
 		const std::unique_ptr<FrameBuffer>& GetFrameBuffer()const;
 		bool Init();
+		const std::unique_ptr<Camera>& GetEditorCamera();
 		void ProcessFrame()override;
 		const std::shared_ptr<Direct3D>& GetD3D()const;
 	private:
@@ -30,7 +31,7 @@ namespace Engine::Rendering {
 		DirectX::XMMATRIX m_projMatrix;
 		std::vector<std::unique_ptr<Drawable>> m_drawables;
 		std::unique_ptr<ConstantBuffer<DirectX::XMMATRIX>> m_transformationCBuff;
-		std::unique_ptr<Camera> m_camera;
+		std::unique_ptr<Camera> m_editorCamera;
 		std::unique_ptr<FrameBuffer> m_frameBuffer;
 	};
 }

@@ -14,13 +14,18 @@ Engine::Rendering::Renderer::Renderer(int64_t width, int64_t height, void* handl
 	m_transformationCBuff = std::make_unique<ConstantBuffer<DirectX::XMMATRIX>>(ConstantBufferType::Vertex, m_direct3d);
 	m_transformationCBuff->Bind();
 	DirectX::XMFLOAT3 camPosition = { 0.0f,0.0f,-5.0f };
-	m_camera = std::make_unique<Camera>(camPosition, (float)width, (float)height);
+	m_editorCamera = std::make_unique<Camera>(camPosition, (float)width, (float)height);
 	m_frameBuffer = std::make_unique<FrameBuffer>(width, height, m_direct3d);
 }
 
 Engine::Rendering::Renderer::~Renderer()
 {
 	m_direct3d.reset();
+}
+
+const std::unique_ptr<Engine::Rendering::Camera>& Engine::Rendering::Renderer::GetEditorCamera()
+{
+	return m_editorCamera;
 }
 
 const DirectX::XMMATRIX& Engine::Rendering::Renderer::GetProjectionMatrix() const
@@ -75,7 +80,7 @@ void Engine::Rendering::Renderer::ProcessFrame()
 	for (const auto& drawable : m_drawables)
 	{
 		drawable->Update();
-		auto transform = DirectX::XMMatrixTranspose(drawable->GetTransform() * m_camera->GetViewMatrix() * GetProjectionMatrix());
+		auto transform = DirectX::XMMatrixTranspose(drawable->GetTransform() * m_editorCamera->GetViewMatrix() * GetProjectionMatrix());
 		m_transformationCBuff->Update(transform);
 		drawable->Draw();
 	}
