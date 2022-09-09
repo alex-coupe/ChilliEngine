@@ -13,13 +13,19 @@ Engine::Rendering::Renderer::Renderer(int64_t width, int64_t height, void* handl
 	m_projMatrix = DirectX::XMMatrixPerspectiveLH(1.0f, m_aspectRatio, 0.5f, 100.0f);
 	m_transformationCBuff = std::make_unique<ConstantBuffer<DirectX::XMMATRIX>>(ConstantBufferType::Vertex, m_direct3d);
 	m_transformationCBuff->Bind();
-	DirectX::XMFLOAT3 camPosition = { 0.0f,0.0f,0.0f };
-	m_camera = std::make_unique<Camera>(camPosition, (float)width, (float)height);
+	DirectX::XMFLOAT3 camPosition = { 0.0f,0.0f,-5.0f };
+	m_editorCamera = std::make_unique<Camera>(camPosition, (float)width, (float)height);
+	m_frameBuffer = std::make_unique<FrameBuffer>(width, height, m_direct3d);
 }
 
 Engine::Rendering::Renderer::~Renderer()
 {
 	m_direct3d.reset();
+}
+
+const std::unique_ptr<Engine::Rendering::Camera>& Engine::Rendering::Renderer::GetEditorCamera()
+{
+	return m_editorCamera;
 }
 
 const DirectX::XMMATRIX& Engine::Rendering::Renderer::GetProjectionMatrix() const
@@ -61,23 +67,33 @@ void Engine::Rendering::Renderer::ProcessFrame()
 		m_drawables.clear();
 		for (const auto& entity : entities)
 		{
-			std::unique_ptr<Drawable> drawable = std::make_unique<Drawable>(m_direct3d, entity);
+			if (entity->HasComponent(Engine::ECS::ComponentTypes::Mesh) 
+				&& entity->HasComponent(Engine::ECS::ComponentTypes::Transform))
+			{
+				std::unique_ptr<Drawable> drawable = std::make_unique<Drawable>(m_direct3d, entity);
 
-			m_drawables.push_back(std::move(drawable));
+				m_drawables.push_back(std::move(drawable));
+			}
 		}
 	}
-
-	m_direct3d->BeginFrame();
-	
+	m_frameBuffer->SetAsRenderTarget();
 	for (const auto& drawable : m_drawables)
 	{
 		drawable->Update();
-		auto transform = DirectX::XMMatrixTranspose(drawable->GetTransform() * m_camera->GetViewMatrix() * GetProjectionMatrix());
+		auto transform = DirectX::XMMatrixTranspose(drawable->GetTransform() * m_editorCamera->GetViewMatrix() * GetProjectionMatrix());
 		m_transformationCBuff->Update(transform);
 		drawable->Draw();
 	}
+	m_direct3d->SetBackBufferRenderTarget();
+	m_direct3d->BeginFrame();
+	Engine::Gui::GuiManager::DrawEditorGui(this);
 	m_direct3d->EndFrame();
 	
+}
+
+const std::unique_ptr<Engine::Rendering::FrameBuffer>& Engine::Rendering::Renderer::GetFrameBuffer()const
+{
+	return m_frameBuffer;
 }
 
 const std::shared_ptr<Engine::Rendering::Direct3D>& Engine::Rendering::Renderer::GetD3D() const

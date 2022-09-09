@@ -17,10 +17,12 @@ Engine::ResourceSystem::Scene::Scene(const std::string& name, Engine::Utilities:
 const std::string Engine::ResourceSystem::Scene::Serialize()
 {
     std::stringstream ss;
-    ss << "{ \"SceneName\":\"" << m_name << "\", \"Uuid\":" << m_uuid.GetUUID() << ", \"Entities\": [";
-    for (const auto& entity : m_entities)
+    ss << "{ \"SceneName\":\"" << m_name << "\", \"Uuid\": \"" << m_uuid.GetUUID() << "\", \"Entities\": [";
+    for (size_t i = 0; i < m_entities.size(); i++)
     {
-        ss << entity->Serialize();
+        ss << m_entities[i]->Serialize();
+        if (i != m_entities.size() - 1)
+            ss << ",";
     }
     ss << "]}";
     return ss.str();
@@ -31,7 +33,7 @@ void Engine::ResourceSystem::Scene::AddEntity(const std::string& name)
     m_entities.emplace_back(std::make_shared<Entity>(name));
 }
 
-void Engine::ResourceSystem::Scene::RemoveEntity(Engine::Utilities::UUID& uuid)
+void Engine::ResourceSystem::Scene::RemoveEntity(const Engine::Utilities::UUID& uuid)
 {
     if (auto m_entIterator = std::find_if(m_entities.begin(), m_entities.end(), [uuid](const std::shared_ptr<Entity> rhs)
         {
@@ -47,8 +49,22 @@ const std::vector<std::shared_ptr<Engine::ResourceSystem::Entity>>& Engine::Reso
     return m_entities;
 }
 
-void Engine::ResourceSystem::Scene::Update(float dt)
+const Engine::ResourceSystem::SceneState Engine::ResourceSystem::Scene::GetSceneState()const
 {
+    return m_sceneState;
+}
+
+void Engine::ResourceSystem::Scene::Update(float dt, bool isEditor)
+{
+    for (const auto& entity : m_entities)
+    {
+        entity->Update(dt, isEditor);
+    }
+}
+
+void Engine::ResourceSystem::Scene::SetSceneState(SceneState state)
+{
+    m_sceneState = state;
 }
 
 const Engine::Utilities::UUID& Engine::ResourceSystem::Scene::GetUUID() const

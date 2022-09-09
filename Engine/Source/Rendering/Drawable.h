@@ -28,7 +28,7 @@ namespace Engine::Rendering {
 		std::unique_ptr<InputLayout> m_inputLayout;
 		std::unique_ptr<Topology> m_topology;
 		std::unique_ptr<IndexBuffer> m_indexBuffer;
-		DirectX::XMMATRIX m_transform;
+		DirectX::XMMATRIX m_transform = {};
 		const std::shared_ptr<Engine::ECS::Entity> m_entity;
 	};
 }

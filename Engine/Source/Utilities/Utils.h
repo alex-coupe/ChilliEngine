@@ -70,6 +70,6 @@ unsigned int StringToInt(std::string& in)
             total += 15;
             break;
         }
-        return total;
     }
+    return total;
 }

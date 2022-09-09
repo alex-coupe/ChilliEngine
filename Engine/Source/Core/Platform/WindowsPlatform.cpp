@@ -5,8 +5,7 @@ using namespace Engine::Core::Platform;
 
 WindowsPlatform* WindowsPlatform::m_pInstance = nullptr;
 
-WindowsPlatform::WindowsPlatform(std::shared_ptr<Gui::GuiManager>& gui_man, int& width, int& height)
-	:m_gui(gui_man)
+WindowsPlatform::WindowsPlatform(int& width, int& height)
 {
 	m_pInstance = this;
 	WNDCLASSEX wndclass = {};
@@ -40,9 +39,9 @@ WindowsPlatform::WindowsPlatform(std::shared_ptr<Gui::GuiManager>& gui_man, int&
 		return;
 	}
 
-	RECT rect = {};
+	RECT rect = { 0, 0, 0, 0 };
 
-	if (!GetWindowRect(m_handle, &rect))
+	if (!GetClientRect(m_handle, &rect))
 		MessageBox(m_handle, L"Failed To Get Window Rect", L"Chilli Error", MB_ICONWARNING | MB_OK);
 
 	width = rect.right - rect.left;
@@ -50,12 +49,9 @@ WindowsPlatform::WindowsPlatform(std::shared_ptr<Gui::GuiManager>& gui_man, int&
 
 	assert(width != 0 && height != 0);
 
-	if (!MoveWindow(m_handle, 0, 0, width, height, false))
-		MessageBox(m_handle, L"Failed To Resize Window", L"Chilli Error", MB_ICONWARNING | MB_OK);
-
 	ShowWindow(m_handle, SW_SHOWMAXIMIZED);
 
-	m_gui->InitWindowsHook(m_handle);
+	ImGui_ImplWin32_Init(m_handle);
 }
 
 LRESULT WindowsPlatform::WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -89,10 +85,16 @@ bool WindowsPlatform::Update()
 	return true;
 }
 
+void Engine::Core::Platform::WindowsPlatform::SetTitle(const char* title)
+{
+	if (!SetWindowTextA(m_handle, title))
+		CHILLI_WARN("Failed setting window title");
+}
+
 LRESULT WindowsPlatform::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	m_gui->WndProcHandler(handle, msg, wParam, lParam);
-	const auto io = m_gui->GetIO();
+	Engine::Gui::GuiManager::WndProcHandler(handle, msg, wParam, lParam);
+	const auto io = Engine::Gui::GuiManager::GetIO();
 
 	switch (msg)
 	{

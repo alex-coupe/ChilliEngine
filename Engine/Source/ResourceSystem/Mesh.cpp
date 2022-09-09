@@ -1,7 +1,7 @@
 #include "Mesh.h"
 
-Engine::ResourceSystem::Mesh::Mesh(const std::string& filepath, const std::string& name, const Engine::Utilities::UUID& uuid)
-	: Asset(Engine::ResourceSystem::AssetTypes::Mesh, std::filesystem::path(filepath), uuid, name)
+Engine::ResourceSystem::Mesh::Mesh(const std::filesystem::path& filepath, const Engine::Utilities::UUID& uuid)
+	: Asset(Engine::ResourceSystem::AssetTypes::Mesh, std::filesystem::path(filepath), uuid)
 {
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(m_filePath.string(), aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
@@ -23,7 +23,7 @@ Engine::ResourceSystem::Mesh::Mesh(const std::string& filepath, const std::strin
 const std::string Engine::ResourceSystem::Mesh::Serialize() const
 {
 	std::stringstream ss;
-	ss << "{ \"UUID\":\"" << m_uuid.GetUUID() << "\", \"Type\":" << static_cast<int>(m_type) << ", \"FilePath\":\"" << m_filePath << "\"}";
+	ss << "{ \"Uuid\":\"" << m_uuid.GetUUID() << "\", \"Type\":" << static_cast<int>(m_type) << ", \"FilePath\": \"Assets/Models/" << m_filePath.filename().string() << "\"}";
 	return  ss.str();
 }
 

@@ -9,14 +9,16 @@
 namespace Engine::ECS {
 
 	enum class ComponentTypes : int {
-		Transform=1, Mesh=2
+		Transform=-1, Mesh=0, Collider2D=1, Camera=2,PointLight=3,Script=4
 	};
 
 	class CHILLI_API Component {
 	public:
-		Component(ComponentTypes type, const std::string& name) :m_type(type), m_name(name) {}
+		Component(ComponentTypes type, const std::string& name) :
+			m_type(type), m_name(name) {}
 		virtual ~Component() {};
 		virtual const std::string Serialize()const = 0;
+		virtual void Update(float dt, bool isEditor) = 0;
 		ComponentTypes GetComponentType()const
 		{
 			return m_type;

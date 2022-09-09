@@ -12,16 +12,16 @@
 namespace Engine::Core {
 	class Window {
 	public:
-		Window(std::shared_ptr<Gui::GuiManager>& gui_man);
+		Window();
 		bool Update();
 		void* GetWindowHandle();
 		~Window();
 		const int GetWidth()const;
 		const int GetHeight()const;
+		void SetTitle(const char* title);
 	private:
 		int m_width = 0;
 		int m_height = 0;
-		std::shared_ptr<Gui::GuiManager>& m_gui;
 #ifdef _WIN32
 		std::unique_ptr<Platform::WindowsPlatform> m_platform;
 #endif

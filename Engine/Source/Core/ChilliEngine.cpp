@@ -7,7 +7,7 @@ void ChilliEngine::Run()
 		m_timer->ProcessFrame();
 		m_events->ProcessFrame();
 		m_renderer->ProcessFrame();
-		m_sceneManager->ProcessFrame();
+		m_projectManager->ProcessFrame();
 	}
 }
 
@@ -15,9 +15,7 @@ ChilliEngine::ChilliEngine()
 {	
 	CHILLI_INFO("Booting Engine");
 
-	m_guiManager = std::make_shared<GuiManager>();
-	if (m_guiManager == nullptr)
-		CHILLI_ERROR("Failed to create GUI manager");
+	GuiManager::Init();
 
 	if (m_events = std::make_shared<Events>(); m_events == nullptr)
 		CHILLI_ERROR("Failed to create events system");
@@ -29,7 +27,7 @@ ChilliEngine::ChilliEngine()
 
 	DependencyResolver::Add(m_timer);
 
-	if (m_window = std::make_unique<Window>(m_guiManager); m_window == nullptr)
+	if (m_window = std::make_unique<Window>(); m_window == nullptr)
 		CHILLI_ERROR("Failed to create window");
 		
 	m_renderer = std::make_shared<Renderer>(m_window->GetWidth(), m_window->GetHeight(), m_window->GetWindowHandle());
@@ -38,10 +36,10 @@ ChilliEngine::ChilliEngine()
 
 	DependencyResolver::Add(m_renderer);
 
-	m_sceneManager = std::make_shared<ProjectManager>();
-	if (m_sceneManager == nullptr)
+	m_projectManager = std::make_shared<ProjectManager>();
+	if (m_projectManager == nullptr)
 		CHILLI_ERROR("Failed to create scene manager");
-	DependencyResolver::Add(m_sceneManager);
+	DependencyResolver::Add(m_projectManager);
 
 	if (!m_renderer->Init())
 		CHILLI_ERROR("Renderer could not init");
@@ -49,12 +47,12 @@ ChilliEngine::ChilliEngine()
 
 ChilliEngine::~ChilliEngine()
 {
-	m_sceneManager.reset();
+	m_projectManager.reset();
 	m_renderer.reset();
 	m_timer.reset();
 	m_window.reset();
 	m_events.reset();
-	m_guiManager.reset();
+	GuiManager::Shutdown();
 	DependencyResolver::Flush();
 }
 

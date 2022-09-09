@@ -26,14 +26,17 @@ namespace Engine::Rendering {
 		Direct3D& operator=(const Direct3D&) = delete;
 		Direct3D(Direct3D&&)noexcept = default;
 		void BeginFrame();
+		void BeginFrameR();
 		void EndFrame();
 		void Draw(UINT vertexCount, UINT startVertex)const;
 		void DrawIndexed(UINT count)const;
 		void HandleWindowResize(const int64_t width, const int64_t height);
+		void SetBackBufferRenderTarget();
 		int64_t GetWindowWidth()const;
 		int64_t GetWindowHeight()const;
 		Microsoft::WRL::ComPtr<ID3D11Device> GetDevice();
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetContext();
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> GetDepthStencil()const;
 	private:
 		void SetUpD3D();
 		void ShutdownD3D();

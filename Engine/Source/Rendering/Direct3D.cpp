@@ -9,9 +9,19 @@ Engine::Rendering::Direct3D::Direct3D(HWND handle, int64_t window_width, int64_t
 	ImGui_ImplDX11_Init(m_device.Get(), m_context.Get());
 }
 
+Microsoft::WRL::ComPtr<ID3D11DepthStencilView> Engine::Rendering::Direct3D::GetDepthStencil()const
+{
+	return m_depthStencil;
+}
+
+void Engine::Rendering::Direct3D::BeginFrameR()
+{
+	m_context->ClearRenderTargetView(m_backBuffer.Get(), DirectX::XMVECTORF32{ 1.0f, 0.0f, 0.0f, 1.0f });
+	m_context->ClearDepthStencilView(m_depthStencil.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
+}
 void Engine::Rendering::Direct3D::BeginFrame()
 {
-	m_context->ClearRenderTargetView(m_backBuffer.Get(), DirectX::XMVECTORF32{ 1.0f, 0.3f, 0.2f, 1.0f });
+	m_context->ClearRenderTargetView(m_backBuffer.Get(), DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f, 1.0f });
 	m_context->ClearDepthStencilView(m_depthStencil.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 }
 
@@ -36,6 +46,7 @@ void Engine::Rendering::Direct3D::HandleWindowResize(const int64_t width, const 
 		return;
 
 	CHILLI_INFO("Calling HandleWindowResize");
+
 }
 
 int64_t Engine::Rendering::Direct3D::GetWindowWidth() const
@@ -142,6 +153,11 @@ void Engine::Rendering::Direct3D::SetUpD3D()
 
 	//Set the Viewport
 	m_context->RSSetViewports(1, &view_port);
+}
+
+void Engine::Rendering::Direct3D::SetBackBufferRenderTarget()
+{
+	m_context->OMSetRenderTargets(1, m_backBuffer.GetAddressOf(), m_depthStencil.Get());
 }
 
 void Engine::Rendering::Direct3D::ShutdownD3D()

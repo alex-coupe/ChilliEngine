@@ -5,6 +5,21 @@ Engine::ECS::TransformComponent::TransformComponent(DirectX::XMFLOAT3 translatio
 {
 }
 
+DirectX::XMFLOAT3& Engine::ECS::TransformComponent::GetTranslation()
+{
+	return m_translation;
+}
+
+DirectX::XMFLOAT3& Engine::ECS::TransformComponent::GetRotation()
+{
+	return m_rotation;
+}
+
+DirectX::XMFLOAT3& Engine::ECS::TransformComponent::GetScale()
+{
+	return m_scale;
+}
+
 const std::string Engine::ECS::TransformComponent::Serialize()const
 {
 
@@ -14,6 +29,11 @@ const std::string Engine::ECS::TransformComponent::Serialize()const
 		<< ",\"RotZ\":" << m_rotation.z << ", \"ScaleX\":" << m_scale.x << ", \"ScaleY\":" << m_scale.y
 		<< ", \"ScaleZ\":" << m_scale.z << "}";
 	return  ss.str();
+}
+
+void Engine::ECS::TransformComponent::Update(float dt, bool isEditor)
+{
+	return;
 }
 
 DirectX::XMMATRIX Engine::ECS::TransformComponent::GetTransformMatrix() const
