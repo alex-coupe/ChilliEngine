@@ -19,8 +19,8 @@ namespace Engine::ECS {
 
 	class CHILLI_API Component {
 	public:
-		Component(ComponentTypes type, const std::string& name, const Engine::Utilities::UUID& uuid) :
-			m_type(type), m_name(name), m_owningEntityUuid(uuid) {}
+		Component(ComponentTypes type, const std::string& name) :
+			m_type(type), m_name(name) {}
 		virtual ~Component() {};
 		virtual const std::string Serialize()const = 0;
 		ComponentTypes GetComponentType()const
@@ -35,7 +35,6 @@ namespace Engine::ECS {
 	protected:
 		const std::string m_name;
 		const ComponentTypes m_type;
-		Engine::Utilities::UUID m_owningEntityUuid;
 	};
 
 }

@@ -455,7 +455,7 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 					ImGui::BeginChild("RigidBody 2D", ImVec2(0, 130), true);
 					ImGui::Text("RigidBody 2D");
 					const char* bodyTypeOptions[] = { "Static","Kinematic","Dynamic" };
-					const char* currentBodyTypeSelected = bodyTypeOptions[rb2d->GetBodyType()];
+					const char* currentBodyTypeSelected = bodyTypeOptions[(int)rb2d->GetBodyType()];
 					if (ImGui::BeginCombo("Body Type", currentBodyTypeSelected))
 					{
 						for (int i = 0; i <= 2; i++)
@@ -497,6 +497,27 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 					ImGui::EndChild();
 				}
 					break;
+				case Engine::ECS::ComponentTypes::BoxCollider2D:
+				{
+					auto bc2d = std::static_pointer_cast<Engine::ECS::BoxCollider2D>(component);
+					ImGui::BeginChild("BoxCollider 2D", ImVec2(0, 130), true);
+					ImGui::Text("BoxCollider 2D");
+					float* offset[2] = { &bc2d->GetOffset().x,&bc2d->GetOffset().y};
+					float* size[2] = { &bc2d->GetSize().x,&bc2d->GetSize().y };
+					ImGui::DragFloat2("Size", size[0]);
+					ImGui::DragFloat2("Offset", offset[0]);
+					ImGui::DragFloat("Density", &bc2d->GetDensity(),0.01f,0.0f,1.0f);
+					ImGui::DragFloat("Friction", &bc2d->GetFriction(), 0.01f, 0.0f, 1.0f);
+					ImGui::DragFloat("Restitution", &bc2d->GetRestitution(), 0.01f, 0.0f, 1.0f);
+					ImGui::DragFloat("Restitution Threshold", &bc2d->GetRestituitonThreshold(), 0.01f, 0.0f);
+					ImGui::Spacing();
+					if (ImGui::Button("Remove Component"))
+					{
+						selectedEntity->RemoveComponent(Engine::ECS::ComponentTypes::RigidBody2D);
+					}
+					ImGui::EndChild();
+				}
+				break;
 				
 			}
 		}

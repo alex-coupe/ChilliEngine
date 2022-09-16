@@ -21,7 +21,9 @@ namespace Engine::ECS {
 		const std::string Serialize()const;
 		const Engine::Utilities::UUID& GetUUID()const;
 		const std::string& GetName()const;
-		const std::shared_ptr<TransformComponent>& GetTransformComponent();
+		const std::shared_ptr<TransformComponent> GetTransformComponent();
+		void OnSceneStart(std::unique_ptr<b2World>& physicsWorld);
+		void OnSceneUpdate();
 	private:
 		std::string m_name;
 		Engine::Utilities::UUID m_uuid;

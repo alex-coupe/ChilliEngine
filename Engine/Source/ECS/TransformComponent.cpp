@@ -1,12 +1,12 @@
 #include "TransformComponent.h"
 
-Engine::ECS::TransformComponent::TransformComponent(const Engine::Utilities::UUID& uuid,DirectX::XMFLOAT3 translation, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 scale)
-	:Component(ComponentTypes::Transform, "Transform",uuid), m_translation(translation), m_rotation(rotation), m_scale(scale)
+Engine::ECS::TransformComponent::TransformComponent(DirectX::XMFLOAT3 translation, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 scale)
+	:Component(ComponentTypes::Transform, "Transform"), m_translation(translation), m_rotation(rotation), m_scale(scale)
 {
 }
 
 Engine::ECS::TransformComponent::TransformComponent(const TransformComponent& rhs)
-	:Component(rhs.m_type,rhs.m_name,rhs.m_owningEntityUuid)
+	:Component(rhs.m_type,rhs.m_name)
 {
 	m_rotation = rhs.m_rotation;
 	m_scale = rhs.m_scale;

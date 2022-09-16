@@ -18,18 +18,17 @@ namespace Engine::ECS {
 
 	class CHILLI_API RigidBody2DComponent : public Component {
 	public:
-		RigidBody2DComponent(const Engine::Utilities::UUID& uuid,BodyType type, 
-			const std::shared_ptr<TransformComponent>& transform, bool fixedRotation);
+		RigidBody2DComponent(BodyType type, bool fixedRotation);
 		RigidBody2DComponent(const RigidBody2DComponent& rhs);
 		virtual const std::string Serialize()const override;
-		void UpdateTransformComponent();
-		const int GetBodyType()const;
+		const BodyType GetBodyType()const;
+		void SetRigidBody(b2Body* body);
 		void SetBodyType(BodyType type);
 		bool* GetFixedRotation();
+		b2Body* GetBody()const;
 	private:
 		b2Body* m_rigidBody = nullptr;
-		b2Fixture* m_fixture = nullptr;
 		bool m_fixedRotation = false;
-		std::shared_ptr<TransformComponent> m_transformComponent;
+		BodyType m_bodyType;
 	};
 }

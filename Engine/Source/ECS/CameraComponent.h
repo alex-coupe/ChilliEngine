@@ -9,7 +9,7 @@ namespace Engine::ECS {
 	};
 	class CHILLI_API CameraComponent : public Component {
 	public:
-		CameraComponent(const Engine::Utilities::UUID& uuid);
+		CameraComponent();
 		virtual const std::string Serialize()const override;
 
 	private:

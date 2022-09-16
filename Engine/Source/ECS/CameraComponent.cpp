@@ -1,7 +1,7 @@
 #include "CameraComponent.h"
 
-Engine::ECS::CameraComponent::CameraComponent(const Engine::Utilities::UUID& uuid)
-	:Component(ComponentTypes::Camera, "Camera", uuid)
+Engine::ECS::CameraComponent::CameraComponent()
+	:Component(ComponentTypes::Camera, "Camera")
 {
 }
 

@@ -144,9 +144,6 @@
     <ClInclude Include="Source\Rendering\FrameBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Physics\PhysicsManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ECS\CameraComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -261,9 +258,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Rendering\FrameBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Physics\PhysicsManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\ECS\RigidBody2DComponent.cpp">

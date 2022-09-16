@@ -67,6 +67,28 @@ void Engine::ResourceSystem::Scene::SetSceneState(SceneState state)
     m_sceneState = state;
 }
 
+void Engine::ResourceSystem::Scene::onSceneStart()
+{
+    m_b2World = std::make_unique<b2World>(m_gravity);
+    for (const auto& entities : m_entities)
+    {
+        entities->OnSceneStart(m_b2World);
+    }
+}
+
+void Engine::ResourceSystem::Scene::onSceneUpdate()
+{
+    m_b2World->Step(m_physicsTimestep, m_velocityIterations, m_positionIterations);
+    for (const auto& entities : m_entities)
+    {
+        entities->OnSceneUpdate();
+    }
+}
+
+void Engine::ResourceSystem::Scene::onSceneEnd()
+{
+}
+
 const Engine::Utilities::UUID& Engine::ResourceSystem::Scene::GetUUID() const
 {
     return m_uuid;

@@ -3,7 +3,7 @@
 Engine::ECS::Entity::Entity(const std::string& name)
 	: m_name(name), m_uuid()
 {
-	m_components.emplace_back(ComponentFactory::MakeTransformComponent(m_uuid,{ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f }));
+	m_components.emplace_back(ComponentFactory::MakeTransformComponent({ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f }));
 }
 
 Engine::ECS::Entity::Entity(const std::string& name, Engine::Utilities::UUID uuid, const rapidjson::Value& components)
@@ -18,17 +18,17 @@ Engine::ECS::Entity::Entity(const std::string& name, Engine::Utilities::UUID uui
 				DirectX::XMFLOAT3 translation = { components[i]["PosX"].GetFloat(),components[i]["PosY"].GetFloat(), components[i]["PosZ"].GetFloat() };
 				DirectX::XMFLOAT3 rotation = { components[i]["RotX"].GetFloat(),components[i]["RotY"].GetFloat(), components[i]["RotZ"].GetFloat() };
 				DirectX::XMFLOAT3 scale = { components[i]["ScaleX"].GetFloat(),components[i]["ScaleY"].GetFloat(), components[i]["ScaleZ"].GetFloat() };
-				m_components.emplace_back(ComponentFactory::MakeTransformComponent(m_uuid,translation, rotation, scale));
+				m_components.emplace_back(ComponentFactory::MakeTransformComponent(translation, rotation, scale));
 				break;
 			}
 			case (int)ComponentTypes::Mesh:
 			{
-				m_components.emplace_back(std::make_shared<MeshComponent>(components[i]["MeshUuid"].GetString(),m_uuid));
+				m_components.emplace_back(std::make_shared<MeshComponent>(components[i]["MeshUuid"].GetString()));
 				break;
 			}
 			case (int)ComponentTypes::RigidBody2D:
 			{
-				m_components.emplace_back(std::make_shared<RigidBody2DComponent>(m_uuid,(BodyType)components[i]["BodyType"].GetInt(),GetTransformComponent(), (bool)components[i]["FixedRotation"].GetInt()));
+				m_components.emplace_back(std::make_shared<RigidBody2DComponent>((BodyType)components[i]["BodyType"].GetInt(), (bool)components[i]["FixedRotation"].GetInt()));
 				break;
 			}
 		}
@@ -59,7 +59,7 @@ const std::string& Engine::ECS::Entity::GetName()const
 	return m_name;
 }
 
-const std::shared_ptr<Engine::ECS::TransformComponent>& Engine::ECS::Entity::GetTransformComponent()
+const std::shared_ptr<Engine::ECS::TransformComponent> Engine::ECS::Entity::GetTransformComponent()
 {
 	for (const auto& comp : m_components)
 	{
@@ -67,6 +67,59 @@ const std::shared_ptr<Engine::ECS::TransformComponent>& Engine::ECS::Entity::Get
 			return std::static_pointer_cast<TransformComponent>(comp);
 	}
 	return nullptr;
+}
+
+void Engine::ECS::Entity::OnSceneStart(std::unique_ptr<b2World>& physicsWorld)
+{
+	auto& transform = GetTransformComponent();
+	const auto& rb2d = std::static_pointer_cast<Engine::ECS::RigidBody2DComponent>(GetComponentByType(ComponentTypes::RigidBody2D));
+	b2BodyDef bodyDef;
+	bodyDef.position.Set(transform->GetTranslation().x, transform->GetTranslation().y);
+	bodyDef.angle = transform->GetRotation().z;
+	switch (rb2d->GetBodyType()) {
+	case BodyType::Static:
+		bodyDef.type = b2_staticBody;
+		break;
+	case BodyType::Dynamic:
+		bodyDef.type = b2_dynamicBody;
+		break;
+	case BodyType::Kinematic:
+		bodyDef.type = b2_kinematicBody;
+		break;
+	default:
+		bodyDef.type = b2_staticBody;
+		break;
+	}
+
+	auto rigidBody = physicsWorld->CreateBody(&bodyDef);
+	rigidBody->SetFixedRotation(rb2d->GetFixedRotation());
+	rb2d->SetRigidBody(rigidBody);
+
+	if (HasComponent(ComponentTypes::BoxCollider2D))
+	{
+		const auto& bc2d = std::static_pointer_cast<Engine::ECS::BoxCollider2D>(GetComponentByType(ComponentTypes::BoxCollider2D));
+		b2PolygonShape boxShape;
+		boxShape.SetAsBox(bc2d->GetSize().x * transform->GetScale().x, 
+			bc2d->GetSize().y * transform->GetScale().y);
+		b2FixtureDef fixtureDef;
+		fixtureDef.shape = &boxShape;
+		fixtureDef.density = bc2d->GetDensity();
+		fixtureDef.friction = bc2d->GetFriction();
+		fixtureDef.restitution = bc2d->GetRestitution();;
+		fixtureDef.restitutionThreshold = bc2d->GetRestituitonThreshold();
+		rigidBody->CreateFixture(&fixtureDef);
+	}
+}
+
+void Engine::ECS::Entity::OnSceneUpdate()
+{
+	auto& transform = GetTransformComponent();
+	const auto& rb2d = std::static_pointer_cast<Engine::ECS::RigidBody2DComponent>(GetComponentByType(ComponentTypes::RigidBody2D));
+
+	const auto& position = rb2d->GetBody()->GetPosition();
+	transform->GetTranslation().x = position.x;
+	transform->GetTranslation().y = position.y;
+	transform->GetRotation().z = rb2d->GetBody()->GetAngle();
 }
 
 const std::vector<std::shared_ptr<Engine::ECS::Component>>& Engine::ECS::Entity::GetComponents()const
@@ -101,14 +154,18 @@ void Engine::ECS::Entity::AddComponent(ComponentTypes type, ComponentVariables* 
 		switch (type)
 		{
 		case ComponentTypes::Mesh:
-			m_components.emplace_back(ComponentFactory::MakeMeshComponent(m_uuid));
+			m_components.emplace_back(ComponentFactory::MakeMeshComponent());
 			break;
 		case ComponentTypes::RigidBody2D:
 		{
 			const auto rb2dVars = (RigidBody2DOptions*)vars;
-			const auto& transform = std::static_pointer_cast<TransformComponent>(GetComponentByName("Transform"));
-			m_components.emplace_back(ComponentFactory::MakeRigidBody2DComponent(m_uuid, rb2dVars->type, transform, rb2dVars->fixedRotation));
+			m_components.emplace_back(ComponentFactory::MakeRigidBody2DComponent(rb2dVars->type, rb2dVars->fixedRotation));
 		}
+
+		case ComponentTypes::BoxCollider2D:
+			m_components.emplace_back(ComponentFactory::MakeBoxCollider2DComponent());
+			break;
+		
 	}
 	}
 }

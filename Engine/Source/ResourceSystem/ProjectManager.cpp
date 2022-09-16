@@ -163,10 +163,12 @@ void Engine::ResourceSystem::ProjectManager::SetCurrentSceneState(SceneState sta
     switch (state) {
     case SceneState::Play:
     case SceneState::Simulate:
+        m_currentScene->onSceneStart();
         //m_currentSceneCopy = std::make_shared<Scene>(*m_currentScene);
         break;
     case SceneState::Edit:
     case SceneState::Pause:
+        m_currentScene->onSceneEnd();
         if (m_currentSceneCopy != nullptr)
         {
             m_currentScene = m_currentSceneCopy;
@@ -216,4 +218,6 @@ int Engine::ResourceSystem::ProjectManager::GetSystemType() const
 
 void Engine::ResourceSystem::ProjectManager::ProcessFrame()
 {
+    if (m_currentScene->GetSceneState() == SceneState::Play || m_currentScene->GetSceneState() == SceneState::Simulate)
+        m_currentScene->onSceneUpdate();
 }
