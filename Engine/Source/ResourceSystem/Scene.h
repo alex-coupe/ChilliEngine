@@ -16,11 +16,11 @@ namespace Engine::ResourceSystem {
 	public:
 		Scene(const std::string& name);
 		Scene(const std::string& name, Engine::Utilities::UUID uuid, const rapidjson::Value& entities);
+		Scene(const Scene& rhs);
 		const std::string Serialize();
 		void AddEntity(const std::string& name);
 		void RemoveEntity(const Engine::Utilities::UUID& uuid);
 		const std::vector<std::shared_ptr<Entity>>& GetEntities()const;
-		void Update(float dt, bool isEditor);
 		const Engine::Utilities::UUID& GetUUID()const;
 		const std::string& GetName()const;
 		const SceneState GetSceneState()const;

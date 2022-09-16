@@ -35,7 +35,7 @@ namespace Engine::Gui {
 	private:
 		static int assetDropdownSelected;
 		static const char* assetDropdownList[4];
-		static const char* componentsList[5];
+		static const char* componentsList[19];
 		static int assetFrameSelected;
 		static int hierarchySelected;
 		static int sceneSelected;

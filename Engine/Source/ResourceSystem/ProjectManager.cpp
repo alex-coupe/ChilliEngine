@@ -158,6 +158,25 @@ void Engine::ResourceSystem::ProjectManager::SetCurrentScene(const Engine::Utili
     }
 }
 
+void Engine::ResourceSystem::ProjectManager::SetCurrentSceneState(SceneState state)
+{
+    switch (state) {
+    case SceneState::Play:
+    case SceneState::Simulate:
+        //m_currentSceneCopy = std::make_shared<Scene>(*m_currentScene);
+        break;
+    case SceneState::Edit:
+    case SceneState::Pause:
+        if (m_currentSceneCopy != nullptr)
+        {
+            m_currentScene = m_currentSceneCopy;
+            m_currentSceneCopy = nullptr;
+        }
+        break;
+    }
+    m_currentScene->SetSceneState(state);
+}
+
 std::shared_ptr<Engine::ResourceSystem::Asset> Engine::ResourceSystem::ProjectManager::GetAssetByUUID(Engine::Utilities::UUID& uuid)
 {
     if (auto m_assetsIterator = std::find_if(m_assets.begin(), m_assets.end(), [&uuid](const std::shared_ptr<Engine::ResourceSystem::Asset> rhs)
@@ -179,6 +198,17 @@ std::vector<std::shared_ptr<Engine::ResourceSystem::Asset>> Engine::ResourceSyst
     return assets;
 }
 
+std::vector<std::shared_ptr<Engine::ECS::Component>> Engine::ResourceSystem::ProjectManager::GetCurrentSceneComponentsByType(Engine::ECS::ComponentTypes type)
+{
+    std::vector<std::shared_ptr<Engine::ECS::Component>> components;
+    for (const auto& ent : m_currentScene->GetEntities())
+    {
+        if (const auto& comp = ent->GetComponentByType(type); comp != nullptr)
+            components.push_back(comp);
+    }
+    return components;
+}
+
 int Engine::ResourceSystem::ProjectManager::GetSystemType() const
 {
     return static_cast<int>(Engine::Core::SystemTypes::ProjectManager);
@@ -186,9 +216,4 @@ int Engine::ResourceSystem::ProjectManager::GetSystemType() const
 
 void Engine::ResourceSystem::ProjectManager::ProcessFrame()
 {
-    if (m_currentScene->GetSceneState() == SceneState::Play)
-        m_currentScene->Update(Engine::Core::DependencyResolver::ResolveDependency<Engine::Core::Timer>()->GetDeltaTime(), false);
-
-    if (m_currentScene->GetSceneState() == SceneState::Edit)
-        m_currentScene->Update(Engine::Core::DependencyResolver::ResolveDependency<Engine::Core::Timer>()->GetDeltaTime(), true);
 }

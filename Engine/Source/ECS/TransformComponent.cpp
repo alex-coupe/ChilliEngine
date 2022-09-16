@@ -1,8 +1,16 @@
 #include "TransformComponent.h"
 
-Engine::ECS::TransformComponent::TransformComponent(DirectX::XMFLOAT3 translation, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 scale)
-	:Component(ComponentTypes::Transform, "Transform"), m_translation(translation), m_rotation(rotation), m_scale(scale)
+Engine::ECS::TransformComponent::TransformComponent(const Engine::Utilities::UUID& uuid,DirectX::XMFLOAT3 translation, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 scale)
+	:Component(ComponentTypes::Transform, "Transform",uuid), m_translation(translation), m_rotation(rotation), m_scale(scale)
 {
+}
+
+Engine::ECS::TransformComponent::TransformComponent(const TransformComponent& rhs)
+	:Component(rhs.m_type,rhs.m_name,rhs.m_owningEntityUuid)
+{
+	m_rotation = rhs.m_rotation;
+	m_scale = rhs.m_scale;
+	m_translation = rhs.m_translation;
 }
 
 DirectX::XMFLOAT3& Engine::ECS::TransformComponent::GetTranslation()
@@ -31,14 +39,11 @@ const std::string Engine::ECS::TransformComponent::Serialize()const
 	return  ss.str();
 }
 
-void Engine::ECS::TransformComponent::Update(float dt, bool isEditor)
-{
-	return;
-}
-
 DirectX::XMMATRIX Engine::ECS::TransformComponent::GetTransformMatrix() const
 {
-	return DirectX::XMMatrixRotationRollPitchYaw(m_rotation.x, m_rotation.y, m_rotation.z) *
+	return
 		DirectX::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z) *
+		DirectX::XMMatrixRotationRollPitchYaw(m_rotation.x, m_rotation.y, m_rotation.z) *
 		DirectX::XMMatrixTranslation(m_translation.x, m_translation.y, m_translation.z);
+		
 }

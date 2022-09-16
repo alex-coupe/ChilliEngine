@@ -3,7 +3,7 @@
 Engine::ECS::Entity::Entity(const std::string& name)
 	: m_name(name), m_uuid()
 {
-	m_components.emplace_back(ComponentFactory::MakeTransformComponent({ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f }));
+	m_components.emplace_back(ComponentFactory::MakeTransformComponent(m_uuid,{ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f }));
 }
 
 Engine::ECS::Entity::Entity(const std::string& name, Engine::Utilities::UUID uuid, const rapidjson::Value& components)
@@ -18,14 +18,38 @@ Engine::ECS::Entity::Entity(const std::string& name, Engine::Utilities::UUID uui
 				DirectX::XMFLOAT3 translation = { components[i]["PosX"].GetFloat(),components[i]["PosY"].GetFloat(), components[i]["PosZ"].GetFloat() };
 				DirectX::XMFLOAT3 rotation = { components[i]["RotX"].GetFloat(),components[i]["RotY"].GetFloat(), components[i]["RotZ"].GetFloat() };
 				DirectX::XMFLOAT3 scale = { components[i]["ScaleX"].GetFloat(),components[i]["ScaleY"].GetFloat(), components[i]["ScaleZ"].GetFloat() };
-				m_components.emplace_back(ComponentFactory::MakeTransformComponent(translation, rotation, scale));
+				m_components.emplace_back(ComponentFactory::MakeTransformComponent(m_uuid,translation, rotation, scale));
 				break;
 			}
 			case (int)ComponentTypes::Mesh:
 			{
-				m_components.emplace_back(std::make_shared<MeshComponent>(components[i]["MeshUuid"].GetString()));
+				m_components.emplace_back(std::make_shared<MeshComponent>(components[i]["MeshUuid"].GetString(),m_uuid));
 				break;
 			}
+			case (int)ComponentTypes::RigidBody2D:
+			{
+				m_components.emplace_back(std::make_shared<RigidBody2DComponent>(m_uuid,(BodyType)components[i]["BodyType"].GetInt(),GetTransformComponent(), (bool)components[i]["FixedRotation"].GetInt()));
+				break;
+			}
+		}
+	}
+}
+
+Engine::ECS::Entity::Entity(const Entity& rhs)
+{
+	for (const auto& component : rhs.GetComponents())
+	{
+		switch (component->GetComponentType())
+		{
+		case ComponentTypes::Mesh:
+			m_components.emplace_back(std::make_shared<MeshComponent>(*(std::static_pointer_cast<MeshComponent>(component))));
+			break;
+		case ComponentTypes::RigidBody2D:
+			m_components.emplace_back(std::make_shared<RigidBody2DComponent>(*(std::static_pointer_cast<RigidBody2DComponent>(component))));
+			break;
+		case ComponentTypes::Transform:
+			m_components.emplace_back(std::make_shared<TransformComponent>(*(std::static_pointer_cast<TransformComponent>(component))));
+			break;
 		}
 	}
 }
@@ -33,6 +57,16 @@ Engine::ECS::Entity::Entity(const std::string& name, Engine::Utilities::UUID uui
 const std::string& Engine::ECS::Entity::GetName()const
 {
 	return m_name;
+}
+
+const std::shared_ptr<Engine::ECS::TransformComponent>& Engine::ECS::Entity::GetTransformComponent()
+{
+	for (const auto& comp : m_components)
+	{
+		if (comp->GetComponentType() == ComponentTypes::Transform)
+			return std::static_pointer_cast<TransformComponent>(comp);
+	}
+	return nullptr;
 }
 
 const std::vector<std::shared_ptr<Engine::ECS::Component>>& Engine::ECS::Entity::GetComponents()const
@@ -58,7 +92,7 @@ bool Engine::ECS::Entity::HasComponent(ComponentTypes type)
 	return contains != m_components.cend();
 }
 
-void Engine::ECS::Entity::AddComponent(ComponentTypes type)
+void Engine::ECS::Entity::AddComponent(ComponentTypes type, ComponentVariables* vars)
 {
 	if (auto contains = std::find_if(m_components.cbegin(), m_components.cend(), [type](const std::shared_ptr<Component> rhs) {
 		return rhs->GetComponentType() == type;
@@ -66,10 +100,16 @@ void Engine::ECS::Entity::AddComponent(ComponentTypes type)
 	{
 		switch (type)
 		{
-			case ComponentTypes::Mesh:
-				m_components.emplace_back(ComponentFactory::MakeMeshComponent());
-				break;
+		case ComponentTypes::Mesh:
+			m_components.emplace_back(ComponentFactory::MakeMeshComponent(m_uuid));
+			break;
+		case ComponentTypes::RigidBody2D:
+		{
+			const auto rb2dVars = (RigidBody2DOptions*)vars;
+			const auto& transform = std::static_pointer_cast<TransformComponent>(GetComponentByName("Transform"));
+			m_components.emplace_back(ComponentFactory::MakeRigidBody2DComponent(m_uuid, rb2dVars->type, transform, rb2dVars->fixedRotation));
 		}
+	}
 	}
 }
 
@@ -113,13 +153,7 @@ std::shared_ptr<Engine::ECS::Component> Engine::ECS::Entity::GetComponentByName(
 	return nullptr;
 }
 
-void Engine::ECS::Entity::Update(float dt, bool isEditor)const
-{
-	for (const auto& component : m_components)
-	{
-		component->Update(dt, isEditor);
-	}
-}
+
 
 
 

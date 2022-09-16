@@ -47,6 +47,13 @@ Engine::Utilities::UUID::UUID()
     m_hash = hash += (int)parts.size();
 }   
 
+Engine::Utilities::UUID& Engine::Utilities::UUID::operator=(const UUID& uuid)
+{
+    this->m_uuid = uuid.m_uuid;
+    this->m_hash = uuid.m_hash;
+    return *this;
+}
+
 Engine::Utilities::UUID::UUID(const char* uuid)
     :m_uuid(uuid)
 {

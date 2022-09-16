@@ -14,6 +14,14 @@ Engine::ResourceSystem::Scene::Scene(const std::string& name, Engine::Utilities:
     }
 }
 
+Engine::ResourceSystem::Scene::Scene(const Scene& rhs)
+{
+    for (const auto entity : rhs.GetEntities())
+    {
+        m_entities.emplace_back(std::make_shared<Entity>(*entity));
+    }
+}
+
 const std::string Engine::ResourceSystem::Scene::Serialize()
 {
     std::stringstream ss;
@@ -52,14 +60,6 @@ const std::vector<std::shared_ptr<Engine::ResourceSystem::Entity>>& Engine::Reso
 const Engine::ResourceSystem::SceneState Engine::ResourceSystem::Scene::GetSceneState()const
 {
     return m_sceneState;
-}
-
-void Engine::ResourceSystem::Scene::Update(float dt, bool isEditor)
-{
-    for (const auto& entity : m_entities)
-    {
-        entity->Update(dt, isEditor);
-    }
 }
 
 void Engine::ResourceSystem::Scene::SetSceneState(SceneState state)

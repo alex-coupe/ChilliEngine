@@ -13,6 +13,8 @@ namespace Engine::Utilities {
 	class CHILLI_API UUID {
 	public:
 		UUID();
+		UUID(const UUID& copy) = default;
+		UUID& operator=(const UUID& uuid);
 		UUID(const char* uuid);
 		const unsigned int GetUUIDHash()const;
 		const std::string& GetUUID()const;

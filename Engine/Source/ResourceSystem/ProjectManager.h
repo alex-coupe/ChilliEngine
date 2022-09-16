@@ -8,6 +8,7 @@
 #include "rapidjson/prettywriter.h"
 #include <fstream>
 #include <sstream>
+#include "../ECS/Component.h"
 
 namespace Engine::ResourceSystem {
 
@@ -24,12 +25,15 @@ namespace Engine::ResourceSystem {
 		void RemoveAsset(const Engine::Utilities::UUID& uuid);
 		std::shared_ptr<Scene> GetCurrentScene()const;
 		void SetCurrentScene(const Engine::Utilities::UUID& uuid);
+		void SetCurrentSceneState(SceneState state);
 		std::shared_ptr<Asset> GetAssetByUUID(Engine::Utilities::UUID& uuid);
 		std::vector<std::shared_ptr<Asset>> GetAssetsByType(AssetTypes type);
-		virtual int GetSystemType()const;
-		virtual void ProcessFrame();
+		std::vector<std::shared_ptr<Engine::ECS::Component>> GetCurrentSceneComponentsByType(Engine::ECS::ComponentTypes type);
+		virtual int GetSystemType()const override;
+		virtual void ProcessFrame()override;
 	private:
 		std::vector<std::shared_ptr<Scene>> m_scenes;
+		std::shared_ptr<Scene> m_currentSceneCopy = nullptr;
 		std::vector<std::shared_ptr<Asset>> m_assets;
 		std::shared_ptr<Scene> m_currentScene;
 		std::string m_projectName = "untitled project";

@@ -6,6 +6,10 @@ void ChilliEngine::Run()
 	{
 		m_timer->ProcessFrame();
 		m_events->ProcessFrame();
+		if (m_projectManager->GetCurrentScene()->GetSceneState() == Engine::ResourceSystem::SceneState::Play)
+		{ 
+			m_physicsManager->ProcessFrame();
+		}
 		m_renderer->ProcessFrame();
 		m_projectManager->ProcessFrame();
 	}
@@ -29,6 +33,10 @@ ChilliEngine::ChilliEngine()
 
 	if (m_window = std::make_unique<Window>(); m_window == nullptr)
 		CHILLI_ERROR("Failed to create window");
+
+	if (m_physicsManager = std::make_shared<PhysicsManager>();m_physicsManager == nullptr)
+		CHILLI_ERROR("Failed to create physcis manager");
+	DependencyResolver::Add(m_physicsManager);
 		
 	m_renderer = std::make_shared<Renderer>(m_window->GetWidth(), m_window->GetHeight(), m_window->GetWindowHandle());
 	if (m_renderer == nullptr)
@@ -52,6 +60,7 @@ ChilliEngine::~ChilliEngine()
 	m_timer.reset();
 	m_window.reset();
 	m_events.reset();
+	m_physicsManager.reset();
 	GuiManager::Shutdown();
 	DependencyResolver::Flush();
 }
