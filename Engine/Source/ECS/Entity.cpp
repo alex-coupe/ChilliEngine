@@ -31,6 +31,15 @@ Engine::ECS::Entity::Entity(const std::string& name, Engine::Utilities::UUID uui
 				m_components.emplace_back(std::make_shared<RigidBody2DComponent>((BodyType)components[i]["BodyType"].GetInt(), (bool)components[i]["FixedRotation"].GetInt()));
 				break;
 			}
+			case (int)ComponentTypes::BoxCollider2D:
+			{
+				DirectX::XMFLOAT2 size = { components[i]["SizeX"].GetFloat(),components[i]["SizeY"].GetFloat()};
+				DirectX::XMFLOAT2 offset = { components[i]["OffSetX"].GetFloat(),components[i]["OffSetY"].GetFloat()};
+				m_components.emplace_back(std::make_shared<BoxCollider2D>(size,offset, 
+					components[i]["Density"].GetFloat(), components[i]["Friction"].GetFloat(),
+					components[i]["Restitution"].GetFloat(),components[i]["RestitutionThreshold"].GetFloat()));
+				break;
+			}
 		}
 	}
 }
@@ -92,7 +101,7 @@ void Engine::ECS::Entity::OnSceneStart(std::unique_ptr<b2World>& physicsWorld)
 	}
 
 	auto rigidBody = physicsWorld->CreateBody(&bodyDef);
-	rigidBody->SetFixedRotation(rb2d->GetFixedRotation());
+	rigidBody->SetFixedRotation(*rb2d->GetFixedRotation());
 	rb2d->SetRigidBody(rigidBody);
 
 	if (HasComponent(ComponentTypes::BoxCollider2D))
@@ -158,8 +167,8 @@ void Engine::ECS::Entity::AddComponent(ComponentTypes type, ComponentVariables* 
 			break;
 		case ComponentTypes::RigidBody2D:
 		{
-			const auto rb2dVars = (RigidBody2DOptions*)vars;
-			m_components.emplace_back(ComponentFactory::MakeRigidBody2DComponent(rb2dVars->type, rb2dVars->fixedRotation));
+			m_components.emplace_back(ComponentFactory::MakeRigidBody2DComponent(Engine::ECS::BodyType::Static,false));
+			break;
 		}
 
 		case ComponentTypes::BoxCollider2D:

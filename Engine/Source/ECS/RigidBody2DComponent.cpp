@@ -9,13 +9,13 @@ Engine::ECS::RigidBody2DComponent::RigidBody2DComponent(const RigidBody2DCompone
 	:Component(rhs.m_type, rhs.m_name)
 {
 	m_fixedRotation = rhs.m_fixedRotation;
-	m_rigidBody = rhs.m_rigidBody;
+	m_bodyType = rhs.m_bodyType;
 }
 
 const std::string Engine::ECS::RigidBody2DComponent::Serialize()const
 {
 	std::stringstream ss;
-	ss << "{ \"Type\":" << static_cast<int>(m_type) << ", \"BodyType\":" << m_rigidBody->GetType() << ",\"FixedRotation\":" << m_fixedRotation << "}";
+	ss << "{ \"Type\":" << static_cast<int>(m_type) << ", \"BodyType\":" << (int)m_bodyType << ",\"FixedRotation\":" << m_fixedRotation << "}";
 	return  ss.str();
 }
 

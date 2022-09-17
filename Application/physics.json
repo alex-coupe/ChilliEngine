@@ -1,1 +1,26 @@
-{ "ProjectName":"untitled project", "Assets":[{ "Uuid":"e2813163-2b8c-4957-ffe-6260c7d26451", "Type":0, "FilePath": "Assets/Models/cube.fbx"}], "Scenes":[ { "SceneName":"Scene 1", "Uuid": "1047f0ca-2fb2-4740-516-b2f7c33ee079", "Entities": [{"Name":"base", "Uuid":"7e4b8ee8-70e8-49f9-d7f-337e08ab8a63", "Components":[{ "Type":-1, "PosX":0, "PosY":-8, "PosZ":0, "RotX":0, "RotY":0,"RotZ":0, "ScaleX":3, "ScaleY":0.5, "ScaleZ":0},{ "Type":0, "MeshUuid":"e2813163-2b8c-4957-ffe-6260c7d26451"}]},{"Name":"cube", "Uuid":"76184f50-48d5-49ce-c35-edc2a4542bd3", "Components":[{ "Type":-1, "PosX":0, "PosY":0, "PosZ":0, "RotX":0, "RotY":0,"RotZ":0, "ScaleX":0.5, "ScaleY":0.5, "ScaleZ":1},{ "Type":0, "MeshUuid":"e2813163-2b8c-4957-ffe-6260c7d26451"}]}]}]}
+{ "ProjectName":"untitled project", 
+"Assets":[
+    { "Uuid":"e2813163-2b8c-4957-ffe-6260c7d26451", "Type":0, "FilePath": "Assets/Models/cube.fbx"}
+    ], 
+    "Scenes":[ 
+        { "SceneName":"Scene 1", "Uuid": "1047f0ca-2fb2-4740-516-b2f7c33ee079", 
+        "Entities": [
+            {"Name":"base", "Uuid":"7e4b8ee8-70e8-49f9-d7f-337e08ab8a63", 
+            "Components":[
+                { "Type":-1, "PosX":0, "PosY":-8, "PosZ":0, "RotX":0, "RotY":0,"RotZ":0.3, "ScaleX":3, "ScaleY":0.5, "ScaleZ":0},
+                { "Type":0, "MeshUuid":"e2813163-2b8c-4957-ffe-6260c7d26451"},
+                { "Type":10, "BodyType":0,"FixedRotation":0},
+                { "Type":4, "SizeX":1.0, "SizeY":1.0, "OffSetX":0, "OffSetY":0, "Density":1, "Friction":0.5, "Restitution":0, "RestitutionThreshold":0.5}
+                ]
+            },
+                {"Name":"cube", "Uuid":"76184f50-48d5-49ce-c35-edc2a4542bd3", 
+                "Components":[
+                    { "Type":-1, "PosX":0, "PosY":0, "PosZ":0, "RotX":0, "RotY":0,"RotZ":0, "ScaleX":0.5, "ScaleY":0.5, "ScaleZ":0},
+                    { "Type":0, "MeshUuid":"e2813163-2b8c-4957-ffe-6260c7d26451"},
+                    { "Type":10, "BodyType":2,"FixedRotation":0},
+                    { "Type":4, "SizeX":1.0, "SizeY":1.0, "OffSetX":0, "OffSetY":0, "Density":1, "Friction":0.5, "Restitution":0, "RestitutionThreshold":0.5}
+                    ]},
+                    {"Name":"test", "Uuid":"c52103ab-5759-4209-2e0-3ebbb496a2f4", 
+                    "Components":[{ "Type":-1, "PosX":-4, "PosY":-10, "PosZ":0, "RotX":0, "RotY":0,"RotZ":0, "ScaleX":4, "ScaleY":0.2, "ScaleZ":0},
+                    { "Type":0, "MeshUuid":"e2813163-2b8c-4957-ffe-6260c7d26451"},{ "Type":10, "BodyType":0,"FixedRotation":0},
+                    { "Type":4, "SizeX":1.0, "SizeY":1.0, "OffSetX":0, "OffSetY":0, "Density":1, "Friction":0.5, "Restitution":0, "RestitutionThreshold":0.5}]}]}]}

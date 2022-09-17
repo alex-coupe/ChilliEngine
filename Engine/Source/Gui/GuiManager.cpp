@@ -390,22 +390,7 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 			{
 				if (ImGui::Selectable(componentsList[i]))
 				{
-					std::shared_ptr<Engine::ECS::TransformComponent> transform = nullptr;
-					switch ((Engine::ECS::ComponentTypes)i) {
-					case Engine::ECS::ComponentTypes::RigidBody2D:
-					{
-						transform = std::static_pointer_cast<Engine::ECS::TransformComponent>(selectedEntity->GetComponentByName("Transform"));
-						Engine::ECS::RigidBody2DOptions rb2dopts = {};
-						rb2dopts.type = Engine::ECS::BodyType::Dynamic;
-						rb2dopts.fixedRotation = false;
-						selectedEntity->AddComponent((Engine::ECS::ComponentTypes)i, &rb2dopts);
-					}
-						break;
-					default:
-						selectedEntity->AddComponent((Engine::ECS::ComponentTypes)i);
-						break;
-					}
-					
+					selectedEntity->AddComponent((Engine::ECS::ComponentTypes)i);					
 				}
 			}
 			ImGui::EndPopup();
@@ -419,8 +404,8 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 				case Engine::ECS::ComponentTypes::Mesh:
 				{
 					const auto& meshComp = std::static_pointer_cast<Engine::ECS::MeshComponent>(component);
-					ImGui::BeginChild("Mesh Component", ImVec2(0, 140), true);
-					ImGui::Text("Mesh Component");
+					ImGui::BeginChild("Mesh", ImVec2(0, 140), true);
+					ImGui::Text("Mesh");
 					if (ImGui::Button("Select"))
 						ImGui::OpenPopup("meshDropdown");
 					ImGui::SameLine();
@@ -484,8 +469,8 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 				case Engine::ECS::ComponentTypes::Transform:
 				{
 					const auto& transformComp = std::static_pointer_cast<Engine::ECS::TransformComponent>(component);
-					ImGui::BeginChild("Transform Component", ImVec2(0, 130), true);
-					ImGui::Text("Transform Component");
+					ImGui::BeginChild("Transform", ImVec2(0, 130), true);
+					ImGui::Text("Transform");
 					ImGui::Spacing();
 					float* transforms[3] = { &transformComp->GetTranslation().x,&transformComp->GetTranslation().y, &transformComp->GetTranslation().z };
 					float* rotation[3] = { &transformComp->GetRotation().x,&transformComp->GetRotation().y, &transformComp->GetRotation().z };
@@ -500,12 +485,12 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 				case Engine::ECS::ComponentTypes::BoxCollider2D:
 				{
 					auto bc2d = std::static_pointer_cast<Engine::ECS::BoxCollider2D>(component);
-					ImGui::BeginChild("BoxCollider 2D", ImVec2(0, 130), true);
+					ImGui::BeginChild("BoxCollider 2D", ImVec2(0, 200), true);
 					ImGui::Text("BoxCollider 2D");
 					float* offset[2] = { &bc2d->GetOffset().x,&bc2d->GetOffset().y};
 					float* size[2] = { &bc2d->GetSize().x,&bc2d->GetSize().y };
-					ImGui::DragFloat2("Size", size[0]);
-					ImGui::DragFloat2("Offset", offset[0]);
+					ImGui::DragFloat2("Size", size[0],0.5f);
+					ImGui::DragFloat2("Offset", offset[0],0.5f);
 					ImGui::DragFloat("Density", &bc2d->GetDensity(),0.01f,0.0f,1.0f);
 					ImGui::DragFloat("Friction", &bc2d->GetFriction(), 0.01f, 0.0f, 1.0f);
 					ImGui::DragFloat("Restitution", &bc2d->GetRestitution(), 0.01f, 0.0f, 1.0f);

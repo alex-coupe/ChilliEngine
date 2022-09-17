@@ -11,11 +11,6 @@ namespace Engine::ECS {
 		Static,Kinematic,Dynamic
 	};
 
-	struct RigidBody2DOptions : ComponentVariables {
-		BodyType type;
-		bool fixedRotation = false;
-	};
-
 	class CHILLI_API RigidBody2DComponent : public Component {
 	public:
 		RigidBody2DComponent(BodyType type, bool fixedRotation);

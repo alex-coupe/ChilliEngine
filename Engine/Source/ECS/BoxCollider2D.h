@@ -6,7 +6,9 @@
 namespace Engine::ECS {
 	class CHILLI_API BoxCollider2D : public Component {
 	public:
-		BoxCollider2D();
+		BoxCollider2D(DirectX::XMFLOAT2 size = { 1.0f,1.0f },
+			DirectX::XMFLOAT2 offset = { 0.0f,0.0f }, float density = 1.0f,float friction = 0.5f,
+			float restitution = 0.0f, float restThreshold = 0.5f);
 		virtual const std::string Serialize()const override;
 		DirectX::XMFLOAT2& GetSize();
 		DirectX::XMFLOAT2& GetOffset();
@@ -15,11 +17,11 @@ namespace Engine::ECS {
 		float& GetRestitution();
 		float& GetRestituitonThreshold();
 	private:
-		DirectX::XMFLOAT2 m_offset = { 0.0f,0.0f };
-		DirectX::XMFLOAT2 m_size = { 1.0f,1.0f };
-		float m_density = 1.0f;
-		float m_friction = 0.5f;
-		float m_restitution = 0.0f;
-		float m_restitutionThreshold = 0.5f;
+		DirectX::XMFLOAT2 m_offset;
+		DirectX::XMFLOAT2 m_size;
+		float m_density;
+		float m_friction;
+		float m_restitution;
+		float m_restitutionThreshold;
 	};
 }
