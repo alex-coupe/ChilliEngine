@@ -31,20 +31,7 @@ void Engine::ECS::RigidBody2DComponent::SetRigidBody(b2Body* body)
 
 void Engine::ECS::RigidBody2DComponent::SetBodyType(BodyType type)
 {
-	switch (type) {
-	case BodyType::Static:
-		m_rigidBody->SetType(b2BodyType::b2_staticBody);
-		break;
-	case BodyType::Dynamic:
-		m_rigidBody->SetType(b2BodyType::b2_dynamicBody);
-		break;
-	case BodyType::Kinematic:
-		m_rigidBody->SetType(b2BodyType::b2_kinematicBody);
-		break;
-	default:
-		m_rigidBody->SetType(b2BodyType::b2_staticBody);
-		break;
-	}
+	m_bodyType = type;
 }
 
 bool* Engine::ECS::RigidBody2DComponent::GetFixedRotation()

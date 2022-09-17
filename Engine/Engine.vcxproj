@@ -175,8 +175,9 @@
     <ClInclude Include="Source\Core\Events.h" />
     <ClInclude Include="Source\Core\Timer.h" />
     <ClInclude Include="Source\Core\Window.h" />
-    <ClInclude Include="Source\ECS\BoxCollider2D.h" />
+    <ClInclude Include="Source\ECS\BoxCollider2DComponent.h" />
     <ClInclude Include="Source\ECS\CameraComponent.h" />
+    <ClInclude Include="Source\ECS\CircleColliderComponent.h" />
     <ClInclude Include="Source\ECS\Component.h" />
     <ClInclude Include="Source\ECS\ComponentFactory.h" />
     <ClInclude Include="Source\ECS\Entity.h" />
@@ -221,8 +222,9 @@
     <ClCompile Include="Source\Core\Platform\WindowsPlatform.cpp" />
     <ClCompile Include="Source\Core\Timer.cpp" />
     <ClCompile Include="Source\Core\Window.cpp" />
-    <ClCompile Include="Source\ECS\BoxCollider2D.cpp" />
+    <ClCompile Include="Source\ECS\BoxCollider2DComponent.cpp" />
     <ClCompile Include="Source\ECS\CameraComponent.cpp" />
+    <ClCompile Include="Source\ECS\CircleColliderComponent.cpp" />
     <ClCompile Include="Source\ECS\ComponentFactory.cpp" />
     <ClCompile Include="Source\ECS\Entity.cpp" />
     <ClCompile Include="Source\ECS\MeshComponent.cpp" />

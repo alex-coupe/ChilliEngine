@@ -3,7 +3,7 @@
 Engine::ECS::Entity::Entity(const std::string& name)
 	: m_name(name), m_uuid()
 {
-	m_components.emplace_back(ComponentFactory::MakeTransformComponent({ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f }));
+	m_components.emplace_back(ComponentFactory::MakeTransformComponent());
 }
 
 Engine::ECS::Entity::Entity(const std::string& name, Engine::Utilities::UUID uuid, const rapidjson::Value& components)
@@ -18,28 +18,32 @@ Engine::ECS::Entity::Entity(const std::string& name, Engine::Utilities::UUID uui
 				DirectX::XMFLOAT3 translation = { components[i]["PosX"].GetFloat(),components[i]["PosY"].GetFloat(), components[i]["PosZ"].GetFloat() };
 				DirectX::XMFLOAT3 rotation = { components[i]["RotX"].GetFloat(),components[i]["RotY"].GetFloat(), components[i]["RotZ"].GetFloat() };
 				DirectX::XMFLOAT3 scale = { components[i]["ScaleX"].GetFloat(),components[i]["ScaleY"].GetFloat(), components[i]["ScaleZ"].GetFloat() };
-				m_components.emplace_back(ComponentFactory::MakeTransformComponent(translation, rotation, scale));
+				m_components.emplace_back(std::make_shared<TransformComponent>(translation, rotation, scale));
 				break;
 			}
 			case (int)ComponentTypes::Mesh:
-			{
 				m_components.emplace_back(std::make_shared<MeshComponent>(components[i]["MeshUuid"].GetString()));
 				break;
-			}
 			case (int)ComponentTypes::RigidBody2D:
-			{
 				m_components.emplace_back(std::make_shared<RigidBody2DComponent>((BodyType)components[i]["BodyType"].GetInt(), (bool)components[i]["FixedRotation"].GetInt()));
 				break;
-			}
 			case (int)ComponentTypes::BoxCollider2D:
 			{
 				DirectX::XMFLOAT2 size = { components[i]["SizeX"].GetFloat(),components[i]["SizeY"].GetFloat()};
 				DirectX::XMFLOAT2 offset = { components[i]["OffSetX"].GetFloat(),components[i]["OffSetY"].GetFloat()};
-				m_components.emplace_back(std::make_shared<BoxCollider2D>(size,offset, 
+				m_components.emplace_back(std::make_shared<BoxCollider2DComponent>(size,offset, 
 					components[i]["Density"].GetFloat(), components[i]["Friction"].GetFloat(),
 					components[i]["Restitution"].GetFloat(),components[i]["RestitutionThreshold"].GetFloat()));
 				break;
 			}
+			case (int)ComponentTypes::CircleCollider:
+			{
+				DirectX::XMFLOAT2 offset = { components[i]["OffSetX"].GetFloat(),components[i]["OffSetY"].GetFloat() };
+				m_components.emplace_back(std::make_shared<CircleColliderComponent>(components[i]["Radius"].GetFloat(), offset,
+					components[i]["Density"].GetFloat(), components[i]["Friction"].GetFloat(),
+					components[i]["Restitution"].GetFloat(), components[i]["RestitutionThreshold"].GetFloat()));
+			}
+				break;
 		}
 	}
 }
@@ -106,7 +110,7 @@ void Engine::ECS::Entity::OnSceneStart(std::unique_ptr<b2World>& physicsWorld)
 
 	if (HasComponent(ComponentTypes::BoxCollider2D))
 	{
-		const auto& bc2d = std::static_pointer_cast<Engine::ECS::BoxCollider2D>(GetComponentByType(ComponentTypes::BoxCollider2D));
+		const auto& bc2d = std::static_pointer_cast<Engine::ECS::BoxCollider2DComponent>(GetComponentByType(ComponentTypes::BoxCollider2D));
 		b2PolygonShape boxShape;
 		boxShape.SetAsBox(bc2d->GetSize().x * transform->GetScale().x, 
 			bc2d->GetSize().y * transform->GetScale().y);
@@ -116,6 +120,22 @@ void Engine::ECS::Entity::OnSceneStart(std::unique_ptr<b2World>& physicsWorld)
 		fixtureDef.friction = bc2d->GetFriction();
 		fixtureDef.restitution = bc2d->GetRestitution();;
 		fixtureDef.restitutionThreshold = bc2d->GetRestituitonThreshold();
+		rigidBody->CreateFixture(&fixtureDef);
+	}
+
+	if (HasComponent(ComponentTypes::CircleCollider))
+	{
+		const auto& circleCollider = std::static_pointer_cast<Engine::ECS::CircleColliderComponent>
+			(GetComponentByType(ComponentTypes::CircleCollider));
+		b2CircleShape circleShape;
+		circleShape.m_p.Set(circleCollider->GetOffset().x, circleCollider->GetOffset().y);
+		circleShape.m_radius = transform->GetScale().x * circleCollider->GetRadius();
+		b2FixtureDef fixtureDef;
+		fixtureDef.shape = &circleShape;
+		fixtureDef.density = circleCollider->GetDensity();
+		fixtureDef.friction = circleCollider->GetFriction();
+		fixtureDef.restitution = circleCollider->GetRestitution();;
+		fixtureDef.restitutionThreshold = circleCollider->GetRestituitonThreshold();
 		rigidBody->CreateFixture(&fixtureDef);
 	}
 }
@@ -166,16 +186,16 @@ void Engine::ECS::Entity::AddComponent(ComponentTypes type, ComponentVariables* 
 			m_components.emplace_back(ComponentFactory::MakeMeshComponent());
 			break;
 		case ComponentTypes::RigidBody2D:
-		{
-			m_components.emplace_back(ComponentFactory::MakeRigidBody2DComponent(Engine::ECS::BodyType::Static,false));
+			m_components.emplace_back(ComponentFactory::MakeRigidBody2DComponent());
 			break;
-		}
-
 		case ComponentTypes::BoxCollider2D:
 			m_components.emplace_back(ComponentFactory::MakeBoxCollider2DComponent());
 			break;
+		case ComponentTypes::CircleCollider:
+			m_components.emplace_back(ComponentFactory::MakeCircleColliderComponent());
+			break;
 		
-	}
+		}
 	}
 }
 

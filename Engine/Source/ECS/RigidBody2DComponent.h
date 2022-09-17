@@ -13,7 +13,7 @@ namespace Engine::ECS {
 
 	class CHILLI_API RigidBody2DComponent : public Component {
 	public:
-		RigidBody2DComponent(BodyType type, bool fixedRotation);
+		RigidBody2DComponent(BodyType type = BodyType::Static, bool fixedRotation = false);
 		RigidBody2DComponent(const RigidBody2DComponent& rhs);
 		virtual const std::string Serialize()const override;
 		const BodyType GetBodyType()const;

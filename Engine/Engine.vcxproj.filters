@@ -150,7 +150,10 @@
     <ClInclude Include="Source\ECS\RigidBody2DComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ECS\BoxCollider2D.h">
+    <ClInclude Include="Source\ECS\BoxCollider2DComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ECS\CircleColliderComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -263,10 +266,13 @@
     <ClCompile Include="Source\ECS\RigidBody2DComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\BoxCollider2D.cpp">
+    <ClCompile Include="Source\ECS\BoxCollider2DComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\ECS\CameraComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ECS\CircleColliderComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

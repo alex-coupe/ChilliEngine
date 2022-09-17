@@ -4,11 +4,10 @@
 #include "../Rendering/Renderer.h"
 
 const char* Engine::Gui::GuiManager::assetDropdownList[4] = {"Meshes", "Audio", "Materials", "Scripts"};
-const char* Engine::Gui::GuiManager::componentsList[19] = 
-{ "Mesh","Camera","Light","Script","BoxCollider2D","BoxCollider",
-		"SphereCollider2D","SphereCollider","SpriteCollider","MeshCollider","RigidBody2D",
-		"RigidBody","AudioListener","AudioSource","Sprite","ParticleEmitter","Animation",
-		"Pathfinding","Skybox" };
+const char* Engine::Gui::GuiManager::componentsList[18] = 
+{ "Mesh","Camera","Light","Script","BoxCollider2D","RigidBody2D","CircleCollider",
+	"BoxCollider","CapsuleCollider","MeshCollider","RigidBody","AudioListener","AudioSource",
+	"Sprite","ParticleEmitter","Animation",	"Pathfinding","Skybox" };
 int Engine::Gui::GuiManager::assetDropdownSelected = 0;
 int Engine::Gui::GuiManager::assetFrameSelected = 0;
 int Engine::Gui::GuiManager::hierarchySelected = 0;
@@ -484,7 +483,7 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 					break;
 				case Engine::ECS::ComponentTypes::BoxCollider2D:
 				{
-					auto bc2d = std::static_pointer_cast<Engine::ECS::BoxCollider2D>(component);
+					auto bc2d = std::static_pointer_cast<Engine::ECS::BoxCollider2DComponent>(component);
 					ImGui::BeginChild("BoxCollider 2D", ImVec2(0, 200), true);
 					ImGui::Text("BoxCollider 2D");
 					float* offset[2] = { &bc2d->GetOffset().x,&bc2d->GetOffset().y};
@@ -503,7 +502,26 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 					ImGui::EndChild();
 				}
 				break;
-				
+				case Engine::ECS::ComponentTypes::CircleCollider:
+				{
+					auto circleCollider = std::static_pointer_cast<Engine::ECS::CircleColliderComponent>(component);
+					ImGui::BeginChild("Circle Collider", ImVec2(0, 200), true);
+					ImGui::Text("Circle Collider");
+					float* offset[2] = { &circleCollider->GetOffset().x,&circleCollider->GetOffset().y };
+					ImGui::DragFloat("Radius", &circleCollider->GetRadius(), 0.5f);
+					ImGui::DragFloat2("Offset", offset[0], 0.5f);
+					ImGui::DragFloat("Density", &circleCollider->GetDensity(), 0.01f, 0.0f, 1.0f);
+					ImGui::DragFloat("Friction", &circleCollider->GetFriction(), 0.01f, 0.0f, 1.0f);
+					ImGui::DragFloat("Restitution", &circleCollider->GetRestitution(), 0.01f, 0.0f, 1.0f);
+					ImGui::DragFloat("Restitution Threshold", &circleCollider->GetRestituitonThreshold(), 0.01f, 0.0f);
+					ImGui::Spacing();
+					if (ImGui::Button("Remove Component"))
+					{
+						selectedEntity->RemoveComponent(Engine::ECS::ComponentTypes::RigidBody2D);
+					}
+					ImGui::EndChild();
+				}
+				break;
 			}
 		}
 	}
