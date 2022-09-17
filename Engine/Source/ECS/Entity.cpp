@@ -82,9 +82,37 @@ const std::shared_ptr<Engine::ECS::TransformComponent> Engine::ECS::Entity::GetT
 	return nullptr;
 }
 
-void Engine::ECS::Entity::OnSceneStart(std::unique_ptr<b2World>& physicsWorld)
+void Engine::ECS::Entity::InitPhysics(std::unique_ptr<b2World>& physicsWorld)
 {
 	auto& transform = GetTransformComponent();
+	if (HasComponent(ComponentTypes::RigidBody2D))
+	{
+		auto rigidBody = CreateRigidBody(physicsWorld, transform);
+		if (HasComponent(ComponentTypes::BoxCollider2D))
+		{
+			CreateBoxCollider(rigidBody, transform);
+		}
+
+		if (HasComponent(ComponentTypes::CircleCollider))
+		{
+			CreateCircleCollider(rigidBody, transform);
+		}
+	}
+}
+
+void Engine::ECS::Entity::UpdatePhysics()
+{
+	auto& transform = GetTransformComponent();
+	const auto& rb2d = std::static_pointer_cast<Engine::ECS::RigidBody2DComponent>(GetComponentByType(ComponentTypes::RigidBody2D));
+
+	const auto& position = rb2d->GetBody()->GetPosition();
+	transform->GetTranslation().x = position.x;
+	transform->GetTranslation().y = position.y;
+	transform->GetRotation().z = rb2d->GetBody()->GetAngle();
+}
+
+b2Body* Engine::ECS::Entity::CreateRigidBody(std::unique_ptr<b2World>& physicsWorld, const std::shared_ptr<TransformComponent> transform)
+{
 	const auto& rb2d = std::static_pointer_cast<Engine::ECS::RigidBody2DComponent>(GetComponentByType(ComponentTypes::RigidBody2D));
 	b2BodyDef bodyDef;
 	bodyDef.position.Set(transform->GetTranslation().x, transform->GetTranslation().y);
@@ -107,48 +135,38 @@ void Engine::ECS::Entity::OnSceneStart(std::unique_ptr<b2World>& physicsWorld)
 	auto rigidBody = physicsWorld->CreateBody(&bodyDef);
 	rigidBody->SetFixedRotation(*rb2d->GetFixedRotation());
 	rb2d->SetRigidBody(rigidBody);
-
-	if (HasComponent(ComponentTypes::BoxCollider2D))
-	{
-		const auto& bc2d = std::static_pointer_cast<Engine::ECS::BoxCollider2DComponent>(GetComponentByType(ComponentTypes::BoxCollider2D));
-		b2PolygonShape boxShape;
-		boxShape.SetAsBox(bc2d->GetSize().x * transform->GetScale().x, 
-			bc2d->GetSize().y * transform->GetScale().y);
-		b2FixtureDef fixtureDef;
-		fixtureDef.shape = &boxShape;
-		fixtureDef.density = bc2d->GetDensity();
-		fixtureDef.friction = bc2d->GetFriction();
-		fixtureDef.restitution = bc2d->GetRestitution();;
-		fixtureDef.restitutionThreshold = bc2d->GetRestituitonThreshold();
-		rigidBody->CreateFixture(&fixtureDef);
-	}
-
-	if (HasComponent(ComponentTypes::CircleCollider))
-	{
-		const auto& circleCollider = std::static_pointer_cast<Engine::ECS::CircleColliderComponent>
-			(GetComponentByType(ComponentTypes::CircleCollider));
-		b2CircleShape circleShape;
-		circleShape.m_p.Set(circleCollider->GetOffset().x, circleCollider->GetOffset().y);
-		circleShape.m_radius = transform->GetScale().x * circleCollider->GetRadius();
-		b2FixtureDef fixtureDef;
-		fixtureDef.shape = &circleShape;
-		fixtureDef.density = circleCollider->GetDensity();
-		fixtureDef.friction = circleCollider->GetFriction();
-		fixtureDef.restitution = circleCollider->GetRestitution();;
-		fixtureDef.restitutionThreshold = circleCollider->GetRestituitonThreshold();
-		rigidBody->CreateFixture(&fixtureDef);
-	}
+	return rigidBody;
 }
 
-void Engine::ECS::Entity::OnSceneUpdate()
+void Engine::ECS::Entity::CreateBoxCollider(b2Body* rigidBody, const std::shared_ptr<TransformComponent> transform)
 {
-	auto& transform = GetTransformComponent();
-	const auto& rb2d = std::static_pointer_cast<Engine::ECS::RigidBody2DComponent>(GetComponentByType(ComponentTypes::RigidBody2D));
+	const auto& bc2d = std::static_pointer_cast<Engine::ECS::BoxCollider2DComponent>(GetComponentByType(ComponentTypes::BoxCollider2D));
+	b2PolygonShape boxShape;
+	boxShape.SetAsBox(bc2d->GetSize().x * transform->GetScale().x,
+		bc2d->GetSize().y * transform->GetScale().y);
+	b2FixtureDef fixtureDef;
+	fixtureDef.shape = &boxShape;
+	fixtureDef.density = bc2d->GetDensity();
+	fixtureDef.friction = bc2d->GetFriction();
+	fixtureDef.restitution = bc2d->GetRestitution();;
+	fixtureDef.restitutionThreshold = bc2d->GetRestituitonThreshold();
+	rigidBody->CreateFixture(&fixtureDef);
+}
 
-	const auto& position = rb2d->GetBody()->GetPosition();
-	transform->GetTranslation().x = position.x;
-	transform->GetTranslation().y = position.y;
-	transform->GetRotation().z = rb2d->GetBody()->GetAngle();
+void Engine::ECS::Entity::CreateCircleCollider(b2Body* rigidBody, const std::shared_ptr<TransformComponent> transform)
+{
+	const auto& circleCollider = std::static_pointer_cast<Engine::ECS::CircleColliderComponent>
+		(GetComponentByType(ComponentTypes::CircleCollider));
+	b2CircleShape circleShape;
+	circleShape.m_p.Set(circleCollider->GetOffset().x, circleCollider->GetOffset().y);
+	circleShape.m_radius = transform->GetScale().x * circleCollider->GetRadius();
+	b2FixtureDef fixtureDef;
+	fixtureDef.shape = &circleShape;
+	fixtureDef.density = circleCollider->GetDensity();
+	fixtureDef.friction = circleCollider->GetFriction();
+	fixtureDef.restitution = circleCollider->GetRestitution();;
+	fixtureDef.restitutionThreshold = circleCollider->GetRestituitonThreshold();
+	rigidBody->CreateFixture(&fixtureDef);
 }
 
 const std::vector<std::shared_ptr<Engine::ECS::Component>>& Engine::ECS::Entity::GetComponents()const

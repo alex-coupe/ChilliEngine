@@ -22,9 +22,12 @@ namespace Engine::ECS {
 		const Engine::Utilities::UUID& GetUUID()const;
 		const std::string& GetName()const;
 		const std::shared_ptr<TransformComponent> GetTransformComponent();
-		void OnSceneStart(std::unique_ptr<b2World>& physicsWorld);
-		void OnSceneUpdate();
+		void InitPhysics(std::unique_ptr<b2World>& physicsWorld);
+		void UpdatePhysics();
 	private:
+		b2Body* CreateRigidBody(std::unique_ptr<b2World>& physicsWorld, const std::shared_ptr<TransformComponent> transform);
+		void CreateBoxCollider(b2Body* rigidBody, const std::shared_ptr<TransformComponent> transform);
+		void CreateCircleCollider(b2Body* rigidBody, const std::shared_ptr<TransformComponent> transform);
 		std::string m_name;
 		Engine::Utilities::UUID m_uuid;
 		std::vector<std::shared_ptr<Component>> m_components;
