@@ -91,7 +91,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/SpdLog;$(SolutionDir)Dependencies/RapidJson/Include;$(SolutionDir)Engine/Source;$(SolutionDir)Dependencies/Assimp/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/box2d/include;$(SolutionDir)Dependencies/SpdLog;$(SolutionDir)Dependencies/RapidJson/Include;$(SolutionDir)Engine/Source;$(SolutionDir)Dependencies/Assimp/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -110,7 +110,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/SpdLog;$(SolutionDir)Dependencies/RapidJson/Include;$(SolutionDir)Engine/Source;$(SolutionDir)Dependencies/Assimp/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/box2d/include;$(SolutionDir)Dependencies/SpdLog;$(SolutionDir)Dependencies/RapidJson/Include;$(SolutionDir)Engine/Source;$(SolutionDir)Dependencies/Assimp/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,7 +127,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/SpdLog;$(SolutionDir)Dependencies/RapidJson/Include;$(SolutionDir)Engine/Source;$(SolutionDir)Dependencies/Assimp/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/box2d/include;$(SolutionDir)Dependencies/SpdLog;$(SolutionDir)Dependencies/RapidJson/Include;$(SolutionDir)Engine/Source;$(SolutionDir)Dependencies/Assimp/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -146,7 +146,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/SpdLog;$(SolutionDir)Dependencies/RapidJson/Include;$(SolutionDir)Engine/Source;$(SolutionDir)Dependencies/Assimp/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/box2d/include;$(SolutionDir)Dependencies/SpdLog;$(SolutionDir)Dependencies/RapidJson/Include;$(SolutionDir)Engine/Source;$(SolutionDir)Dependencies/Assimp/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

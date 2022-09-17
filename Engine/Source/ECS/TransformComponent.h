@@ -7,9 +7,11 @@ namespace Engine::ECS {
 
 	class CHILLI_API TransformComponent : public Component {
 	public:
-		TransformComponent(DirectX::XMFLOAT3 translation, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 scale);
+		TransformComponent(DirectX::XMFLOAT3 translation = { 0.0f,0.0f,0.0f }, 
+			DirectX::XMFLOAT3 rotation = {0.0f,0.0f,0.0f}, 
+			DirectX::XMFLOAT3 scale = {1.0f,1.0f,1.0f});
+		TransformComponent(const TransformComponent& rhs);
 		virtual const std::string Serialize()const override;
-		virtual void Update(float dt, bool isEditor)override;
 		DirectX::XMMATRIX GetTransformMatrix()const;
 		DirectX::XMFLOAT3& GetTranslation();
 		DirectX::XMFLOAT3& GetRotation();

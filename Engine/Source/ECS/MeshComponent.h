@@ -7,9 +7,9 @@ namespace Engine::ECS {
 
 	class CHILLI_API MeshComponent : public Component {
 	public:
-		MeshComponent(Engine::Utilities::UUID uuid);
+		MeshComponent(const Engine::Utilities::UUID& uuid);
+		MeshComponent(const MeshComponent& rhs);
 		virtual const std::string Serialize()const override;
-		virtual void Update(float dt, bool isEditor)override;
 		const std::vector<Engine::Rendering::VertexPos>& GetVertices()const;
 		const std::vector<unsigned short>& GetIndices()const;
 		const std::shared_ptr<Engine::ResourceSystem::Mesh>& GetMesh()const;

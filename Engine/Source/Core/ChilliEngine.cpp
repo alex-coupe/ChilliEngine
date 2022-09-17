@@ -6,8 +6,8 @@ void ChilliEngine::Run()
 	{
 		m_timer->ProcessFrame();
 		m_events->ProcessFrame();
-		m_renderer->ProcessFrame();
 		m_projectManager->ProcessFrame();
+		m_renderer->ProcessFrame();
 	}
 }
 

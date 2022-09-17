@@ -14,6 +14,14 @@ Engine::ResourceSystem::Scene::Scene(const std::string& name, Engine::Utilities:
     }
 }
 
+Engine::ResourceSystem::Scene::Scene(const Scene& rhs)
+{
+    for (const auto entity : rhs.GetEntities())
+    {
+        m_entities.emplace_back(std::make_shared<Entity>(*entity));
+    }
+}
+
 const std::string Engine::ResourceSystem::Scene::Serialize()
 {
     std::stringstream ss;
@@ -54,17 +62,31 @@ const Engine::ResourceSystem::SceneState Engine::ResourceSystem::Scene::GetScene
     return m_sceneState;
 }
 
-void Engine::ResourceSystem::Scene::Update(float dt, bool isEditor)
-{
-    for (const auto& entity : m_entities)
-    {
-        entity->Update(dt, isEditor);
-    }
-}
-
 void Engine::ResourceSystem::Scene::SetSceneState(SceneState state)
 {
     m_sceneState = state;
+}
+
+void Engine::ResourceSystem::Scene::onSceneStart()
+{
+    m_b2World = std::make_unique<b2World>(m_gravity);
+    for (const auto& entities : m_entities)
+    {
+        entities->InitPhysics(m_b2World);
+    }
+}
+
+void Engine::ResourceSystem::Scene::onSceneUpdate()
+{
+    m_b2World->Step(m_physicsTimestep, m_velocityIterations, m_positionIterations);
+    for (const auto& entities : m_entities)
+    {
+        entities->UpdatePhysics();
+    }
+}
+
+void Engine::ResourceSystem::Scene::onSceneEnd()
+{
 }
 
 const Engine::Utilities::UUID& Engine::ResourceSystem::Scene::GetUUID() const

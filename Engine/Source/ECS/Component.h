@@ -9,8 +9,13 @@
 namespace Engine::ECS {
 
 	enum class ComponentTypes : int {
-		Transform=-1, Mesh=0, Collider2D=1, Camera=2,PointLight=3,Script=4
+		Transform=-1, Mesh=0,Camera=1,Light=2,Script=3,BoxCollider2D=4, RigidBody2D = 5,
+		CircleCollider= 6, BoxCollider=7,CapsuleCollider=8,MeshCollider=9,
+		RigidBody=10,AudioListener=11,AudioSource=12,Sprite=13,ParticleEmitter=14,Animation=15,
+		Pathfinding=16,Skybox=17
 	};
+
+	struct ComponentVariables {};
 
 	class CHILLI_API Component {
 	public:
@@ -18,7 +23,6 @@ namespace Engine::ECS {
 			m_type(type), m_name(name) {}
 		virtual ~Component() {};
 		virtual const std::string Serialize()const = 0;
-		virtual void Update(float dt, bool isEditor) = 0;
 		ComponentTypes GetComponentType()const
 		{
 			return m_type;
@@ -27,6 +31,7 @@ namespace Engine::ECS {
 		{
 			return m_name;
 		}
+		
 	protected:
 		const std::string m_name;
 		const ComponentTypes m_type;

@@ -4,8 +4,10 @@
 #include "../Rendering/Renderer.h"
 
 const char* Engine::Gui::GuiManager::assetDropdownList[4] = {"Meshes", "Audio", "Materials", "Scripts"};
-const char* Engine::Gui::GuiManager::componentsList[5] = 
-{ "Mesh", "2D Collider", "Camera", "Point Light", "Script"};
+const char* Engine::Gui::GuiManager::componentsList[18] = 
+{ "Mesh","Camera","Light","Script","BoxCollider2D","RigidBody2D","CircleCollider",
+	"BoxCollider","CapsuleCollider","MeshCollider","RigidBody","AudioListener","AudioSource",
+	"Sprite","ParticleEmitter","Animation",	"Pathfinding","Skybox" };
 int Engine::Gui::GuiManager::assetDropdownSelected = 0;
 int Engine::Gui::GuiManager::assetFrameSelected = 0;
 int Engine::Gui::GuiManager::hierarchySelected = 0;
@@ -166,7 +168,7 @@ void Engine::Gui::GuiManager::BuildMenuBar()
 			{
 				if (ImGui::MenuItem("Play"))
 				{
-					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetCurrentScene()->SetSceneState(Engine::ResourceSystem::SceneState::Play);
+					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->SetCurrentSceneState(Engine::ResourceSystem::SceneState::Play);
 				}
 			}
 
@@ -174,7 +176,7 @@ void Engine::Gui::GuiManager::BuildMenuBar()
 			{
 				if (ImGui::MenuItem("Stop"))
 				{
-					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetCurrentScene()->SetSceneState(Engine::ResourceSystem::SceneState::Edit);
+					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->SetCurrentSceneState(Engine::ResourceSystem::SceneState::Edit);
 				}
 			}
 
@@ -182,7 +184,7 @@ void Engine::Gui::GuiManager::BuildMenuBar()
 			{
 				if (ImGui::MenuItem("Simulate"))
 				{
-					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetCurrentScene()->SetSceneState(Engine::ResourceSystem::SceneState::Simulate);
+					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->SetCurrentSceneState(Engine::ResourceSystem::SceneState::Simulate);
 				}
 			}
 
@@ -190,7 +192,7 @@ void Engine::Gui::GuiManager::BuildMenuBar()
 			{
 				if (ImGui::MenuItem("Pause"))
 				{
-					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetCurrentScene()->SetSceneState(Engine::ResourceSystem::SceneState::Pause);
+					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->SetCurrentSceneState(Engine::ResourceSystem::SceneState::Pause);
 				}
 			}
 			ImGui::EndMenu();
@@ -373,7 +375,6 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 	ImGui::Begin("Inspector",0,window_flags);
 	const auto& meshes = Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetAssetsByType(Engine::ResourceSystem::AssetTypes::Mesh);
-	std::shared_ptr<Engine::ECS::MeshComponent> meshComp = nullptr;
 	if (selectedEntity)
 	{
 		if (ImGui::Button("+"))
@@ -388,7 +389,7 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 			{
 				if (ImGui::Selectable(componentsList[i]))
 				{
-					selectedEntity->AddComponent((Engine::ECS::ComponentTypes)i);
+					selectedEntity->AddComponent((Engine::ECS::ComponentTypes)i);					
 				}
 			}
 			ImGui::EndPopup();
@@ -400,9 +401,10 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 			switch (component->GetComponentType())
 			{
 				case Engine::ECS::ComponentTypes::Mesh:
-					meshComp = std::static_pointer_cast<Engine::ECS::MeshComponent>(component);
-					ImGui::BeginChild("Mesh Component", ImVec2(0, 140), true);
-					ImGui::Text("Mesh Component");
+				{
+					const auto& meshComp = std::static_pointer_cast<Engine::ECS::MeshComponent>(component);
+					ImGui::BeginChild("Mesh", ImVec2(0, 140), true);
+					ImGui::Text("Mesh");
 					if (ImGui::Button("Select"))
 						ImGui::OpenPopup("meshDropdown");
 					ImGui::SameLine();
@@ -429,11 +431,45 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 						selectedEntity->RemoveComponent(Engine::ECS::ComponentTypes::Mesh);
 					}
 					ImGui::EndChild();
+				}
+					break;
+				case Engine::ECS::ComponentTypes::RigidBody2D:
+				{
+					const auto& rb2d = std::static_pointer_cast<Engine::ECS::RigidBody2DComponent>(component);
+					ImGui::BeginChild("RigidBody 2D", ImVec2(0, 130), true);
+					ImGui::Text("RigidBody 2D");
+					const char* bodyTypeOptions[] = { "Static","Kinematic","Dynamic" };
+					const char* currentBodyTypeSelected = bodyTypeOptions[(int)rb2d->GetBodyType()];
+					if (ImGui::BeginCombo("Body Type", currentBodyTypeSelected))
+					{
+						for (int i = 0; i <= 2; i++)
+						{
+							bool isSelected = currentBodyTypeSelected == bodyTypeOptions[i];
+							if (ImGui::Selectable(bodyTypeOptions[i], isSelected))
+							{
+								currentBodyTypeSelected = bodyTypeOptions[i];
+								rb2d->SetBodyType((Engine::ECS::BodyType)i);
+							}
+
+							if (isSelected)
+								ImGui::SetItemDefaultFocus();
+						}
+						ImGui::EndCombo();
+					}
+					ImGui::Checkbox("Fixed Rotation", rb2d->GetFixedRotation());
+					ImGui::Spacing();
+					if (ImGui::Button("Remove Component"))
+					{
+						selectedEntity->RemoveComponent(Engine::ECS::ComponentTypes::RigidBody2D);
+					}
+					ImGui::EndChild();
+				}
 					break;
 				case Engine::ECS::ComponentTypes::Transform:
+				{
 					const auto& transformComp = std::static_pointer_cast<Engine::ECS::TransformComponent>(component);
-					ImGui::BeginChild("Transform Component", ImVec2(0, 130), true);
-					ImGui::Text("Transform Component");
+					ImGui::BeginChild("Transform", ImVec2(0, 130), true);
+					ImGui::Text("Transform");
 					ImGui::Spacing();
 					float* transforms[3] = { &transformComp->GetTranslation().x,&transformComp->GetTranslation().y, &transformComp->GetTranslation().z };
 					float* rotation[3] = { &transformComp->GetRotation().x,&transformComp->GetRotation().y, &transformComp->GetRotation().z };
@@ -443,7 +479,49 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 					ImGui::InputFloat3("Scale", scale[0]);
 					ImGui::Spacing();
 					ImGui::EndChild();
+				}
 					break;
+				case Engine::ECS::ComponentTypes::BoxCollider2D:
+				{
+					auto bc2d = std::static_pointer_cast<Engine::ECS::BoxCollider2DComponent>(component);
+					ImGui::BeginChild("BoxCollider 2D", ImVec2(0, 200), true);
+					ImGui::Text("BoxCollider 2D");
+					float* offset[2] = { &bc2d->GetOffset().x,&bc2d->GetOffset().y};
+					float* size[2] = { &bc2d->GetSize().x,&bc2d->GetSize().y };
+					ImGui::DragFloat2("Size", size[0],0.5f);
+					ImGui::DragFloat2("Offset", offset[0],0.5f);
+					ImGui::DragFloat("Density", &bc2d->GetDensity(),0.01f,0.0f,1.0f);
+					ImGui::DragFloat("Friction", &bc2d->GetFriction(), 0.01f, 0.0f, 1.0f);
+					ImGui::DragFloat("Restitution", &bc2d->GetRestitution(), 0.01f, 0.0f, 1.0f);
+					ImGui::DragFloat("Restitution Threshold", &bc2d->GetRestituitonThreshold(), 0.01f, 0.0f);
+					ImGui::Spacing();
+					if (ImGui::Button("Remove Component"))
+					{
+						selectedEntity->RemoveComponent(Engine::ECS::ComponentTypes::RigidBody2D);
+					}
+					ImGui::EndChild();
+				}
+				break;
+				case Engine::ECS::ComponentTypes::CircleCollider:
+				{
+					auto circleCollider = std::static_pointer_cast<Engine::ECS::CircleColliderComponent>(component);
+					ImGui::BeginChild("Circle Collider", ImVec2(0, 200), true);
+					ImGui::Text("Circle Collider");
+					float* offset[2] = { &circleCollider->GetOffset().x,&circleCollider->GetOffset().y };
+					ImGui::DragFloat("Radius", &circleCollider->GetRadius(), 0.5f);
+					ImGui::DragFloat2("Offset", offset[0], 0.5f);
+					ImGui::DragFloat("Density", &circleCollider->GetDensity(), 0.01f, 0.0f, 1.0f);
+					ImGui::DragFloat("Friction", &circleCollider->GetFriction(), 0.01f, 0.0f, 1.0f);
+					ImGui::DragFloat("Restitution", &circleCollider->GetRestitution(), 0.01f, 0.0f, 1.0f);
+					ImGui::DragFloat("Restitution Threshold", &circleCollider->GetRestituitonThreshold(), 0.01f, 0.0f);
+					ImGui::Spacing();
+					if (ImGui::Button("Remove Component"))
+					{
+						selectedEntity->RemoveComponent(Engine::ECS::ComponentTypes::RigidBody2D);
+					}
+					ImGui::EndChild();
+				}
+				break;
 			}
 		}
 	}
