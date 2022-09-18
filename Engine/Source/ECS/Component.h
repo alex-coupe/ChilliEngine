@@ -15,8 +15,6 @@ namespace Engine::ECS {
 		Pathfinding=16,Skybox=17
 	};
 
-	struct ComponentVariables {};
-
 	class CHILLI_API Component {
 	public:
 		Component(ComponentTypes type, const std::string& name) :
