@@ -17,7 +17,6 @@ namespace Engine::ResourceSystem {
 	public:
 		Scene(const std::string& name);
 		Scene(const std::string& name, Engine::Utilities::UUID uuid, const rapidjson::Value& entities);
-		Scene(const Scene& rhs);
 		const std::string Serialize();
 		void AddEntity(const std::string& name);
 		void RemoveEntity(const Engine::Utilities::UUID& uuid);
@@ -29,8 +28,8 @@ namespace Engine::ResourceSystem {
 		void onSceneStart();
 		void onSceneUpdate();
 		void onSceneEnd();
-
 	private:
+		std::vector<std::shared_ptr<Entity>> m_entitiesClone;
 		std::string m_name;
 		SceneState m_sceneState = SceneState::Edit;
 		Engine::Utilities::UUID m_uuid;
