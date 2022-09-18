@@ -14,6 +14,7 @@ namespace Engine::ECS {
 		std::shared_ptr<Component> GetComponentByType(ComponentTypes type);
 		std::shared_ptr<Component> GetComponentByName(const char* name);
 		void AddComponent(ComponentTypes type);
+		void AddComponent(std::shared_ptr<Component> component);
 		const std::vector<std::shared_ptr<Component>>& GetComponents()const;
 		void RemoveComponent(ComponentTypes type);
 		bool HasComponent(ComponentTypes type);
@@ -23,7 +24,7 @@ namespace Engine::ECS {
 		const std::shared_ptr<TransformComponent> GetTransformComponent();
 		void InitPhysics(std::unique_ptr<b2World>& physicsWorld);
 		void UpdatePhysics();
-		static std::shared_ptr<Engine::ECS::Entity> Clone(Entity entity);
+		static std::shared_ptr<Engine::ECS::Entity> Clone(Entity& entity);
 	private:
 		b2Body* CreateRigidBody(std::unique_ptr<b2World>& physicsWorld, const std::shared_ptr<TransformComponent> transform);
 		void CreateBoxCollider(b2Body* rigidBody, const std::shared_ptr<TransformComponent> transform);

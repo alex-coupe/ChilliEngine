@@ -92,14 +92,36 @@ void Engine::ECS::Entity::UpdatePhysics()
 	transform->GetRotation().z = rb2d->GetBody()->GetAngle();
 }
 
-std::shared_ptr<Engine::ECS::Entity> Engine::ECS::Entity::Clone(Entity entity)
+std::shared_ptr<Engine::ECS::Entity> Engine::ECS::Entity::Clone(Entity& entity)
 {
 	auto clone = std::make_shared<Entity>(entity.GetName());
+	clone->RemoveComponent(ComponentTypes::Transform);
 
-/*	for (const auto compo : entity.GetComponents())
+	DirectX::XMFLOAT3 translation;
+	DirectX::XMFLOAT3 rotation;
+	DirectX::XMFLOAT3 scale;
+
+	for (const auto& compo : entity.GetComponents())
 	{
-		entity.m_components.push_back(compo);
-	}*/
+		clone->AddComponent(compo);
+	}
+
+	auto transform = clone->GetTransformComponent();
+
+	translation.x = transform->GetTranslation().x;
+	translation.y = transform->GetTranslation().y;
+	translation.z = transform->GetTranslation().z;
+
+	rotation.x = transform->GetRotation().x;
+	rotation.y = transform->GetRotation().y;
+	rotation.z = transform->GetRotation().z;
+
+	scale.x = transform->GetScale().x;
+	scale.y = transform->GetScale().y;
+	scale.z = transform->GetScale().z;
+
+	clone->RemoveComponent(ComponentTypes::Transform);
+	clone->AddComponent(std::make_shared<TransformComponent>(translation, rotation, scale));
 
 	return clone;
 }
@@ -208,6 +230,11 @@ void Engine::ECS::Entity::AddComponent(ComponentTypes type)
 		
 		}
 	}
+}
+
+void Engine::ECS::Entity::AddComponent(std::shared_ptr<Component> component)
+{
+	m_components.push_back(component);
 }
 
 void Engine::ECS::Entity::RemoveComponent(ComponentTypes type)
