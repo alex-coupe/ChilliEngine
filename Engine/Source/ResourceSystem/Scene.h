@@ -27,7 +27,7 @@ namespace Engine::ResourceSystem {
 		void SetSceneState(SceneState state);
 		void onSceneStart();
 		void onSceneUpdate();
-		void onSceneEnd();
+		void onSceneStop();
 	private:
 		std::vector<std::shared_ptr<Entity>> m_entitiesClone;
 		std::string m_name;

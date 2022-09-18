@@ -18,7 +18,6 @@ namespace Engine::Rendering {
 		Drawable(const std::shared_ptr<Direct3D>& d3d, const std::shared_ptr<Engine::ECS::Entity>& entity);
 		const DirectX::XMMATRIX& GetTransform()const;
 		void Draw()const;
-		void Rebind();
 		void Update();
 	private:
 		std::shared_ptr<Direct3D> m_direct3d;
@@ -29,6 +28,6 @@ namespace Engine::Rendering {
 		std::unique_ptr<Topology> m_topology;
 		std::unique_ptr<IndexBuffer> m_indexBuffer;
 		DirectX::XMMATRIX m_transform = {};
-		const std::shared_ptr<Engine::ECS::Entity> m_entity;
+		const std::shared_ptr<Engine::ECS::Entity>& m_entity;
 	};
 }

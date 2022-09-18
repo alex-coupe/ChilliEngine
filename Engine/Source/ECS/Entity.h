@@ -11,10 +11,9 @@ namespace Engine::ECS {
 	public:
 		Entity(const std::string& name);
 		Entity(const std::string& name, Engine::Utilities::UUID uuid, const rapidjson::Value& components);
-		Entity(const Entity& rhs);
 		std::shared_ptr<Component> GetComponentByType(ComponentTypes type);
 		std::shared_ptr<Component> GetComponentByName(const char* name);
-		void AddComponent(ComponentTypes type, ComponentVariables* vars = {});
+		void AddComponent(ComponentTypes type);
 		const std::vector<std::shared_ptr<Component>>& GetComponents()const;
 		void RemoveComponent(ComponentTypes type);
 		bool HasComponent(ComponentTypes type);
@@ -24,6 +23,7 @@ namespace Engine::ECS {
 		const std::shared_ptr<TransformComponent> GetTransformComponent();
 		void InitPhysics(std::unique_ptr<b2World>& physicsWorld);
 		void UpdatePhysics();
+		static std::shared_ptr<Engine::ECS::Entity> Clone(Entity entity);
 	private:
 		b2Body* CreateRigidBody(std::unique_ptr<b2World>& physicsWorld, const std::shared_ptr<TransformComponent> transform);
 		void CreateBoxCollider(b2Body* rigidBody, const std::shared_ptr<TransformComponent> transform);

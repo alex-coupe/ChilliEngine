@@ -164,16 +164,10 @@ void Engine::ResourceSystem::ProjectManager::SetCurrentSceneState(SceneState sta
     case SceneState::Play:
     case SceneState::Simulate:
         m_currentScene->onSceneStart();
-        //m_currentSceneCopy = std::make_shared<Scene>(*m_currentScene);
         break;
     case SceneState::Edit:
     case SceneState::Pause:
-        m_currentScene->onSceneEnd();
-        if (m_currentSceneCopy != nullptr)
-        {
-            m_currentScene = m_currentSceneCopy;
-            m_currentSceneCopy = nullptr;
-        }
+        m_currentScene->onSceneStop();
         break;
     }
     m_currentScene->SetSceneState(state);

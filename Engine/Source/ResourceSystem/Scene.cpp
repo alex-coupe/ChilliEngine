@@ -83,7 +83,7 @@ void Engine::ResourceSystem::Scene::onSceneUpdate()
     }
 }
 
-void Engine::ResourceSystem::Scene::onSceneEnd()
+void Engine::ResourceSystem::Scene::onSceneStop()
 {
     m_entities.clear();
     m_entities = m_entitiesClone;
