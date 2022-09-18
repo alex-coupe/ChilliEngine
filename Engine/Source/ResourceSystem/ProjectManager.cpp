@@ -93,6 +93,8 @@ void Engine::ResourceSystem::ProjectManager::SaveProject(const std::string& file
 void Engine::ResourceSystem::ProjectManager::NewProject()
 {
     m_scenes.clear();
+    m_assets.clear();
+    m_projectName = "Untitled Project";
     m_scenes.emplace_back(std::make_shared<Scene>("Scene 1"));
     m_currentScene = m_scenes.front();
 }
