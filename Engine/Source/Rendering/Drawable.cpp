@@ -49,16 +49,12 @@ void Engine::Rendering::Drawable::Draw() const
 	}
 }
 
-void Engine::Rendering::Drawable::Rebind()
-{
-}
-
 void Engine::Rendering::Drawable::Update()
 {
 	auto mesh = std::static_pointer_cast<Engine::ECS::MeshComponent>
 		(m_entity->GetComponentByType(Engine::ECS::ComponentTypes::Mesh));
 
-	if (mesh->GetMesh())
+	if (mesh != nullptr)
 	{
 		if (m_indexBuffer == nullptr)
 			m_indexBuffer = std::make_unique<IndexBuffer>(mesh->GetIndices(), m_direct3d);
@@ -68,11 +64,16 @@ void Engine::Rendering::Drawable::Update()
 
 		if (mesh->GetIndices().size() != m_indexBuffer->GetCount())
 		{
-			m_vertexBuffer.release();
-			m_indexBuffer.release();
+			m_vertexBuffer.reset();
+			m_indexBuffer.reset();
 			m_vertexBuffer = std::make_unique<VertexBuffer>(mesh->GetVertices(), m_direct3d);
 			m_indexBuffer = std::make_unique<IndexBuffer>(mesh->GetIndices(), m_direct3d);
 		}
+	}
+	else
+	{
+		m_vertexBuffer.reset();
+		m_indexBuffer.reset();
 	}
 	auto tranformComp = std::static_pointer_cast<Engine::ECS::TransformComponent>(m_entity->GetComponentByType(Engine::ECS::ComponentTypes::Transform));
 	if (tranformComp)

@@ -10,7 +10,7 @@ Engine::ECS::MeshComponent::MeshComponent(const Engine::Utilities::UUID& uuid)
 Engine::ECS::MeshComponent::MeshComponent(const MeshComponent& rhs)
 	:Component(rhs.m_type,rhs.m_name)
 {
-	m_mesh = std::make_shared<Engine::ResourceSystem::Mesh>(*rhs.m_mesh);
+	m_mesh = rhs.m_mesh;
 	m_meshUuid = rhs.m_meshUuid;
 }
 

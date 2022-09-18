@@ -7,6 +7,17 @@ Engine::ECS::BoxCollider2DComponent::BoxCollider2DComponent(DirectX::XMFLOAT2 si
 {
 }
 
+Engine::ECS::BoxCollider2DComponent::BoxCollider2DComponent(BoxCollider2DComponent& rhs)
+	:Component(rhs.m_type, rhs.m_name)
+{
+	m_size = rhs.m_size;
+	m_offset = rhs.m_offset;
+	m_density = rhs.m_density;
+	m_friction = rhs.m_friction;
+	m_restitution = rhs.m_restitution;
+	m_restitutionThreshold = rhs.m_restitutionThreshold;
+}
+
 const std::string Engine::ECS::BoxCollider2DComponent::Serialize() const
 {
 	std::stringstream ss;

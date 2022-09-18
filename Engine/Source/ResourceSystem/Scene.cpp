@@ -14,14 +14,6 @@ Engine::ResourceSystem::Scene::Scene(const std::string& name, Engine::Utilities:
     }
 }
 
-Engine::ResourceSystem::Scene::Scene(const Scene& rhs)
-{
-    for (const auto entity : rhs.GetEntities())
-    {
-        m_entities.emplace_back(std::make_shared<Entity>(*entity));
-    }
-}
-
 const std::string Engine::ResourceSystem::Scene::Serialize()
 {
     std::stringstream ss;
@@ -48,6 +40,10 @@ void Engine::ResourceSystem::Scene::RemoveEntity(const Engine::Utilities::UUID& 
             return rhs->GetUUID() == uuid;
         }); m_entIterator != m_entities.end())
     {
+        for (int i = 0; i < m_entIterator->get()->GetComponents().size(); i++)
+        {
+            m_entIterator->get()->RemoveComponent(m_entIterator->get()->GetComponents()[i]->GetComponentType());
+        }
         m_entities.erase(m_entIterator);
     }
 }
@@ -70,9 +66,11 @@ void Engine::ResourceSystem::Scene::SetSceneState(SceneState state)
 void Engine::ResourceSystem::Scene::onSceneStart()
 {
     m_b2World = std::make_unique<b2World>(m_gravity);
-    for (const auto& entities : m_entities)
+    for (const auto& entity : m_entities)
     {
-        entities->InitPhysics(m_b2World);
+        auto clone = Entity::Clone(*entity);
+        m_entitiesClone.emplace_back(clone);
+        entity->InitPhysics(m_b2World);
     }
 }
 
@@ -85,8 +83,11 @@ void Engine::ResourceSystem::Scene::onSceneUpdate()
     }
 }
 
-void Engine::ResourceSystem::Scene::onSceneEnd()
+void Engine::ResourceSystem::Scene::onSceneStop()
 {
+    m_entities.clear();
+    m_entities = m_entitiesClone;
+    m_entitiesClone.clear();
 }
 
 const Engine::Utilities::UUID& Engine::ResourceSystem::Scene::GetUUID() const

@@ -15,13 +15,12 @@ namespace Engine::ECS {
 		Pathfinding=16,Skybox=17
 	};
 
-	struct ComponentVariables {};
-
 	class CHILLI_API Component {
 	public:
 		Component(ComponentTypes type, const std::string& name) :
 			m_type(type), m_name(name) {}
 		virtual ~Component() {};
+		Component(Component& rhs) : m_type(rhs.m_type),m_name(rhs.m_name) {};
 		virtual const std::string Serialize()const = 0;
 		ComponentTypes GetComponentType()const
 		{

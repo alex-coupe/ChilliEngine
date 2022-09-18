@@ -48,25 +48,6 @@ Engine::ECS::Entity::Entity(const std::string& name, Engine::Utilities::UUID uui
 	}
 }
 
-Engine::ECS::Entity::Entity(const Entity& rhs)
-{
-	for (const auto& component : rhs.GetComponents())
-	{
-		switch (component->GetComponentType())
-		{
-		case ComponentTypes::Mesh:
-			m_components.emplace_back(std::make_shared<MeshComponent>(*(std::static_pointer_cast<MeshComponent>(component))));
-			break;
-		case ComponentTypes::RigidBody2D:
-			m_components.emplace_back(std::make_shared<RigidBody2DComponent>(*(std::static_pointer_cast<RigidBody2DComponent>(component))));
-			break;
-		case ComponentTypes::Transform:
-			m_components.emplace_back(std::make_shared<TransformComponent>(*(std::static_pointer_cast<TransformComponent>(component))));
-			break;
-		}
-	}
-}
-
 const std::string& Engine::ECS::Entity::GetName()const
 {
 	return m_name;
@@ -109,6 +90,40 @@ void Engine::ECS::Entity::UpdatePhysics()
 	transform->GetTranslation().x = position.x;
 	transform->GetTranslation().y = position.y;
 	transform->GetRotation().z = rb2d->GetBody()->GetAngle();
+}
+
+std::shared_ptr<Engine::ECS::Entity> Engine::ECS::Entity::Clone(Entity& entity)
+{
+	auto clone = std::make_shared<Entity>(entity.GetName());
+	clone->RemoveComponent(ComponentTypes::Transform);
+
+	DirectX::XMFLOAT3 translation;
+	DirectX::XMFLOAT3 rotation;
+	DirectX::XMFLOAT3 scale;
+
+	for (const auto& compo : entity.GetComponents())
+	{
+		clone->AddComponent(compo);
+	}
+
+	auto transform = clone->GetTransformComponent();
+
+	translation.x = transform->GetTranslation().x;
+	translation.y = transform->GetTranslation().y;
+	translation.z = transform->GetTranslation().z;
+
+	rotation.x = transform->GetRotation().x;
+	rotation.y = transform->GetRotation().y;
+	rotation.z = transform->GetRotation().z;
+
+	scale.x = transform->GetScale().x;
+	scale.y = transform->GetScale().y;
+	scale.z = transform->GetScale().z;
+
+	clone->RemoveComponent(ComponentTypes::Transform);
+	clone->AddComponent(std::make_shared<TransformComponent>(translation, rotation, scale));
+
+	return clone;
 }
 
 b2Body* Engine::ECS::Entity::CreateRigidBody(std::unique_ptr<b2World>& physicsWorld, const std::shared_ptr<TransformComponent> transform)
@@ -192,7 +207,7 @@ bool Engine::ECS::Entity::HasComponent(ComponentTypes type)
 	return contains != m_components.cend();
 }
 
-void Engine::ECS::Entity::AddComponent(ComponentTypes type, ComponentVariables* vars)
+void Engine::ECS::Entity::AddComponent(ComponentTypes type)
 {
 	if (auto contains = std::find_if(m_components.cbegin(), m_components.cend(), [type](const std::shared_ptr<Component> rhs) {
 		return rhs->GetComponentType() == type;
@@ -215,6 +230,11 @@ void Engine::ECS::Entity::AddComponent(ComponentTypes type, ComponentVariables* 
 		
 		}
 	}
+}
+
+void Engine::ECS::Entity::AddComponent(std::shared_ptr<Component> component)
+{
+	m_components.push_back(component);
 }
 
 void Engine::ECS::Entity::RemoveComponent(ComponentTypes type)

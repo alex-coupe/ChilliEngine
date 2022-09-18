@@ -9,6 +9,7 @@ namespace Engine::ECS {
 		BoxCollider2DComponent(DirectX::XMFLOAT2 size = { 1.0f,1.0f },
 			DirectX::XMFLOAT2 offset = { 0.0f,0.0f }, float density = 1.0f,float friction = 0.5f,
 			float restitution = 0.0f, float restThreshold = 0.5f);
+		BoxCollider2DComponent(BoxCollider2DComponent& rhs);
 		virtual const std::string Serialize()const override;
 		DirectX::XMFLOAT2& GetSize();
 		DirectX::XMFLOAT2& GetOffset();
