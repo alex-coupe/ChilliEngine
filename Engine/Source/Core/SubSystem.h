@@ -5,7 +5,7 @@ namespace Engine::Core {
 
 	enum class SystemTypes {
 		Timer = 1, Events = 2, Renderer = 3, ProjectManager = 4, GuiManager = 5, Physics = 6,
-		Scripting = 7, Animation = 8, Sound = 9, Networking = 10
+		ScriptingEngine = 7, Animation = 8, Sound = 9, Networking = 10
 	};
 
 	class CHILLI_API SubSystem {

@@ -92,15 +92,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>DEBUG;CHILLI_ENGINE;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\box2d\include;$(SolutionDir)Dependencies\Nfd\include;$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Mono\include\;$(SolutionDir)Dependencies\box2d\include;$(SolutionDir)Dependencies\Nfd\include;$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\box2d\bin\Debug;$(SolutionDir)Dependencies/Nfd;$(SolutionDir)Dependencies/Assimp</AdditionalLibraryDirectories>
-      <AdditionalDependencies>box2d.lib;nfd.lib;zlib.lib;assimp-vc142-mt.lib;IrrXML.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\mono\lib\Debug\;$(SolutionDir)Dependencies\box2d\bin\Debug;$(SolutionDir)Dependencies/Nfd;$(SolutionDir)Dependencies/Assimp</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mono-2.0-sgen.lib;box2d.lib;nfd.lib;zlib.lib;assimp-vc142-mt.lib;IrrXML.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/NODEFAULTLIB:MSVCRT %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
@@ -112,7 +112,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>CHILLI_ENGINE;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\box2d\include;$(SolutionDir)Dependencies\Nfd\include;$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Mono\include\;$(SolutionDir)Dependencies\box2d\include;$(SolutionDir)Dependencies\Nfd\include;$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -121,8 +121,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\Spdlog;$(SolutionDir)Dependencies\box2d\bin\Release;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>box2d.lib;spdlog.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Dependencies\mono\lib\Release;$(SolutionDir)Dependencies\Spdlog;$(SolutionDir)Dependencies\box2d\bin\Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mono-2.0-sgen.lib;box2d.lib;spdlog.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/NODEFAULTLIB:MSVCRT %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
@@ -132,15 +132,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>DEBUG;CHILLI_ENGINE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\box2d\include;$(SolutionDir)Dependencies\Nfd\include;$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Mono\include\;$(SolutionDir)Dependencies\box2d\include;$(SolutionDir)Dependencies\Nfd\include;$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\box2d\bin\Debug;$(SolutionDir)Dependencies/Nfd;$(SolutionDir)Dependencies/Assimp</AdditionalLibraryDirectories>
-      <AdditionalDependencies>box2d.lib;nfd.lib;zlib.lib;assimp-vc142-mt.lib;IrrXML.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\mono\lib\Debug\;$(SolutionDir)Dependencies\box2d\bin\Debug;$(SolutionDir)Dependencies/Nfd;$(SolutionDir)Dependencies/Assimp</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mono-2.0-sgen.lib;box2d.lib;nfd.lib;zlib.lib;assimp-vc142-mt.lib;IrrXML.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/NODEFAULTLIB:MSVCRT %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
@@ -152,7 +152,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>CHILLI_ENGINE;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\box2d\include;$(SolutionDir)Dependencies\Nfd\include;$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Mono\include\;$(SolutionDir)Dependencies\box2d\include;$(SolutionDir)Dependencies\Nfd\include;$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -161,8 +161,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\Spdlog;$(SolutionDir)Dependencies\box2d\bin\Release;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>box2d.lib;spdlog.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Dependencies\mono\lib\Release;$(SolutionDir)Dependencies\Spdlog;$(SolutionDir)Dependencies\box2d\bin\Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mono-2.0-sgen.lib;box2d.lib;spdlog.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/NODEFAULTLIB:MSVCRT %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
@@ -212,6 +212,7 @@
     <ClInclude Include="Source\ResourceSystem\Mesh.h" />
     <ClInclude Include="Source\ResourceSystem\Scene.h" />
     <ClInclude Include="Source\ResourceSystem\ProjectManager.h" />
+    <ClInclude Include="Source\Scripting\ScriptingEngine.h" />
     <ClInclude Include="Source\Utilities\Utils.h" />
     <ClInclude Include="Source\Utilities\UUID.h" />
   </ItemGroup>
@@ -254,6 +255,7 @@
     <ClCompile Include="Source\ResourceSystem\Mesh.cpp" />
     <ClCompile Include="Source\ResourceSystem\Scene.cpp" />
     <ClCompile Include="Source\ResourceSystem\ProjectManager.cpp" />
+    <ClCompile Include="Source\Scripting\ScriptingEngine.cpp" />
     <ClCompile Include="Source\Utilities\UUID.cpp" />
   </ItemGroup>
   <ItemGroup>
