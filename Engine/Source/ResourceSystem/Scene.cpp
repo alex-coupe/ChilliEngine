@@ -66,6 +66,7 @@ void Engine::ResourceSystem::Scene::SetSceneState(SceneState state)
 void Engine::ResourceSystem::Scene::onSceneStart()
 {
     m_b2World = std::make_unique<b2World>(m_gravity);
+    m_scriptEngine = std::make_unique<Scripting::ScriptEngine>();
     for (const auto& entity : m_entities)
     {
         auto clone = Entity::Clone(*entity);
@@ -76,6 +77,7 @@ void Engine::ResourceSystem::Scene::onSceneStart()
 
 void Engine::ResourceSystem::Scene::onSceneUpdate()
 {
+    m_scriptEngine->RunScripts();
     m_b2World->Step(m_physicsTimestep, m_velocityIterations, m_positionIterations);
     for (const auto& entities : m_entities)
     {

@@ -116,6 +116,9 @@ void Engine::ResourceSystem::ProjectManager::AddAsset(const std::filesystem::pat
         case AssetTypes::Mesh:
             m_assets.emplace_back(std::make_shared<Mesh>(filename, Engine::Utilities::UUID()));
             break;
+        case AssetTypes::Script:
+            m_assets.emplace_back(std::make_shared<Script>(filename, Engine::Utilities::UUID()));
+            break;
         default:
             break;
     }

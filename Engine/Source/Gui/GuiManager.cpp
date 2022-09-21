@@ -66,7 +66,7 @@ void Engine::Gui::GuiManager::BuildScenePreviewWindow(Engine::Rendering::Rendere
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 	ImGui::Begin("Scene Preview", 0, window_flags);
 	ImGui::Image(renderer->GetFrameBuffer()->GetShaderResourceView().Get(), ImVec2(1200, 620));
-	if (ImGui::IsMouseDown(ImGuiMouseButton_Right) && ImGui::IsWindowHovered() 
+	if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsWindowHovered() 
 		&& Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>
 		()->GetCurrentScene()->GetSceneState() == Engine::ResourceSystem::SceneState::Edit)
 	{
@@ -227,17 +227,17 @@ void Engine::Gui::GuiManager::BuildAssetManager()
 				nfdchar_t* outPath = NULL;
 				nfdresult_t result = NFD_ERROR;
 				switch (assetDropdownSelected) {
-				case 0:
+				case (int)Engine::ResourceSystem::AssetTypes::Mesh:
 					result = NFD_OpenDialog("gltf,fbx", NULL, &outPath);
 					break;
-				case 1:
+				case (int)Engine::ResourceSystem::AssetTypes::Audio:
 					result = NFD_OpenDialog("wav,mp3", NULL, &outPath);
 					break;
-				case 2:
+				case (int)Engine::ResourceSystem::AssetTypes::Material:
 					result = NFD_OpenDialog("png,jpg,jpeg,bmp", NULL, &outPath);
 					break;
-				case 3:
-					result = NFD_OpenDialog("cs", NULL, &outPath);
+				case (int)Engine::ResourceSystem::AssetTypes::Script:
+					result = NFD_OpenDialog("dll,exe", NULL, &outPath);
 					break;
 				}
 

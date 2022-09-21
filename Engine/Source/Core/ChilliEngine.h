@@ -8,13 +8,11 @@
 #include "../Gui/GuiManager.h"
 #include "../ResourceSystem/ProjectManager.h"
 #include "../Rendering/Renderer.h"
-#include "../Scripting/ScriptingEngine.h"
 
 using namespace Engine::Core;
 using namespace Engine::Rendering;
 using namespace Engine::ResourceSystem;
 using namespace Engine::Gui;
-using namespace Engine::Scripting;
 
 class CHILLI_API ChilliEngine {
 
@@ -32,5 +30,4 @@ private:
 	std::unique_ptr<Window> m_window;
 	std::shared_ptr<ProjectManager> m_projectManager;
 	std::shared_ptr<GuiManager> m_guiManager;
-	std::shared_ptr<ScriptingEngine> m_scriptingEngine;
 };

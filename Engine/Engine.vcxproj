@@ -121,8 +121,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)\Dependencies\mono\lib\Release;$(SolutionDir)Dependencies\Spdlog;$(SolutionDir)Dependencies\box2d\bin\Release</AdditionalLibraryDirectories>
-      <AdditionalDependencies>mono-2.0-sgen.lib;box2d.lib;spdlog.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Dependencies\mono\lib\Release;$(SolutionDir)Dependencies\box2d\bin\Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mono-2.0-sgen.lib;box2d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/NODEFAULTLIB:MSVCRT %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
@@ -161,8 +161,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)\Dependencies\mono\lib\Release;$(SolutionDir)Dependencies\Spdlog;$(SolutionDir)Dependencies\box2d\bin\Release</AdditionalLibraryDirectories>
-      <AdditionalDependencies>mono-2.0-sgen.lib;box2d.lib;spdlog.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Dependencies\mono\lib\Release;$(SolutionDir)Dependencies\box2d\bin\Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mono-2.0-sgen.lib;box2d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/NODEFAULTLIB:MSVCRT %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
@@ -183,6 +183,7 @@
     <ClInclude Include="Source\ECS\Entity.h" />
     <ClInclude Include="Source\ECS\MeshComponent.h" />
     <ClInclude Include="Source\ECS\RigidBody2DComponent.h" />
+    <ClInclude Include="Source\ECS\ScriptComponent.h" />
     <ClInclude Include="Source\ECS\TransformComponent.h" />
     <ClInclude Include="Source\Gui\GuiManager.h" />
     <ClInclude Include="Source\Gui\ImGui\imconfig.h" />
@@ -212,7 +213,8 @@
     <ClInclude Include="Source\ResourceSystem\Mesh.h" />
     <ClInclude Include="Source\ResourceSystem\Scene.h" />
     <ClInclude Include="Source\ResourceSystem\ProjectManager.h" />
-    <ClInclude Include="Source\Scripting\ScriptingEngine.h" />
+    <ClInclude Include="Source\ResourceSystem\Script.h" />
+    <ClInclude Include="Source\Scripting\ScriptEngine.h" />
     <ClInclude Include="Source\Utilities\Utils.h" />
     <ClInclude Include="Source\Utilities\UUID.h" />
   </ItemGroup>
@@ -255,7 +257,8 @@
     <ClCompile Include="Source\ResourceSystem\Mesh.cpp" />
     <ClCompile Include="Source\ResourceSystem\Scene.cpp" />
     <ClCompile Include="Source\ResourceSystem\ProjectManager.cpp" />
-    <ClCompile Include="Source\Scripting\ScriptingEngine.cpp" />
+    <ClCompile Include="Source\ResourceSystem\Script.cpp" />
+    <ClCompile Include="Source\Scripting\ScriptEngine.cpp" />
     <ClCompile Include="Source\Utilities\UUID.cpp" />
   </ItemGroup>
   <ItemGroup>

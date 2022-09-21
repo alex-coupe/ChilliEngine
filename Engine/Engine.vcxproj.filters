@@ -156,7 +156,13 @@
     <ClInclude Include="Source\ECS\CircleColliderComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Scripting\ScriptingEngine.h">
+    <ClInclude Include="Source\Scripting\ScriptEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ResourceSystem\Script.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ECS\ScriptComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -278,7 +284,10 @@
     <ClCompile Include="Source\ECS\CircleColliderComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scripting\ScriptingEngine.cpp">
+    <ClCompile Include="Source\Scripting\ScriptEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ResourceSystem\Script.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
