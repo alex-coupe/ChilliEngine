@@ -11,7 +11,7 @@ namespace Engine::Core {
 	public:
 		Timer();
 		void ProcessFrame()override;
-		int GetSystemType()const override;
+		static SystemType GetSystemType();
 		const float GetDeltaTime()const;
 		const float GetElapsedTime()const;
 	private:

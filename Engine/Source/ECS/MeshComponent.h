@@ -15,7 +15,7 @@ namespace Engine::ECS {
 		const std::shared_ptr<Engine::ResourceSystem::Mesh>& GetMesh()const;
 		void SetMesh(std::shared_ptr<Engine::ResourceSystem::Mesh> mesh);
 	private:
-		std::shared_ptr<Engine::ResourceSystem::Mesh> m_mesh;
+		std::shared_ptr<Engine::ResourceSystem::Mesh> m_mesh = nullptr;
 		Engine::Utilities::UUID m_meshUuid;
 	};
 }

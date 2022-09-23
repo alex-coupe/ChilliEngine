@@ -6,6 +6,12 @@ Engine::ResourceSystem::ProjectManager::ProjectManager()
 {
     m_scenes.emplace_back(std::make_shared<Scene>("Scene 1"));
     m_currentScene = m_scenes.front();
+    m_scriptEngine = std::make_unique<Scripting::ScriptEngine>();
+}
+
+const std::vector<std::string>& Engine::ResourceSystem::ProjectManager::GetAvailableScripts()const
+{
+    return m_scriptEngine->GetAvailableClasses();
 }
 
 void Engine::ResourceSystem::ProjectManager::LoadProject(const std::string& filename)
@@ -168,6 +174,7 @@ void Engine::ResourceSystem::ProjectManager::SetCurrentSceneState(SceneState sta
     switch (state) {
     case SceneState::Play:
     case SceneState::Simulate:
+        m_scriptEngine->SceneStart();
         m_currentScene->onSceneStart();
         break;
     case SceneState::Edit:
@@ -209,14 +216,16 @@ std::vector<std::shared_ptr<Engine::ECS::Component>> Engine::ResourceSystem::Pro
     }
     return components;
 }
-
-int Engine::ResourceSystem::ProjectManager::GetSystemType() const
+Engine::Core::SystemType Engine::ResourceSystem::ProjectManager::GetSystemType()
 {
-    return static_cast<int>(Engine::Core::SystemTypes::ProjectManager);
+    return Engine::Core::SystemType::ProjectManager;
 }
 
 void Engine::ResourceSystem::ProjectManager::ProcessFrame()
 {
     if (m_currentScene->GetSceneState() == SceneState::Play || m_currentScene->GetSceneState() == SceneState::Simulate)
+    {
+        m_scriptEngine->SceneUpdate();
         m_currentScene->onSceneUpdate();
+    }
 }

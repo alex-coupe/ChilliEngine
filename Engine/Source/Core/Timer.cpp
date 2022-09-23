@@ -16,9 +16,9 @@ void Engine::Core::Timer::ProcessFrame()
 	m_deltaTime = deltaMilli.count();
 }
 
-int Engine::Core::Timer::GetSystemType()const
+Engine::Core::SystemType Engine::Core::Timer::GetSystemType()
 {
-	return static_cast<int>(SystemTypes::Timer);
+	return SystemType::Timer;
 }
 
 const float Engine::Core::Timer::GetDeltaTime()const

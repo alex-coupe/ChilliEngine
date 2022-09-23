@@ -85,11 +85,13 @@ void Engine::ECS::Entity::UpdatePhysics()
 {
 	auto& transform = GetTransformComponent();
 	const auto& rb2d = std::static_pointer_cast<Engine::ECS::RigidBody2DComponent>(GetComponentByType(ComponentTypes::RigidBody2D));
-
-	const auto& position = rb2d->GetBody()->GetPosition();
-	transform->GetTranslation().x = position.x;
-	transform->GetTranslation().y = position.y;
-	transform->GetRotation().z = rb2d->GetBody()->GetAngle();
+	if (rb2d)
+	{
+		const auto& position = rb2d->GetBody()->GetPosition();
+		transform->GetTranslation().x = position.x;
+		transform->GetTranslation().y = position.y;
+		transform->GetRotation().z = rb2d->GetBody()->GetAngle();
+	}
 }
 
 std::shared_ptr<Engine::ECS::Entity> Engine::ECS::Entity::Clone(Entity& entity)
@@ -226,6 +228,9 @@ void Engine::ECS::Entity::AddComponent(ComponentTypes type)
 			break;
 		case ComponentTypes::CircleCollider:
 			m_components.emplace_back(ComponentFactory::MakeCircleColliderComponent());
+			break;
+		case ComponentTypes::Script:
+			m_components.emplace_back(ComponentFactory::MakeScriptComponent());
 			break;
 		
 		}

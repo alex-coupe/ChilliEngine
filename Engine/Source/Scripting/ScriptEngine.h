@@ -7,19 +7,23 @@
 #include "../Utilities/UUID.h"
 #include "../Core/DependencyResolver.h"
 #include "../ResourceSystem/Script.h"
+#include "ScriptApi.h"
 
 namespace Engine::Scripting {
 	class CHILLI_API ScriptEngine {
 	public:
 		ScriptEngine();
-		void LoadAssembly(Engine::Utilities::UUID& uuid);
-		void RunScripts()const;
-		void PrintAssemblyTypes(MonoAssembly* assembly);
-		static void TestPrint(MonoString* string);
+		void SceneStart()const;
+		void SceneUpdate()const;
+		const std::vector<std::string>& GetAvailableClasses()const;
 		~ScriptEngine();
 	private:
+		void BuildAvailableClasses();
+		std::vector<std::string> m_availableClasses;
 		MonoDomain* m_domain = nullptr;
 		MonoDomain* m_appDomain = nullptr;
-		std::vector<MonoAssembly*> m_assemblies;
+		MonoImage* m_applicationScriptsImage = nullptr;
+		MonoAssembly* m_chilliCoreAssembly = nullptr;
+		MonoAssembly* m_applicationScriptsAssembly = nullptr;
 	};
 }

@@ -28,10 +28,12 @@ namespace Engine::ResourceSystem {
 		void SetCurrentSceneState(SceneState state);
 		std::shared_ptr<Asset> GetAssetByUUID(Engine::Utilities::UUID& uuid);
 		std::vector<std::shared_ptr<Asset>> GetAssetsByType(AssetTypes type);
+		const std::vector<std::string>& GetAvailableScripts()const;
 		std::vector<std::shared_ptr<Engine::ECS::Component>> GetCurrentSceneComponentsByType(Engine::ECS::ComponentTypes type);
-		virtual int GetSystemType()const override;
+		static Engine::Core::SystemType GetSystemType();
 		virtual void ProcessFrame()override;
 	private:
+		std::unique_ptr<Engine::Scripting::ScriptEngine> m_scriptEngine = nullptr;
 		std::vector<std::shared_ptr<Scene>> m_scenes;
 		std::shared_ptr<Scene> m_currentSceneCopy = nullptr;
 		std::vector<std::shared_ptr<Asset>> m_assets;

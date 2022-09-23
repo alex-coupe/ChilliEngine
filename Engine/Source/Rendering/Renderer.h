@@ -18,7 +18,7 @@ namespace Engine::Rendering {
 		Renderer& operator=(const Renderer&) = delete;
 		Renderer(Renderer&&)noexcept = default;
 		const DirectX::XMMATRIX& GetProjectionMatrix()const;
-		int GetSystemType() const override;
+		static SystemType GetSystemType();
 		const std::unique_ptr<FrameBuffer>& GetFrameBuffer()const;
 		bool Init();
 		const std::unique_ptr<Camera>& GetEditorCamera();

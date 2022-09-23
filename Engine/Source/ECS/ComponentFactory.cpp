@@ -1,9 +1,8 @@
 #include "ComponentFactory.h"
 
-std::shared_ptr<Engine::ECS::MeshComponent> 
-Engine::ECS::ComponentFactory::MakeMeshComponent()
+std::shared_ptr<Engine::ECS::MeshComponent> Engine::ECS::ComponentFactory::MakeMeshComponent()
 {
-	return std::make_shared<MeshComponent>("Mesh");
+	return std::make_shared<MeshComponent>("");
 }
 
 std::shared_ptr<Engine::ECS::BoxCollider2DComponent> Engine::ECS::ComponentFactory::MakeBoxCollider2DComponent()
@@ -24,4 +23,9 @@ std::shared_ptr<Engine::ECS::TransformComponent>Engine::ECS::ComponentFactory::M
 std::shared_ptr<Engine::ECS::RigidBody2DComponent>Engine::ECS::ComponentFactory::MakeRigidBody2DComponent()
 {
 	return std::make_shared<RigidBody2DComponent>();
+}
+
+std::shared_ptr<Engine::ECS::ScriptComponent> Engine::ECS::ComponentFactory::MakeScriptComponent()
+{
+	return std::make_shared<ScriptComponent>("");
 }

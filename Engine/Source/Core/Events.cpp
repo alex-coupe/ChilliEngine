@@ -45,9 +45,9 @@ Engine::Core::Events::~Events()
 	}
 }
 
-int Engine::Core::Events::GetSystemType()const
+Engine::Core::SystemType Engine::Core::Events::GetSystemType()
 {
-	return static_cast<int>(SystemTypes::Events);
+	return SystemType::Events;
 }
 
 bool Engine::Core::Events::GetInWindow() const

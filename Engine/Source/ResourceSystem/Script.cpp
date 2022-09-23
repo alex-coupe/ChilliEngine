@@ -34,7 +34,6 @@ char* Engine::ResourceSystem::Script::ReadBytes(const std::filesystem::path& fil
 
     if (!stream)
     {
-        // Failed to open the file
         return nullptr;
     }
 
@@ -44,7 +43,6 @@ char* Engine::ResourceSystem::Script::ReadBytes(const std::filesystem::path& fil
 
     if (size == 0)
     {
-        // File is empty
         return nullptr;
     }
 

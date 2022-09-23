@@ -4,15 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{554E9689-7D32-43C1-9538-F98EF268CA47}</ProjectGuid>
+    <ProjectGuid>{3030F093-2356-49D8-AC00-C81E37AE12A0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ChilliScriptCore</RootNamespace>
-    <AssemblyName>ChilliScriptCore</AssemblyName>
+    <RootNamespace>ApplicationScripts</RootNamespace>
+    <AssemblyName>ApplicationScripts</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,12 +42,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Source\Engine.cs" />
-    <Compile Include="Source\Entity.cs" />
-    <Compile Include="Source\Input.cs" />
-    <Compile Include="Source\InternalCalls.cs" />
-    <Compile Include="Source\KeyCode.cs" />
-    <Compile Include="Source\Vector2.cs" />
+    <Compile Include="..\Application\Assets\Scripts\Test.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ChilliScriptCore\ChilliScriptCore.csproj">
+      <Project>{554e9689-7d32-43c1-9538-f98ef268ca47}</Project>
+      <Name>ChilliScriptCore</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

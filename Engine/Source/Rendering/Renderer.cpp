@@ -33,9 +33,9 @@ const DirectX::XMMATRIX& Engine::Rendering::Renderer::GetProjectionMatrix() cons
 	return m_projMatrix;
 }
 
-int Engine::Rendering::Renderer::GetSystemType()const
+Engine::Core::SystemType Engine::Rendering::Renderer::GetSystemType()
 {
-    return static_cast<int>(Engine::Core::SystemTypes::Renderer);
+    return Engine::Core::SystemType::Renderer;
 	
 }
 

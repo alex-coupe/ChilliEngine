@@ -212,6 +212,7 @@
     <ClInclude Include="Source\ResourceSystem\Scene.h" />
     <ClInclude Include="Source\ResourceSystem\ProjectManager.h" />
     <ClInclude Include="Source\ResourceSystem\Script.h" />
+    <ClInclude Include="Source\Scripting\ScriptApi.h" />
     <ClInclude Include="Source\Scripting\ScriptEngine.h" />
     <ClInclude Include="Source\Utilities\Utils.h" />
     <ClInclude Include="Source\Utilities\UUID.h" />
@@ -230,6 +231,7 @@
     <ClCompile Include="Source\ECS\Entity.cpp" />
     <ClCompile Include="Source\ECS\MeshComponent.cpp" />
     <ClCompile Include="Source\ECS\RigidBody2DComponent.cpp" />
+    <ClCompile Include="Source\ECS\ScriptComponent.cpp" />
     <ClCompile Include="Source\ECS\TransformComponent.cpp" />
     <ClCompile Include="Source\Gui\GuiManager.cpp" />
     <ClCompile Include="Source\Gui\ImGui\imgui.cpp" />
@@ -256,6 +258,7 @@
     <ClCompile Include="Source\ResourceSystem\Scene.cpp" />
     <ClCompile Include="Source\ResourceSystem\ProjectManager.cpp" />
     <ClCompile Include="Source\ResourceSystem\Script.cpp" />
+    <ClCompile Include="Source\Scripting\ScriptApi.cpp" />
     <ClCompile Include="Source\Scripting\ScriptEngine.cpp" />
     <ClCompile Include="Source\Utilities\UUID.cpp" />
   </ItemGroup>

@@ -36,7 +36,6 @@ namespace Engine::ResourceSystem {
 		Engine::Utilities::UUID m_uuid;
 		std::vector<std::shared_ptr<Entity>> m_entities;
 		std::unique_ptr<b2World> m_b2World = nullptr;
-		std::unique_ptr<Engine::Scripting::ScriptEngine> m_scriptEngine = nullptr;
 		const float m_physicsTimestep = 1.0f / 60.0f;
 		const int m_velocityIterations = 6;
 		const int m_positionIterations = 2;

@@ -237,7 +237,7 @@ void Engine::Gui::GuiManager::BuildAssetManager()
 					result = NFD_OpenDialog("png,jpg,jpeg,bmp", NULL, &outPath);
 					break;
 				case (int)Engine::ResourceSystem::AssetTypes::Script:
-					result = NFD_OpenDialog("dll,exe", NULL, &outPath);
+					result = NFD_OpenDialog("cs,dll", NULL, &outPath);
 					break;
 				}
 
@@ -375,6 +375,8 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 	ImGui::Begin("Inspector",0,window_flags);
 	const auto& meshes = Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetAssetsByType(Engine::ResourceSystem::AssetTypes::Mesh);
+	const auto& scripts = Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetAvailableScripts();
+
 	if (selectedEntity)
 	{
 		if (ImGui::Button("+"))
@@ -518,6 +520,39 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 					if (ImGui::Button("Remove Component"))
 					{
 						selectedEntity->RemoveComponent(Engine::ECS::ComponentTypes::RigidBody2D);
+					}
+					ImGui::EndChild();
+				}
+				break;
+				case Engine::ECS::ComponentTypes::Script:
+				{
+					const auto& scriptComp = std::static_pointer_cast<Engine::ECS::ScriptComponent>(component);
+					ImGui::BeginChild("Script", ImVec2(0, 140), true);
+					ImGui::Text("Script");
+					if (ImGui::Button("Select"))
+						ImGui::OpenPopup("scriptDropdown");
+					ImGui::SameLine();
+					ImGui::TextUnformatted(scriptComp->GetScriptName() == "" ? "<None>" :
+						scriptComp->GetScriptName().c_str());
+					if (ImGui::BeginPopup("scriptDropdown"))
+					{
+						ImGui::Text("Scripts");
+						ImGui::Separator();
+						for (const auto& script : scripts)
+						{
+							if (ImGui::Selectable(script.c_str()))
+							{
+								scriptComp->SetScript(script);
+							}
+						}
+						ImGui::EndPopup();
+					}
+					ImGui::Spacing();
+					ImGui::Text("Material");
+					ImGui::Spacing();
+					if (ImGui::Button("Remove Component"))
+					{
+						selectedEntity->RemoveComponent(Engine::ECS::ComponentTypes::Mesh);
 					}
 					ImGui::EndChild();
 				}

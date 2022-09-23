@@ -4,6 +4,7 @@
 #include "RigidBody2DComponent.h"
 #include "BoxCollider2DComponent.h"
 #include "CircleColliderComponent.h"
+#include "ScriptComponent.h"
 
 namespace Engine::ECS {
 	class CHILLI_API ComponentFactory {
@@ -13,6 +14,7 @@ namespace Engine::ECS {
 		static std::shared_ptr<CircleColliderComponent> MakeCircleColliderComponent();
 		static std::shared_ptr<TransformComponent> MakeTransformComponent();
 		static std::shared_ptr<RigidBody2DComponent> MakeRigidBody2DComponent();
+		static std::shared_ptr<ScriptComponent> MakeScriptComponent();
 	};
 
 } 
