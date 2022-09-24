@@ -14,8 +14,8 @@ namespace Chilli {
 		const std::vector<VertexPos>& GetVertices()const;
 		const std::vector<unsigned short>& GetIndices()const;
 		const std::shared_ptr<Mesh> GetMesh()const;
-		void SetMesh(std::shared_ptr<Mesh> mesh);
+		void SetMesh(UUID meshUuid);
 	private:
-		std::shared_ptr<Mesh> m_mesh = nullptr;
+		UUID m_meshUuid;
 	};
 }

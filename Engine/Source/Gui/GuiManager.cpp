@@ -201,6 +201,8 @@ namespace Chilli {
 				}
 				ImGui::EndMenu();
 			}
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
+				1000.0 / float(ImGui::GetIO().Framerate), float(ImGui::GetIO().Framerate));
 			ImGui::EndMainMenuBar();
 		}
 	}
@@ -420,7 +422,7 @@ namespace Chilli {
 						{
 							if (ImGui::Selectable(mesh->GetName().stem().generic_string().c_str()))
 							{
-								meshComp->SetMesh(std::static_pointer_cast<Mesh>(mesh));
+								meshComp->SetMesh(mesh->Uuid);
 							}
 						}
 						ImGui::EndPopup();

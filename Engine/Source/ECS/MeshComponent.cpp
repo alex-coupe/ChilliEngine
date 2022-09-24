@@ -7,42 +7,40 @@ namespace Chilli {
 	{}
 
 	MeshComponent::MeshComponent(UUID meshUuid)
-		: Component(ComponentTypes::Mesh, "Mesh")
-	{
-		m_mesh = std::static_pointer_cast<Mesh>(DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetByUUID(meshUuid));
-	}
+		: Component(ComponentTypes::Mesh, "Mesh"), m_meshUuid(meshUuid)
+	{}
 
 	MeshComponent::MeshComponent(const MeshComponent& rhs)
 		:Component(rhs.m_type, rhs.m_name)
 	{
-		m_mesh = rhs.m_mesh;
+		m_meshUuid = rhs.m_meshUuid;
 	}
 
 	const std::string MeshComponent::Serialize() const
 	{
 		std::stringstream ss;
-		ss << "{ \"Type\":" << static_cast<int>(m_type) << ", \"MeshUuid\":" << m_mesh->Uuid.Get() << "}";
+		ss << "{ \"Type\":" << static_cast<int>(m_type) << ", \"MeshUuid\":" << m_meshUuid.Get() << "}";
 		return  ss.str();
 	}
 
 	const std::vector<VertexPos>& MeshComponent::GetVertices() const
 	{
-		return m_mesh->GetVertices();
+		return std::static_pointer_cast<Mesh>(DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetByUUID(m_meshUuid))->GetVertices();
 	}
 
 	const std::vector<unsigned short>& MeshComponent::GetIndices() const
 	{
-		return m_mesh->GetIndices();
+		return std::static_pointer_cast<Mesh>(DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetByUUID(m_meshUuid))->GetIndices();
 	}
 
 	const std::shared_ptr<Mesh> MeshComponent::GetMesh() const
 	{
-		return m_mesh;
+		return std::static_pointer_cast<Mesh>(DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetByUUID(m_meshUuid));
 	}
 
-	void MeshComponent::SetMesh(std::shared_ptr<Mesh> mesh)
+	void MeshComponent::SetMesh(UUID meshUuid)
 	{
-		m_mesh = mesh;
+		m_meshUuid = meshUuid;
 	}
 }
 
