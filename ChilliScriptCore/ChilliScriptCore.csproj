@@ -43,12 +43,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Source\Engine.cs" />
+    <Compile Include="Source\ChilliScript.cs" />
+    <Compile Include="Source\Component.cs" />
+    <Compile Include="Source\Core.cs" />
     <Compile Include="Source\Entity.cs" />
     <Compile Include="Source\Input.cs" />
     <Compile Include="Source\InternalCalls.cs" />
     <Compile Include="Source\KeyCode.cs" />
     <Compile Include="Source\Vector2.cs" />
+    <Compile Include="Source\Vector3.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

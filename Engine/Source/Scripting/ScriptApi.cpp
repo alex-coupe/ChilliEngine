@@ -4,7 +4,7 @@
 #include "../Core/Events.h"
 #include "../Core/Timer.h"
 
-namespace Engine::Scripting {
+namespace Chilli {
 
 #pragma region Core
 
@@ -16,20 +16,30 @@ namespace Engine::Scripting {
 		CHILLI_INFO(message);
 	}
 
+	static bool Entity_HasComponent(UUID entityID, MonoReflectionType* componentType)
+	{
+
+	}
+
+#pragma endregion
+
+#pragma region Transform
+
+
+
 #pragma endregion
 
 #pragma region Input
 
-	static bool Input_IsKeyDown(Engine::Core::Key keycode)
+	static bool Input_IsKeyDown(Key keycode)
 	{
-		return Engine::Core::DependencyResolver()
-			.ResolveDependency<Engine::Core::Events>()->GetKeyPressed(keycode);
+		return DependencyResolver().ResolveDependency<Events>()->GetKeyPressed(keycode);
 	}
 
 #pragma endregion
 
 
-	void Engine::Scripting::ScriptApi::Init()
+	void ScriptApi::Init()
 	{
 		mono_add_internal_call("Chilli.InternalCalls::Log", Log);
 		mono_add_internal_call("Chilli.InternalCalls::Input_IsKeyDown", Input_IsKeyDown);

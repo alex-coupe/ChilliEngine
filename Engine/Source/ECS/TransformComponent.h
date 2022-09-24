@@ -3,7 +3,7 @@
 #include "Component.h"
 #include <DirectXMath.h>
 
-namespace Engine::ECS {
+namespace Chilli {
 
 	class CHILLI_API TransformComponent : public Component {
 	public:

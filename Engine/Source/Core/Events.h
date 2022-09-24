@@ -8,7 +8,7 @@
 
 #pragma warning(disable:4251)
 
-namespace Engine::Core {
+namespace Chilli {
 
 	struct EventData {
 		uint64_t wparam = 0;

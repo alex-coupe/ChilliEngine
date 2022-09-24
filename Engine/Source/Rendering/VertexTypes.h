@@ -1,7 +1,7 @@
 #pragma once
 #include <DirectXMath.h>
 
-namespace Engine::Rendering {
+namespace Chilli {
 
 	struct VertexPosColor {
 		DirectX::XMFLOAT3 position;

@@ -8,6 +8,24 @@ namespace Chilli
         #region Core
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void Log(string message);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static bool Entity_HasComponent(ulong entityID, Type componentType);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static ulong Entity_FindEntityByName(string name);
+        #endregion
+
+        #region Transform
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void TransformComponent_GetTranslation(ulong entityId, out Vector3 translation);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void TransformComponent_SetTranslation(ulong entityId, ref Vector3 translation);
+        #endregion
+
+        #region RigidBody2D
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void Rigidbody2DComponent_ApplyLinearImpulse(ulong entityID, ref Vector2 impulse, ref Vector2 point, bool wake);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void Rigidbody2DComponent_ApplyLinearImpulseToCenter(ulong entityID, ref Vector2 impulse, bool wake);
         #endregion
 
         #region Input

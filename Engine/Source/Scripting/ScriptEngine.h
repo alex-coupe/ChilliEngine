@@ -4,12 +4,12 @@
 #include "mono/metadata/assembly.h"
 #include "mono/jit/jit.h"
 #include <filesystem>
-#include "../Utilities/UUID.h"
+#include "../Core/UUID.h"
 #include "../Core/DependencyResolver.h"
 #include "../ResourceSystem/Script.h"
 #include "ScriptApi.h"
 
-namespace Engine::Scripting {
+namespace Chilli {
 	class CHILLI_API ScriptEngine {
 	public:
 		ScriptEngine();

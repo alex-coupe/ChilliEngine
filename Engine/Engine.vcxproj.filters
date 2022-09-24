@@ -132,10 +132,7 @@
     <ClInclude Include="Source\ECS\ComponentFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Utilities\UUID.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Utilities\Utils.h">
+    <ClInclude Include="Source\Core\UUID.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\ResourceSystem\Asset.h">
@@ -269,7 +266,7 @@
     <ClCompile Include="Source\ECS\ComponentFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Utilities\UUID.cpp">
+    <ClCompile Include="Source\Core\UUID.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Rendering\FrameBuffer.cpp">

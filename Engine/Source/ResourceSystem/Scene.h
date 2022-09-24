@@ -2,27 +2,25 @@
 #include "../Core/ChilliDefinitions.h"
 #include <string>
 #include "../ECS/Entity.h"
-#include "../Utilities/UUID.h"
+#include "../Core/UUID.h"
 #include <memory>
 #include "../Scripting/ScriptEngine.h"
 
-namespace Engine::ResourceSystem {
+namespace Chilli {
 
 	enum class SceneState : int {
 		Edit = 0, Play = 1, Pause = 2, Simulate = 3
 	};
 
-	using namespace Engine::ECS;
-
 	class CHILLI_API Scene {
 	public:
 		Scene(const std::string& name);
-		Scene(const std::string& name, Engine::Utilities::UUID uuid, const rapidjson::Value& entities);
+		Scene(const std::string& name, UUID uuid, const rapidjson::Value& entities);
 		const std::string Serialize();
 		void AddEntity(const std::string& name);
-		void RemoveEntity(const Engine::Utilities::UUID& uuid);
+		void RemoveEntity(UUID uuid);
 		const std::vector<std::shared_ptr<Entity>>& GetEntities()const;
-		const Engine::Utilities::UUID& GetUUID()const;
+		const UUID Uuid;
 		const std::string& GetName()const;
 		const SceneState GetSceneState()const;
 		void SetSceneState(SceneState state);
@@ -33,7 +31,6 @@ namespace Engine::ResourceSystem {
 		std::vector<std::shared_ptr<Entity>> m_entitiesClone;
 		std::string m_name;
 		SceneState m_sceneState = SceneState::Edit;
-		Engine::Utilities::UUID m_uuid;
 		std::vector<std::shared_ptr<Entity>> m_entities;
 		std::unique_ptr<b2World> m_b2World = nullptr;
 		const float m_physicsTimestep = 1.0f / 60.0f;

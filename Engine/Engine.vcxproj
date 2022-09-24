@@ -214,8 +214,7 @@
     <ClInclude Include="Source\ResourceSystem\Script.h" />
     <ClInclude Include="Source\Scripting\ScriptApi.h" />
     <ClInclude Include="Source\Scripting\ScriptEngine.h" />
-    <ClInclude Include="Source\Utilities\Utils.h" />
-    <ClInclude Include="Source\Utilities\UUID.h" />
+    <ClInclude Include="Source\Core\UUID.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\ChilliEngine.cpp" />
@@ -260,7 +259,7 @@
     <ClCompile Include="Source\ResourceSystem\Script.cpp" />
     <ClCompile Include="Source\Scripting\ScriptApi.cpp" />
     <ClCompile Include="Source\Scripting\ScriptEngine.cpp" />
-    <ClCompile Include="Source\Utilities\UUID.cpp" />
+    <ClCompile Include="Source\Core\UUID.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Source\Rendering\shaders\Pixel_Basic.hlsl">

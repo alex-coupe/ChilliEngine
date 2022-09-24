@@ -2,7 +2,7 @@
 #include "Direct3D.h"
 #include "../Core/ChilliDefinitions.h"
 
-namespace Engine::Rendering {
+namespace Chilli {
 
 	class CHILLI_API FrameBuffer {
 	public:

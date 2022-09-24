@@ -6,7 +6,7 @@
 #include "CircleColliderComponent.h"
 #include "ScriptComponent.h"
 
-namespace Engine::ECS {
+namespace Chilli {
 	class CHILLI_API ComponentFactory {
 	public:
 		static std::shared_ptr<MeshComponent> MakeMeshComponent();

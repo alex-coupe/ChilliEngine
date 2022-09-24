@@ -5,9 +5,8 @@
 #include "../../Core/Events.h"
 #include "../DependencyResolver.h"
 
-namespace Engine::Core::Platform {
-
-	class WindowsPlatform {
+namespace Chilli {
+	class CHILLI_API WindowsPlatform {
 	public:
 		WindowsPlatform(int& width, int& height);
 		static LRESULT CALLBACK WndProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam);

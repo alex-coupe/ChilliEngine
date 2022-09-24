@@ -1,7 +1,8 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
+#include "../Core/UUID.h"
 
-namespace Engine::Scripting {
+namespace Chilli {
 
 	class CHILLI_API ScriptApi {
 	public:

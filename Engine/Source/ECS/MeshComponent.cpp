@@ -1,44 +1,48 @@
 #include "MeshComponent.h"
 #include "../ResourceSystem/ProjectManager.h"
 
-Engine::ECS::MeshComponent::MeshComponent(const Engine::Utilities::UUID& uuid)
-	: m_meshUuid(uuid),Component(ComponentTypes::Mesh, "Mesh")
-{
-	m_mesh = std::static_pointer_cast<Engine::ResourceSystem::Mesh>(Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetAssetByUUID(m_meshUuid));
-}
+namespace Chilli {
+	MeshComponent::MeshComponent()
+		: Component(ComponentTypes::Mesh, "Mesh")
+	{}
 
-Engine::ECS::MeshComponent::MeshComponent(const MeshComponent& rhs)
-	:Component(rhs.m_type,rhs.m_name)
-{
-	m_mesh = rhs.m_mesh;
-	m_meshUuid = rhs.m_meshUuid;
-}
+	MeshComponent::MeshComponent(UUID meshUuid)
+		: Component(ComponentTypes::Mesh, "Mesh")
+	{
+		m_mesh = std::static_pointer_cast<Mesh>(DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetByUUID(meshUuid));
+	}
 
-const std::string Engine::ECS::MeshComponent::Serialize() const
-{
-	std::stringstream ss;
-	ss << "{ \"Type\":" << static_cast<int>(m_type) << ", \"MeshUuid\":\"" << m_mesh->GetUUID().GetUUID() << "\"}";
-	return  ss.str();
-}
+	MeshComponent::MeshComponent(const MeshComponent& rhs)
+		:Component(rhs.m_type, rhs.m_name)
+	{
+		m_mesh = rhs.m_mesh;
+	}
 
-const std::vector<Engine::Rendering::VertexPos>& Engine::ECS::MeshComponent::GetVertices() const
-{
-	return m_mesh->GetVertices();
-}
+	const std::string MeshComponent::Serialize() const
+	{
+		std::stringstream ss;
+		ss << "{ \"Type\":" << static_cast<int>(m_type) << ", \"MeshUuid\":" << m_mesh->Uuid.Get() << "}";
+		return  ss.str();
+	}
 
-const std::vector<unsigned short>& Engine::ECS::MeshComponent::GetIndices() const
-{
-	return m_mesh->GetIndices();
-}
+	const std::vector<VertexPos>& MeshComponent::GetVertices() const
+	{
+		return m_mesh->GetVertices();
+	}
 
-const std::shared_ptr<Engine::ResourceSystem::Mesh>& Engine::ECS::MeshComponent::GetMesh() const
-{
-	return m_mesh;
-}
+	const std::vector<unsigned short>& MeshComponent::GetIndices() const
+	{
+		return m_mesh->GetIndices();
+	}
 
-void Engine::ECS::MeshComponent::SetMesh(std::shared_ptr<Engine::ResourceSystem::Mesh> mesh)
-{
-	m_mesh = mesh;
-	m_meshUuid = mesh->GetUUID();
+	const std::shared_ptr<Mesh> MeshComponent::GetMesh() const
+	{
+		return m_mesh;
+	}
+
+	void MeshComponent::SetMesh(std::shared_ptr<Mesh> mesh)
+	{
+		m_mesh = mesh;
+	}
 }
 

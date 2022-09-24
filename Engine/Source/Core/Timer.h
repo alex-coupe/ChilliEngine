@@ -4,7 +4,7 @@
 #include "SubSystem.h"
 
 #pragma warning(disable:4251)
-namespace Engine::Core {
+namespace Chilli {
 
 	class CHILLI_API Timer : public SubSystem
 	{

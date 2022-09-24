@@ -1,12 +1,13 @@
 #include "CameraComponent.h"
+namespace Chilli {
+	CameraComponent::CameraComponent()
+		:Component(ComponentTypes::Camera, "Camera")
+	{
+	}
 
-Engine::ECS::CameraComponent::CameraComponent()
-	:Component(ComponentTypes::Camera, "Camera")
-{
-}
-
-const std::string Engine::ECS::CameraComponent::Serialize() const
-{
-	std::stringstream ss;
-	return  ss.str();
+	const std::string CameraComponent::Serialize() const
+	{
+		std::stringstream ss;
+		return  ss.str();
+	}
 }

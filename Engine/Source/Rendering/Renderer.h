@@ -6,10 +6,8 @@
 #include "Drawable.h"
 #include "Camera.h"
 
-namespace Engine::Rendering {
+namespace Chilli {
 
-	using namespace Engine::Core;
-	using namespace Engine::ResourceSystem;
 	class CHILLI_API Renderer : public SubSystem{
 	public:
 		Renderer(int64_t width, int64_t height, void* handle);

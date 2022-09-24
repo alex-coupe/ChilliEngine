@@ -1,35 +1,36 @@
 #include "ScriptComponent.h"
 #include "../ResourceSystem/ProjectManager.h"
+namespace Chilli {
+	ScriptComponent::ScriptComponent()
+		: Component(ComponentTypes::Script, "Script")
+	{}
 
-Engine::ECS::ScriptComponent::ScriptComponent(const Engine::Utilities::UUID& uuid)
-	: Component(Engine::ECS::ComponentTypes::Script, "Script"), m_scriptUuid(uuid)
-{
-	
-}
+	ScriptComponent::ScriptComponent(const std::string & scriptName)
+		: Component(ComponentTypes::Script, "Script"),m_scriptName(scriptName)
+	{}
 
-Engine::ECS::ScriptComponent::ScriptComponent(const ScriptComponent& rhs)
-	: Component(Engine::ECS::ComponentTypes::Script, "Script")
-{
-	m_scriptName = rhs.m_scriptName;
-	m_scriptUuid = rhs.m_scriptUuid;
-}
+	ScriptComponent::ScriptComponent(const ScriptComponent& rhs)
+		: Component(ComponentTypes::Script, "Script")
+	{
+		m_scriptName = rhs.m_scriptName;
+	}
 
-const std::string Engine::ECS::ScriptComponent::Serialize() const
-{
-	std::stringstream ss;
-	ss << "{ \"Type\":" << static_cast<int>(m_type) 
-		<< ", \"ScriptUuid\":\"" << m_scriptUuid.GetUUID() 
-		<< ",\"ScriptClassName\":\"" << m_scriptName
-		<< "\"}";
-	return  ss.str();
-}
+	const std::string ScriptComponent::Serialize() const
+	{
+		std::stringstream ss;
+		ss << "{ \"Type\":" << static_cast<int>(m_type)
+			<< ",\"ScriptClassName\":\"" << m_scriptName
+			<< "\"}";
+		return  ss.str();
+	}
 
-const std::string& Engine::ECS::ScriptComponent::GetScriptName()const
-{
-	return m_scriptName;
-}
+	const std::string& ScriptComponent::GetScriptName()const
+	{
+		return m_scriptName;
+	}
 
-void Engine::ECS::ScriptComponent::SetScript(const std::string& script)
-{
-	m_scriptName = script;
+	void ScriptComponent::SetScript(const std::string& script)
+	{
+		m_scriptName = script;
+	}
 }

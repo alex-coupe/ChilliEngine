@@ -13,7 +13,7 @@
 #include <vector>
 
 #pragma warning(disable:4251)
-namespace Engine::Rendering {
+namespace Chilli {
 
 #pragma comment (lib, "d3d11.lib") 
 #pragma comment (lib, "D3DCompiler.lib")

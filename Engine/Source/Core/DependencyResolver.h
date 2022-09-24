@@ -5,7 +5,7 @@
 #include <memory>
 #include "SubSystem.h"
 
-namespace Engine::Core {
+namespace Chilli {
 
 	class DependencyResolver {
 	public:

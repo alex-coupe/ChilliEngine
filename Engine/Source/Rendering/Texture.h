@@ -3,7 +3,7 @@
 #include "stb/stb_image.h"
 #include "Direct3D.h"
 
-namespace Engine::Rendering {
+namespace Chilli {
 
 	class CHILLI_API Texture {
 	public:

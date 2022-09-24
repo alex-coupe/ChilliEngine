@@ -3,10 +3,12 @@
 #include "Component.h"
 #include "../Rendering/Camera.h"
 
-namespace Engine::ECS {
+namespace Chilli {
+
 	enum class CameraType : int {
 		Perspective,Orthographic
 	};
+
 	class CHILLI_API CameraComponent : public Component {
 	public:
 		CameraComponent();
@@ -14,7 +16,7 @@ namespace Engine::ECS {
 
 	private:
 		CameraType m_type = CameraType::Perspective;
-		std::unique_ptr<Engine::Rendering::Camera> m_camera;
+		std::unique_ptr<Camera> m_camera;
 	};
 
 }

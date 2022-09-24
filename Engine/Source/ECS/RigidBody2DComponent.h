@@ -5,7 +5,7 @@
 #include "box2d/box2d.h"
 #include "TransformComponent.h"
 
-namespace Engine::ECS {
+namespace Chilli {
 
 	enum class BodyType : int {
 		Static,Kinematic,Dynamic

@@ -3,408 +3,408 @@
 #include "../ECS/Entity.h"
 #include "../Rendering/Renderer.h"
 
-const char* Engine::Gui::GuiManager::assetDropdownList[4] = {"Meshes", "Audio", "Materials", "Scripts"};
-const char* Engine::Gui::GuiManager::componentsList[18] = 
-{ "Mesh","Camera","Light","Script","BoxCollider2D","RigidBody2D","CircleCollider",
-	"BoxCollider","CapsuleCollider","MeshCollider","RigidBody","AudioListener","AudioSource",
-	"Sprite","ParticleEmitter","Animation",	"Pathfinding","Skybox" };
-int Engine::Gui::GuiManager::assetDropdownSelected = 0;
-int Engine::Gui::GuiManager::assetFrameSelected = 0;
-int Engine::Gui::GuiManager::hierarchySelected = 0;
-int Engine::Gui::GuiManager::sceneSelected = 0;
-int Engine::Gui::GuiManager::entitySelected = 0;
-bool Engine::Gui::GuiManager::initialMousePos = true;
-float Engine::Gui::GuiManager::mouseX = 0.0f;
-float Engine::Gui::GuiManager::mouseY = 0.0f;
-std::shared_ptr<Engine::ResourceSystem::Asset> Engine::Gui::GuiManager::selectedAsset = nullptr;
-std::shared_ptr<Engine::ResourceSystem::Scene> Engine::Gui::GuiManager::selectedScene = nullptr;
-std::shared_ptr<Engine::ECS::Entity> Engine::Gui::GuiManager::selectedEntity = nullptr;
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-void Engine::Gui::GuiManager::Init()
-{
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGui::StyleColorsDark();
-}
+namespace Chilli {
 
-void Engine::Gui::GuiManager::Shutdown()
-{
-	ImGui_ImplWin32_Shutdown();
-	ImGui_ImplDX11_Shutdown();
-	ImGui::DestroyContext();
-}
+	const char* GuiManager::assetDropdownList[4] = { "Meshes", "Audio", "Materials", "Scripts" };
+	const char* GuiManager::componentsList[18] =
+	{ "Mesh","Camera","Light","Script","BoxCollider2D","RigidBody2D","CircleCollider",
+		"BoxCollider","CapsuleCollider","MeshCollider","RigidBody","AudioListener","AudioSource",
+		"Sprite","ParticleEmitter","Animation",	"Pathfinding","Skybox" };
+	int GuiManager::assetDropdownSelected = 0;
+	uint64_t GuiManager::assetFrameSelected = 0;
+	uint64_t GuiManager::hierarchySelected = 0;
+	uint64_t GuiManager::sceneSelected = 0;
+	uint64_t GuiManager::entitySelected = 0;
+	bool GuiManager::initialMousePos = true;
+	float GuiManager::mouseX = 0.0f;
+	float GuiManager::mouseY = 0.0f;
+	std::shared_ptr<Asset> GuiManager::selectedAsset = nullptr;
+	std::shared_ptr<Scene> GuiManager::selectedScene = nullptr;
+	std::shared_ptr<Entity> GuiManager::selectedEntity = nullptr;
 
-void Engine::Gui::GuiManager::DrawEditorGui(Engine::Rendering::Renderer* renderer)
-{
-	BeginFrame();
-	BuildMenuBar();
-	BuildAssetManager();
-	BuildSceneHierarchy();
-	BuildEntityInspector();
-	BuildScenePreviewWindow(renderer);
-	EndFrame();
-}
-
-void Engine::Gui::GuiManager::BeginFrame()
-{
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-}
-
-void Engine::Gui::GuiManager::EndFrame()
-{
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-}
-
-void Engine::Gui::GuiManager::BuildScenePreviewWindow(Engine::Rendering::Renderer* renderer)
-{
-	ImGuiWindowFlags window_flags = 0;
-	window_flags |= ImGuiWindowFlags_NoMove;
-	window_flags |= ImGuiWindowFlags_NoResize;
-	window_flags |= ImGuiWindowFlags_NoCollapse;
-	ImGui::Begin("Scene Preview", 0, window_flags);
-	ImGui::Image(renderer->GetFrameBuffer()->GetShaderResourceView().Get(), ImVec2(1200, 620));
-	if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsWindowHovered() 
-		&& Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>
-		()->GetCurrentScene()->GetSceneState() == Engine::ResourceSystem::SceneState::Edit)
+	void GuiManager::Init()
 	{
-		if (initialMousePos)
-		{
-			auto pos = ImGui::GetMousePos();
-			mouseX = pos.x;
-			mouseY = pos.y;
-			initialMousePos = false;
-		}
-		else 
-		{
-			auto pos = ImGui::GetMousePos();
-			auto deltaX = mouseX - pos.x;
-			auto deltaY = mouseY - pos.y;
-
-			mouseX = pos.x;
-			mouseY = pos.y;
-			renderer->GetEditorCamera()->UpdateRotation(deltaY, deltaX);
-		}
-		
-		if (ImGui::IsKeyDown((int)Engine::Core::Key::W))
-		{
-			renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ 0.00f,0.00f,0.01f });
-		}
-
-		if (ImGui::IsKeyDown((int)Engine::Core::Key::A))
-		{
-			renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ -0.01f,0.00f,0.0f });
-		}
-
-		if (ImGui::IsKeyDown((int)Engine::Core::Key::S))
-		{
-			renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ 0.00f,0.00f,-0.01f });
-		}
-
-		if (ImGui::IsKeyDown((int)Engine::Core::Key::D))
-		{
-			renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ 0.01f,0.00f,0.0f });
-		}
-				
-		if (ImGui::IsKeyDown((int)Engine::Core::Key::Space))
-		{
-			renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ 0.00f,0.01f,0.0f });
-		}
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGui::StyleColorsDark();
 	}
-	ImGui::End();
-}
 
-void Engine::Gui::GuiManager::BuildMenuBar()
-{
-	if (ImGui::BeginMainMenuBar())
+	void GuiManager::Shutdown()
 	{
-		if (ImGui::BeginMenu("File"))
+		ImGui_ImplWin32_Shutdown();
+		ImGui_ImplDX11_Shutdown();
+		ImGui::DestroyContext();
+	}
+
+	void GuiManager::DrawEditorGui(Renderer* renderer)
+	{
+		BeginFrame();
+		BuildMenuBar();
+		BuildAssetManager();
+		BuildSceneHierarchy();
+		BuildEntityInspector();
+		BuildScenePreviewWindow(renderer);
+		EndFrame();
+	}
+
+	void GuiManager::BeginFrame()
+	{
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+	}
+
+	void GuiManager::EndFrame()
+	{
+		ImGui::Render();
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	}
+
+	void GuiManager::BuildScenePreviewWindow(Renderer* renderer)
+	{
+		ImGuiWindowFlags window_flags = 0;
+		window_flags |= ImGuiWindowFlags_NoMove;
+		window_flags |= ImGuiWindowFlags_NoResize;
+		window_flags |= ImGuiWindowFlags_NoCollapse;
+		ImGui::Begin("Scene Preview", 0, window_flags);
+		ImGui::Image(renderer->GetFrameBuffer()->GetShaderResourceView().Get(), ImVec2(1200, 620));
+		if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsWindowHovered()
+			&& DependencyResolver::ResolveDependency<ProjectManager>
+			()->GetCurrentScene()->GetSceneState() == SceneState::Edit)
 		{
-			if (ImGui::MenuItem("New")) 
+			if (initialMousePos)
 			{
-				selectedAsset = nullptr;
-				selectedEntity = nullptr;
-				selectedScene = nullptr;
-				Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->NewProject();
+				auto pos = ImGui::GetMousePos();
+				mouseX = pos.x;
+				mouseY = pos.y;
+				initialMousePos = false;
+			}
+			else
+			{
+				auto pos = ImGui::GetMousePos();
+				auto deltaX = mouseX - pos.x;
+				auto deltaY = mouseY - pos.y;
+
+				mouseX = pos.x;
+				mouseY = pos.y;
+				renderer->GetEditorCamera()->UpdateRotation(deltaY, deltaX);
 			}
 
-			if (ImGui::MenuItem("Open", "Ctrl+O")) 
+			if (ImGui::IsKeyDown((int)Key::W))
 			{
-				nfdchar_t* outPath = NULL;
-				nfdresult_t result = NFD_OpenDialog("json", NULL, &outPath);
-				if (result == NFD_OKAY) 
-				{	
-					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->LoadProject(outPath);
-					free(outPath);
+				renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ 0.00f,0.00f,0.01f });
+			}
+
+			if (ImGui::IsKeyDown((int)Key::A))
+			{
+				renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ -0.01f,0.00f,0.0f });
+			}
+
+			if (ImGui::IsKeyDown((int)Key::S))
+			{
+				renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ 0.00f,0.00f,-0.01f });
+			}
+
+			if (ImGui::IsKeyDown((int)Key::D))
+			{
+				renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ 0.01f,0.00f,0.0f });
+			}
+
+			if (ImGui::IsKeyDown((int)Key::Space))
+			{
+				renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ 0.00f,0.01f,0.0f });
+			}
+		}
+		ImGui::End();
+	}
+
+	void GuiManager::BuildMenuBar()
+	{
+		if (ImGui::BeginMainMenuBar())
+		{
+			if (ImGui::BeginMenu("File"))
+			{
+				if (ImGui::MenuItem("New"))
+				{
 					selectedAsset = nullptr;
 					selectedEntity = nullptr;
-					hierarchySelected = 0;
-					assetDropdownSelected = 0;
-					assetFrameSelected = 0;
-				}
-			}
-
-			if (ImGui::MenuItem("Save", "Ctrl+S")) 
-			{
-				nfdchar_t* outPath = NULL;
-				nfdresult_t result = NFD_SaveDialog("json", NULL, &outPath);
-				if (result == NFD_OKAY)
-				{
-					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->SaveProject(outPath);
-					free(outPath);
-				}
-
-			}
-			ImGui::EndMenu();
-		}
-		if (ImGui::BeginMenu("Scene"))
-		{
-
-			auto sceneState = Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetCurrentScene()->GetSceneState();
-			
-			if (sceneState == Engine::ResourceSystem::SceneState::Edit)
-			{
-				if (ImGui::MenuItem("Play"))
-				{
-					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->SetCurrentSceneState(Engine::ResourceSystem::SceneState::Play);
-				}
-			}
-
-			if (sceneState == Engine::ResourceSystem::SceneState::Play)
-			{
-				if (ImGui::MenuItem("Stop"))
-				{
-					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->SetCurrentSceneState(Engine::ResourceSystem::SceneState::Edit);
-				}
-			}
-
-			if (sceneState == Engine::ResourceSystem::SceneState::Edit)
-			{
-				if (ImGui::MenuItem("Simulate"))
-				{
-					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->SetCurrentSceneState(Engine::ResourceSystem::SceneState::Simulate);
-				}
-			}
-
-			if (sceneState == Engine::ResourceSystem::SceneState::Play)
-			{
-				if (ImGui::MenuItem("Pause"))
-				{
-					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->SetCurrentSceneState(Engine::ResourceSystem::SceneState::Pause);
-				}
-			}
-			ImGui::EndMenu();
-		}
-		ImGui::EndMainMenuBar();
-	}
-}
-
-void Engine::Gui::GuiManager::BuildAssetManager()
-{
-	ImGuiWindowFlags window_flags = 0;
-	window_flags |= ImGuiWindowFlags_NoMove;
-    window_flags |= ImGuiWindowFlags_NoResize;
-	window_flags |= ImGuiWindowFlags_NoCollapse;
-
-	ImGui::Begin("Assets",0, window_flags);
-	ImGui::BeginGroup();
-	if (ImGui::BeginTabBar("##Tabs", ImGuiTabBarFlags_None))
-	{
-		if (ImGui::BeginTabItem("Assets"))
-		{
-			for (int i = 0; i < IM_ARRAYSIZE(assetDropdownList); i++)
-			{
-				if (ImGui::Selectable(assetDropdownList[i], assetDropdownSelected == i))
-				{
-					assetDropdownSelected = i;
-				}
-
-			}
-			if (ImGui::Button("Add"))
-			{
-				nfdchar_t* outPath = NULL;
-				nfdresult_t result = NFD_ERROR;
-				switch (assetDropdownSelected) {
-				case (int)Engine::ResourceSystem::AssetTypes::Mesh:
-					result = NFD_OpenDialog("gltf,fbx", NULL, &outPath);
-					break;
-				case (int)Engine::ResourceSystem::AssetTypes::Audio:
-					result = NFD_OpenDialog("wav,mp3", NULL, &outPath);
-					break;
-				case (int)Engine::ResourceSystem::AssetTypes::Material:
-					result = NFD_OpenDialog("png,jpg,jpeg,bmp", NULL, &outPath);
-					break;
-				case (int)Engine::ResourceSystem::AssetTypes::Script:
-					result = NFD_OpenDialog("cs,dll", NULL, &outPath);
-					break;
-				}
-
-				if (result == NFD_OKAY)
-				{
-					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->AddAsset(outPath, (Engine::ResourceSystem::AssetTypes)assetDropdownSelected);
-					free(outPath);
-				}
-			}
-			ImGui::Separator();
-			const auto& assets = Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetAssetsByType((Engine::ResourceSystem::AssetTypes)assetDropdownSelected);
-			for (const auto& asset : assets)
-			{
-				if (ImGui::Selectable(asset->GetName().stem().generic_string().c_str(), assetFrameSelected == asset->GetUUID().GetUUIDHash()))
-				{
-					selectedAsset = asset;
-					assetFrameSelected = selectedAsset->GetUUID().GetUUIDHash();
-				}
-			}
-			if (selectedAsset)
-			{
-				ImGui::TextWrapped("UUID : %s", selectedAsset->GetUUID().GetUUID().c_str());
-				if (ImGui::Button("Remove Asset"))
-				{
-					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->RemoveAsset(selectedAsset->GetUUID());
-					selectedAsset = nullptr;
-				}
-			}
-			ImGui::EndTabItem();
-		}
-		
-		if (ImGui::BeginTabItem("Scenes"))
-		{
-			static char buffer[128] = "";
-			ImGui::InputText("Name", buffer, IM_ARRAYSIZE(buffer));
-			if (ImGui::Button("Add Scene"))
-			{
-				Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->AddScene(buffer);
-			}
-			ImGui::Separator();
-			const auto& scenes = Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetScenes();
-			for (const auto& scene : scenes)
-			{
-				if (ImGui::Selectable(scene->GetName().c_str(), sceneSelected == scene->GetUUID().GetUUIDHash()))
-				{
-					selectedScene = scene;
-					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->SetCurrentScene(scene->GetUUID());
-					selectedEntity = nullptr;
-					sceneSelected = selectedScene->GetUUID().GetUUIDHash();
-				}
-			}
-			if (selectedScene)
-			{
-				ImGui::TextWrapped("UUID : %s", selectedScene->GetUUID().GetUUID().c_str());
-				if (ImGui::Button("Remove Scene"))
-				{
-					Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->RemoveScene(selectedScene->GetUUID());
 					selectedScene = nullptr;
-					selectedEntity = nullptr;
+					DependencyResolver::ResolveDependency<ProjectManager>()->NewProject();
 				}
+
+				if (ImGui::MenuItem("Open", "Ctrl+O"))
+				{
+					nfdchar_t* outPath = NULL;
+					nfdresult_t result = NFD_OpenDialog("json", NULL, &outPath);
+					if (result == NFD_OKAY)
+					{
+						DependencyResolver::ResolveDependency<ProjectManager>()->LoadProject(outPath);
+						free(outPath);
+						selectedAsset = nullptr;
+						selectedEntity = nullptr;
+						hierarchySelected = 0;
+						assetDropdownSelected = 0;
+						assetFrameSelected = 0;
+					}
+				}
+
+				if (ImGui::MenuItem("Save", "Ctrl+S"))
+				{
+					nfdchar_t* outPath = NULL;
+					nfdresult_t result = NFD_SaveDialog("json", NULL, &outPath);
+					if (result == NFD_OKAY)
+					{
+						DependencyResolver::ResolveDependency<ProjectManager>()->SaveProject(outPath);
+						free(outPath);
+					}
+
+				}
+				ImGui::EndMenu();
 			}
-			ImGui::EndTabItem();
+			if (ImGui::BeginMenu("Scene"))
+			{
+
+				auto sceneState = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene()->GetSceneState();
+
+				if (sceneState == SceneState::Edit)
+				{
+					if (ImGui::MenuItem("Play"))
+					{
+						DependencyResolver::ResolveDependency<ProjectManager>()->SetCurrentSceneState(SceneState::Play);
+					}
+				}
+
+				if (sceneState == SceneState::Play)
+				{
+					if (ImGui::MenuItem("Stop"))
+					{
+						DependencyResolver::ResolveDependency<ProjectManager>()->SetCurrentSceneState(SceneState::Edit);
+					}
+				}
+
+				if (sceneState == SceneState::Edit)
+				{
+					if (ImGui::MenuItem("Simulate"))
+					{
+						DependencyResolver::ResolveDependency<ProjectManager>()->SetCurrentSceneState(SceneState::Simulate);
+					}
+				}
+
+				if (sceneState == SceneState::Play)
+				{
+					if (ImGui::MenuItem("Pause"))
+					{
+						DependencyResolver::ResolveDependency<ProjectManager>()->SetCurrentSceneState(SceneState::Pause);
+					}
+				}
+				ImGui::EndMenu();
+			}
+			ImGui::EndMainMenuBar();
 		}
-		if (ImGui::BeginTabItem("Entities"))
+	}
+
+	void GuiManager::BuildAssetManager()
+	{
+		ImGuiWindowFlags window_flags = 0;
+		window_flags |= ImGuiWindowFlags_NoMove;
+		window_flags |= ImGuiWindowFlags_NoResize;
+		window_flags |= ImGuiWindowFlags_NoCollapse;
+
+		ImGui::Begin("Assets", 0, window_flags);
+		ImGui::BeginGroup();
+		if (ImGui::BeginTabBar("##Tabs", ImGuiTabBarFlags_None))
 		{
-			if (selectedScene)
+			if (ImGui::BeginTabItem("Assets"))
+			{
+				for (int i = 0; i < IM_ARRAYSIZE(assetDropdownList); i++)
+				{
+					if (ImGui::Selectable(assetDropdownList[i], assetDropdownSelected == i))
+					{
+						assetDropdownSelected = i;
+					}
+
+				}
+				if (ImGui::Button("Add"))
+				{
+					nfdchar_t* outPath = NULL;
+					nfdresult_t result = NFD_ERROR;
+					switch (assetDropdownSelected) {
+					case (int)AssetTypes::Mesh:
+						result = NFD_OpenDialog("gltf,fbx", NULL, &outPath);
+						break;
+					case (int)AssetTypes::Audio:
+						result = NFD_OpenDialog("wav,mp3", NULL, &outPath);
+						break;
+					case (int)AssetTypes::Material:
+						result = NFD_OpenDialog("png,jpg,jpeg,bmp", NULL, &outPath);
+						break;
+					case (int)AssetTypes::Script:
+						result = NFD_OpenDialog("cs,dll", NULL, &outPath);
+						break;
+					}
+
+					if (result == NFD_OKAY)
+					{
+						DependencyResolver::ResolveDependency<ProjectManager>()->AddAsset(outPath, (AssetTypes)assetDropdownSelected);
+						free(outPath);
+					}
+				}
+				ImGui::Separator();
+				const auto& assets = DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetsByType((AssetTypes)assetDropdownSelected);
+				for (const auto& asset : assets)
+				{
+					if (ImGui::Selectable(asset->GetName().stem().generic_string().c_str(), assetFrameSelected == asset->Uuid.Get()))
+					{
+						selectedAsset = asset;
+						assetFrameSelected = selectedAsset->Uuid.Get();
+					}
+				}
+				if (selectedAsset)
+				{
+					if (ImGui::Button("Remove Asset"))
+					{
+						DependencyResolver::ResolveDependency<ProjectManager>()->RemoveAsset(selectedAsset->Uuid);
+						selectedAsset = nullptr;
+					}
+				}
+				ImGui::EndTabItem();
+			}
+
+			if (ImGui::BeginTabItem("Scenes"))
 			{
 				static char buffer[128] = "";
 				ImGui::InputText("Name", buffer, IM_ARRAYSIZE(buffer));
-				if (ImGui::Button("Add Entity"))
+				if (ImGui::Button("Add Scene"))
 				{
-					selectedScene->AddEntity(buffer);
+					DependencyResolver::ResolveDependency<ProjectManager>()->AddScene(buffer);
 				}
-
-				const auto& entities = selectedScene->GetEntities();
-				for (const auto& entity : entities)
+				ImGui::Separator();
+				const auto& scenes = DependencyResolver::ResolveDependency<ProjectManager>()->GetScenes();
+				for (const auto& scene : scenes)
 				{
-					if (ImGui::Selectable(entity->GetName().c_str(), entitySelected == entity->GetUUID().GetUUIDHash()))
+					if (ImGui::Selectable(scene->GetName().c_str(), sceneSelected == scene->Uuid.Get()))
 					{
-						selectedEntity = entity;
-						entitySelected = selectedEntity->GetUUID().GetUUIDHash();
+						selectedScene = scene;
+						DependencyResolver::ResolveDependency<ProjectManager>()->SetCurrentScene(scene->Uuid);
+						selectedEntity = nullptr;
+						sceneSelected = selectedScene->Uuid.Get();
 					}
-
 				}
-				if (selectedEntity && selectedScene)
+				if (selectedScene)
 				{
-					ImGui::TextWrapped("UUID : %s", selectedEntity->GetUUID().GetUUID().c_str());
-					if (ImGui::Button("Remove Entity"))
+					if (ImGui::Button("Remove Scene"))
 					{
-						selectedScene->RemoveEntity(selectedEntity->GetUUID());
+						DependencyResolver::ResolveDependency<ProjectManager>()->RemoveScene(selectedScene->Uuid);
+						selectedScene = nullptr;
 						selectedEntity = nullptr;
 					}
 				}
-
+				ImGui::EndTabItem();
 			}
-			ImGui::EndTabItem();
-		}
-		ImGui::EndTabBar();
-	}
-	ImGui::EndGroup();
-	ImGui::End();
-}
-
-void Engine::Gui::GuiManager::BuildSceneHierarchy()
-{
-	ImGuiWindowFlags window_flags = 0;
-	window_flags |= ImGuiWindowFlags_NoMove;
-	window_flags |= ImGuiWindowFlags_NoResize;
-	window_flags |= ImGuiWindowFlags_NoCollapse;
-	ImGui::Begin("Scene Hierarchy", 0, window_flags);
-	const auto& scenes = Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetScenes();		
-	for (const auto& scene : scenes)
-	{
-		if (ImGui::TreeNode(scene->GetName().c_str()))
-		{
-			for (const auto& entity : scene->GetEntities()) 
+			if (ImGui::BeginTabItem("Entities"))
 			{
-				if (ImGui::Selectable(entity->GetName().c_str(), hierarchySelected == entity->GetUUID().GetUUIDHash()))
+				if (selectedScene)
 				{
-					hierarchySelected = entity->GetUUID().GetUUIDHash();
-					selectedEntity = entity;
+					static char buffer[128] = "";
+					ImGui::InputText("Name", buffer, IM_ARRAYSIZE(buffer));
+					if (ImGui::Button("Add Entity"))
+					{
+						selectedScene->AddEntity(buffer);
+					}
+
+					const auto& entities = selectedScene->GetEntities();
+					for (const auto& entity : entities)
+					{
+						if (ImGui::Selectable(entity->GetName().c_str(), entitySelected == entity->Uuid.Get()))
+						{
+							selectedEntity = entity;
+							entitySelected = selectedEntity->Uuid.Get();
+						}
+
+					}
+					if (selectedEntity && selectedScene)
+					{
+						if (ImGui::Button("Remove Entity"))
+						{
+							selectedScene->RemoveEntity(selectedEntity->Uuid);
+							selectedEntity = nullptr;
+						}
+					}
 				}
+				ImGui::EndTabItem();
 			}
-			ImGui::TreePop();
+			ImGui::EndTabBar();
 		}
+		ImGui::EndGroup();
+		ImGui::End();
 	}
-	ImGui::End();
-}
 
-void Engine::Gui::GuiManager::BuildEntityInspector()
-{
-	ImGuiWindowFlags window_flags = 0;
-	window_flags |= ImGuiWindowFlags_NoMove;
-	window_flags |= ImGuiWindowFlags_NoResize;
-	window_flags |= ImGuiWindowFlags_NoCollapse;
-	ImGui::Begin("Inspector",0,window_flags);
-	const auto& meshes = Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetAssetsByType(Engine::ResourceSystem::AssetTypes::Mesh);
-	const auto& scripts = Engine::Core::DependencyResolver::ResolveDependency<Engine::ResourceSystem::ProjectManager>()->GetAvailableScripts();
-
-	if (selectedEntity)
+	void GuiManager::BuildSceneHierarchy()
 	{
-		if (ImGui::Button("+"))
-			ImGui::OpenPopup("addComponent");
-
-		if (ImGui::BeginPopup("addComponent"))
+		ImGuiWindowFlags window_flags = 0;
+		window_flags |= ImGuiWindowFlags_NoMove;
+		window_flags |= ImGuiWindowFlags_NoResize;
+		window_flags |= ImGuiWindowFlags_NoCollapse;
+		ImGui::Begin("Scene Hierarchy", 0, window_flags);
+		const auto& scenes = DependencyResolver::ResolveDependency<ProjectManager>()->GetScenes();
+		for (const auto& scene : scenes)
 		{
-			ImGui::Text("Add Component");
-			ImGui::Separator();
-
-			for (int i = 0; i < IM_ARRAYSIZE(componentsList); i++)
+			if (ImGui::TreeNode(scene->GetName().c_str()))
 			{
-				if (ImGui::Selectable(componentsList[i]))
+				for (const auto& entity : scene->GetEntities())
 				{
-					selectedEntity->AddComponent((Engine::ECS::ComponentTypes)i);					
+					if (ImGui::Selectable(entity->GetName().c_str(), hierarchySelected == entity->Uuid.Get()))
+					{
+						hierarchySelected = entity->Uuid.Get();
+						selectedEntity = entity;
+					}
 				}
+				ImGui::TreePop();
 			}
-			ImGui::EndPopup();
 		}
-		ImGui::Spacing();
+		ImGui::End();
+	}
 
-		for (const auto& component : selectedEntity->GetComponents())
+	void GuiManager::BuildEntityInspector()
+	{
+		ImGuiWindowFlags window_flags = 0;
+		window_flags |= ImGuiWindowFlags_NoMove;
+		window_flags |= ImGuiWindowFlags_NoResize;
+		window_flags |= ImGuiWindowFlags_NoCollapse;
+		ImGui::Begin("Inspector", 0, window_flags);
+		const auto& meshes = DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetsByType(AssetTypes::Mesh);
+		const auto& scripts = DependencyResolver::ResolveDependency<ProjectManager>()->GetAvailableScripts();
+
+		if (selectedEntity)
 		{
-			switch (component->GetComponentType())
+			if (ImGui::Button("+"))
+				ImGui::OpenPopup("addComponent");
+
+			if (ImGui::BeginPopup("addComponent"))
 			{
-				case Engine::ECS::ComponentTypes::Mesh:
+				ImGui::Text("Add Component");
+				ImGui::Separator();
+
+				for (int i = 0; i < IM_ARRAYSIZE(componentsList); i++)
 				{
-					const auto& meshComp = std::static_pointer_cast<Engine::ECS::MeshComponent>(component);
+					if (ImGui::Selectable(componentsList[i]))
+					{
+						selectedEntity->AddComponent((ComponentTypes)i);
+					}
+				}
+				ImGui::EndPopup();
+			}
+			ImGui::Spacing();
+
+			for (const auto& component : selectedEntity->GetComponents())
+			{
+				switch (component->GetComponentType())
+				{
+				case ComponentTypes::Mesh:
+				{
+					const auto& meshComp = std::static_pointer_cast<MeshComponent>(component);
 					ImGui::BeginChild("Mesh", ImVec2(0, 140), true);
 					ImGui::Text("Mesh");
 					if (ImGui::Button("Select"))
@@ -420,7 +420,7 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 						{
 							if (ImGui::Selectable(mesh->GetName().stem().generic_string().c_str()))
 							{
-								meshComp->SetMesh(std::static_pointer_cast<Engine::ResourceSystem::Mesh>(mesh));
+								meshComp->SetMesh(std::static_pointer_cast<Mesh>(mesh));
 							}
 						}
 						ImGui::EndPopup();
@@ -430,14 +430,14 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 					ImGui::Spacing();
 					if (ImGui::Button("Remove Component"))
 					{
-						selectedEntity->RemoveComponent(Engine::ECS::ComponentTypes::Mesh);
+						selectedEntity->RemoveComponent(ComponentTypes::Mesh);
 					}
 					ImGui::EndChild();
 				}
-					break;
-				case Engine::ECS::ComponentTypes::RigidBody2D:
+				break;
+				case ComponentTypes::RigidBody2D:
 				{
-					const auto& rb2d = std::static_pointer_cast<Engine::ECS::RigidBody2DComponent>(component);
+					const auto& rb2d = std::static_pointer_cast<RigidBody2DComponent>(component);
 					ImGui::BeginChild("RigidBody 2D", ImVec2(0, 130), true);
 					ImGui::Text("RigidBody 2D");
 					const char* bodyTypeOptions[] = { "Static","Kinematic","Dynamic" };
@@ -450,7 +450,7 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 							if (ImGui::Selectable(bodyTypeOptions[i], isSelected))
 							{
 								currentBodyTypeSelected = bodyTypeOptions[i];
-								rb2d->SetBodyType((Engine::ECS::BodyType)i);
+								rb2d->SetBodyType((BodyType)i);
 							}
 
 							if (isSelected)
@@ -462,14 +462,14 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 					ImGui::Spacing();
 					if (ImGui::Button("Remove Component"))
 					{
-						selectedEntity->RemoveComponent(Engine::ECS::ComponentTypes::RigidBody2D);
+						selectedEntity->RemoveComponent(ComponentTypes::RigidBody2D);
 					}
 					ImGui::EndChild();
 				}
-					break;
-				case Engine::ECS::ComponentTypes::Transform:
+				break;
+				case ComponentTypes::Transform:
 				{
-					const auto& transformComp = std::static_pointer_cast<Engine::ECS::TransformComponent>(component);
+					const auto& transformComp = std::static_pointer_cast<TransformComponent>(component);
 					ImGui::BeginChild("Transform", ImVec2(0, 130), true);
 					ImGui::Text("Transform");
 					ImGui::Spacing();
@@ -482,31 +482,31 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 					ImGui::Spacing();
 					ImGui::EndChild();
 				}
-					break;
-				case Engine::ECS::ComponentTypes::BoxCollider2D:
+				break;
+				case ComponentTypes::BoxCollider2D:
 				{
-					auto bc2d = std::static_pointer_cast<Engine::ECS::BoxCollider2DComponent>(component);
+					auto bc2d = std::static_pointer_cast<BoxCollider2DComponent>(component);
 					ImGui::BeginChild("BoxCollider 2D", ImVec2(0, 200), true);
 					ImGui::Text("BoxCollider 2D");
-					float* offset[2] = { &bc2d->GetOffset().x,&bc2d->GetOffset().y};
+					float* offset[2] = { &bc2d->GetOffset().x,&bc2d->GetOffset().y };
 					float* size[2] = { &bc2d->GetSize().x,&bc2d->GetSize().y };
-					ImGui::DragFloat2("Size", size[0],0.5f);
-					ImGui::DragFloat2("Offset", offset[0],0.5f);
-					ImGui::DragFloat("Density", &bc2d->GetDensity(),0.01f,0.0f,1.0f);
+					ImGui::DragFloat2("Size", size[0], 0.5f);
+					ImGui::DragFloat2("Offset", offset[0], 0.5f);
+					ImGui::DragFloat("Density", &bc2d->GetDensity(), 0.01f, 0.0f, 1.0f);
 					ImGui::DragFloat("Friction", &bc2d->GetFriction(), 0.01f, 0.0f, 1.0f);
 					ImGui::DragFloat("Restitution", &bc2d->GetRestitution(), 0.01f, 0.0f, 1.0f);
 					ImGui::DragFloat("Restitution Threshold", &bc2d->GetRestituitonThreshold(), 0.01f, 0.0f);
 					ImGui::Spacing();
 					if (ImGui::Button("Remove Component"))
 					{
-						selectedEntity->RemoveComponent(Engine::ECS::ComponentTypes::RigidBody2D);
+						selectedEntity->RemoveComponent(ComponentTypes::RigidBody2D);
 					}
 					ImGui::EndChild();
 				}
 				break;
-				case Engine::ECS::ComponentTypes::CircleCollider:
+				case ComponentTypes::CircleCollider:
 				{
-					auto circleCollider = std::static_pointer_cast<Engine::ECS::CircleColliderComponent>(component);
+					auto circleCollider = std::static_pointer_cast<CircleColliderComponent>(component);
 					ImGui::BeginChild("Circle Collider", ImVec2(0, 200), true);
 					ImGui::Text("Circle Collider");
 					float* offset[2] = { &circleCollider->GetOffset().x,&circleCollider->GetOffset().y };
@@ -519,14 +519,14 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 					ImGui::Spacing();
 					if (ImGui::Button("Remove Component"))
 					{
-						selectedEntity->RemoveComponent(Engine::ECS::ComponentTypes::RigidBody2D);
+						selectedEntity->RemoveComponent(ComponentTypes::RigidBody2D);
 					}
 					ImGui::EndChild();
 				}
 				break;
-				case Engine::ECS::ComponentTypes::Script:
+				case ComponentTypes::Script:
 				{
-					const auto& scriptComp = std::static_pointer_cast<Engine::ECS::ScriptComponent>(component);
+					const auto& scriptComp = std::static_pointer_cast<ScriptComponent>(component);
 					ImGui::BeginChild("Script", ImVec2(0, 140), true);
 					ImGui::Text("Script");
 					if (ImGui::Button("Select"))
@@ -552,31 +552,30 @@ void Engine::Gui::GuiManager::BuildEntityInspector()
 					ImGui::Spacing();
 					if (ImGui::Button("Remove Component"))
 					{
-						selectedEntity->RemoveComponent(Engine::ECS::ComponentTypes::Mesh);
+						selectedEntity->RemoveComponent(ComponentTypes::Mesh);
 					}
 					ImGui::EndChild();
 				}
 				break;
+				}
 			}
 		}
+		ImGui::End();
 	}
-	ImGui::End();
-}
 
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
-bool Engine::Gui::GuiManager::WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
-{
-	return ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
-}
-
-ImGuiIO* Engine::Gui::GuiManager::GetIO()
-{
-	if (ImGui::GetCurrentContext())
+	bool GuiManager::WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
-		return &ImGui::GetIO();
+		return ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
 	}
-	return nullptr;
+
+	ImGuiIO* GuiManager::GetIO()
+	{
+		if (ImGui::GetCurrentContext())
+		{
+			return &ImGui::GetIO();
+		}
+		return nullptr;
+	}
 }
 
 

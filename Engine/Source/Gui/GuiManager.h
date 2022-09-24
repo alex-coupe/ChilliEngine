@@ -11,47 +11,39 @@
 #include "../Core/DependencyResolver.h"
 #include "../ResourceSystem/Asset.h"
 
-namespace Engine::ECS {
+namespace Chilli {
+
 	class Entity;
-}
-
-namespace Engine::ResourceSystem {
 	class Scene;
-}
-
-namespace Engine::Rendering {
 	class Renderer;
-}
-
-namespace Engine::Gui {
 
 	class CHILLI_API GuiManager {
 	public:
 		static void Init();
 		static void Shutdown();
-		static void DrawEditorGui(Engine::Rendering::Renderer* renderer);
+		static void DrawEditorGui(Renderer* renderer);
 		static bool WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 		static ImGuiIO* GetIO();
 	private:
 		static int assetDropdownSelected;
 		static const char* assetDropdownList[4];
 		static const char* componentsList[18];
-		static int assetFrameSelected;
-		static int hierarchySelected;
-		static int sceneSelected;
-		static int entitySelected;
+		static uint64_t assetFrameSelected;
+		static uint64_t hierarchySelected;
+		static uint64_t sceneSelected;
+		static uint64_t entitySelected;
 		static bool initialMousePos;
 		static float mouseX;
 		static float mouseY;
-		static std::shared_ptr<Engine::ResourceSystem::Asset> selectedAsset;
-		static std::shared_ptr<Engine::ECS::Entity> selectedEntity;
-		static std::shared_ptr<Engine::ResourceSystem::Scene> selectedScene;
+		static std::shared_ptr<Asset> selectedAsset;
+		static std::shared_ptr<Entity> selectedEntity;
+		static std::shared_ptr<Scene> selectedScene;
 		static void BeginFrame();
 		static void EndFrame();
 		static void BuildMenuBar();
 		static void BuildAssetManager();
 		static void BuildSceneHierarchy();
 		static void BuildEntityInspector();
-		static void BuildScenePreviewWindow(Engine::Rendering::Renderer* renderer);
+		static void BuildScenePreviewWindow(Renderer* renderer);
 	};
 }

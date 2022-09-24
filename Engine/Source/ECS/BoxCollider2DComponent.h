@@ -3,7 +3,7 @@
 #include "Component.h"
 #include <DirectXMath.h>
 
-namespace Engine::ECS {
+namespace Chilli {
 	class CHILLI_API BoxCollider2DComponent : public Component {
 	public:
 		BoxCollider2DComponent(DirectX::XMFLOAT2 size = { 1.0f,1.0f },

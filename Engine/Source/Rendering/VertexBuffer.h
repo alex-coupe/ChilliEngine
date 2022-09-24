@@ -2,7 +2,7 @@
 #include "../Core/ChilliDefinitions.h"
 #include "Direct3D.h"
 
-namespace Engine::Rendering {
+namespace Chilli {
 
 	class VertexBuffer {
 	public:

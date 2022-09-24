@@ -3,16 +3,16 @@
 #include "../ECS/Component.h"
 #include "../ResourceSystem/Script.h"
 
-namespace Engine::ECS {
+namespace Chilli {
 	class CHILLI_API ScriptComponent :public Component {
 	public:
-		ScriptComponent(const Engine::Utilities::UUID& uuid);
+		ScriptComponent();
+		ScriptComponent(const std::string& scriptName);
 		ScriptComponent(const ScriptComponent& rhs);
 		virtual const std::string Serialize()const override;
 		const std::string& GetScriptName()const;
 		void SetScript(const std::string& scriptName);
 	private:
 		std::string m_scriptName;
-		Engine::Utilities::UUID m_scriptUuid;
 	};
 }

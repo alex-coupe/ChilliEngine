@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Chilli
 {
-    public class Engine
+    public class Core
     {
         public static void Log(string message)
         {
