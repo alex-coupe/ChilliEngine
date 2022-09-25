@@ -3,13 +3,13 @@
 namespace Chilli {
 
 	Mesh::Mesh(const std::filesystem::path& filepath, UUID uuid)
-		: Asset(AssetTypes::Mesh, std::filesystem::path(filepath), uuid)
+		: Asset(AssetType::Mesh, std::filesystem::path(filepath), uuid)
 	{
 		ImportMesh();
 	}
 
 	Mesh::Mesh(const std::filesystem::path& filepath)
-		: Asset(AssetTypes::Mesh, std::filesystem::path(filepath))
+		: Asset(AssetType::Mesh, std::filesystem::path(filepath))
 	{
 		ImportMesh();
 	}

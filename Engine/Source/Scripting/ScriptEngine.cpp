@@ -22,10 +22,9 @@ namespace Chilli {
         ScriptApi::Init();
 
         m_applicationScriptsImage = mono_assembly_get_image(m_applicationScriptsAssembly);
-        BuildAvailableClasses();
     }
 
-    void ScriptEngine::SceneStart()const
+    void ScriptEngine::InvokeCreateMethod()const
     {
         auto currentScene = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene();
         for (const auto& entity : currentScene->GetEntities())
@@ -33,36 +32,31 @@ namespace Chilli {
             if (entity->HasComponent(ComponentTypes::Script))
             {
                 auto scriptComp = std::static_pointer_cast<ScriptComponent>(entity->GetComponentByType(ComponentTypes::Script));
-                auto monoClass = mono_class_from_name(m_applicationScriptsImage, "Application", scriptComp->GetScriptName().c_str());
-                auto monoObject = mono_object_new(m_appDomain, monoClass);
-                mono_runtime_object_init(monoObject);
-                MonoMethod* method = mono_class_get_method_from_name(monoClass, "OnCreate", 0);
-                mono_runtime_invoke(method, monoObject, nullptr, nullptr);
+                auto script = DependencyResolver::ResolveDependency<ProjectManager>()->GetScriptByName(scriptComp->GetScriptName());
+                mono_runtime_invoke(script->GetCreateMethod(), script->GetMonoObject(), nullptr, nullptr);
             }
         }
     }
 
-    void ScriptEngine::SceneUpdate() const
+    void ScriptEngine::InvokeUpdateMethod() const
     {
         auto currentScene = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene();
         for (const auto& entity : currentScene->GetEntities())
         {
             if (entity->HasComponent(ComponentTypes::Script))
             {
-                auto scriptComp = std::static_pointer_cast<ScriptComponent>(entity->GetComponentByType(ComponentTypes::Script));
-                auto monoClass = mono_class_from_name(m_applicationScriptsImage, "Application", scriptComp->GetScriptName().c_str());
-                auto monoObject = mono_object_new(m_appDomain, monoClass);
-                mono_runtime_object_init(monoObject);
-                MonoMethod* methodTwo = mono_class_get_method_from_name(monoClass, "OnUpdate", 1);
                 float dt = DependencyResolver().ResolveDependency<Timer>()->GetDeltaTime();
                 void* deltaTime = &dt;
-                mono_runtime_invoke(methodTwo, monoObject, &deltaTime, nullptr);
+                auto scriptComp = std::static_pointer_cast<ScriptComponent>(entity->GetComponentByType(ComponentTypes::Script));
+                auto script = DependencyResolver::ResolveDependency<ProjectManager>()->GetScriptByName(scriptComp->GetScriptName());
+                mono_runtime_invoke(script->GetUpdateMethod(), script->GetMonoObject(), &deltaTime, nullptr);
             }
         }
     }
 
-    void ScriptEngine::BuildAvailableClasses()
+    std::vector<std::shared_ptr<Script>>  ScriptEngine::BuildAvailableScripts()
     {
+        std::vector<std::shared_ptr<Script>> scripts;
         MonoImage* image = mono_assembly_get_image(m_applicationScriptsAssembly);
         const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
         int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
@@ -73,14 +67,9 @@ namespace Chilli {
             mono_metadata_decode_row(typeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE);
 
             const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
-
-            m_availableClasses.push_back(name);
+            scripts.emplace_back(std::make_shared<Script>(name, m_applicationScriptsImage, m_appDomain));
         }
-    }
-
-    const std::vector<std::string>& ScriptEngine::GetAvailableClasses()const
-    {
-        return m_availableClasses;
+        return scripts;
     }
 
     ScriptEngine::~ScriptEngine()

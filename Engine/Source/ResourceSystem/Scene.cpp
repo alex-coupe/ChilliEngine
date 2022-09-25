@@ -65,9 +65,10 @@ namespace Chilli {
         m_sceneState = state;
     }
 
-    void Scene::onSceneStart()
+    void Scene::StartScene()
     {
         m_b2World = std::make_unique<b2World>(m_gravity);
+        //scriptEngine->InvokeCreateMethod
         for (const auto& entity : m_entities)
         {
             auto clone = Entity::Clone(*entity);
@@ -76,8 +77,9 @@ namespace Chilli {
         }
     }
 
-    void Scene::onSceneUpdate()
+    void Scene::UpdateScene()
     {
+        //scriptEngine->InvokeUpdateMethod
         m_b2World->Step(m_physicsTimestep, m_velocityIterations, m_positionIterations);
         for (const auto& entities : m_entities)
         {
@@ -85,7 +87,7 @@ namespace Chilli {
         }
     }
 
-    void Scene::onSceneStop()
+    void Scene::StopScene()
     {
         m_entities.clear();
         m_entities = m_entitiesClone;

@@ -208,9 +208,11 @@
     <ClInclude Include="Source\Rendering\VertexBuffer.h" />
     <ClInclude Include="Source\Rendering\VertexTypes.h" />
     <ClInclude Include="Source\ResourceSystem\Asset.h" />
+    <ClInclude Include="Source\ResourceSystem\AssetManager.h" />
     <ClInclude Include="Source\ResourceSystem\Mesh.h" />
     <ClInclude Include="Source\ResourceSystem\Scene.h" />
     <ClInclude Include="Source\ResourceSystem\ProjectManager.h" />
+    <ClInclude Include="Source\ResourceSystem\SceneManager.h" />
     <ClInclude Include="Source\ResourceSystem\Script.h" />
     <ClInclude Include="Source\Scripting\ScriptApi.h" />
     <ClInclude Include="Source\Scripting\ScriptEngine.h" />
@@ -253,9 +255,11 @@
     <ClCompile Include="Source\Rendering\Texture.cpp" />
     <ClCompile Include="Source\Rendering\Topology.cpp" />
     <ClCompile Include="Source\Rendering\VertexBuffer.cpp" />
+    <ClCompile Include="Source\ResourceSystem\AssetManager.cpp" />
     <ClCompile Include="Source\ResourceSystem\Mesh.cpp" />
     <ClCompile Include="Source\ResourceSystem\Scene.cpp" />
     <ClCompile Include="Source\ResourceSystem\ProjectManager.cpp" />
+    <ClCompile Include="Source\ResourceSystem\SceneManager.cpp" />
     <ClCompile Include="Source\ResourceSystem\Script.cpp" />
     <ClCompile Include="Source\Scripting\ScriptApi.cpp" />
     <ClCompile Include="Source\Scripting\ScriptEngine.cpp" />

@@ -6,14 +6,12 @@ namespace Chilli {
 
     ProjectManager::ProjectManager()
     {
-        m_scenes.emplace_back(std::make_shared<Scene>("Scene 1"));
-        m_currentScene = m_scenes.front();
-        m_scriptEngine = std::make_unique<ScriptEngine>();
-    }
-
-    const std::vector<std::string>& ProjectManager::GetAvailableScripts()const
-    {
-        return m_scriptEngine->GetAvailableClasses();
+        m_sceneManager = std::make_unique<SceneManager>();
+        m_assetManager = std::make_unique<AssetManager>();
+        for (const auto& script : m_sceneManager->BuildAvailableScripts())
+        {
+            m_assetManager->AddScript(script);
+        }
     }
 
     void ProjectManager::LoadProject(const std::string& filename)
@@ -46,30 +44,12 @@ namespace Chilli {
 
         if (document.HasMember("Assets"))
         {
-            m_assets.clear();
-            for (const auto& asset : document["Assets"].GetArray())
-            {
-                switch (asset["Type"].GetInt())
-                {
-                case (int)AssetTypes::Mesh:
-                    m_assets.emplace_back(std::make_shared<Mesh>(asset["FilePath"].GetString(),
-                        asset["Uuid"].GetUint64()));
-                    break;
-                default:
-                    break;
-                }
-            }
+            m_assetManager->LoadAssets(document["Assets"].GetArray());
         }
 
         if (document.HasMember("Scenes"))
         {
-            m_scenes.clear();
-            m_currentScene.reset();
-            for (const auto& scene : document["Scenes"].GetArray())
-            {
-                m_scenes.emplace_back(std::make_shared<Scene>(scene["SceneName"].GetString(), scene["Uuid"].GetUint64(), scene["Entities"].GetArray()));
-            }
-            m_currentScene = m_scenes.front();
+            m_sceneManager->LoadScenes(document["Scenes"].GetArray());
         }
     }
 
@@ -78,21 +58,9 @@ namespace Chilli {
         std::stringstream ss;
         std::ofstream outputStream;
 
-        ss << "{ \"ProjectName\":\"" << m_projectName << "\", \"Assets\":[";
-        for (size_t i = 0; i < m_assets.size(); i++)
-        {
-            ss << m_assets[i]->Serialize();
-            if (i != m_assets.size() - 1)
-                ss << ",";
-        }
-        ss << "], \"Scenes\":[ ";
-        for (size_t i = 0; i < m_scenes.size(); i++)
-        {
-            ss << m_scenes[i]->Serialize();
-            if (i != m_scenes.size() - 1)
-                ss << ",";
-        }
-        ss << "]}";
+        ss << "{ \"ProjectName\":\"" << m_projectName << "\", \"Assets\":["
+        << m_assetManager->SaveAssets() << "], \"Scenes\":[ " 
+        << m_sceneManager->SaveScenes() << "]}";
         outputStream.open(filename);
         outputStream << ss.str();
         outputStream.close();
@@ -100,135 +68,110 @@ namespace Chilli {
 
     void ProjectManager::NewProject()
     {
-        m_scenes.clear();
-        m_assets.clear();
+        m_assetManager->Reset();
+        m_sceneManager->Reset();
         m_projectName = "Untitled Project";
-        m_scenes.emplace_back(std::make_shared<Scene>("Scene 1"));
-        m_currentScene = m_scenes.front();
     }
 
     void ProjectManager::AddScene(const std::string& name)
     {
-        m_scenes.emplace_back(std::make_shared<Scene>(name));
+        m_sceneManager->AddScene(name);
     }
 
     std::vector<std::shared_ptr<Scene>> ProjectManager::GetScenes() const
     {
-        return m_scenes;
+        return m_sceneManager->GetAllScenes();
     }
 
-    void ProjectManager::AddAsset(const std::filesystem::path& filename, AssetTypes type)
+    void ProjectManager::AddScript(const std::string& className)
+    {
+        m_assetManager->AddScript(className);
+    }
+
+    void ProjectManager::AddAsset(const std::filesystem::path& filename, AssetType type)
     {
         switch (type)
         {
-        case AssetTypes::Mesh:
-            m_assets.emplace_back(std::make_shared<Mesh>(filename));
-            break;
-        case AssetTypes::Script:
-            m_assets.emplace_back(std::make_shared<Script>(filename));
+        case AssetType::Mesh:
+            m_assetManager->AddMesh(filename);
             break;
         default:
             break;
         }
     }
 
-    void ProjectManager::RemoveAsset(UUID uuid)
+    void ProjectManager::RemoveAsset(UUID uuid,AssetType type)
     {
-        if (auto m_assetIterator = std::find_if(m_assets.begin(), m_assets.end(), [uuid](const std::shared_ptr<Asset> rhs)
-            {
-                return rhs->Uuid.Get() == uuid.Get();
-            }); m_assetIterator != m_assets.end() && m_assets.size() > 0)
+        switch (type)
         {
-            m_assets.erase(m_assetIterator);
-        }
+        case AssetType::Mesh:
+            m_assetManager->RemoveMesh(uuid);
+            break;
+        default:
+            return;
+        }   
     }
-
 
     void ProjectManager::RemoveScene(UUID uuid)
     {
-        if (auto m_sceneIterator = std::find_if(m_scenes.begin(), m_scenes.end(), [uuid](const std::shared_ptr<Scene> rhs)
-            {
-                return rhs->Uuid.Get() == uuid.Get();
-            }); m_sceneIterator != m_scenes.end() && m_scenes.size() > 0)
-        {
-            m_scenes.erase(m_sceneIterator);
-        }
+        m_sceneManager->RemoveScene(uuid);
     }
 
     std::shared_ptr<Scene> ProjectManager::GetCurrentScene() const
     {
-        return m_currentScene;
+        return m_sceneManager->GetCurrentScene();
     }
 
     void ProjectManager::SetCurrentScene(UUID uuid)
     {
-        if (auto m_sceneIterator = std::find_if(m_scenes.begin(), m_scenes.end(), [&uuid](const std::shared_ptr<Scene> rhs)
-            {
-                return rhs->Uuid.Get() == uuid.Get();
-            }); m_sceneIterator != m_scenes.end() && m_scenes.size() > 0)
-        {
-            m_currentScene = *m_sceneIterator;
-        }
+        m_sceneManager->GoToScene(uuid);
     }
 
-    void ProjectManager::SetCurrentSceneState(SceneState state)
+    std::shared_ptr<Asset> ProjectManager::GetAssetByUUID(UUID uuid, AssetType type)
     {
-        switch (state) {
-        case SceneState::Play:
-        case SceneState::Simulate:
-            m_scriptEngine->SceneStart();
-            m_currentScene->onSceneStart();
-            break;
-        case SceneState::Edit:
-        case SceneState::Pause:
-            m_currentScene->onSceneStop();
-            break;
-        }
-        m_currentScene->SetSceneState(state);
-    }
-
-    std::shared_ptr<Asset> ProjectManager::GetAssetByUUID(UUID uuid)
-    {
-        if (auto m_assetsIterator = std::find_if(m_assets.begin(), m_assets.end(), [uuid](const std::shared_ptr<Asset> rhs)
-            {
-                return rhs->Uuid.Get() == uuid.Get();
-            }); m_assetsIterator != m_assets.end() && m_assets.size() > 0)
+        switch (type)
         {
-            return *m_assetsIterator;
-        }
+        case AssetType::Mesh:
+            return m_assetManager->GetMeshByUUID(uuid);
+        case AssetType::Script:
+            return m_assetManager->GetScriptByUUID(uuid);
+        default:
             return nullptr;
-    }
-
-    std::vector<std::shared_ptr<Asset>> ProjectManager::GetAssetsByType(AssetTypes type)
-    {
-        std::vector<std::shared_ptr<Asset>> assets;
-        std::copy_if(m_assets.begin(), m_assets.end(), std::back_inserter(assets), [type](const std::shared_ptr<Asset> rhs) {
-            return rhs->GetAssetType() == type;
-            });
-        return assets;
-    }
-
-    std::vector<std::shared_ptr<Component>> ProjectManager::GetCurrentSceneComponentsByType(ComponentTypes type)
-    {
-        std::vector<std::shared_ptr<Component>> components;
-        for (const auto& ent : m_currentScene->GetEntities())
-        {
-            if (const auto& comp = ent->GetComponentByType(type); comp != nullptr)
-                components.push_back(comp);
         }
-        return components;
     }
+
+    const std::unordered_map<uint64_t, std::shared_ptr<Script>>& ProjectManager::GetScripts()const
+    {
+        return m_assetManager->GetScripts();
+    }
+
+    const std::unordered_map<uint64_t, std::shared_ptr<Mesh>>& ProjectManager::GetMeshes()const
+    {
+        return m_assetManager->GetMeshes();
+    }
+
     SystemType ProjectManager::GetSystemType()
     {
         return SystemType::ProjectManager;
     }
 
+    void ProjectManager::PlayCurrentScene()const
+    {
+        m_sceneManager->StartCurrentScene();
+    }
+
+    void ProjectManager::StopCurrentScene()const
+    {
+        m_sceneManager->StopCurrentScene();
+    }
+
+    std::shared_ptr<Script> ProjectManager::GetScriptByName(const std::string& name)const
+    {
+       return  m_assetManager->GetScriptByName(name);
+    }
+
     void ProjectManager::ProcessFrame()
     {
-        if (m_currentScene->GetSceneState() == SceneState::Play || m_currentScene->GetSceneState() == SceneState::Simulate)
-        {
-            m_scriptEngine->SceneUpdate();
-            m_currentScene->onSceneUpdate();
-        }
+        m_sceneManager->UpdateCurrentScene();
     }
 }

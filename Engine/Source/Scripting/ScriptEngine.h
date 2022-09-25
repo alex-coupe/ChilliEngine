@@ -13,13 +13,14 @@ namespace Chilli {
 	class CHILLI_API ScriptEngine {
 	public:
 		ScriptEngine();
-		void SceneStart()const;
-		void SceneUpdate()const;
-		const std::vector<std::string>& GetAvailableClasses()const;
+		void InvokeCreateMethod()const;
+		void InvokeUpdateMethod()const;
+		std::vector<std::shared_ptr<Script>> BuildAvailableScripts();
 		~ScriptEngine();
+		
 	private:
-		void BuildAvailableClasses();
-		std::vector<std::string> m_availableClasses;
+		
+		
 		MonoDomain* m_domain = nullptr;
 		MonoDomain* m_appDomain = nullptr;
 		MonoImage* m_applicationScriptsImage = nullptr;

@@ -25,17 +25,17 @@ namespace Chilli {
 
 	const std::vector<VertexPos>& MeshComponent::GetVertices() const
 	{
-		return std::static_pointer_cast<Mesh>(DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetByUUID(m_meshUuid))->GetVertices();
+		return std::static_pointer_cast<Mesh>(DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetByUUID(m_meshUuid, AssetType::Mesh))->GetVertices();
 	}
 
 	const std::vector<unsigned short>& MeshComponent::GetIndices() const
 	{
-		return std::static_pointer_cast<Mesh>(DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetByUUID(m_meshUuid))->GetIndices();
+		return std::static_pointer_cast<Mesh>(DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetByUUID(m_meshUuid, AssetType::Mesh))->GetIndices();
 	}
 
 	const std::shared_ptr<Mesh> MeshComponent::GetMesh() const
 	{
-		return std::static_pointer_cast<Mesh>(DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetByUUID(m_meshUuid));
+		return std::static_pointer_cast<Mesh>(DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetByUUID(m_meshUuid, AssetType::Mesh));
 	}
 
 	void MeshComponent::SetMesh(UUID meshUuid)

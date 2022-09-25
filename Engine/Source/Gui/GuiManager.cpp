@@ -172,7 +172,7 @@ namespace Chilli {
 				{
 					if (ImGui::MenuItem("Play"))
 					{
-						DependencyResolver::ResolveDependency<ProjectManager>()->SetCurrentSceneState(SceneState::Play);
+						DependencyResolver::ResolveDependency<ProjectManager>()->PlayCurrentScene();
 					}
 				}
 
@@ -180,7 +180,7 @@ namespace Chilli {
 				{
 					if (ImGui::MenuItem("Stop"))
 					{
-						DependencyResolver::ResolveDependency<ProjectManager>()->SetCurrentSceneState(SceneState::Edit);
+						DependencyResolver::ResolveDependency<ProjectManager>()->StopCurrentScene();
 					}
 				}
 
@@ -188,7 +188,7 @@ namespace Chilli {
 				{
 					if (ImGui::MenuItem("Simulate"))
 					{
-						DependencyResolver::ResolveDependency<ProjectManager>()->SetCurrentSceneState(SceneState::Simulate);
+						DependencyResolver::ResolveDependency<ProjectManager>()->PlayCurrentScene();
 					}
 				}
 
@@ -196,7 +196,7 @@ namespace Chilli {
 				{
 					if (ImGui::MenuItem("Pause"))
 					{
-						DependencyResolver::ResolveDependency<ProjectManager>()->SetCurrentSceneState(SceneState::Pause);
+						DependencyResolver::ResolveDependency<ProjectManager>()->StopCurrentScene();
 					}
 				}
 				ImGui::EndMenu();
@@ -233,43 +233,73 @@ namespace Chilli {
 					nfdchar_t* outPath = NULL;
 					nfdresult_t result = NFD_ERROR;
 					switch (assetDropdownSelected) {
-					case (int)AssetTypes::Mesh:
+					case (int)AssetType::Mesh:
 						result = NFD_OpenDialog("gltf,fbx", NULL, &outPath);
 						break;
-					case (int)AssetTypes::Audio:
+					case (int)AssetType::Audio:
 						result = NFD_OpenDialog("wav,mp3", NULL, &outPath);
 						break;
-					case (int)AssetTypes::Material:
+					case (int)AssetType::Material:
 						result = NFD_OpenDialog("png,jpg,jpeg,bmp", NULL, &outPath);
 						break;
-					case (int)AssetTypes::Script:
+					case (int)AssetType::Script:
 						result = NFD_OpenDialog("cs,dll", NULL, &outPath);
 						break;
 					}
 
 					if (result == NFD_OKAY)
 					{
-						DependencyResolver::ResolveDependency<ProjectManager>()->AddAsset(outPath, (AssetTypes)assetDropdownSelected);
+						DependencyResolver::ResolveDependency<ProjectManager>()->AddAsset(outPath, (AssetType)assetDropdownSelected);
 						free(outPath);
 					}
 				}
 				ImGui::Separator();
-				const auto& assets = DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetsByType((AssetTypes)assetDropdownSelected);
-				for (const auto& asset : assets)
+				switch ((AssetType)assetDropdownSelected) 
 				{
-					if (ImGui::Selectable(asset->GetName().stem().generic_string().c_str(), assetFrameSelected == asset->Uuid.Get()))
+					case AssetType::Mesh:
 					{
-						selectedAsset = asset;
-						assetFrameSelected = selectedAsset->Uuid.Get();
+						const auto& meshes = DependencyResolver::ResolveDependency<ProjectManager>()->GetMeshes();
+
+						for (const auto& mesh : meshes)
+						{
+							if (ImGui::Selectable(mesh.second->GetName().stem().generic_string().c_str(), assetFrameSelected == mesh.first))
+							{
+								selectedAsset = mesh.second;
+								assetFrameSelected = selectedAsset->Uuid.Get();
+							}
+						}
 					}
-				}
-				if (selectedAsset)
-				{
-					if (ImGui::Button("Remove Asset"))
+					if (selectedAsset)
 					{
-						DependencyResolver::ResolveDependency<ProjectManager>()->RemoveAsset(selectedAsset->Uuid);
-						selectedAsset = nullptr;
+						if (ImGui::Button("Remove Asset"))
+						{
+							DependencyResolver::ResolveDependency<ProjectManager>()->RemoveAsset(selectedAsset->Uuid, AssetType::Mesh);
+							selectedAsset = nullptr;
+						}
 					}
+				break;
+					case AssetType::Script:
+					{
+						const auto& scripts = DependencyResolver::ResolveDependency<ProjectManager>()->GetScripts();
+
+						for (const auto& script : scripts)
+						{
+							if (ImGui::Selectable(script.second->GetScriptName().c_str(), assetFrameSelected == script.first))
+							{
+								selectedAsset = script.second;
+								assetFrameSelected = selectedAsset->Uuid.Get();
+							}
+						}
+					}
+					if (selectedAsset)
+					{
+						if (ImGui::Button("Remove Asset"))
+						{
+							DependencyResolver::ResolveDependency<ProjectManager>()->RemoveAsset(selectedAsset->Uuid, AssetType::Script);
+							selectedAsset = nullptr;
+						}
+					}
+					break;
 				}
 				ImGui::EndTabItem();
 			}
@@ -376,8 +406,8 @@ namespace Chilli {
 		window_flags |= ImGuiWindowFlags_NoResize;
 		window_flags |= ImGuiWindowFlags_NoCollapse;
 		ImGui::Begin("Inspector", 0, window_flags);
-		const auto& meshes = DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetsByType(AssetTypes::Mesh);
-		const auto& scripts = DependencyResolver::ResolveDependency<ProjectManager>()->GetAvailableScripts();
+		const auto& meshes = DependencyResolver::ResolveDependency<ProjectManager>()->GetMeshes();
+		const auto& scripts = DependencyResolver::ResolveDependency<ProjectManager>()->GetScripts();
 
 		if (selectedEntity)
 		{
@@ -420,9 +450,9 @@ namespace Chilli {
 						ImGui::Separator();
 						for (const auto& mesh : meshes)
 						{
-							if (ImGui::Selectable(mesh->GetName().stem().generic_string().c_str()))
+							if (ImGui::Selectable(mesh.second->GetName().stem().generic_string().c_str()))
 							{
-								meshComp->SetMesh(mesh->Uuid);
+								meshComp->SetMesh(mesh.second->Uuid);
 							}
 						}
 						ImGui::EndPopup();
@@ -542,19 +572,17 @@ namespace Chilli {
 						ImGui::Separator();
 						for (const auto& script : scripts)
 						{
-							if (ImGui::Selectable(script.c_str()))
+							if (ImGui::Selectable(script.second->GetScriptName().c_str()))
 							{
-								scriptComp->SetScript(script);
+								scriptComp->SetScript(script.second->GetScriptName());
 							}
 						}
 						ImGui::EndPopup();
 					}
 					ImGui::Spacing();
-					ImGui::Text("Material");
-					ImGui::Spacing();
 					if (ImGui::Button("Remove Component"))
 					{
-						selectedEntity->RemoveComponent(ComponentTypes::Mesh);
+						selectedEntity->RemoveComponent(ComponentTypes::Script);
 					}
 					ImGui::EndChild();
 				}
