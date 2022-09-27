@@ -2,19 +2,19 @@
 
 namespace Application
 {
-    public class Test
+    public class Test : ChilliScript
     {
-        public void OnCreate()
+        public override void OnCreate()
         {
                 Core.Log("Entity has transform component");
         }
 
-        public  void OnDestroy()
+        public override void OnDestroy()
         {
             Core.Log("Destroy function called");
         }
 
-        public void OnUpdate(float dt)
+        public override void OnUpdate(float dt)
         {
             if (Input.IsKeyDown(KeyCode.A))
             {
