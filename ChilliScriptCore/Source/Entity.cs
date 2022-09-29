@@ -8,8 +8,8 @@ namespace Chilli
 {
     public class Entity
     {
-        public readonly uint ID;
-        public Entity(uint id) { ID = id; }
+        public readonly ulong ID;
+        public Entity(ulong id) { ID = id; }
 
         public bool HasComponent<T>() where T : Component, new()
         {

@@ -21,10 +21,14 @@ namespace Chilli {
 
         ScriptApi::Init();
 
+        MonoImage* coreImage = mono_assembly_get_image(m_chilliCoreAssembly);
+        MonoClass* coreClass = mono_class_from_name(coreImage, "Chilli", "ChilliScript");
+        m_constructor = mono_class_get_method_from_name(coreClass, ".ctor", 1);
+
         m_applicationScriptsImage = mono_assembly_get_image(m_applicationScriptsAssembly);
     }
 
-    void ScriptEngine::InvokeCreateMethod()const
+    void ScriptEngine::ConstructAndInvokeCreateMethod()const
     {
         auto currentScene = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene();
         for (const auto& entity : currentScene->GetEntities())
@@ -33,6 +37,9 @@ namespace Chilli {
             {
                 auto scriptComp = std::static_pointer_cast<ScriptComponent>(entity->GetComponentByType(ComponentTypes::Script));
                 auto script = DependencyResolver::ResolveDependency<ProjectManager>()->GetScriptByName(scriptComp->GetScriptName());
+                uint64_t uuid = entity->Uuid.Get();
+                void* param = &uuid;
+                mono_runtime_invoke(m_constructor, script->GetMonoObject(), &param, nullptr);
                 mono_runtime_invoke(script->GetCreateMethod(), script->GetMonoObject(), nullptr, nullptr);
             }
         }

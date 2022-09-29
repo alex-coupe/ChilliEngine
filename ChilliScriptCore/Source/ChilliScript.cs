@@ -11,9 +11,9 @@ namespace Chilli
         protected Entity Entity;
         protected ChilliScript() { }
 
-        internal ChilliScript(Entity owningEntity)
+        internal ChilliScript(ulong owningEntityId)
         {
-            Entity = owningEntity;
+            Entity = new Entity(owningEntityId);
         }
         
         public abstract void OnCreate();

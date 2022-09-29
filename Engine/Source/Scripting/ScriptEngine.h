@@ -13,7 +13,7 @@ namespace Chilli {
 	class CHILLI_API ScriptEngine {
 	public:
 		ScriptEngine();
-		void InvokeCreateMethod()const;
+		void ConstructAndInvokeCreateMethod()const;
 		void InvokeUpdateMethod()const;
 		std::vector<std::shared_ptr<Script>> BuildAvailableScripts();
 		~ScriptEngine();
@@ -26,5 +26,6 @@ namespace Chilli {
 		MonoImage* m_applicationScriptsImage = nullptr;
 		MonoAssembly* m_chilliCoreAssembly = nullptr;
 		MonoAssembly* m_applicationScriptsAssembly = nullptr;
+		MonoMethod* m_constructor = nullptr;
 	};
 }

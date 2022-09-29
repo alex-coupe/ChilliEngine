@@ -111,7 +111,7 @@ namespace Chilli {
 	{
 		m_currentScene->SetSceneState(SceneState::Play);
 		m_currentScene->StartScene();
-		m_scriptEngine->InvokeCreateMethod();
+		m_scriptEngine->ConstructAndInvokeCreateMethod();
 	}
 	void SceneManager::StopCurrentScene()const
 	{
