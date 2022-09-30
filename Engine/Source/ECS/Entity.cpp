@@ -93,9 +93,9 @@ namespace Chilli {
 		if (rb2d)
 		{
 			const auto& position = rb2d->GetBody()->GetPosition();
-			transform->GetTranslation().x = position.x;
-			transform->GetTranslation().y = position.y;
-			transform->GetRotation().z = rb2d->GetBody()->GetAngle();
+			transform->Translation().x = position.x;
+			transform->Translation().y = position.y;
+			transform->Rotation().z = rb2d->GetBody()->GetAngle();
 		}
 	}
 
@@ -115,17 +115,17 @@ namespace Chilli {
 
 		auto transform = clone->GetTransformComponent();
 
-		translation.x = transform->GetTranslation().x;
-		translation.y = transform->GetTranslation().y;
-		translation.z = transform->GetTranslation().z;
+		translation.x = transform->Translation().x;
+		translation.y = transform->Translation().y;
+		translation.z = transform->Translation().z;
 
-		rotation.x = transform->GetRotation().x;
-		rotation.y = transform->GetRotation().y;
-		rotation.z = transform->GetRotation().z;
+		rotation.x = transform->Rotation().x;
+		rotation.y = transform->Rotation().y;
+		rotation.z = transform->Rotation().z;
 
-		scale.x = transform->GetScale().x;
-		scale.y = transform->GetScale().y;
-		scale.z = transform->GetScale().z;
+		scale.x = transform->Scale().x;
+		scale.y = transform->Scale().y;
+		scale.z = transform->Scale().z;
 
 		clone->RemoveComponent(ComponentTypes::Transform);
 		clone->AddComponent(std::make_shared<TransformComponent>(translation, rotation, scale));
@@ -137,8 +137,8 @@ namespace Chilli {
 	{
 		const auto& rb2d = std::static_pointer_cast<RigidBody2DComponent>(GetComponentByType(ComponentTypes::RigidBody2D));
 		b2BodyDef bodyDef;
-		bodyDef.position.Set(transform->GetTranslation().x, transform->GetTranslation().y);
-		bodyDef.angle = transform->GetRotation().z;
+		bodyDef.position.Set(transform->Translation().x, transform->Translation().y);
+		bodyDef.angle = transform->Rotation().z;
 		switch (rb2d->GetBodyType()) {
 		case BodyType::Static:
 			bodyDef.type = b2_staticBody;
@@ -164,8 +164,8 @@ namespace Chilli {
 	{
 		const auto& bc2d = std::static_pointer_cast<BoxCollider2DComponent>(GetComponentByType(ComponentTypes::BoxCollider2D));
 		b2PolygonShape boxShape;
-		boxShape.SetAsBox(bc2d->GetSize().x * transform->GetScale().x,
-			bc2d->GetSize().y * transform->GetScale().y);
+		boxShape.SetAsBox(bc2d->GetSize().x * transform->Scale().x,
+			bc2d->GetSize().y * transform->Scale().y);
 		b2FixtureDef fixtureDef;
 		fixtureDef.shape = &boxShape;
 		fixtureDef.density = bc2d->GetDensity();
@@ -180,7 +180,7 @@ namespace Chilli {
 		const auto& circleCollider = std::static_pointer_cast<CircleColliderComponent>(GetComponentByType(ComponentTypes::CircleCollider));
 		b2CircleShape circleShape;
 		circleShape.m_p.Set(circleCollider->GetOffset().x, circleCollider->GetOffset().y);
-		circleShape.m_radius = transform->GetScale().x * circleCollider->GetRadius();
+		circleShape.m_radius = transform->Scale().x * circleCollider->GetRadius();
 		b2FixtureDef fixtureDef;
 		fixtureDef.shape = &circleShape;
 		fixtureDef.density = circleCollider->GetDensity();

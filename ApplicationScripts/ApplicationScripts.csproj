@@ -42,7 +42,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="..\Application\Assets\Scripts\Test.cs" />
+    <Compile Include="..\Application\Assets\Scripts\Test.cs">
+      <Link>Source\Test.cs</Link>
+    </Compile>
+	  <Compile Include="..\Application\Assets\Scripts\TestTwo.cs">
+		  <Link>Source\TestTwo.cs</Link>
+	  </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ChilliScriptCore\ChilliScriptCore.csproj">

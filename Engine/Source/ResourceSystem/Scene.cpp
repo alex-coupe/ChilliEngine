@@ -108,4 +108,16 @@ namespace Chilli {
         }
             return nullptr;
     }
+
+    std::shared_ptr<Entity> Scene::GetEntityByName(const std::string& name)const
+    {
+        if (auto m_entIterator = std::find_if(m_entities.begin(), m_entities.end(), [name](const std::shared_ptr<Entity> rhs)
+            {
+                return rhs->GetName() == name;
+            }); m_entIterator != m_entities.end())
+        {
+            return *m_entIterator;
+        }
+            return nullptr;
+    }
 }

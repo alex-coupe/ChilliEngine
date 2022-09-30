@@ -505,9 +505,9 @@ namespace Chilli {
 					ImGui::BeginChild("Transform", ImVec2(0, 130), true);
 					ImGui::Text("Transform");
 					ImGui::Spacing();
-					float* transforms[3] = { &transformComp->GetTranslation().x,&transformComp->GetTranslation().y, &transformComp->GetTranslation().z };
-					float* rotation[3] = { &transformComp->GetRotation().x,&transformComp->GetRotation().y, &transformComp->GetRotation().z };
-					float* scale[3] = { &transformComp->GetScale().x,&transformComp->GetScale().y, &transformComp->GetScale().z };
+					float* transforms[3] = { &transformComp->Translation().x,&transformComp->Translation().y, &transformComp->Translation().z };
+					float* rotation[3] = { &transformComp->Rotation().x,&transformComp->Rotation().y, &transformComp->Rotation().z };
+					float* scale[3] = { &transformComp->Scale().x,&transformComp->Scale().y, &transformComp->Scale().z };
 					ImGui::InputFloat3("Translation", transforms[0]);
 					ImGui::InputFloat3("Rotation", rotation[0]);
 					ImGui::InputFloat3("Scale", scale[0]);

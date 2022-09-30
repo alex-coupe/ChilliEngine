@@ -17,5 +17,35 @@ namespace Chilli
             return InternalCalls.Entity_HasComponent(ID, componentType);
         }
 
+        public Vector3 Translation
+        {
+            get
+            {
+                InternalCalls.TransformComponent_GetTranslation(ID, out Vector3 result);
+                return result;
+            }
+            set
+            {
+                InternalCalls.TransformComponent_SetTranslation(ID, ref value);
+            }
+        }
+
+        public T GetComponent<T>() where T : Component, new()
+        {
+            if (!HasComponent<T>())
+                return null;
+
+            T component = new T() { Entity = this };
+            return component;
+        }
+
+        public Entity FindByName(string name)
+        {
+            ulong id = InternalCalls.Entity_FindByName(name);
+            if (id == 0)
+                return null;
+            return new Entity(id);
+        }
+
     }
 }

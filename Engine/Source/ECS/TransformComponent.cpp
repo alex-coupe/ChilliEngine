@@ -14,17 +14,17 @@ namespace Chilli {
 		m_translation = rhs.m_translation;
 	}
 
-	DirectX::XMFLOAT3& TransformComponent::GetTranslation()
+	DirectX::XMFLOAT3& TransformComponent::Translation()
 	{
 		return m_translation;
 	}
 
-	DirectX::XMFLOAT3& TransformComponent::GetRotation()
+	DirectX::XMFLOAT3& TransformComponent::Rotation()
 	{
 		return m_rotation;
 	}
 
-	DirectX::XMFLOAT3& TransformComponent::GetScale()
+	DirectX::XMFLOAT3& TransformComponent::Scale()
 	{
 		return m_scale;
 	}

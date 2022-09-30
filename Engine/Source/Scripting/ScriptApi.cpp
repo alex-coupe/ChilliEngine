@@ -26,11 +26,63 @@ namespace Chilli {
 		return s_EntityHasComponentFuncs.at(managedType)(entity);
 	}
 
+	static uint64_t Entity_FindByName(MonoString* name)
+	{
+		char* charName = mono_string_to_utf8(name);
+		const auto& entity = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene()->GetEntityByName(charName);
+		mono_free(charName);
+		if (!entity)
+			return 0;
+		return entity->Uuid.Get();
+	}
+
 #pragma endregion
 
 #pragma region Transform
 
+	static void TransformComponent_GetTranslation(UUID entId, DirectX::XMFLOAT3* outTranslation)
+	{
+		const auto& entity = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene()->GetEntityByUUID(entId);
+		*outTranslation = entity->GetTransformComponent()->Translation();
+	}
 
+	static void TransformComponent_SetTranslation(UUID entId, DirectX::XMFLOAT3* Translation)
+	{
+		const auto& entity = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene()->GetEntityByUUID(entId);
+		entity->GetTransformComponent()->Translation() = *Translation;
+	}
+
+#pragma endregion
+
+#pragma region Physics
+
+	static void RigidBody2DComponent_ApplyLinearImpulse(uint64_t entId, DirectX::XMFLOAT2* impulse, DirectX::XMFLOAT2* point, bool wake)
+	{
+		const auto& rb2d = std::static_pointer_cast<RigidBody2DComponent>(DependencyResolver::ResolveDependency<ProjectManager>()
+			->GetCurrentScene()
+			->GetEntityByUUID(entId)
+			->GetComponentByType(ComponentTypes::RigidBody2D));
+		
+		if (!rb2d)
+			return;
+
+		rb2d->GetBody()
+			->ApplyLinearImpulse(b2Vec2(impulse->x,impulse->y), b2Vec2(point->x, point->y), wake);
+	}
+
+	static void RigidBody2DComponent_ApplyLinearImpulseToCenter(uint64_t entId, DirectX::XMFLOAT2* impulse, bool wake)
+	{
+		const auto& rb2d = std::static_pointer_cast<RigidBody2DComponent>(DependencyResolver::ResolveDependency<ProjectManager>()
+			->GetCurrentScene()
+			->GetEntityByUUID(entId)
+			->GetComponentByType(ComponentTypes::RigidBody2D));
+
+		if (!rb2d)
+			return;
+
+		rb2d->GetBody()
+			->ApplyLinearImpulseToCenter(b2Vec2(impulse->x, impulse->y), wake);
+	}
 
 #pragma endregion
 
@@ -74,5 +126,10 @@ namespace Chilli {
 		mono_add_internal_call("Chilli.InternalCalls::Log", Log);
 		mono_add_internal_call("Chilli.InternalCalls::Input_IsKeyDown", Input_IsKeyDown);
 		mono_add_internal_call("Chilli.InternalCalls::Entity_HasComponent", Entity_HasComponent);
+		mono_add_internal_call("Chilli.InternalCalls::Entity_FindByName", Entity_FindByName);
+		mono_add_internal_call("Chilli.InternalCalls::TransformComponent_GetTranslation", TransformComponent_GetTranslation);
+		mono_add_internal_call("Chilli.InternalCalls::TransformComponent_SetTranslation", TransformComponent_SetTranslation);
+		mono_add_internal_call("Chilli.InternalCalls::RigidBody2DComponent_ApplyLinearImpulse", RigidBody2DComponent_ApplyLinearImpulse);
+		mono_add_internal_call("Chilli.InternalCalls::RigidBody2DComponent_ApplyLinearImpulseToCenter", RigidBody2DComponent_ApplyLinearImpulseToCenter);
 	}
 }

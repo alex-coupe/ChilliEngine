@@ -11,7 +11,7 @@ namespace Chilli
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static bool Entity_HasComponent(ulong entityID, Type componentType);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static ulong Entity_FindEntityByName(string name);
+        internal extern static ulong Entity_FindByName(string name);
         #endregion
 
         #region Transform
@@ -23,9 +23,9 @@ namespace Chilli
 
         #region RigidBody2D
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void Rigidbody2DComponent_ApplyLinearImpulse(ulong entityID, ref Vector2 impulse, ref Vector2 point, bool wake);
+        internal extern static void RigidBody2DComponent_ApplyLinearImpulse(ulong entityID, ref Vector2 impulse, ref Vector2 point, bool wake);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void Rigidbody2DComponent_ApplyLinearImpulseToCenter(ulong entityID, ref Vector2 impulse, bool wake);
+        internal extern static void RigidBody2DComponent_ApplyLinearImpulseToCenter(ulong entityID, ref Vector2 impulse, bool wake);
         #endregion
 
         #region Input
