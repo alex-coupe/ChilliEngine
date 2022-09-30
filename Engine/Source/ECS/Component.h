@@ -6,7 +6,7 @@
 #include <string>
 #include <sstream>
 
-namespace Engine::ECS {
+namespace Chilli {
 
 	enum class ComponentTypes : int {
 		Transform=-1, Mesh=0,Camera=1,Light=2,Script=3,BoxCollider2D=4, RigidBody2D = 5,

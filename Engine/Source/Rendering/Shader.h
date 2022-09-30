@@ -2,7 +2,7 @@
 #include "../Core/ChilliDefinitions.h"
 #include "Direct3D.h"
 
-namespace Engine::Rendering {
+namespace Chilli {
 
 	enum class ShaderType {
 		Vertex = 1, Pixel = 2, Geometry = 3

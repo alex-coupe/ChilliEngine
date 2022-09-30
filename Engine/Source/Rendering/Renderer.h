@@ -6,10 +6,8 @@
 #include "Drawable.h"
 #include "Camera.h"
 
-namespace Engine::Rendering {
+namespace Chilli {
 
-	using namespace Engine::Core;
-	using namespace Engine::ResourceSystem;
 	class CHILLI_API Renderer : public SubSystem{
 	public:
 		Renderer(int64_t width, int64_t height, void* handle);
@@ -18,7 +16,7 @@ namespace Engine::Rendering {
 		Renderer& operator=(const Renderer&) = delete;
 		Renderer(Renderer&&)noexcept = default;
 		const DirectX::XMMATRIX& GetProjectionMatrix()const;
-		int GetSystemType() const override;
+		static SystemType GetSystemType();
 		const std::unique_ptr<FrameBuffer>& GetFrameBuffer()const;
 		bool Init();
 		const std::unique_ptr<Camera>& GetEditorCamera();

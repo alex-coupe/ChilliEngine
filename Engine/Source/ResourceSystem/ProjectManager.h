@@ -3,39 +3,41 @@
 #include "../Core/SubSystem.h"
 #include "../Core/DependencyResolver.h"
 #include "../Core/Timer.h"
-#include "Scene.h"
-#include "rapidjson/document.h"
-#include "rapidjson/prettywriter.h"
 #include <fstream>
 #include <sstream>
 #include "../ECS/Component.h"
+#include "SceneManager.h"
+#include "AssetManager.h"
 
-namespace Engine::ResourceSystem {
+namespace Chilli {
 
-	class CHILLI_API ProjectManager : public Engine::Core::SubSystem {
+	class CHILLI_API ProjectManager : public SubSystem {
 	public:
 		ProjectManager();
 		void LoadProject(const std::string& filename);
 		void SaveProject(const std::string& filename);
 		void NewProject();
 		void AddScene(const std::string& name);
-		void RemoveScene(const Engine::Utilities::UUID& uuid);
+		void RemoveScene(UUID uuid);
 		std::vector<std::shared_ptr<Scene>> GetScenes()const;
-		void AddAsset(const std::filesystem::path& filename, AssetTypes type);
-		void RemoveAsset(const Engine::Utilities::UUID& uuid);
+		void AddAsset(const std::filesystem::path& filename, AssetType type);
+		void AddScript(const std::string& className);
+		void RemoveAsset(UUID uuid, AssetType type);
 		std::shared_ptr<Scene> GetCurrentScene()const;
-		void SetCurrentScene(const Engine::Utilities::UUID& uuid);
-		void SetCurrentSceneState(SceneState state);
-		std::shared_ptr<Asset> GetAssetByUUID(Engine::Utilities::UUID& uuid);
-		std::vector<std::shared_ptr<Asset>> GetAssetsByType(AssetTypes type);
-		std::vector<std::shared_ptr<Engine::ECS::Component>> GetCurrentSceneComponentsByType(Engine::ECS::ComponentTypes type);
-		virtual int GetSystemType()const override;
+		void SetCurrentScene(UUID uuid);
+		void PlayCurrentScene()const;
+		void StopCurrentScene()const;
+		std::shared_ptr<Asset> GetAssetByUUID(UUID uuid, AssetType type);
+		std::shared_ptr<Script> GetScriptByName(const std::string& name)const;
+		const std::unordered_map<uint64_t, std::shared_ptr<Script>>& GetScripts()const;
+		const std::unordered_map<uint64_t, std::shared_ptr<Mesh>>& GetMeshes()const;
+		std::vector<std::shared_ptr<Component>> GetCurrentSceneComponentsByType(ComponentTypes type);
+		static SystemType GetSystemType();
 		virtual void ProcessFrame()override;
+		MonoImage* GetCoreScriptAssemblyImage()const;
 	private:
-		std::vector<std::shared_ptr<Scene>> m_scenes;
-		std::shared_ptr<Scene> m_currentSceneCopy = nullptr;
-		std::vector<std::shared_ptr<Asset>> m_assets;
-		std::shared_ptr<Scene> m_currentScene;
+		std::unique_ptr<SceneManager> m_sceneManager = nullptr;
+		std::unique_ptr<AssetManager> m_assetManager = nullptr;
 		std::string m_projectName = "untitled project";
 	};
 }

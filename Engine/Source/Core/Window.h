@@ -9,7 +9,7 @@
 #include "Platform/WindowsPlatform.h"
 #endif
 
-namespace Engine::Core {
+namespace Chilli {
 	class Window {
 	public:
 		Window();
@@ -23,7 +23,7 @@ namespace Engine::Core {
 		int m_width = 0;
 		int m_height = 0;
 #ifdef _WIN32
-		std::unique_ptr<Platform::WindowsPlatform> m_platform;
+		std::unique_ptr<WindowsPlatform> m_platform;
 #endif
 	};
 }

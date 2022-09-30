@@ -29,26 +29,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -92,15 +92,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>DEBUG;CHILLI_ENGINE;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\box2d\include;$(SolutionDir)Dependencies\Nfd\include;$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Mono\include\;$(SolutionDir)Dependencies\box2d\include;$(SolutionDir)Dependencies\Nfd\include;$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\box2d\bin\Debug;$(SolutionDir)Dependencies/Nfd;$(SolutionDir)Dependencies/Assimp</AdditionalLibraryDirectories>
-      <AdditionalDependencies>box2d.lib;nfd.lib;zlib.lib;assimp-vc142-mt.lib;IrrXML.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\mono\lib\Debug\;$(SolutionDir)Dependencies\box2d\bin\Debug;$(SolutionDir)Dependencies/Nfd;$(SolutionDir)Dependencies/Assimp</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mono-2.0-sgen.lib;box2d.lib;nfd.lib;zlib.lib;assimp-vc142-mt.lib;IrrXML.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/NODEFAULTLIB:MSVCRT %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
@@ -112,7 +112,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>CHILLI_ENGINE;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\box2d\include;$(SolutionDir)Dependencies\Nfd\include;$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Mono\include\;$(SolutionDir)Dependencies\box2d\include;$(SolutionDir)Dependencies\Nfd\include;$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -121,9 +121,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\Spdlog;$(SolutionDir)Dependencies\box2d\bin\Release;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>box2d.lib;spdlog.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/NODEFAULTLIB:MSVCRT %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\mono\lib\Release\;$(SolutionDir)Dependencies\box2d\bin\Release;$(SolutionDir)Dependencies/Nfd;$(SolutionDir)Dependencies/Assimp</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mono-2.0-sgen.lib;box2d.lib;nfd.lib;zlib.lib;assimp-vc142-mt.lib;IrrXML.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -132,15 +131,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>DEBUG;CHILLI_ENGINE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\box2d\include;$(SolutionDir)Dependencies\Nfd\include;$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Mono\include\;$(SolutionDir)Dependencies\box2d\include;$(SolutionDir)Dependencies\Nfd\include;$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\box2d\bin\Debug;$(SolutionDir)Dependencies/Nfd;$(SolutionDir)Dependencies/Assimp</AdditionalLibraryDirectories>
-      <AdditionalDependencies>box2d.lib;nfd.lib;zlib.lib;assimp-vc142-mt.lib;IrrXML.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\mono\lib\Debug\;$(SolutionDir)Dependencies\box2d\bin\Debug;$(SolutionDir)Dependencies/Nfd;$(SolutionDir)Dependencies/Assimp</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mono-2.0-sgen.lib;box2d.lib;nfd.lib;zlib.lib;assimp-vc142-mt.lib;IrrXML.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/NODEFAULTLIB:MSVCRT %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
@@ -152,7 +151,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>CHILLI_ENGINE;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\box2d\include;$(SolutionDir)Dependencies\Nfd\include;$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Mono\include\;$(SolutionDir)Dependencies\box2d\include;$(SolutionDir)Dependencies\Nfd\include;$(SolutionDir)Dependencies\SpdLog;$(SolutionDir)Dependencies\Assimp\Include;$(SolutionDir)Dependencies\RapidJson\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -161,9 +160,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\Spdlog;$(SolutionDir)Dependencies\box2d\bin\Release;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>box2d.lib;spdlog.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/NODEFAULTLIB:MSVCRT %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\mono\lib\Release\;$(SolutionDir)Dependencies\box2d\bin\Release;$(SolutionDir)Dependencies/Nfd;$(SolutionDir)Dependencies/Assimp</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mono-2.0-sgen.lib;box2d.lib;nfd.lib;zlib.lib;assimp-vc142-mt.lib;IrrXML.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -183,6 +181,7 @@
     <ClInclude Include="Source\ECS\Entity.h" />
     <ClInclude Include="Source\ECS\MeshComponent.h" />
     <ClInclude Include="Source\ECS\RigidBody2DComponent.h" />
+    <ClInclude Include="Source\ECS\ScriptComponent.h" />
     <ClInclude Include="Source\ECS\TransformComponent.h" />
     <ClInclude Include="Source\Gui\GuiManager.h" />
     <ClInclude Include="Source\Gui\ImGui\imconfig.h" />
@@ -209,11 +208,15 @@
     <ClInclude Include="Source\Rendering\VertexBuffer.h" />
     <ClInclude Include="Source\Rendering\VertexTypes.h" />
     <ClInclude Include="Source\ResourceSystem\Asset.h" />
+    <ClInclude Include="Source\ResourceSystem\AssetManager.h" />
     <ClInclude Include="Source\ResourceSystem\Mesh.h" />
     <ClInclude Include="Source\ResourceSystem\Scene.h" />
     <ClInclude Include="Source\ResourceSystem\ProjectManager.h" />
-    <ClInclude Include="Source\Utilities\Utils.h" />
-    <ClInclude Include="Source\Utilities\UUID.h" />
+    <ClInclude Include="Source\ResourceSystem\SceneManager.h" />
+    <ClInclude Include="Source\ResourceSystem\Script.h" />
+    <ClInclude Include="Source\Scripting\ScriptApi.h" />
+    <ClInclude Include="Source\Scripting\ScriptEngine.h" />
+    <ClInclude Include="Source\Core\UUID.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\ChilliEngine.cpp" />
@@ -229,6 +232,7 @@
     <ClCompile Include="Source\ECS\Entity.cpp" />
     <ClCompile Include="Source\ECS\MeshComponent.cpp" />
     <ClCompile Include="Source\ECS\RigidBody2DComponent.cpp" />
+    <ClCompile Include="Source\ECS\ScriptComponent.cpp" />
     <ClCompile Include="Source\ECS\TransformComponent.cpp" />
     <ClCompile Include="Source\Gui\GuiManager.cpp" />
     <ClCompile Include="Source\Gui\ImGui\imgui.cpp" />
@@ -251,10 +255,15 @@
     <ClCompile Include="Source\Rendering\Texture.cpp" />
     <ClCompile Include="Source\Rendering\Topology.cpp" />
     <ClCompile Include="Source\Rendering\VertexBuffer.cpp" />
+    <ClCompile Include="Source\ResourceSystem\AssetManager.cpp" />
     <ClCompile Include="Source\ResourceSystem\Mesh.cpp" />
     <ClCompile Include="Source\ResourceSystem\Scene.cpp" />
     <ClCompile Include="Source\ResourceSystem\ProjectManager.cpp" />
-    <ClCompile Include="Source\Utilities\UUID.cpp" />
+    <ClCompile Include="Source\ResourceSystem\SceneManager.cpp" />
+    <ClCompile Include="Source\ResourceSystem\Script.cpp" />
+    <ClCompile Include="Source\Scripting\ScriptApi.cpp" />
+    <ClCompile Include="Source\Scripting\ScriptEngine.cpp" />
+    <ClCompile Include="Source\Core\UUID.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Source\Rendering\shaders\Pixel_Basic.hlsl">

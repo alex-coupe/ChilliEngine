@@ -8,7 +8,7 @@
 
 #pragma warning(disable:4251)
 
-namespace Engine::Core {
+namespace Chilli {
 
 	struct EventData {
 		uint64_t wparam = 0;
@@ -44,7 +44,7 @@ namespace Engine::Core {
 		Events(const Events&) = delete;
 		Events& operator=(const Events&) = delete;
 		Events(Events&&)noexcept = default;
-		int GetSystemType()const override;
+		static SystemType GetSystemType();
 		void ProcessFrame()override;
 		void Push(const EventData*const e);
 		void Subscribe(const EventType type, std::function<void()> callback);

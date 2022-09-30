@@ -4,7 +4,7 @@
 #include "Component.h"
 #include <DirectXMath.h>
 
-namespace Engine::ECS {
+namespace Chilli {
 	class CHILLI_API CircleColliderComponent : public Component {
 	public:
 		CircleColliderComponent(float radius = 0.5f,DirectX::XMFLOAT2 offset = { 0.0f,0.0f }, float density = 1.0f, float friction = 0.5f,

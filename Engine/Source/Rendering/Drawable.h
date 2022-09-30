@@ -12,10 +12,10 @@
 #include "VertexTypes.h"
 
 #include "../ECS/Entity.h"
-namespace Engine::Rendering {
+namespace Chilli {
 	class CHILLI_API Drawable {
 	public:
-		Drawable(const std::shared_ptr<Direct3D>& d3d, const std::shared_ptr<Engine::ECS::Entity>& entity);
+		Drawable(const std::shared_ptr<Direct3D>& d3d, const std::shared_ptr<Entity>& entity);
 		const DirectX::XMMATRIX& GetTransform()const;
 		void Draw()const;
 		void Update();
@@ -28,6 +28,6 @@ namespace Engine::Rendering {
 		std::unique_ptr<Topology> m_topology;
 		std::unique_ptr<IndexBuffer> m_indexBuffer;
 		DirectX::XMMATRIX m_transform = {};
-		const std::shared_ptr<Engine::ECS::Entity>& m_entity;
+		const std::shared_ptr<Entity> m_entity;
 	};
 }

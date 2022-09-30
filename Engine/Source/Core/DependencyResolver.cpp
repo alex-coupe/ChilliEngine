@@ -1,4 +1,6 @@
 #include "DependencyResolver.h"
 
-std::vector<std::shared_ptr<Engine::Core::SubSystem>> Engine::Core::DependencyResolver::m_dependencies = {};
-std::map<int, size_t> Engine::Core::DependencyResolver::m_cache = {};
+namespace Chilli {
+	std::vector<std::shared_ptr<SubSystem>> DependencyResolver::m_dependencies = {};
+	std::map<SystemType, size_t> DependencyResolver::m_cache = {};
+}

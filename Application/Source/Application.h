@@ -13,5 +13,5 @@ public:
 	Application(Application&&) = default;
 	void Run();
 private:
-	std::unique_ptr<ChilliEngine> m_engine = nullptr;
+	std::unique_ptr<Chilli::ChilliEngine> m_engine = nullptr;
 };

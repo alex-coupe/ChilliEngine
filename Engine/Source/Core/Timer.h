@@ -4,14 +4,14 @@
 #include "SubSystem.h"
 
 #pragma warning(disable:4251)
-namespace Engine::Core {
+namespace Chilli {
 
 	class CHILLI_API Timer : public SubSystem
 	{
 	public:
 		Timer();
 		void ProcessFrame()override;
-		int GetSystemType()const override;
+		static SystemType GetSystemType();
 		const float GetDeltaTime()const;
 		const float GetElapsedTime()const;
 	private:

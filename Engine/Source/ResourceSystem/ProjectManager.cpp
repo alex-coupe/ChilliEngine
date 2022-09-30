@@ -2,218 +2,181 @@
 #include "../Rendering/Renderer.h"
 #include "../Core/DependencyResolver.h"
 
-Engine::ResourceSystem::ProjectManager::ProjectManager()
-{
-    m_scenes.emplace_back(std::make_shared<Scene>("Scene 1"));
-    m_currentScene = m_scenes.front();
-}
+namespace Chilli {
 
-void Engine::ResourceSystem::ProjectManager::LoadProject(const std::string& filename)
-{
-    std::stringstream ss;
-    std::ifstream json;
-    json.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-
-    json.open(filename);
-    try
+    ProjectManager::ProjectManager()
     {
-        ss << json.rdbuf();
-    }
-    catch (std::ifstream::failure&)
-    {
-        CHILLI_ERROR("Loading JSON File Failed");
-    }
-
-    rapidjson::Document document;
-
-    auto payload = ss.str();
-     
-    if (document.Parse(payload.c_str()).HasParseError())
-        return;
-
-    if (document.HasMember("ProjectName"))
-    {
-        m_projectName = document["ProjectName"].GetString();
-    }
-
-    if (document.HasMember("Assets"))
-    {
-        m_assets.clear();
-        for (const auto& asset : document["Assets"].GetArray())
+        m_sceneManager = std::make_unique<SceneManager>();
+        m_assetManager = std::make_unique<AssetManager>();
+        for (const auto& script : m_sceneManager->BuildAvailableScripts())
         {
-            switch (asset["Type"].GetInt())
-            {
-                case (int)AssetTypes::Mesh:
-                    m_assets.emplace_back(std::make_shared<Mesh>(asset["FilePath"].GetString(),
-                        asset["Uuid"].GetString()));
-                    break;
-                default:
-                    break;
-            }
+            m_assetManager->AddScript(script);
         }
     }
 
-    if (document.HasMember("Scenes"))
+    void ProjectManager::LoadProject(const std::string& filename)
     {
-        m_scenes.clear();
-        m_currentScene.reset();
-        for (const auto& scene : document["Scenes"].GetArray())
+        std::stringstream ss;
+        std::ifstream json;
+        json.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+
+        json.open(filename);
+        try
         {
-            m_scenes.emplace_back(std::make_shared<Scene>(scene["SceneName"].GetString(), scene["Uuid"].GetString(), scene["Entities"].GetArray()));
+            ss << json.rdbuf();
         }
-        m_currentScene = m_scenes.front();
+        catch (std::ifstream::failure&)
+        {
+            CHILLI_ERROR("Loading JSON File Failed");
+        }
+
+        rapidjson::Document document;
+
+        auto payload = ss.str();
+
+        if (document.Parse(payload.c_str()).HasParseError())
+            return;
+
+        if (document.HasMember("ProjectName"))
+        {
+            m_projectName = document["ProjectName"].GetString();
+        }
+
+        if (document.HasMember("Assets"))
+        {
+            m_assetManager->LoadAssets(document["Assets"].GetArray());
+        }
+
+        if (document.HasMember("Scenes"))
+        {
+            m_sceneManager->LoadScenes(document["Scenes"].GetArray());
+        }
     }
-}
 
-void Engine::ResourceSystem::ProjectManager::SaveProject(const std::string& filename)
-{
-    std::stringstream ss;
-    std::ofstream outputStream;
-
-    ss << "{ \"ProjectName\":\"" << m_projectName << "\", \"Assets\":[";
-    for (size_t i = 0; i < m_assets.size(); i++)
+    void ProjectManager::SaveProject(const std::string& filename)
     {
-        ss << m_assets[i]->Serialize();
-        if (i != m_assets.size() - 1)
-            ss << ",";
+        std::stringstream ss;
+        std::ofstream outputStream;
+
+        ss << "{ \"ProjectName\":\"" << m_projectName << "\", \"Assets\":["
+        << m_assetManager->SaveAssets() << "], \"Scenes\":[ " 
+        << m_sceneManager->SaveScenes() << "]}";
+        outputStream.open(filename);
+        outputStream << ss.str();
+        outputStream.close();
     }
-    ss << "], \"Scenes\":[ ";
-    for (size_t i = 0; i < m_scenes.size(); i++)
+
+    void ProjectManager::NewProject()
     {
-        ss << m_scenes[i]->Serialize();
-        if (i != m_scenes.size() - 1)
-            ss << ",";
+        m_assetManager->Reset();
+        m_sceneManager->Reset();
+        m_projectName = "Untitled Project";
     }
-    ss << "]}";
-    outputStream.open(filename);
-    outputStream << ss.str();
-    outputStream.close();
-}
 
-void Engine::ResourceSystem::ProjectManager::NewProject()
-{
-    m_scenes.clear();
-    m_assets.clear();
-    m_projectName = "Untitled Project";
-    m_scenes.emplace_back(std::make_shared<Scene>("Scene 1"));
-    m_currentScene = m_scenes.front();
-}
-
-void Engine::ResourceSystem::ProjectManager::AddScene(const std::string& name)
-{
-    m_scenes.emplace_back(std::make_shared<Scene>(name));
-}
-
-std::vector<std::shared_ptr<Engine::ResourceSystem::Scene>> Engine::ResourceSystem::ProjectManager::GetScenes() const
-{
-    return m_scenes;
-}
-
-void Engine::ResourceSystem::ProjectManager::AddAsset(const std::filesystem::path& filename, AssetTypes type)
-{
-    switch (type)
+    void ProjectManager::AddScene(const std::string& name)
     {
-        case AssetTypes::Mesh:
-            m_assets.emplace_back(std::make_shared<Mesh>(filename, Engine::Utilities::UUID()));
+        m_sceneManager->AddScene(name);
+    }
+
+    std::vector<std::shared_ptr<Scene>> ProjectManager::GetScenes() const
+    {
+        return m_sceneManager->GetAllScenes();
+    }
+
+    void ProjectManager::AddScript(const std::string& className)
+    {
+        m_assetManager->AddScript(className);
+    }
+
+    void ProjectManager::AddAsset(const std::filesystem::path& filename, AssetType type)
+    {
+        switch (type)
+        {
+        case AssetType::Mesh:
+            m_assetManager->AddMesh(filename);
             break;
         default:
             break;
+        }
     }
-}
 
-void Engine::ResourceSystem::ProjectManager::RemoveAsset(const Engine::Utilities::UUID& uuid)
-{
-    if (auto m_assetIterator = std::find_if(m_assets.begin(), m_assets.end(), [uuid](const std::shared_ptr<Asset> rhs)
+    void ProjectManager::RemoveAsset(UUID uuid,AssetType type)
+    {
+        switch (type)
         {
-            return rhs->GetUUID() == uuid;
-        }); m_assetIterator != m_assets.end() && m_assets.size() > 0)
-    {
-        m_assets.erase(m_assetIterator);
+        case AssetType::Mesh:
+            m_assetManager->RemoveMesh(uuid);
+            break;
+        default:
+            return;
+        }   
     }
-}
 
+    void ProjectManager::RemoveScene(UUID uuid)
+    {
+        m_sceneManager->RemoveScene(uuid);
+    }
 
-void Engine::ResourceSystem::ProjectManager::RemoveScene(const Engine::Utilities::UUID& uuid)
-{
-    if (auto m_sceneIterator = std::find_if(m_scenes.begin(), m_scenes.end(), [uuid](const std::shared_ptr<Scene> rhs)
+    std::shared_ptr<Scene> ProjectManager::GetCurrentScene() const
+    {
+        return m_sceneManager->GetCurrentScene();
+    }
+
+    void ProjectManager::SetCurrentScene(UUID uuid)
+    {
+        m_sceneManager->GoToScene(uuid);
+    }
+
+    std::shared_ptr<Asset> ProjectManager::GetAssetByUUID(UUID uuid, AssetType type)
+    {
+        switch (type)
         {
-            return rhs->GetUUID() == uuid;
-        }); m_sceneIterator != m_scenes.end() && m_scenes.size() > 0)
+        case AssetType::Mesh:
+            return m_assetManager->GetMeshByUUID(uuid);
+        case AssetType::Script:
+            return m_assetManager->GetScriptByUUID(uuid);
+        default:
+            return nullptr;
+        }
+    }
+
+    const std::unordered_map<uint64_t, std::shared_ptr<Script>>& ProjectManager::GetScripts()const
     {
-        m_scenes.erase(m_sceneIterator);
+        return m_assetManager->GetScripts();
     }
-}
 
-std::shared_ptr<Engine::ResourceSystem::Scene> Engine::ResourceSystem::ProjectManager::GetCurrentScene() const
-{
-    return m_currentScene;
-}
-
-void Engine::ResourceSystem::ProjectManager::SetCurrentScene(const Engine::Utilities::UUID& uuid)
-{
-    if (auto m_sceneIterator = std::find_if(m_scenes.begin(), m_scenes.end(), [&uuid](const std::shared_ptr<Scene> rhs)
-        {
-            return rhs->GetUUID() == uuid;
-        }); m_sceneIterator != m_scenes.end() && m_scenes.size() > 0)
+    const std::unordered_map<uint64_t, std::shared_ptr<Mesh>>& ProjectManager::GetMeshes()const
     {
-        m_currentScene = *m_sceneIterator;
+        return m_assetManager->GetMeshes();
     }
-}
 
-void Engine::ResourceSystem::ProjectManager::SetCurrentSceneState(SceneState state)
-{
-    switch (state) {
-    case SceneState::Play:
-    case SceneState::Simulate:
-        m_currentScene->onSceneStart();
-        break;
-    case SceneState::Edit:
-    case SceneState::Pause:
-        m_currentScene->onSceneStop();
-        break;
-    }
-    m_currentScene->SetSceneState(state);
-}
-
-std::shared_ptr<Engine::ResourceSystem::Asset> Engine::ResourceSystem::ProjectManager::GetAssetByUUID(Engine::Utilities::UUID& uuid)
-{
-    if (auto m_assetsIterator = std::find_if(m_assets.begin(), m_assets.end(), [&uuid](const std::shared_ptr<Engine::ResourceSystem::Asset> rhs)
-        {
-            return rhs->GetUUID().GetUUIDHash() == uuid.GetUUIDHash();
-        }); m_assetsIterator != m_assets.end() && m_assets.size() > 0)
+    SystemType ProjectManager::GetSystemType()
     {
-        return *m_assetsIterator;
+        return SystemType::ProjectManager;
     }
-    return nullptr;
-}
 
-std::vector<std::shared_ptr<Engine::ResourceSystem::Asset>> Engine::ResourceSystem::ProjectManager::GetAssetsByType(AssetTypes type)
-{
-    std::vector<std::shared_ptr<Asset>> assets;
-    std::copy_if(m_assets.begin(), m_assets.end(), std::back_inserter(assets), [&type](const std::shared_ptr<Asset> rhs) {
-        return rhs->GetAssetType() == type;
-        });
-    return assets;
-}
-
-std::vector<std::shared_ptr<Engine::ECS::Component>> Engine::ResourceSystem::ProjectManager::GetCurrentSceneComponentsByType(Engine::ECS::ComponentTypes type)
-{
-    std::vector<std::shared_ptr<Engine::ECS::Component>> components;
-    for (const auto& ent : m_currentScene->GetEntities())
+    void ProjectManager::PlayCurrentScene()const
     {
-        if (const auto& comp = ent->GetComponentByType(type); comp != nullptr)
-            components.push_back(comp);
+        m_sceneManager->StartCurrentScene();
     }
-    return components;
-}
 
-int Engine::ResourceSystem::ProjectManager::GetSystemType() const
-{
-    return static_cast<int>(Engine::Core::SystemTypes::ProjectManager);
-}
+    void ProjectManager::StopCurrentScene()const
+    {
+        m_sceneManager->StopCurrentScene();
+    }
 
-void Engine::ResourceSystem::ProjectManager::ProcessFrame()
-{
-    if (m_currentScene->GetSceneState() == SceneState::Play || m_currentScene->GetSceneState() == SceneState::Simulate)
-        m_currentScene->onSceneUpdate();
+    std::shared_ptr<Script> ProjectManager::GetScriptByName(const std::string& name)const
+    {
+       return  m_assetManager->GetScriptByName(name);
+    }
+
+    void ProjectManager::ProcessFrame()
+    {
+        m_sceneManager->UpdateCurrentScene();
+    }
+
+    MonoImage* ProjectManager::GetCoreScriptAssemblyImage()const
+    {
+        return m_sceneManager->GetScriptEngine()->GetCoreAssemblyImage();
+    }
 }

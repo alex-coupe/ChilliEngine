@@ -2,7 +2,7 @@
 #include "../Core/ChilliDefinitions.h"
 #include "Direct3D.h"
 
-namespace Engine::Rendering {
+namespace Chilli {
 	class CHILLI_API Camera {
 	public:
 		Camera(DirectX::XMFLOAT3 position, float screen_width, float screen_height);

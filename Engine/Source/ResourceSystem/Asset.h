@@ -1,22 +1,28 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
-#include "../Utilities/UUID.h"
+#include "../Core/UUID.h"
 #include <filesystem>
+#include <sstream>
 
-namespace Engine::ResourceSystem {
+namespace Chilli {
 
-	enum class AssetTypes : int {
+	enum class AssetType : int {
 		Mesh = 0, Audio = 1, Material = 2, Script = 3
 	};
 
 	class CHILLI_API Asset {
 	public:
-		Asset(AssetTypes type,std::filesystem::path filepath, Engine::Utilities::UUID uuid) 
+		Asset(AssetType type,std::filesystem::path filepath, UUID uuid) 
 			:m_type(type)
 			,m_filePath(filepath),
-			m_uuid(uuid)
+			Uuid(uuid)
 		{}
-		AssetTypes GetAssetType()const
+		Asset(AssetType type, std::filesystem::path filepath)
+			:m_type(type)
+			, m_filePath(filepath),
+			Uuid()
+		{}
+		AssetType GetAssetType()const
 		{
 			return m_type;
 		}
@@ -24,10 +30,7 @@ namespace Engine::ResourceSystem {
 		{
 			return m_filePath;
 		}
-		const Engine::Utilities::UUID& GetUUID()const
-		{
-			return m_uuid;
-		}
+		const UUID Uuid;
 		const std::filesystem::path& GetName()const
 		{
 			return m_filePath;
@@ -35,8 +38,7 @@ namespace Engine::ResourceSystem {
 		virtual ~Asset() {};
 		virtual const std::string Serialize()const = 0;
 	protected:
-		Engine::Utilities::UUID m_uuid;
 		const std::filesystem::path m_filePath;
-		const AssetTypes m_type;
+		const AssetType m_type;
 	};
 }

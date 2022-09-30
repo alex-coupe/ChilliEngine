@@ -2,7 +2,7 @@
 
 Application::Application()
 {
-	m_engine = std::make_unique<ChilliEngine>();
+	m_engine = std::make_unique<Chilli::ChilliEngine>();
 }
 
 Application::~Application()

@@ -1,84 +1,98 @@
 #include "Mesh.h"
 
-Engine::ResourceSystem::Mesh::Mesh(const std::filesystem::path& filepath, const Engine::Utilities::UUID& uuid)
-	: Asset(Engine::ResourceSystem::AssetTypes::Mesh, std::filesystem::path(filepath), uuid)
-{
-	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(m_filePath.string(), aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
+namespace Chilli {
 
-	ProcessSubMesh(scene->mRootNode,scene);
-
-	for(const auto& subMesh : m_subMeshes)
+	Mesh::Mesh(const std::filesystem::path& filepath, UUID uuid)
+		: Asset(AssetType::Mesh, std::filesystem::path(filepath), uuid)
 	{
-		int offset = static_cast<unsigned int>(m_vertices.size());
-		
-		std::copy(subMesh.GetVertices().cbegin(), subMesh.GetVertices().cend(), std::back_inserter(m_vertices));
-		for (auto i : subMesh.GetIndices())
+		ImportMesh();
+	}
+
+	Mesh::Mesh(const std::filesystem::path& filepath)
+		: Asset(AssetType::Mesh, std::filesystem::path(filepath))
+	{
+		ImportMesh();
+	}
+
+	const std::string Mesh::Serialize() const
+	{
+		std::stringstream ss;
+		ss << "{ \"Uuid\":" << Uuid.Get() << ", \"Type\":" << static_cast<int>(m_type) << ", \"FilePath\": \"Assets/Models/" << m_filePath.filename().string() << "\"}";
+		return  ss.str();
+	}
+
+	void Mesh::ProcessSubMesh(aiNode* node, const aiScene* scene)
+	{
+		for (unsigned int i = 0; i < node->mNumMeshes; i++)
 		{
-			m_indices.push_back(i + offset);
+			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+			m_subMeshes.push_back(SubMesh(mesh, scene));
+		}
+
+		for (unsigned int i = 0; i < node->mNumChildren; i++)
+		{
+			ProcessSubMesh(node->mChildren[i], scene);
 		}
 	}
-}
 
-const std::string Engine::ResourceSystem::Mesh::Serialize() const
-{
-	std::stringstream ss;
-	ss << "{ \"Uuid\":\"" << m_uuid.GetUUID() << "\", \"Type\":" << static_cast<int>(m_type) << ", \"FilePath\": \"Assets/Models/" << m_filePath.filename().string() << "\"}";
-	return  ss.str();
-}
-
-void Engine::ResourceSystem::Mesh::ProcessSubMesh(aiNode* node, const aiScene* scene)
-{
-	for (unsigned int i = 0; i < node->mNumMeshes; i++)
+	const std::vector<VertexPos>& Mesh::GetVertices() const
 	{
-		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		m_subMeshes.push_back(SubMesh(mesh, scene));
+		return m_vertices;
 	}
 
-	for (unsigned int i = 0; i < node->mNumChildren; i++)
+	const std::vector<unsigned short>& Mesh::GetIndices() const
 	{
-		ProcessSubMesh(node->mChildren[i], scene);
-	}
-}
-	
-const std::vector<Engine::Rendering::VertexPos>& Engine::ResourceSystem::Mesh::GetVertices() const
-{
-	return m_vertices;
-}
-
-const std::vector<unsigned short>& Engine::ResourceSystem::Mesh::GetIndices() const
-{
-	return m_indices;
-}
-
-Engine::ResourceSystem::Mesh::SubMesh::SubMesh(aiMesh* mesh, const aiScene* scene)
-{
-	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
-	{
-		Engine::Rendering::VertexPos vertex = {};
-
-		vertex.position.x = mesh->mVertices[i].x;
-		vertex.position.y = mesh->mVertices[i].y;
-		vertex.position.z = mesh->mVertices[i].z;
-
-		m_vertices.push_back(vertex);
+		return m_indices;
 	}
 
-	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+	void Mesh::ImportMesh()
 	{
-		aiFace face = mesh->mFaces[i];
+		Assimp::Importer importer;
+		const aiScene* scene = importer.ReadFile(m_filePath.string(), aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
 
-		for (unsigned int j = 0; j < face.mNumIndices; j++)
-			m_indices.push_back(face.mIndices[j]);
+		ProcessSubMesh(scene->mRootNode, scene);
+
+		for (const auto& subMesh : m_subMeshes)
+		{
+			int offset = static_cast<unsigned int>(m_vertices.size());
+
+			std::copy(subMesh.GetVertices().cbegin(), subMesh.GetVertices().cend(), std::back_inserter(m_vertices));
+			for (auto i : subMesh.GetIndices())
+			{
+				m_indices.push_back(i + offset);
+			}
+		}
 	}
-}
 
-const std::vector<Engine::Rendering::VertexPos>& Engine::ResourceSystem::Mesh::SubMesh::GetVertices() const
-{
-	return m_vertices;
-}
+	Mesh::SubMesh::SubMesh(aiMesh* mesh, const aiScene* scene)
+	{
+		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
+		{
+			VertexPos vertex = {};
 
-const std::vector<unsigned short>& Engine::ResourceSystem::Mesh::SubMesh::GetIndices() const
-{
-	return m_indices;
+			vertex.position.x = mesh->mVertices[i].x;
+			vertex.position.y = mesh->mVertices[i].y;
+			vertex.position.z = mesh->mVertices[i].z;
+
+			m_vertices.push_back(vertex);
+		}
+
+		for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+		{
+			aiFace face = mesh->mFaces[i];
+
+			for (unsigned int j = 0; j < face.mNumIndices; j++)
+				m_indices.push_back(face.mIndices[j]);
+		}
+	}
+
+	const std::vector<VertexPos>& Mesh::SubMesh::GetVertices() const
+	{
+		return m_vertices;
+	}
+
+	const std::vector<unsigned short>& Mesh::SubMesh::GetIndices() const
+	{
+		return m_indices;
+	}
 }
