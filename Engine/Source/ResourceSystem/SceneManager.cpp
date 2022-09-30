@@ -119,6 +119,11 @@ namespace Chilli {
 		//m_currentScene->StopScene();
 	}
 
+	const std::unique_ptr<ScriptEngine>& SceneManager::GetScriptEngine()const
+	{
+		return m_scriptEngine;
+	}
+
 	void SceneManager::UpdateCurrentScene()const
 	{
 		if (m_currentScene->GetSceneState() == SceneState::Play ||

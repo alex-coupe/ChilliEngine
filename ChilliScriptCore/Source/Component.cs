@@ -25,18 +25,18 @@ namespace Chilli
                 InternalCalls.TransformComponent_SetTranslation(Entity.ID, ref value);
             }
         }
+    }
 
-        public class Rigidbody2DComponent : Component
+    public class RigidBody2DComponent : Component
+    {
+        public void ApplyLinearImpulse(Vector2 impulse, Vector2 worldPosition, bool wake)
         {
-            public void ApplyLinearImpulse(Vector2 impulse, Vector2 worldPosition, bool wake)
-            {
-                InternalCalls.Rigidbody2DComponent_ApplyLinearImpulse(Entity.ID, ref impulse, ref worldPosition, wake);
-            }
+            InternalCalls.Rigidbody2DComponent_ApplyLinearImpulse(Entity.ID, ref impulse, ref worldPosition, wake);
+        }
 
-            public void ApplyLinearImpulse(Vector2 impulse, bool wake)
-            {
-                InternalCalls.Rigidbody2DComponent_ApplyLinearImpulseToCenter(Entity.ID, ref impulse, wake);
-            }
+        public void ApplyLinearImpulse(Vector2 impulse, bool wake)
+        {
+            InternalCalls.Rigidbody2DComponent_ApplyLinearImpulseToCenter(Entity.ID, ref impulse, wake);
         }
     }
 }

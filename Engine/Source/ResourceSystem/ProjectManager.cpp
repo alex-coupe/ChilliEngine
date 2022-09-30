@@ -174,4 +174,9 @@ namespace Chilli {
     {
         m_sceneManager->UpdateCurrentScene();
     }
+
+    MonoImage* ProjectManager::GetCoreScriptAssemblyImage()const
+    {
+        return m_sceneManager->GetScriptEngine()->GetCoreAssemblyImage();
+    }
 }

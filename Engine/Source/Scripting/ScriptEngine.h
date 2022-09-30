@@ -17,12 +17,11 @@ namespace Chilli {
 		void InvokeUpdateMethod()const;
 		std::vector<std::shared_ptr<Script>> BuildAvailableScripts();
 		~ScriptEngine();
-		
+		MonoImage* GetCoreAssemblyImage()const;
 	private:
-		
-		
 		MonoDomain* m_domain = nullptr;
 		MonoDomain* m_appDomain = nullptr;
+		MonoImage* m_coreAssemblyImage = nullptr;
 		MonoImage* m_applicationScriptsImage = nullptr;
 		MonoAssembly* m_chilliCoreAssembly = nullptr;
 		MonoAssembly* m_applicationScriptsAssembly = nullptr;

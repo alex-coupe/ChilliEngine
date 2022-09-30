@@ -19,13 +19,16 @@ namespace Chilli {
         m_chilliCoreAssembly = mono_domain_assembly_open(m_domain, "Assets\\Scripts\\bin\\ChilliScriptCore.dll");
         m_applicationScriptsAssembly = mono_domain_assembly_open(m_domain, "Assets\\Scripts\\bin\\ApplicationScripts.dll");
 
-        ScriptApi::Init();
-
-        MonoImage* coreImage = mono_assembly_get_image(m_chilliCoreAssembly);
-        MonoClass* coreClass = mono_class_from_name(coreImage, "Chilli", "ChilliScript");
+        m_coreAssemblyImage = mono_assembly_get_image(m_chilliCoreAssembly);
+        MonoClass* coreClass = mono_class_from_name(m_coreAssemblyImage, "Chilli", "ChilliScript");
         m_constructor = mono_class_get_method_from_name(coreClass, ".ctor", 1);
 
         m_applicationScriptsImage = mono_assembly_get_image(m_applicationScriptsAssembly);
+    }
+
+    MonoImage* ScriptEngine::GetCoreAssemblyImage()const
+    {
+        return m_coreAssemblyImage;
     }
 
     void ScriptEngine::ConstructAndInvokeCreateMethod()const

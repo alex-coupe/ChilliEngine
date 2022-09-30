@@ -6,7 +6,7 @@ namespace Application
     {
         public override void OnCreate()
         {
-                Core.Log($"Entity uuid is {Entity.ID}");
+            Core.Log($"{Entity.ID} has TransformComponent: {Entity.HasComponent<TransformComponent>()}");  
         }
 
         public override void OnDestroy()

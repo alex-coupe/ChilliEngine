@@ -34,6 +34,7 @@ namespace Chilli {
 		std::vector<std::shared_ptr<Component>> GetCurrentSceneComponentsByType(ComponentTypes type);
 		static SystemType GetSystemType();
 		virtual void ProcessFrame()override;
+		MonoImage* GetCoreScriptAssemblyImage()const;
 	private:
 		std::unique_ptr<SceneManager> m_sceneManager = nullptr;
 		std::unique_ptr<AssetManager> m_assetManager = nullptr;

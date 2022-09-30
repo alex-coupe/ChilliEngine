@@ -96,4 +96,16 @@ namespace Chilli {
     {
         return m_name;
     }
+
+    std::shared_ptr<Entity> Scene::GetEntityByUUID(UUID uuid)const
+    {
+        if (auto m_entIterator = std::find_if(m_entities.begin(), m_entities.end(), [uuid](const std::shared_ptr<Entity> rhs)
+            {
+                return rhs->Uuid.Get() == uuid.Get();
+            }); m_entIterator != m_entities.end())
+        {
+            return *m_entIterator;
+        }
+            return nullptr;
+    }
 }
