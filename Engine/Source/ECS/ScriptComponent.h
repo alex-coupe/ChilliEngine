@@ -9,7 +9,7 @@ namespace Chilli {
 		ScriptComponent();
 		ScriptComponent(const std::string& scriptName);
 		ScriptComponent(const ScriptComponent& rhs);
-		virtual const std::string Serialize()const override;
+		virtual const std::string Serialize(uint64_t entityId)const override;
 		const std::string& GetScriptName()const;
 		void SetScript(const std::string& scriptName);
 	private:

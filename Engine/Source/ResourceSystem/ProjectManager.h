@@ -21,7 +21,6 @@ namespace Chilli {
 		void RemoveScene(UUID uuid);
 		std::vector<std::shared_ptr<Scene>> GetScenes()const;
 		void AddAsset(const std::filesystem::path& filename, AssetType type);
-		void AddScript(const std::string& className);
 		void RemoveAsset(UUID uuid, AssetType type);
 		std::shared_ptr<Scene> GetCurrentScene()const;
 		void SetCurrentScene(UUID uuid);

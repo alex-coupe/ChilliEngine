@@ -10,7 +10,7 @@ namespace Chilli {
 		CircleColliderComponent(float radius = 0.5f,DirectX::XMFLOAT2 offset = { 0.0f,0.0f }, float density = 1.0f, float friction = 0.5f,
 			float restitution = 0.0f, float restThreshold = 0.5f);
 		CircleColliderComponent(CircleColliderComponent& rhs);
-		virtual const std::string Serialize()const override;
+		virtual const std::string Serialize(uint64_t entityId)const override;
 		float& GetRadius();
 		DirectX::XMFLOAT2& GetOffset();
 		float& GetDensity();

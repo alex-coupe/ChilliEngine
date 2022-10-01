@@ -6,7 +6,7 @@ namespace Chilli {
 
 	enum class FieldType : int {
 		Unknown, Float, Double, Bool, Char, Short, Int, Long, Byte, UShort, UInt, ULong,
-		Vector2, Vector3, Vector4, Entity, TransformComponent, RigidBody2DComponent
+		Vector2, Vector3, Vector4, Entity
 	};
 
 	static std::unordered_map<std::string, FieldType> s_fieldTypeMap =
@@ -25,33 +25,47 @@ namespace Chilli {
 		{"Chilli.Vector2", FieldType::Vector2},
 		{"Chilli.Vector3", FieldType::Vector3},
 		{"Chilli.Vector4", FieldType::Vector4},
-		{"Chilli.Entity", FieldType::Entity},
-		{"Chilli.TransformComponent", FieldType::TransformComponent},
-		{"Chilli.RigidBody2DComponent", FieldType::RigidBody2DComponent}
+		{"Chilli.Entity", FieldType::Entity}
 	};
 
 	struct Field {
-		FieldType Type;
+		FieldType Type = FieldType::Unknown;
 		std::string Name;
-		MonoClassField* ClassField;
+		MonoClassField* ClassField = nullptr;
 		std::string ScriptName;
+		char FieldValueBuffer[16] = {};
 	};
 
 	class CHILLI_API ScriptInstance {
 	public:
 		ScriptInstance(MonoClass* scriptClass, uint64_t entityId);
 		~ScriptInstance();
+		bool HasFields()const;
 		MonoObject* GetMonoObject()const;
 		MonoMethod* GetDestroyMethod()const;
 		MonoMethod* GetCreateMethod()const;
 		MonoMethod* GetUpdateMethod()const;
-		void GetFieldValue(const std::string& fieldName, void* buffer)const;
-		void SetFieldValue(const std::string& fieldName, void* buffer)const;
+		template <typename T>
+		T GetFieldValue(const std::string& fieldName)const
+		{
+			const auto& field = m_fields.find(fieldName);
+			if (field != m_fields.end())
+			{
+				GetFieldValueInternal(fieldName, (void*)field->second.FieldValueBuffer);
+				return *(T*)field->second.FieldValueBuffer;
+			}
+			return T();
+		}
+		template <typename T>
+		void SetFieldValue(const std::string& fieldName, T value)const
+		{
+			SetFieldValueInternal(fieldName, &value);
+		}
 		const std::unordered_map<std::string, Field>& GetFields()const;
-		inline static char s_FieldValueBuffer[16];
 	private:
+		void GetFieldValueInternal(const std::string& fieldName, void* buffer)const;
+		void SetFieldValueInternal(const std::string& fieldName, void* buffer)const;
 		const FieldType MonoTypeToFieldType(MonoType* type)const;
-		const char* FieldTypeToString(FieldType type)const;
 		MonoObject* m_monoObject = nullptr;
 		MonoMethod* m_createMethod = nullptr;
 		MonoMethod* m_updateMethod = nullptr;

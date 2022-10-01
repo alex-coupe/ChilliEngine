@@ -36,7 +36,7 @@ namespace Chilli {
         }
 	}
 
-    void ScriptInstance::GetFieldValue(const std::string& fieldName, void* buffer)const
+    void ScriptInstance::GetFieldValueInternal(const std::string& fieldName, void* buffer)const
     {
         auto it = m_fields.find(fieldName);
         if (it == m_fields.end())
@@ -46,7 +46,7 @@ namespace Chilli {
         mono_field_get_value(m_monoObject, field.ClassField, buffer);
     }
 
-    void ScriptInstance::SetFieldValue(const std::string& fieldName, void* buffer)const
+    void ScriptInstance::SetFieldValueInternal(const std::string& fieldName, void* buffer)const
     {
 
         auto it = m_fields.find(fieldName);
@@ -71,32 +71,7 @@ namespace Chilli {
             return itr->second;
         }
         return FieldType::Unknown;
-    }
-
-    const char* ScriptInstance::FieldTypeToString(FieldType type)const
-    {
-        switch (type)
-        {
-        case FieldType::Float: return "Float";
-        case FieldType::Double: return "Double";
-        case FieldType::Bool: return "Bool";
-        case FieldType::Char: return "Char";
-        case FieldType::Short: return "Short";
-        case FieldType::Int: return "Int";
-        case FieldType::Long: return "Long";
-        case FieldType::Byte: return "Byte";
-        case FieldType::UShort: return "UShort";
-        case FieldType::UInt: return "UInt";
-        case FieldType::ULong: return "ULong";
-        case FieldType::Vector2: return "Vector2";
-        case FieldType::Vector3: return "Vector3";
-        case FieldType::Vector4: return "Vector4";
-        case FieldType::Entity: return "Entity";
-        case FieldType::TransformComponent: return "TransformComponent";
-        case FieldType::RigidBody2DComponent: return "RigidBody2DComponent";
-        default:return "Unknown";
-        }
-    }
+    }  
 
     MonoObject* ScriptInstance::GetMonoObject()const
     {
@@ -118,9 +93,15 @@ namespace Chilli {
         return m_destroyMethod;
     }
 
+    bool ScriptInstance::HasFields()const
+    {
+        return m_fields.size() > 0;
+    }
+
     ScriptInstance::~ScriptInstance()
     {
-        mono_free_method(m_createMethod);
-        mono_free_method(m_updateMethod);
+        m_createMethod = nullptr;
+        m_updateMethod = nullptr;
+        m_destroyMethod = nullptr;
     }
 }

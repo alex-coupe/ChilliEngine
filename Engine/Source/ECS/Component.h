@@ -21,7 +21,7 @@ namespace Chilli {
 			m_type(type), m_name(name) {}
 		virtual ~Component() {};
 		Component(Component& rhs) : m_type(rhs.m_type),m_name(rhs.m_name) {};
-		virtual const std::string Serialize()const = 0;
+		virtual const std::string Serialize(uint64_t)const = 0;
 		ComponentTypes GetComponentType()const
 		{
 			return m_type;

@@ -15,7 +15,7 @@ namespace Chilli {
 	public:
 		RigidBody2DComponent(BodyType type = BodyType::Static, bool fixedRotation = false);
 		RigidBody2DComponent(const RigidBody2DComponent& rhs);
-		virtual const std::string Serialize()const override;
+		virtual const std::string Serialize(uint64_t entityId)const override;
 		const BodyType GetBodyType()const;
 		void SetRigidBody(b2Body* body);
 		void SetBodyType(BodyType type);

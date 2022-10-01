@@ -567,11 +567,11 @@ namespace Chilli {
 						{
 							if (field.Type == FieldType::Float)
 							{
-								scriptInstance->GetFieldValue(name, ScriptInstance::s_FieldValueBuffer);
-								float value = *(float*)ScriptInstance::s_FieldValueBuffer;
-								if (ImGui::DragFloat(name.c_str(), &value))
+								float data = scriptInstance->GetFieldValue<float>(name);
+								
+								if (ImGui::DragFloat(name.c_str(), &data))
 								{
-									scriptInstance->SetFieldValue(name, &value);
+									scriptInstance->SetFieldValue(name, data);
 								}
 							}
 						}

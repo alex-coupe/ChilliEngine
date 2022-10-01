@@ -19,7 +19,7 @@ namespace Chilli {
 		m_restitutionThreshold = rhs.m_restitutionThreshold;
 	}
 
-	const std::string CircleColliderComponent::Serialize() const
+	const std::string CircleColliderComponent::Serialize(uint64_t entityId) const
 	{
 		std::stringstream ss;
 		ss << "{ \"Type\":" << static_cast<int>(m_type) << ", \"Radius\":" << m_radius

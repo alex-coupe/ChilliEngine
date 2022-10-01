@@ -29,7 +29,7 @@ namespace Chilli {
 		return m_scale;
 	}
 
-	const std::string TransformComponent::Serialize()const
+	const std::string TransformComponent::Serialize(uint64_t entityId)const
 	{
 
 		std::stringstream ss;

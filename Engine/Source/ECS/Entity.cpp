@@ -48,7 +48,55 @@ namespace Chilli {
 			break;
 			case (int)ComponentTypes::Script:
 				m_components.emplace_back(std::make_shared<ScriptComponent>(components[i]["ScriptClassName"].GetString()));
-				ScriptInstanceRepository::MakeScriptInstance(components[i]["ScriptClassName"].GetString(),Uuid.Get());
+				auto scriptInstance = ScriptInstanceRepository::MakeScriptInstance(components[i]["ScriptClassName"].GetString(),Uuid.Get());
+				if (components[i]["Fields"].IsArray())
+				{
+					auto scriptFields = components[i]["Fields"].GetArray();
+					for (unsigned int i = 0; i < scriptFields.Size(); i++)
+					{
+						auto name = scriptFields[i]["Name"].GetString();
+						auto type = (FieldType)scriptFields[i]["Type"].GetInt();
+						switch (type)
+						{
+						case FieldType::Float:
+							scriptInstance->SetFieldValue<float>(name, scriptFields[i]["Value"].GetFloat());
+							break;
+						case FieldType::Bool:
+							scriptInstance->SetFieldValue<bool>(name, scriptFields[i]["Value"].GetBool());
+							break;
+						case FieldType::Byte:
+							scriptInstance->SetFieldValue<uint8_t>(name, scriptFields[i]["Value"].GetUint());
+							break;
+						case FieldType::Char:
+							scriptInstance->SetFieldValue<char>(name, scriptFields[i]["Value"].GetInt());
+							break;
+						case FieldType::Double:
+							scriptInstance->SetFieldValue<double>(name, scriptFields[i]["Value"].GetDouble());
+							break;
+						case FieldType::Entity:
+						case FieldType::ULong:
+							scriptInstance->SetFieldValue<uint64_t>(name, scriptFields[i]["Value"].GetUint64());
+							break;
+						case FieldType::Int:
+							scriptInstance->SetFieldValue<int32_t>(name, scriptFields[i]["Value"].GetInt());
+							break;
+						case FieldType::Long:
+							scriptInstance->SetFieldValue<int64_t>(name, scriptFields[i]["Value"].GetInt64());
+							break;
+						case FieldType::Short:
+							scriptInstance->SetFieldValue<int16_t>(name, scriptFields[i]["Value"].GetInt());
+							break;
+						case FieldType::UInt:
+							scriptInstance->SetFieldValue<uint32_t>(name, scriptFields[i]["Value"].GetUint());
+							break;
+						case FieldType::UShort:
+							scriptInstance->SetFieldValue<uint16_t>(name, scriptFields[i]["Value"].GetUint());
+							break;
+						default:
+							break;
+						}
+					}
+				}
 				break;
 			}
 		}
@@ -265,10 +313,10 @@ namespace Chilli {
 		ss << "{\"Name\":\"" << m_name << "\", \"Uuid\":" << Uuid.Get() << ", \"Components\":[";
 		for (size_t i = 0; i < m_components.size(); i++)
 		{
-			ss << m_components[i]->Serialize();
+			ss << m_components[i]->Serialize(Uuid.Get());
 			if (i != m_components.size() - 1)
 				ss << ",";
-		}
+		}		
 		ss << "]}";
 		return ss.str();
 	}

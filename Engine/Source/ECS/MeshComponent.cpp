@@ -16,7 +16,7 @@ namespace Chilli {
 		m_meshUuid = rhs.m_meshUuid;
 	}
 
-	const std::string MeshComponent::Serialize() const
+	const std::string MeshComponent::Serialize(uint64_t entityId) const
 	{
 		std::stringstream ss;
 		ss << "{ \"Type\":" << static_cast<int>(m_type) << ", \"MeshUuid\":" << m_meshUuid.Get() << "}";

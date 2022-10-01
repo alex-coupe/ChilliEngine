@@ -18,7 +18,7 @@ namespace Chilli {
 		m_restitutionThreshold = rhs.m_restitutionThreshold;
 	}
 
-	const std::string BoxCollider2DComponent::Serialize() const
+	const std::string BoxCollider2DComponent::Serialize(uint64_t entityId) const
 	{
 		std::stringstream ss;
 		ss << "{ \"Type\":" << static_cast<int>(m_type) << ", \"SizeX\":" << m_size.x

@@ -6,7 +6,7 @@ namespace Chilli {
 
 	class CHILLI_API ScriptInstanceRepository {
 	public:
-		static void MakeScriptInstance(const std::string& scriptName, uint64_t entityId);
+		static std::shared_ptr<ScriptInstance> MakeScriptInstance(const std::string& scriptName, uint64_t entityId);
 		static void RemoveScriptInstance(uint64_t entityId);
 		static std::shared_ptr<ScriptInstance> GetScriptInstanceByEntityId(uint64_t);
 	private:

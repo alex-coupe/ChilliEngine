@@ -10,7 +10,7 @@ namespace Chilli {
 		MeshComponent();
 		MeshComponent(UUID meshUuid);
 		MeshComponent(const MeshComponent& rhs);
-		virtual const std::string Serialize()const override;
+		virtual const std::string Serialize(uint64_t entityId)const override;
 		const std::vector<VertexPos>& GetVertices()const;
 		const std::vector<unsigned short>& GetIndices()const;
 		const std::shared_ptr<Mesh> GetMesh()const;
