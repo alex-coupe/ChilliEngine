@@ -1,7 +1,7 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
 #include "../ECS/Component.h"
-#include "../ResourceSystem/Script.h"
+#include "../Scripting/Script.h"
 
 namespace Chilli {
 	class CHILLI_API ScriptComponent :public Component {

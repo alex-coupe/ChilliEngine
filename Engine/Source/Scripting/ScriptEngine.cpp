@@ -2,53 +2,72 @@
 #include "../ResourceSystem/ProjectManager.h"
 
 namespace Chilli {
-    ScriptEngine::ScriptEngine()
+
+    MonoDomain* ScriptEngine::s_domain = nullptr;
+    MonoDomain* ScriptEngine::s_appDomain = nullptr;
+    MonoImage* ScriptEngine::s_coreAssemblyImage = nullptr;
+    MonoImage* ScriptEngine::s_applicationScriptsImage = nullptr;
+    MonoAssembly* ScriptEngine::s_chilliCoreAssembly = nullptr;
+    MonoAssembly* ScriptEngine::s_applicationScriptsAssembly = nullptr;
+    std::vector<std::shared_ptr<Script>> ScriptEngine::s_scripts;
+
+    void ScriptEngine::Init()
     {
         mono_set_assemblies_path("..\\Dependencies\\Mono\\lib");
 
-        m_domain = mono_jit_init("ChilliJITRuntime");
+        s_domain = mono_jit_init("ChilliJITRuntime");
 
-        if (m_domain == nullptr)
+        if (s_domain == nullptr)
         {
             CHILLI_ERROR("Script engine domain not initialised!");
             return;
         }
 
-        m_appDomain = mono_domain_create_appdomain(nullptr, nullptr);
+        s_appDomain = mono_domain_create_appdomain(nullptr, nullptr);
 
-        m_chilliCoreAssembly = mono_domain_assembly_open(m_domain, "Assets\\Scripts\\bin\\ChilliScriptCore.dll");
-        m_applicationScriptsAssembly = mono_domain_assembly_open(m_domain, "Assets\\Scripts\\bin\\ApplicationScripts.dll");
-
-        m_coreAssemblyImage = mono_assembly_get_image(m_chilliCoreAssembly);
-        MonoClass* coreClass = mono_class_from_name(m_coreAssemblyImage, "Chilli", "ChilliScript");
-        m_constructor = mono_class_get_method_from_name(coreClass, ".ctor", 1);
-
-        m_applicationScriptsImage = mono_assembly_get_image(m_applicationScriptsAssembly);
+        s_chilliCoreAssembly = mono_domain_assembly_open(s_domain, "Assets\\Scripts\\bin\\ChilliScriptCore.dll");
+        s_applicationScriptsAssembly = mono_domain_assembly_open(s_domain, "Assets\\Scripts\\bin\\ApplicationScripts.dll");
+        s_coreAssemblyImage = mono_assembly_get_image(s_chilliCoreAssembly);      
+        s_applicationScriptsImage = mono_assembly_get_image(s_applicationScriptsAssembly);
+        BuildAvailableScripts();
     }
 
-    MonoImage* ScriptEngine::GetCoreAssemblyImage()const
+    MonoDomain* ScriptEngine::GetAppDomain()
     {
-        return m_coreAssemblyImage;
+        return s_appDomain;
     }
 
-    void ScriptEngine::ConstructAndInvokeCreateMethod()const
+    MonoImage* ScriptEngine::GetCoreAssemblyImage()
+    {
+        return s_coreAssemblyImage;
+    }
+
+    std::shared_ptr<Script> ScriptEngine::GetScriptByName(const std::string& name)
+    {
+        if (auto scriptItr = std::find_if(s_scripts.begin(), s_scripts.end(), [&name](const std::shared_ptr<Script> rhs)
+            {
+                return rhs->GetScriptName() == name;
+            }); scriptItr != s_scripts.end())
+        {
+            return *scriptItr;
+        }
+            return nullptr;
+    }
+
+    void ScriptEngine::InvokeCreateMethod()
     {
         auto currentScene = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene();
         for (const auto& entity : currentScene->GetEntities())
         {
             if (entity->HasComponent(ComponentTypes::Script))
             {
-                auto scriptComp = std::static_pointer_cast<ScriptComponent>(entity->GetComponentByType(ComponentTypes::Script));
-                auto script = DependencyResolver::ResolveDependency<ProjectManager>()->GetScriptByName(scriptComp->GetScriptName());
-                uint64_t uuid = entity->Uuid.Get();
-                void* param = &uuid;
-                mono_runtime_invoke(m_constructor, script->GetMonoObject(), &param, nullptr);
-                mono_runtime_invoke(script->GetCreateMethod(), script->GetMonoObject(), nullptr, nullptr);
+                const auto& scriptInstance = ScriptInstanceRepository::GetScriptInstanceByEntityId(entity->Uuid.Get());
+                mono_runtime_invoke(scriptInstance->GetCreateMethod(), scriptInstance->GetMonoObject(), nullptr, nullptr);
             }
         }
     }
 
-    void ScriptEngine::InvokeUpdateMethod() const
+    void ScriptEngine::InvokeUpdateMethod()
     {
         auto currentScene = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene();
         for (const auto& entity : currentScene->GetEntities())
@@ -57,17 +76,33 @@ namespace Chilli {
             {
                 float dt = DependencyResolver().ResolveDependency<Timer>()->GetDeltaTime();
                 void* deltaTime = &dt;
-                auto scriptComp = std::static_pointer_cast<ScriptComponent>(entity->GetComponentByType(ComponentTypes::Script));
-                auto script = DependencyResolver::ResolveDependency<ProjectManager>()->GetScriptByName(scriptComp->GetScriptName());
-                mono_runtime_invoke(script->GetUpdateMethod(), script->GetMonoObject(), &deltaTime, nullptr);
+                const auto& scriptInstance = ScriptInstanceRepository::GetScriptInstanceByEntityId(entity->Uuid.Get());
+                mono_runtime_invoke(scriptInstance->GetUpdateMethod(), scriptInstance->GetMonoObject(), &deltaTime, nullptr);
             }
         }
     }
 
-    std::vector<std::shared_ptr<Script>>  ScriptEngine::BuildAvailableScripts()
+    std::vector<std::shared_ptr<Script>> ScriptEngine::GetAvailableScripts()
     {
-        std::vector<std::shared_ptr<Script>> scripts;
-        MonoImage* image = mono_assembly_get_image(m_applicationScriptsAssembly);
+        return s_scripts;
+    }
+
+    void ScriptEngine::InvokeDestroyMethod()
+    {
+        auto currentScene = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene();
+        for (const auto& entity : currentScene->GetEntities())
+        {
+            if (entity->HasComponent(ComponentTypes::Script))
+            {
+                const auto& scriptInstance = ScriptInstanceRepository::GetScriptInstanceByEntityId(entity->Uuid.Get());
+                mono_runtime_invoke(scriptInstance->GetDestroyMethod(), scriptInstance->GetMonoObject(), nullptr, nullptr);
+            }
+        }
+    }
+
+    void ScriptEngine::BuildAvailableScripts()
+    {
+        MonoImage* image = mono_assembly_get_image(s_applicationScriptsAssembly);
         const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
         int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
 
@@ -77,14 +112,13 @@ namespace Chilli {
             mono_metadata_decode_row(typeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE);
 
             const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
-            scripts.emplace_back(std::make_shared<Script>(name, m_applicationScriptsImage, m_appDomain));
+            s_scripts.emplace_back(std::make_shared<Script>(name, s_applicationScriptsImage, s_appDomain));
         }
-        return scripts;
     }
 
-    ScriptEngine::~ScriptEngine()
+    void ScriptEngine::Shutdown()
     {
-        mono_domain_unload(m_appDomain);
-        mono_jit_cleanup(m_domain);
+        mono_domain_unload(s_appDomain);
+        mono_jit_cleanup(s_domain);
     }
 }

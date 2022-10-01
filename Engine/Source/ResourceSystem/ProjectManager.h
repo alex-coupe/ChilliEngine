@@ -28,13 +28,9 @@ namespace Chilli {
 		void PlayCurrentScene()const;
 		void StopCurrentScene()const;
 		std::shared_ptr<Asset> GetAssetByUUID(UUID uuid, AssetType type);
-		std::shared_ptr<Script> GetScriptByName(const std::string& name)const;
-		const std::unordered_map<uint64_t, std::shared_ptr<Script>>& GetScripts()const;
 		const std::unordered_map<uint64_t, std::shared_ptr<Mesh>>& GetMeshes()const;
-		std::vector<std::shared_ptr<Component>> GetCurrentSceneComponentsByType(ComponentTypes type);
 		static SystemType GetSystemType();
 		virtual void ProcessFrame()override;
-		MonoImage* GetCoreScriptAssemblyImage()const;
 	private:
 		std::unique_ptr<SceneManager> m_sceneManager = nullptr;
 		std::unique_ptr<AssetManager> m_assetManager = nullptr;

@@ -278,28 +278,6 @@ namespace Chilli {
 						}
 					}
 				break;
-					case AssetType::Script:
-					{
-						const auto& scripts = DependencyResolver::ResolveDependency<ProjectManager>()->GetScripts();
-
-						for (const auto& script : scripts)
-						{
-							if (ImGui::Selectable(script.second->GetScriptName().c_str(), assetFrameSelected == script.first))
-							{
-								selectedAsset = script.second;
-								assetFrameSelected = selectedAsset->Uuid.Get();
-							}
-						}
-					}
-					if (selectedAsset)
-					{
-						if (ImGui::Button("Remove Asset"))
-						{
-							DependencyResolver::ResolveDependency<ProjectManager>()->RemoveAsset(selectedAsset->Uuid, AssetType::Script);
-							selectedAsset = nullptr;
-						}
-					}
-					break;
 				}
 				ImGui::EndTabItem();
 			}
@@ -407,7 +385,7 @@ namespace Chilli {
 		window_flags |= ImGuiWindowFlags_NoCollapse;
 		ImGui::Begin("Inspector", 0, window_flags);
 		const auto& meshes = DependencyResolver::ResolveDependency<ProjectManager>()->GetMeshes();
-		const auto& scripts = DependencyResolver::ResolveDependency<ProjectManager>()->GetScripts();
+		const auto& scripts = ScriptEngine::GetAvailableScripts();
 
 		if (selectedEntity)
 		{
@@ -572,9 +550,10 @@ namespace Chilli {
 						ImGui::Separator();
 						for (const auto& script : scripts)
 						{
-							if (ImGui::Selectable(script.second->GetScriptName().c_str()))
+							if (ImGui::Selectable(script->GetScriptName().c_str()))
 							{
-								scriptComp->SetScript(script.second->GetScriptName());
+								ScriptInstanceRepository::MakeScriptInstance(script->GetScriptName(), selectedEntity->Uuid.Get());
+								scriptComp->SetScript(script->GetScriptName());
 							}
 						}
 						ImGui::EndPopup();
@@ -582,18 +561,17 @@ namespace Chilli {
 					ImGui::Spacing();
 					if (scriptComp->GetScriptName() != "")
 					{
-						const auto& script = DependencyResolver::ResolveDependency<ProjectManager>()->GetScriptByName(scriptComp->GetScriptName());
-						auto& fields = script->GetFields();
+						const auto& scriptInstance = ScriptInstanceRepository::GetScriptInstanceByEntityId(selectedEntity->Uuid.Get());
+						auto& fields = scriptInstance->GetFields();
 						for (const auto& [name,field] : fields)
 						{
 							if (field.Type == FieldType::Float)
 							{
-								
-								script->GetFieldValue(name, Script::s_FieldValueBuffer);
-								float value = *(float*)Script::s_FieldValueBuffer;
+								scriptInstance->GetFieldValue(name, ScriptInstance::s_FieldValueBuffer);
+								float value = *(float*)ScriptInstance::s_FieldValueBuffer;
 								if (ImGui::DragFloat(name.c_str(), &value))
 								{
-									script->SetFieldValue(name, &value);
+									scriptInstance->SetFieldValue(name, &value);
 								}
 							}
 						}

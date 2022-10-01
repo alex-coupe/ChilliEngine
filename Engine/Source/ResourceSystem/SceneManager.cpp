@@ -3,14 +3,9 @@
 namespace Chilli {
 	SceneManager::SceneManager()
 	{
-		m_scriptEngine = std::make_unique<ScriptEngine>();
+		
 		m_scenes.emplace_back(std::make_shared<Scene>("Scene 1"));
 		m_currentScene = m_scenes.front();
-	}
-
-	std::vector<std::shared_ptr<Script>>  SceneManager::BuildAvailableScripts()const
-	{
-		return m_scriptEngine->BuildAvailableScripts();
 	}
 
 	void SceneManager::LoadScenes(const rapidjson::Value& scenes)
@@ -111,7 +106,6 @@ namespace Chilli {
 	{
 		m_currentScene->SetSceneState(SceneState::Play);
 		m_currentScene->StartScene();
-		m_scriptEngine->ConstructAndInvokeCreateMethod();
 	}
 	void SceneManager::StopCurrentScene()const
 	{
@@ -119,16 +113,10 @@ namespace Chilli {
 		//m_currentScene->StopScene();
 	}
 
-	const std::unique_ptr<ScriptEngine>& SceneManager::GetScriptEngine()const
-	{
-		return m_scriptEngine;
-	}
-
 	void SceneManager::UpdateCurrentScene()const
 	{
 		if (m_currentScene->GetSceneState() == SceneState::Play ||
 			m_currentScene->GetSceneState() == SceneState::Simulate) {
-			m_scriptEngine->InvokeUpdateMethod();
 			m_currentScene->UpdateScene();
 		}
 	}

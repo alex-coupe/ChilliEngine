@@ -42,26 +42,6 @@ namespace Chilli {
         m_meshes.emplace( mesh->Uuid.Get(), std::move(mesh));
     }
 
-    void AssetManager::AddScript(const std::string& classname)const
-    {
-        std::stringstream ss;
-        ss << "using Chilli; namespace Application { class " << classname << ": ChilliScript {"
-            << "public override void OnCreate() {} public override void OnDestroy() {} public override void OnUpdate(float dt) {}"
-            << "}}";
-
-        std::ofstream outputStream;
-        std::stringstream filename;
-        filename << "Assets/Scripts/" << classname << ".cs";
-        outputStream.open(filename.str());
-        outputStream << ss.str();
-        outputStream.close();
-    }
-
-    void AssetManager::AddScript(const std::shared_ptr<Script>& script)
-    {
-        m_scripts.emplace(script->Uuid.Get(), script);
-    }
-
     void AssetManager::RemoveMesh(UUID uuid)
     {
         auto mesh = m_meshes.find(uuid.Get());
@@ -78,33 +58,8 @@ namespace Chilli {
         return nullptr;
     }
 
-    std::shared_ptr<Script> AssetManager::GetScriptByUUID(UUID uuid)const
-    {
-        auto script = m_scripts.find(uuid.Get());
-        if (script != m_scripts.end())
-            return script->second;
-
-        return nullptr;
-    }
-
-    std::shared_ptr<Script> AssetManager::GetScriptByName(const std::string& name)const
-    {
-        for (const auto script : m_scripts)
-        {
-            if (script.second->GetScriptName() == name)
-                return script.second;
-        }
-
-        return nullptr;
-    }
-
     const std::unordered_map<uint64_t, std::shared_ptr<Mesh>>& AssetManager::GetMeshes()const
     {
         return m_meshes;
-    }
-
-    const std::unordered_map<uint64_t, std::shared_ptr<Script>>& AssetManager::GetScripts()const
-    {
-        return m_scripts;
     }
 }

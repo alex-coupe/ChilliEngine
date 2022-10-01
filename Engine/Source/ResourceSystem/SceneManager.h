@@ -22,11 +22,8 @@ namespace Chilli {
 		void StartCurrentScene()const;
 		void StopCurrentScene()const;
 		void UpdateCurrentScene()const;
-		const std::unique_ptr<ScriptEngine>& GetScriptEngine()const;
-		std::vector<std::shared_ptr<Script>> BuildAvailableScripts()const;
 		const std::vector<std::shared_ptr<Scene>>& GetAllScenes()const;
 	private:
-		std::unique_ptr<ScriptEngine> m_scriptEngine = nullptr;
 		std::shared_ptr<Scene> CopyCurrentScene()const;
 		std::vector<std::shared_ptr<Scene>> m_scenes;
 		std::shared_ptr<Scene> m_currentScene;

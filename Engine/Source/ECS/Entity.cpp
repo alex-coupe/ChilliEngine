@@ -48,6 +48,7 @@ namespace Chilli {
 			break;
 			case (int)ComponentTypes::Script:
 				m_components.emplace_back(std::make_shared<ScriptComponent>(components[i]["ScriptClassName"].GetString()));
+				ScriptInstanceRepository::MakeScriptInstance(components[i]["ScriptClassName"].GetString(),Uuid.Get());
 				break;
 			}
 		}
@@ -253,6 +254,8 @@ namespace Chilli {
 			}); m_compoIterator != m_components.end())
 		{
 			m_components.erase(m_compoIterator);
+			if (type == ComponentTypes::Script)
+				ScriptInstanceRepository::RemoveScriptInstance(Uuid.Get());
 		}
 	}
 

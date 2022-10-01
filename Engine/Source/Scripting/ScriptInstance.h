@@ -1,15 +1,11 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
-#include "Asset.h"
-#include <string>
-#include <fstream>
-#include "mono/metadata/assembly.h"
-#include "mono/jit/jit.h"
+#include "Script.h"
 
 namespace Chilli {
 
 	enum class FieldType : int {
-		Unknown,Float, Double, Bool, Char, Short, Int, Long, Byte, UShort, UInt, ULong,
+		Unknown, Float, Double, Bool, Char, Short, Int, Long, Byte, UShort, UInt, ULong,
 		Vector2, Vector3, Vector4, Entity, TransformComponent, RigidBody2DComponent
 	};
 
@@ -41,29 +37,26 @@ namespace Chilli {
 		std::string ScriptName;
 	};
 
-	class CHILLI_API Script : public Asset {
+	class CHILLI_API ScriptInstance {
 	public:
-		Script(const std::string& className, UUID uuid, MonoImage* image, MonoDomain* appDomain);
-		Script(const std::string& className, MonoImage* image, MonoDomain* appDomain);
-		virtual const std::string Serialize()const override;
-		const std::string& GetScriptName()const;
+		ScriptInstance(MonoClass* scriptClass, uint64_t entityId);
+		~ScriptInstance();
 		MonoObject* GetMonoObject()const;
+		MonoMethod* GetDestroyMethod()const;
 		MonoMethod* GetCreateMethod()const;
 		MonoMethod* GetUpdateMethod()const;
 		void GetFieldValue(const std::string& fieldName, void* buffer)const;
 		void SetFieldValue(const std::string& fieldName, void* buffer)const;
 		const std::unordered_map<std::string, Field>& GetFields()const;
 		inline static char s_FieldValueBuffer[16];
-		~Script();
 	private:
 		const FieldType MonoTypeToFieldType(MonoType* type)const;
-		
 		const char* FieldTypeToString(FieldType type)const;
-		MonoClass* m_monoClass = nullptr;
 		MonoObject* m_monoObject = nullptr;
 		MonoMethod* m_createMethod = nullptr;
 		MonoMethod* m_updateMethod = nullptr;
+		MonoMethod* m_destroyMethod = nullptr;
 		std::string m_className;
-		std::unordered_map<std::string,Field> m_fields;
+		std::unordered_map<std::string, Field> m_fields;
 	};
 }

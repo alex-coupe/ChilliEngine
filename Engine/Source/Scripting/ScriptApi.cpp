@@ -103,7 +103,7 @@ namespace Chilli {
 		std::string managedTypename = fmt::format("Chilli.{}", structName);
 
 		MonoType* managedType = mono_reflection_type_from_name(managedTypename.data(), 
-			DependencyResolver::ResolveDependency<ProjectManager>()->GetCoreScriptAssemblyImage());
+			ScriptEngine::GetCoreAssemblyImage());
 		if (!managedType)
 		{
 			CHILLI_WARN("Could not find component type {}", managedTypename);

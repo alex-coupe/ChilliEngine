@@ -1,34 +1,28 @@
-#include "Script.h"
+#include "ScriptInstance.h"
+#include "ScriptEngine.h"
 #define PUBLIC_FIELD_FLAG 6
 #define PRIVATE_FIELD_FLAG 1
 
 namespace Chilli {
 
-    Script::Script(const std::string& className,UUID uuid, MonoImage* image, MonoDomain* appDomain)
-        : Asset(AssetType::Script, "Assets/Scripts", uuid), m_className(className)
-    {
-        m_monoClass = mono_class_from_name(image, "Application", className.c_str());
-        m_monoObject = mono_object_new(appDomain, m_monoClass);
-        mono_runtime_object_init(m_monoObject);
-        m_createMethod = mono_class_get_method_from_name(m_monoClass, "OnCreate", 0);
-        m_updateMethod = mono_class_get_method_from_name(m_monoClass, "OnUpdate", 1);
-    }
-
-    Script::Script(const std::string& className, MonoImage* image, MonoDomain* appDomain)
-        : Asset(AssetType::Script, "Assets/Scripts", UUID()), m_className(className)
-    {
-        m_monoClass = mono_class_from_name(image, "Application", className.c_str());
-        m_monoObject = mono_object_new(appDomain, m_monoClass);
-        mono_runtime_object_init(m_monoObject);
-        m_createMethod = mono_class_get_method_from_name(m_monoClass, "OnCreate", 0);
-        m_updateMethod = mono_class_get_method_from_name(m_monoClass, "OnUpdate", 1);
+	ScriptInstance::ScriptInstance(MonoClass* scriptClass, uint64_t entityId)
+	{
+		m_monoObject = mono_object_new(ScriptEngine::GetAppDomain(), scriptClass);
+		mono_runtime_object_init(m_monoObject);
+        auto coreClass = mono_class_from_name(ScriptEngine::GetCoreAssemblyImage(), "Chilli", "ChilliScript");
+        auto constructor = mono_class_get_method_from_name(coreClass, ".ctor", 1);
+        void* param = &entityId;
+        mono_runtime_invoke(constructor, m_monoObject, &param, nullptr);
+		m_createMethod = mono_class_get_method_from_name(scriptClass, "OnCreate", 0);
+		m_updateMethod = mono_class_get_method_from_name(scriptClass, "OnUpdate", 1);
+        m_destroyMethod = mono_class_get_method_from_name(scriptClass, "OnDestroy", 0);
 
         void* iterator = nullptr;
-        while (MonoClassField* field = mono_class_get_fields(m_monoClass, &iterator))
+        while (MonoClassField* field = mono_class_get_fields(scriptClass, &iterator))
         {
             uint32_t flags = mono_field_get_flags(field);
 
-            if (flags & PUBLIC_FIELD_FLAG) 
+            if (flags & PUBLIC_FIELD_FLAG)
             {
                 MonoType* type = mono_field_get_type(field);
                 auto fieldType = MonoTypeToFieldType(type);
@@ -40,9 +34,9 @@ namespace Chilli {
                 m_fields.insert({ scriptField.Name,scriptField });
             }
         }
-    }
+	}
 
-    void Script::GetFieldValue(const std::string& fieldName, void* buffer)const
+    void ScriptInstance::GetFieldValue(const std::string& fieldName, void* buffer)const
     {
         auto it = m_fields.find(fieldName);
         if (it == m_fields.end())
@@ -52,7 +46,7 @@ namespace Chilli {
         mono_field_get_value(m_monoObject, field.ClassField, buffer);
     }
 
-    void Script::SetFieldValue(const std::string& fieldName, void* buffer)const
+    void ScriptInstance::SetFieldValue(const std::string& fieldName, void* buffer)const
     {
 
         auto it = m_fields.find(fieldName);
@@ -63,12 +57,12 @@ namespace Chilli {
         mono_field_set_value(m_monoObject, field.ClassField, buffer);
     }
 
-    const std::unordered_map<std::string, Field>& Script::GetFields()const
+    const std::unordered_map<std::string, Field>& ScriptInstance::GetFields()const
     {
         return m_fields;
     }
 
-    const FieldType Script::MonoTypeToFieldType(MonoType* type)const
+    const FieldType ScriptInstance::MonoTypeToFieldType(MonoType* type)const
     {
         std::string typeName = mono_type_get_name(type);
         auto itr = s_fieldTypeMap.find(typeName);
@@ -79,7 +73,7 @@ namespace Chilli {
         return FieldType::Unknown;
     }
 
-    const char* Script::FieldTypeToString(FieldType type)const
+    const char* ScriptInstance::FieldTypeToString(FieldType type)const
     {
         switch (type)
         {
@@ -104,38 +98,29 @@ namespace Chilli {
         }
     }
 
-    const std::string& Script::GetScriptName()const
-    {
-        return m_className;
-    }
-    
-    const std::string Script::Serialize() const
-    {
-        std::stringstream ss;
-        ss << "{ \"Uuid\":" << Uuid.Get() << ", \"Type\":" << static_cast<int>(m_type) << ", \"FilePath\": \"Assets/Scripts/" << m_filePath.filename().string() << "\"}";
-        return  ss.str();
-    }
-
-    MonoObject* Script::GetMonoObject()const
+    MonoObject* ScriptInstance::GetMonoObject()const
     {
         return m_monoObject;
     }
 
-    MonoMethod* Script::GetCreateMethod()const
+    MonoMethod* ScriptInstance::GetCreateMethod()const
     {
         return m_createMethod;
     }
 
-    MonoMethod* Script::GetUpdateMethod()const
+    MonoMethod* ScriptInstance::GetUpdateMethod()const
     {
         return m_updateMethod;
     }
 
-    Script::~Script()
+    MonoMethod* ScriptInstance::GetDestroyMethod()const
+    {
+        return m_destroyMethod;
+    }
+
+    ScriptInstance::~ScriptInstance()
     {
         mono_free_method(m_createMethod);
         mono_free_method(m_updateMethod);
     }
-
-    
 }

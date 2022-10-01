@@ -213,10 +213,12 @@
     <ClInclude Include="Source\ResourceSystem\Scene.h" />
     <ClInclude Include="Source\ResourceSystem\ProjectManager.h" />
     <ClInclude Include="Source\ResourceSystem\SceneManager.h" />
-    <ClInclude Include="Source\ResourceSystem\Script.h" />
+    <ClInclude Include="Source\Scripting\Script.h" />
     <ClInclude Include="Source\Scripting\ScriptApi.h" />
     <ClInclude Include="Source\Scripting\ScriptEngine.h" />
     <ClInclude Include="Source\Core\UUID.h" />
+    <ClInclude Include="Source\Scripting\ScriptInstance.h" />
+    <ClInclude Include="Source\Scripting\ScriptInstanceRepository.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\ChilliEngine.cpp" />
@@ -260,10 +262,12 @@
     <ClCompile Include="Source\ResourceSystem\Scene.cpp" />
     <ClCompile Include="Source\ResourceSystem\ProjectManager.cpp" />
     <ClCompile Include="Source\ResourceSystem\SceneManager.cpp" />
-    <ClCompile Include="Source\ResourceSystem\Script.cpp" />
+    <ClCompile Include="Source\Scripting\Script.cpp" />
     <ClCompile Include="Source\Scripting\ScriptApi.cpp" />
     <ClCompile Include="Source\Scripting\ScriptEngine.cpp" />
     <ClCompile Include="Source\Core\UUID.cpp" />
+    <ClCompile Include="Source\Scripting\ScriptInstance.cpp" />
+    <ClCompile Include="Source\Scripting\ScriptInstanceRepository.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Source\Rendering\shaders\Pixel_Basic.hlsl">
