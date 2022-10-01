@@ -326,5 +326,7 @@
     <FxCompile Include="Source\Rendering\shaders\Vertex_Basic.hlsl" />
     <FxCompile Include="Source\Rendering\shaders\Vertex_Texture.hlsl" />
     <FxCompile Include="Source\Rendering\shaders\Pixel_Texture.hlsl" />
+    <FxCompile Include="Source\Rendering\shaders\Vertex_Color.hlsl" />
+    <FxCompile Include="Source\Rendering\shaders\Pixel_Color.hlsl" />
   </ItemGroup>
 </Project>

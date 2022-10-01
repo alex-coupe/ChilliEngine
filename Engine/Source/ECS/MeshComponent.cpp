@@ -3,11 +3,11 @@
 
 namespace Chilli {
 	MeshComponent::MeshComponent()
-		: Component(ComponentTypes::Mesh, "Mesh")
+		: Component(ComponentTypes::Mesh, "Mesh"), m_color(1.0f, 0.2f, 0.5f, 1.0f)
 	{}
 
 	MeshComponent::MeshComponent(UUID meshUuid)
-		: Component(ComponentTypes::Mesh, "Mesh"), m_meshUuid(meshUuid)
+		: Component(ComponentTypes::Mesh, "Mesh"), m_meshUuid(meshUuid), m_color(1.0f, 0.2f, 0.5f, 1.0f)
 	{}
 
 	MeshComponent::MeshComponent(const MeshComponent& rhs)
@@ -41,6 +41,11 @@ namespace Chilli {
 	void MeshComponent::SetMesh(UUID meshUuid)
 	{
 		m_meshUuid = meshUuid;
+	}
+
+	DirectX::XMFLOAT4& MeshComponent::Color()
+	{
+		return m_color;
 	}
 }
 

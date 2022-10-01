@@ -437,6 +437,8 @@ namespace Chilli {
 					}
 					ImGui::Spacing();
 					ImGui::Text("Material");
+					float* color[4] = { &meshComp->Color().x,&meshComp->Color().y,&meshComp->Color().z,&meshComp->Color().w };
+					ImGui::ColorPicker4("Diffuse Color",color[0]);
 					ImGui::Spacing();
 					if (ImGui::Button("Remove Component"))
 					{

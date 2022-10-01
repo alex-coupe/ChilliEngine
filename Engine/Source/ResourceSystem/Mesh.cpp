@@ -73,6 +73,7 @@ namespace Chilli {
 			vertex.position.x = mesh->mVertices[i].x;
 			vertex.position.y = mesh->mVertices[i].y;
 			vertex.position.z = mesh->mVertices[i].z;
+			
 
 			m_vertices.push_back(vertex);
 		}

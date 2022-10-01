@@ -7,24 +7,23 @@ namespace Chilli {
 	{
 		auto transform = std::static_pointer_cast<TransformComponent>(m_entity->GetComponentByType(ComponentTypes::Transform));
 		auto mesh = std::static_pointer_cast<MeshComponent>(m_entity->GetComponentByType(ComponentTypes::Mesh));
-
+		
 		if (transform != nullptr && mesh->GetMesh() != nullptr)
 		{
 			m_transform = transform->GetTransformMatrix();
 			m_vertexBuffer = std::make_unique<VertexBuffer>(mesh->GetVertices(), m_direct3d);
-
 			m_indexBuffer = std::make_unique<IndexBuffer>(mesh->GetIndices(), m_direct3d);
 		}
 
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
-			{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 		};
 
-		m_vertexShader = std::make_unique<Shader>(ShaderType::Vertex, L"../Engine/Source/Rendering/shaders/Vertex_Basic.hlsl", m_direct3d);
+		m_vertexShader = std::make_unique<Shader>(ShaderType::Vertex, L"../Engine/Source/Rendering/shaders/Vertex_Color.hlsl", m_direct3d);
 		m_vertexShader->Bind();
 
-		m_pixelShader = std::make_unique<Shader>(ShaderType::Pixel, L"../Engine/Source/Rendering/shaders/Pixel_Basic.hlsl", m_direct3d);
+		m_pixelShader = std::make_unique<Shader>(ShaderType::Pixel, L"../Engine/Source/Rendering/shaders/Pixel_Color.hlsl", m_direct3d);
 		m_pixelShader->Bind();
 
 		m_inputLayout = std::make_unique<InputLayout>(ied, m_vertexShader->GetByteCode(), m_direct3d);
@@ -37,6 +36,11 @@ namespace Chilli {
 	const DirectX::XMMATRIX& Drawable::GetTransform() const
 	{
 		return m_transform;
+	}
+
+	const DirectX::XMFLOAT4& Drawable::GetColor() const
+	{
+		return m_color;
 	}
 
 	void Drawable::Draw() const
@@ -55,6 +59,7 @@ namespace Chilli {
 
 		if (mesh != nullptr)
 		{
+			m_color = mesh->Color();
 			if (m_indexBuffer == nullptr)
 				m_indexBuffer = std::make_unique<IndexBuffer>(mesh->GetIndices(), m_direct3d);
 

@@ -17,6 +17,7 @@ namespace Chilli {
 	public:
 		Drawable(const std::shared_ptr<Direct3D>& d3d, const std::shared_ptr<Entity>& entity);
 		const DirectX::XMMATRIX& GetTransform()const;
+		const DirectX::XMFLOAT4& GetColor()const;
 		void Draw()const;
 		void Update();
 	private:
@@ -28,6 +29,7 @@ namespace Chilli {
 		std::unique_ptr<Topology> m_topology;
 		std::unique_ptr<IndexBuffer> m_indexBuffer;
 		DirectX::XMMATRIX m_transform = {};
+		DirectX::XMFLOAT4 m_color = {};
 		const std::shared_ptr<Entity> m_entity;
 	};
 }
