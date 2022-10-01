@@ -93,9 +93,15 @@ namespace Chilli {
         return m_destroyMethod;
     }
 
-    bool ScriptInstance::HasFields()const
+    const bool ScriptInstance::HasFields()const
     {
         return m_fields.size() > 0;
+    }
+
+    const bool ScriptInstance::HasField(const std::string& fieldName)const
+    {
+        auto itr = m_fields.find(fieldName);
+        return itr != m_fields.end();
     }
 
     ScriptInstance::~ScriptInstance()

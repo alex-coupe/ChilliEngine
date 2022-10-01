@@ -40,7 +40,7 @@ namespace Chilli {
 	public:
 		ScriptInstance(MonoClass* scriptClass, uint64_t entityId);
 		~ScriptInstance();
-		bool HasFields()const;
+		const bool HasFields()const;
 		MonoObject* GetMonoObject()const;
 		MonoMethod* GetDestroyMethod()const;
 		MonoMethod* GetCreateMethod()const;
@@ -62,6 +62,7 @@ namespace Chilli {
 			SetFieldValueInternal(fieldName, &value);
 		}
 		const std::unordered_map<std::string, Field>& GetFields()const;
+		const bool HasField(const std::string& fieldName)const;
 	private:
 		void GetFieldValueInternal(const std::string& fieldName, void* buffer)const;
 		void SetFieldValueInternal(const std::string& fieldName, void* buffer)const;
