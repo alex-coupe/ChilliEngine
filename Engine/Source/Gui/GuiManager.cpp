@@ -565,15 +565,105 @@ namespace Chilli {
 						auto& fields = scriptInstance->GetFields();
 						for (const auto& [name,field] : fields)
 						{
-							if (field.Type == FieldType::Float)
+							switch (field.Type)
+							{
+							case FieldType::Float:
 							{
 								float data = scriptInstance->GetFieldValue<float>(name);
-								
+
 								if (ImGui::DragFloat(name.c_str(), &data))
 								{
 									scriptInstance->SetFieldValue(name, data);
 								}
 							}
+								break;
+							case FieldType::Bool:
+							{
+								bool data = scriptInstance->GetFieldValue<bool>(name);
+								if (ImGui::Checkbox(name.c_str(), &data))
+								{
+									scriptInstance->SetFieldValue(name, data);
+								}
+							}
+								break;
+							case FieldType::Byte:
+						
+								break;
+							case FieldType::Char:
+							{
+								
+							}
+								break;
+							case FieldType::Double:
+							{
+								double data = scriptInstance->GetFieldValue<double>(name);
+
+								if (ImGui::InputDouble(name.c_str(), &data))
+								{
+									scriptInstance->SetFieldValue(name, data);
+								}
+							}
+								break;
+							case FieldType::Entity:
+							case FieldType::ULong:
+							{
+								
+							}
+								break;
+							case FieldType::Int:
+							{
+								int data = scriptInstance->GetFieldValue<int>(name);
+
+								if (ImGui::InputInt(name.c_str(), &data))
+								{
+									scriptInstance->SetFieldValue(name, data);
+								}
+							}
+								break;
+							case FieldType::Long:
+								
+								break;
+							case FieldType::Short:
+								
+								break;
+							case FieldType::UInt:
+								
+								break;
+							case FieldType::UShort:
+								
+								break;
+							case FieldType::Vector2:
+							{
+								DirectX::XMFLOAT2 data = scriptInstance->GetFieldValue<DirectX::XMFLOAT2>(name);
+								float* vec2[2] = { &data.x,&data.y };
+								if (ImGui::InputFloat2(name.c_str(),vec2[0]))
+								{
+									scriptInstance->SetFieldValue(name, data);
+								}
+							}
+							break;
+							case FieldType::Vector3:
+							{
+								DirectX::XMFLOAT3 data = scriptInstance->GetFieldValue<DirectX::XMFLOAT3>(name);
+								float* vec3[3] = { &data.x,&data.y, &data.z };
+								if (ImGui::InputFloat3(name.c_str(), vec3[0]))
+								{
+									scriptInstance->SetFieldValue(name, data);
+								}
+							}
+							break;
+							case FieldType::Vector4:
+							{
+								DirectX::XMFLOAT4 data = scriptInstance->GetFieldValue<DirectX::XMFLOAT4>(name);
+								float* vec4[4] = { &data.x,&data.y, &data.z, &data.w };
+								if (ImGui::InputFloat4(name.c_str(), vec4[0]))
+								{
+									scriptInstance->SetFieldValue(name, data);
+								}
+							}
+							break;
+							}
+							
 						}
 					}
 					ImGui::Spacing();
