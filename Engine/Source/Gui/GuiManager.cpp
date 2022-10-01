@@ -580,6 +580,25 @@ namespace Chilli {
 						ImGui::EndPopup();
 					}
 					ImGui::Spacing();
+					if (scriptComp->GetScriptName() != "")
+					{
+						const auto& script = DependencyResolver::ResolveDependency<ProjectManager>()->GetScriptByName(scriptComp->GetScriptName());
+						auto& fields = script->GetFields();
+						for (const auto& [name,field] : fields)
+						{
+							if (field.Type == FieldType::Float)
+							{
+								
+								script->GetFieldValue(name, Script::s_FieldValueBuffer);
+								float value = *(float*)Script::s_FieldValueBuffer;
+								if (ImGui::DragFloat(name.c_str(), &value))
+								{
+									script->SetFieldValue(name, &value);
+								}
+							}
+						}
+					}
+					ImGui::Spacing();
 					if (ImGui::Button("Remove Component"))
 					{
 						selectedEntity->RemoveComponent(ComponentTypes::Script);
