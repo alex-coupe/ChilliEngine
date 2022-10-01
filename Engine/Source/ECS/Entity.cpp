@@ -48,6 +48,79 @@ namespace Chilli {
 			break;
 			case (int)ComponentTypes::Script:
 				m_components.emplace_back(std::make_shared<ScriptComponent>(components[i]["ScriptClassName"].GetString()));
+				auto scriptInstance = ScriptInstanceRepository::MakeScriptInstance(components[i]["ScriptClassName"].GetString(),Uuid.Get());
+				if (components[i]["Fields"].IsArray())
+				{
+					auto scriptFields = components[i]["Fields"].GetArray();
+					for (unsigned int i = 0; i < scriptFields.Size(); i++)
+					{
+						auto name = scriptFields[i]["Name"].GetString();
+						auto type = (FieldType)scriptFields[i]["Type"].GetInt();
+						if (scriptInstance->HasField(name))
+						{
+							switch (type)
+							{
+							case FieldType::Float:
+								scriptInstance->SetFieldValue<float>(name, scriptFields[i]["Value"].GetFloat());
+								break;
+							case FieldType::Bool:
+								scriptInstance->SetFieldValue<bool>(name, scriptFields[i]["Value"].GetBool());
+								break;
+							case FieldType::Byte:
+								scriptInstance->SetFieldValue<uint8_t>(name, scriptFields[i]["Value"].GetUint());
+								break;
+							case FieldType::Char:
+								scriptInstance->SetFieldValue<char>(name, scriptFields[i]["Value"].GetInt());
+								break;
+							case FieldType::Double:
+								scriptInstance->SetFieldValue<double>(name, scriptFields[i]["Value"].GetDouble());
+								break;
+							case FieldType::Entity:
+							case FieldType::ULong:
+								scriptInstance->SetFieldValue<uint64_t>(name, scriptFields[i]["Value"].GetUint64());
+								break;
+							case FieldType::Int:
+								scriptInstance->SetFieldValue<int32_t>(name, scriptFields[i]["Value"].GetInt());
+								break;
+							case FieldType::Long:
+								scriptInstance->SetFieldValue<int64_t>(name, scriptFields[i]["Value"].GetInt64());
+								break;
+							case FieldType::Short:
+								scriptInstance->SetFieldValue<int16_t>(name, scriptFields[i]["Value"].GetInt());
+								break;
+							case FieldType::UInt:
+								scriptInstance->SetFieldValue<uint32_t>(name, scriptFields[i]["Value"].GetUint());
+								break;
+							case FieldType::UShort:
+								scriptInstance->SetFieldValue<uint16_t>(name, scriptFields[i]["Value"].GetUint());
+								break;
+							case FieldType::Vector2:
+							{
+								auto values = scriptFields[i]["Value"].GetArray();
+								DirectX::XMFLOAT2 value = { values[0]["X"].GetFloat(),values[0]["Y"].GetFloat() };
+								scriptInstance->SetFieldValue<DirectX::XMFLOAT2>(name, value);
+							}
+							break;
+							case FieldType::Vector3:
+							{
+								auto values = scriptFields[i]["Value"].GetArray();
+								DirectX::XMFLOAT3 value = { values[0]["X"].GetFloat(),values[0]["Y"].GetFloat(), values[0]["Z"].GetFloat() };
+								scriptInstance->SetFieldValue<DirectX::XMFLOAT3>(name, value);
+							}
+							break;
+							case FieldType::Vector4:
+							{
+								auto values = scriptFields[i]["Value"].GetArray();
+								DirectX::XMFLOAT4 value = { values[0]["X"].GetFloat(),values[0]["Y"].GetFloat(), values[0]["Z"].GetFloat(), values[0]["W"].GetFloat() };
+								scriptInstance->SetFieldValue<DirectX::XMFLOAT4>(name, value);
+							}
+							break;
+							default:
+								break;
+							}
+						}
+					}
+				}
 				break;
 			}
 		}
@@ -253,6 +326,8 @@ namespace Chilli {
 			}); m_compoIterator != m_components.end())
 		{
 			m_components.erase(m_compoIterator);
+			if (type == ComponentTypes::Script)
+				ScriptInstanceRepository::RemoveScriptInstance(Uuid.Get());
 		}
 	}
 
@@ -262,10 +337,10 @@ namespace Chilli {
 		ss << "{\"Name\":\"" << m_name << "\", \"Uuid\":" << Uuid.Get() << ", \"Components\":[";
 		for (size_t i = 0; i < m_components.size(); i++)
 		{
-			ss << m_components[i]->Serialize();
+			ss << m_components[i]->Serialize(Uuid.Get());
 			if (i != m_components.size() - 1)
 				ss << ",";
-		}
+		}		
 		ss << "]}";
 		return ss.str();
 	}

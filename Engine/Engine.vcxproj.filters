@@ -156,7 +156,7 @@
     <ClInclude Include="Source\Scripting\ScriptEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ResourceSystem\Script.h">
+    <ClInclude Include="Source\Scripting\Script.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\ECS\ScriptComponent.h">
@@ -169,6 +169,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\ResourceSystem\SceneManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scripting\ScriptInstance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scripting\ScriptInstanceRepository.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -293,7 +299,7 @@
     <ClCompile Include="Source\Scripting\ScriptEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ResourceSystem\Script.cpp">
+    <ClCompile Include="Source\Scripting\Script.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Scripting\ScriptApi.cpp">
@@ -306,6 +312,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\ResourceSystem\AssetManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scripting\ScriptInstance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scripting\ScriptInstanceRepository.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

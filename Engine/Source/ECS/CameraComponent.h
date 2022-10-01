@@ -12,7 +12,7 @@ namespace Chilli {
 	class CHILLI_API CameraComponent : public Component {
 	public:
 		CameraComponent();
-		virtual const std::string Serialize()const override;
+		virtual const std::string Serialize(uint64_t entityId)const override;
 
 	private:
 		CameraType m_type = CameraType::Perspective;

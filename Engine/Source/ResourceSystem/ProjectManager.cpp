@@ -8,10 +8,6 @@ namespace Chilli {
     {
         m_sceneManager = std::make_unique<SceneManager>();
         m_assetManager = std::make_unique<AssetManager>();
-        for (const auto& script : m_sceneManager->BuildAvailableScripts())
-        {
-            m_assetManager->AddScript(script);
-        }
     }
 
     void ProjectManager::LoadProject(const std::string& filename)
@@ -83,11 +79,6 @@ namespace Chilli {
         return m_sceneManager->GetAllScenes();
     }
 
-    void ProjectManager::AddScript(const std::string& className)
-    {
-        m_assetManager->AddScript(className);
-    }
-
     void ProjectManager::AddAsset(const std::filesystem::path& filename, AssetType type)
     {
         switch (type)
@@ -133,16 +124,9 @@ namespace Chilli {
         {
         case AssetType::Mesh:
             return m_assetManager->GetMeshByUUID(uuid);
-        case AssetType::Script:
-            return m_assetManager->GetScriptByUUID(uuid);
         default:
             return nullptr;
         }
-    }
-
-    const std::unordered_map<uint64_t, std::shared_ptr<Script>>& ProjectManager::GetScripts()const
-    {
-        return m_assetManager->GetScripts();
     }
 
     const std::unordered_map<uint64_t, std::shared_ptr<Mesh>>& ProjectManager::GetMeshes()const
@@ -165,18 +149,8 @@ namespace Chilli {
         m_sceneManager->StopCurrentScene();
     }
 
-    std::shared_ptr<Script> ProjectManager::GetScriptByName(const std::string& name)const
-    {
-       return  m_assetManager->GetScriptByName(name);
-    }
-
     void ProjectManager::ProcessFrame()
     {
         m_sceneManager->UpdateCurrentScene();
-    }
-
-    MonoImage* ProjectManager::GetCoreScriptAssemblyImage()const
-    {
-        return m_sceneManager->GetScriptEngine()->GetCoreAssemblyImage();
     }
 }

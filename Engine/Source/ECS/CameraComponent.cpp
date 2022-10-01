@@ -5,7 +5,7 @@ namespace Chilli {
 	{
 	}
 
-	const std::string CameraComponent::Serialize() const
+	const std::string CameraComponent::Serialize(uint64_t entityId) const
 	{
 		std::stringstream ss;
 		return  ss.str();

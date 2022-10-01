@@ -4,6 +4,7 @@
 #include <vector>
 #include "ComponentFactory.h"
 #include "../Core/UUID.h"
+#include "../Scripting/ScriptInstanceRepository.h"
 
 namespace Chilli {
 

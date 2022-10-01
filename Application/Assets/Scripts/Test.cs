@@ -8,8 +8,10 @@ namespace Application
        
         public float Speed = 3.0f;
         public float Time = 0.0f;
+        public Vector2 Velocity = new Vector2(1.0f, 5.0f);
         public override void OnCreate()
         {
+            
             TransformComponent = Entity.GetComponent<TransformComponent>();
         }
 

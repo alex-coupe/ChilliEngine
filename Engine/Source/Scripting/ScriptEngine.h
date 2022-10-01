@@ -1,30 +1,30 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
-#include "../Core/SubSystem.h"
 #include "mono/metadata/assembly.h"
 #include "mono/jit/jit.h"
-#include <filesystem>
-#include "../Core/UUID.h"
-#include "../Core/DependencyResolver.h"
-#include "../ResourceSystem/Script.h"
+#include "Script.h"
 #include "ScriptApi.h"
 
 namespace Chilli {
 	class CHILLI_API ScriptEngine {
 	public:
-		ScriptEngine();
-		void ConstructAndInvokeCreateMethod()const;
-		void InvokeUpdateMethod()const;
-		std::vector<std::shared_ptr<Script>> BuildAvailableScripts();
-		~ScriptEngine();
-		MonoImage* GetCoreAssemblyImage()const;
+		static void Init();
+		static void InvokeCreateMethod();
+		static void InvokeUpdateMethod();
+		static void InvokeDestroyMethod();
+		static void Shutdown();
+		static MonoDomain* GetAppDomain();
+		static MonoImage* GetCoreAssemblyImage();
+		static std::shared_ptr<Script> GetScriptByName(const std::string& name);
+		static std::vector<std::shared_ptr<Script>> GetAvailableScripts();
 	private:
-		MonoDomain* m_domain = nullptr;
-		MonoDomain* m_appDomain = nullptr;
-		MonoImage* m_coreAssemblyImage = nullptr;
-		MonoImage* m_applicationScriptsImage = nullptr;
-		MonoAssembly* m_chilliCoreAssembly = nullptr;
-		MonoAssembly* m_applicationScriptsAssembly = nullptr;
-		MonoMethod* m_constructor = nullptr;
+		static void BuildAvailableScripts();
+		static MonoDomain* s_domain;
+		static MonoDomain* s_appDomain;
+		static MonoImage* s_coreAssemblyImage;
+		static MonoImage* s_applicationScriptsImage;
+		static MonoAssembly* s_chilliCoreAssembly;
+		static MonoAssembly* s_applicationScriptsAssembly;
+		static std::vector<std::shared_ptr<Script>> s_scripts;
 	};
 }

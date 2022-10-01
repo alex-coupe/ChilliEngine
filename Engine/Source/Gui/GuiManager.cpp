@@ -278,28 +278,6 @@ namespace Chilli {
 						}
 					}
 				break;
-					case AssetType::Script:
-					{
-						const auto& scripts = DependencyResolver::ResolveDependency<ProjectManager>()->GetScripts();
-
-						for (const auto& script : scripts)
-						{
-							if (ImGui::Selectable(script.second->GetScriptName().c_str(), assetFrameSelected == script.first))
-							{
-								selectedAsset = script.second;
-								assetFrameSelected = selectedAsset->Uuid.Get();
-							}
-						}
-					}
-					if (selectedAsset)
-					{
-						if (ImGui::Button("Remove Asset"))
-						{
-							DependencyResolver::ResolveDependency<ProjectManager>()->RemoveAsset(selectedAsset->Uuid, AssetType::Script);
-							selectedAsset = nullptr;
-						}
-					}
-					break;
 				}
 				ImGui::EndTabItem();
 			}
@@ -407,7 +385,7 @@ namespace Chilli {
 		window_flags |= ImGuiWindowFlags_NoCollapse;
 		ImGui::Begin("Inspector", 0, window_flags);
 		const auto& meshes = DependencyResolver::ResolveDependency<ProjectManager>()->GetMeshes();
-		const auto& scripts = DependencyResolver::ResolveDependency<ProjectManager>()->GetScripts();
+		const auto& scripts = ScriptEngine::GetAvailableScripts();
 
 		if (selectedEntity)
 		{
@@ -572,12 +550,121 @@ namespace Chilli {
 						ImGui::Separator();
 						for (const auto& script : scripts)
 						{
-							if (ImGui::Selectable(script.second->GetScriptName().c_str()))
+							if (ImGui::Selectable(script->GetScriptName().c_str()))
 							{
-								scriptComp->SetScript(script.second->GetScriptName());
+								ScriptInstanceRepository::MakeScriptInstance(script->GetScriptName(), selectedEntity->Uuid.Get());
+								scriptComp->SetScript(script->GetScriptName());
 							}
 						}
 						ImGui::EndPopup();
+					}
+					ImGui::Spacing();
+					if (scriptComp->GetScriptName() != "")
+					{
+						const auto& scriptInstance = ScriptInstanceRepository::GetScriptInstanceByEntityId(selectedEntity->Uuid.Get());
+						auto& fields = scriptInstance->GetFields();
+						for (const auto& [name,field] : fields)
+						{
+							switch (field.Type)
+							{
+							case FieldType::Float:
+							{
+								float data = scriptInstance->GetFieldValue<float>(name);
+
+								if (ImGui::DragFloat(name.c_str(), &data))
+								{
+									scriptInstance->SetFieldValue(name, data);
+								}
+							}
+								break;
+							case FieldType::Bool:
+							{
+								bool data = scriptInstance->GetFieldValue<bool>(name);
+								if (ImGui::Checkbox(name.c_str(), &data))
+								{
+									scriptInstance->SetFieldValue(name, data);
+								}
+							}
+								break;
+							case FieldType::Byte:
+						
+								break;
+							case FieldType::Char:
+							{
+								
+							}
+								break;
+							case FieldType::Double:
+							{
+								double data = scriptInstance->GetFieldValue<double>(name);
+
+								if (ImGui::InputDouble(name.c_str(), &data))
+								{
+									scriptInstance->SetFieldValue(name, data);
+								}
+							}
+								break;
+							case FieldType::Entity:
+							case FieldType::ULong:
+							{
+								
+							}
+								break;
+							case FieldType::Int:
+							{
+								int data = scriptInstance->GetFieldValue<int>(name);
+
+								if (ImGui::InputInt(name.c_str(), &data))
+								{
+									scriptInstance->SetFieldValue(name, data);
+								}
+							}
+								break;
+							case FieldType::Long:
+								
+								break;
+							case FieldType::Short:
+								
+								break;
+							case FieldType::UInt:
+								
+								break;
+							case FieldType::UShort:
+								
+								break;
+							case FieldType::Vector2:
+							{
+								DirectX::XMFLOAT2 data = scriptInstance->GetFieldValue<DirectX::XMFLOAT2>(name);
+								float* vec2[2] = { &data.x,&data.y };
+								if (ImGui::InputFloat2(name.c_str(),vec2[0]))
+								{
+									scriptInstance->SetFieldValue(name, data);
+								}
+							}
+							break;
+							case FieldType::Vector3:
+							{
+								DirectX::XMFLOAT3 data = scriptInstance->GetFieldValue<DirectX::XMFLOAT3>(name);
+								float* vec3[3] = { &data.x,&data.y, &data.z };
+								if (ImGui::InputFloat3(name.c_str(), vec3[0]))
+								{
+									scriptInstance->SetFieldValue(name, data);
+								}
+							}
+							break;
+							case FieldType::Vector4:
+							{
+								DirectX::XMFLOAT4 data = scriptInstance->GetFieldValue<DirectX::XMFLOAT4>(name);
+								float* vec4[4] = { &data.x,&data.y, &data.z, &data.w };
+								if (ImGui::InputFloat4(name.c_str(), vec4[0]))
+								{
+									scriptInstance->SetFieldValue(name, data);
+								}
+							}
+							break;
+							}
+							
+						}
 					}
 					ImGui::Spacing();
 					if (ImGui::Button("Remove Component"))

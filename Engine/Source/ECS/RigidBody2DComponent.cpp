@@ -13,7 +13,7 @@ namespace Chilli {
 		m_bodyType = rhs.m_bodyType;
 	}
 
-	const std::string RigidBody2DComponent::Serialize()const
+	const std::string RigidBody2DComponent::Serialize(uint64_t entityId)const
 	{
 		std::stringstream ss;
 		ss << "{ \"Type\":" << static_cast<int>(m_type) << ", \"BodyType\":" << (int)m_bodyType << ",\"FixedRotation\":" << m_fixedRotation << "}";
