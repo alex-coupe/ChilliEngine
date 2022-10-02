@@ -30,7 +30,6 @@ namespace Chilli {
 		void UpdateScene();
 		void StopScene();
 	private:
-		std::vector<std::shared_ptr<Entity>> m_entitiesClone;
 		std::string m_name;
 		SceneState m_sceneState = SceneState::Edit;
 		std::vector<std::shared_ptr<Entity>> m_entities;

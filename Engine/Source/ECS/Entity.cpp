@@ -172,40 +172,6 @@ namespace Chilli {
 		}
 	}
 
-	std::shared_ptr<Entity> Entity::Clone(Entity& entity)
-	{
-		auto clone = std::make_shared<Entity>(entity.GetName());
-		clone->RemoveComponent(ComponentTypes::Transform);
-
-		DirectX::XMFLOAT3 translation;
-		DirectX::XMFLOAT3 rotation;
-		DirectX::XMFLOAT3 scale;
-
-		for (const auto& compo : entity.GetComponents())
-		{
-			clone->AddComponent(compo);
-		}
-
-		auto transform = clone->GetTransformComponent();
-
-		translation.x = transform->Translation().x;
-		translation.y = transform->Translation().y;
-		translation.z = transform->Translation().z;
-
-		rotation.x = transform->Rotation().x;
-		rotation.y = transform->Rotation().y;
-		rotation.z = transform->Rotation().z;
-
-		scale.x = transform->Scale().x;
-		scale.y = transform->Scale().y;
-		scale.z = transform->Scale().z;
-
-		clone->RemoveComponent(ComponentTypes::Transform);
-		clone->AddComponent(std::make_shared<TransformComponent>(translation, rotation, scale));
-
-		return clone;
-	}
-
 	b2Body* Entity::CreateRigidBody(std::unique_ptr<b2World>& physicsWorld, const std::shared_ptr<TransformComponent> transform)
 	{
 		const auto& rb2d = std::static_pointer_cast<RigidBody2DComponent>(GetComponentByType(ComponentTypes::RigidBody2D));

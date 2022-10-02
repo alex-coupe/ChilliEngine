@@ -71,8 +71,6 @@ namespace Chilli {
         m_b2World = std::make_unique<b2World>(m_gravity);
         for (const auto& entity : m_entities)
         {
-            auto clone = Entity::Clone(*entity);
-            m_entitiesClone.emplace_back(clone);
             entity->InitPhysics(m_b2World);
         }
     }
@@ -90,9 +88,6 @@ namespace Chilli {
     void Scene::StopScene()
     {
         ScriptEngine::InvokeDestroyMethod();
-        m_entities.clear();
-        m_entities = m_entitiesClone;
-        m_entitiesClone.clear();
     }
 
     const std::string& Scene::GetName() const
