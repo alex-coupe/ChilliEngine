@@ -5,7 +5,7 @@ namespace Chilli {
 
 	struct VertexPosColor {
 		DirectX::XMFLOAT3 position;
-		DirectX::XMFLOAT3 color;
+		DirectX::XMFLOAT4 color;
 	};
 
 	struct VertexPos {

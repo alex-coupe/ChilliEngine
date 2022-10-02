@@ -18,6 +18,7 @@ namespace Chilli {
 		virtual const std::string Serialize()const override;
 		const std::vector<VertexPos>& GetVertices()const;
 		const std::vector<unsigned short>& GetIndices()const;
+		
 	private:
 		void ImportMesh();
 		class SubMesh {
