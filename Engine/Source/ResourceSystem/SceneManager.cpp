@@ -3,7 +3,6 @@
 namespace Chilli {
 	SceneManager::SceneManager()
 	{
-		
 		m_scenes.emplace_back(std::make_shared<Scene>("Scene 1"));
 		m_currentScene = m_scenes.front();
 	}
@@ -102,15 +101,18 @@ namespace Chilli {
 
 	}
 
-	void SceneManager::StartCurrentScene()const
+	void SceneManager::StartCurrentScene()
 	{
+		CopyCurrentScene();
 		m_currentScene->SetSceneState(SceneState::Play);
 		m_currentScene->StartScene();
 	}
-	void SceneManager::StopCurrentScene()const
+	void SceneManager::StopCurrentScene()
 	{
 		m_currentScene->SetSceneState(SceneState::Edit);
-		//m_currentScene->StopScene();
+		m_currentScene->StopScene();
+		m_currentScene->Clone(m_currentSceneCopy);
+		m_currentSceneCopy = nullptr;
 	}
 
 	void SceneManager::UpdateCurrentScene()const
@@ -131,8 +133,8 @@ namespace Chilli {
 		return m_currentScene;
 	}
 
-	std::shared_ptr<Scene> SceneManager::CopyCurrentScene()const
+	void SceneManager::CopyCurrentScene()
 	{
-		return nullptr;
+		m_currentSceneCopy = std::make_shared<Scene>(*m_currentScene);
 	}
 }

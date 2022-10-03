@@ -2,7 +2,7 @@
 namespace Chilli {
 
 	RigidBody2DComponent::RigidBody2DComponent(BodyType type, bool fixedRotation)
-		:Component(ComponentTypes::RigidBody2D, "RigidBody2D"),
+		:Component(ComponentType::RigidBody2D, "RigidBody2D"),
 		m_bodyType(type), m_fixedRotation(fixedRotation)
 	{}
 
@@ -11,6 +11,13 @@ namespace Chilli {
 	{
 		m_fixedRotation = rhs.m_fixedRotation;
 		m_bodyType = rhs.m_bodyType;
+	}
+
+	void RigidBody2DComponent::Clone(const std::shared_ptr<Component>& rhs)
+	{
+		const auto comp = std::static_pointer_cast<RigidBody2DComponent>(rhs);
+		m_bodyType = comp->m_bodyType;
+		m_fixedRotation = comp->m_fixedRotation;
 	}
 
 	const std::string RigidBody2DComponent::Serialize(uint64_t entityId)const

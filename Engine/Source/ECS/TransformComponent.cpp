@@ -2,13 +2,14 @@
 namespace Chilli {
 
 	TransformComponent::TransformComponent(DirectX::XMFLOAT3 translation, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 scale)
-		:Component(ComponentTypes::Transform, "Transform"), m_translation(translation), m_rotation(rotation), m_scale(scale)
+		:Component(ComponentType::Transform, "Transform"), m_translation(translation), m_rotation(rotation), m_scale(scale)
 	{
 	}
 
 	TransformComponent::TransformComponent(const TransformComponent& rhs)
 		:Component(rhs.m_type, rhs.m_name)
 	{
+		CHILLI_INFO("Transform CC");
 		m_rotation = rhs.m_rotation;
 		m_scale = rhs.m_scale;
 		m_translation = rhs.m_translation;
@@ -39,6 +40,15 @@ namespace Chilli {
 			<< ", \"ScaleZ\":" << m_scale.z << "}";
 		return  ss.str();
 	}
+
+	void TransformComponent::Clone(const std::shared_ptr<Component>& rhs)
+	{
+		const auto& comp = std::static_pointer_cast<TransformComponent>(rhs);
+		m_rotation = comp->m_rotation;
+		m_scale = comp->m_scale;
+		m_translation = comp->m_translation;
+	}
+
 
 	DirectX::XMMATRIX TransformComponent::GetTransformMatrix() const
 	{

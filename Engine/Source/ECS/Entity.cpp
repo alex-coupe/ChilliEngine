@@ -15,7 +15,7 @@ namespace Chilli {
 		{
 			switch (components[i]["Type"].GetInt())
 			{
-			case (int)ComponentTypes::Transform:
+			case (int)ComponentType::Transform:
 			{
 				DirectX::XMFLOAT3 translation = { components[i]["PosX"].GetFloat(),components[i]["PosY"].GetFloat(), components[i]["PosZ"].GetFloat() };
 				DirectX::XMFLOAT3 rotation = { components[i]["RotX"].GetFloat(),components[i]["RotY"].GetFloat(), components[i]["RotZ"].GetFloat() };
@@ -23,13 +23,13 @@ namespace Chilli {
 				m_components.emplace_back(std::make_shared<TransformComponent>(translation, rotation, scale));
 				break;
 			}
-			case (int)ComponentTypes::Mesh:
+			case (int)ComponentType::Mesh:
 				m_components.emplace_back(std::make_shared<MeshComponent>(components[i]["MeshUuid"].GetInt()));
 				break;
-			case (int)ComponentTypes::RigidBody2D:
+			case (int)ComponentType::RigidBody2D:
 				m_components.emplace_back(std::make_shared<RigidBody2DComponent>((BodyType)components[i]["BodyType"].GetInt(), (bool)components[i]["FixedRotation"].GetInt()));
 				break;
-			case (int)ComponentTypes::BoxCollider2D:
+			case (int)ComponentType::BoxCollider2D:
 			{
 				DirectX::XMFLOAT2 size = { components[i]["SizeX"].GetFloat(),components[i]["SizeY"].GetFloat() };
 				DirectX::XMFLOAT2 offset = { components[i]["OffSetX"].GetFloat(),components[i]["OffSetY"].GetFloat() };
@@ -38,7 +38,7 @@ namespace Chilli {
 					components[i]["Restitution"].GetFloat(), components[i]["RestitutionThreshold"].GetFloat()));
 				break;
 			}
-			case (int)ComponentTypes::CircleCollider:
+			case (int)ComponentType::CircleCollider:
 			{
 				DirectX::XMFLOAT2 offset = { components[i]["OffSetX"].GetFloat(),components[i]["OffSetY"].GetFloat() };
 				m_components.emplace_back(std::make_shared<CircleColliderComponent>(components[i]["Radius"].GetFloat(), offset,
@@ -46,10 +46,10 @@ namespace Chilli {
 					components[i]["Restitution"].GetFloat(), components[i]["RestitutionThreshold"].GetFloat()));
 			}
 			break;
-			case (int)ComponentTypes::Script:
+			case (int)ComponentType::Script:
 				m_components.emplace_back(std::make_shared<ScriptComponent>(components[i]["ScriptClassName"].GetString()));
 				auto scriptInstance = ScriptInstanceRepository::MakeScriptInstance(components[i]["ScriptClassName"].GetString(),Uuid.Get());
-				if (components[i]["Fields"].IsArray())
+				if (components[i].HasMember("Fields"))
 				{
 					auto scriptFields = components[i]["Fields"].GetArray();
 					for (unsigned int i = 0; i < scriptFields.Size(); i++)
@@ -126,6 +126,44 @@ namespace Chilli {
 		}
 	}
 
+	Entity::Entity(const Entity& rhs)
+		: m_name(rhs.m_name)
+	{
+		for (const auto& component : rhs.m_components)
+		{
+			switch (component->GetComponentType())
+			{
+			case ComponentType::Transform:
+			{
+				auto pointer = std::static_pointer_cast<TransformComponent>(component);
+				m_components.emplace_back(std::make_shared<TransformComponent>(*pointer));
+			}
+				break;
+			case ComponentType::Mesh:
+			{
+				auto pointer = std::static_pointer_cast<MeshComponent>(component);
+				m_components.emplace_back(std::make_shared<MeshComponent>(*pointer));
+			}
+				break;
+			case ComponentType::Script:
+			{
+				auto pointer = std::static_pointer_cast<ScriptComponent>(component);
+				m_components.emplace_back(std::make_shared<ScriptComponent>(*pointer));
+			}
+				break;
+			}
+		}
+	}
+
+	void Entity::Clone(const Entity& rhs)
+	{
+		m_name = rhs.m_name;
+		for (int i = 0; i < m_components.size(); i++)
+		{
+			m_components[i]->Clone(rhs.m_components[i]);
+		}
+	}
+
 	const std::string& Entity::GetName()const
 	{
 		return m_name;
@@ -135,7 +173,7 @@ namespace Chilli {
 	{
 		for (const auto& comp : m_components)
 		{
-			if (comp->GetComponentType() == ComponentTypes::Transform)
+			if (comp->GetComponentType() == ComponentType::Transform)
 				return std::static_pointer_cast<TransformComponent>(comp);
 		}
 		return nullptr;
@@ -144,15 +182,15 @@ namespace Chilli {
 	void Entity::InitPhysics(std::unique_ptr<b2World>& physicsWorld)
 	{
 		auto& transform = GetTransformComponent();
-		if (HasComponent(ComponentTypes::RigidBody2D))
+		if (HasComponent(ComponentType::RigidBody2D))
 		{
 			auto rigidBody = CreateRigidBody(physicsWorld, transform);
-			if (HasComponent(ComponentTypes::BoxCollider2D))
+			if (HasComponent(ComponentType::BoxCollider2D))
 			{
 				CreateBoxCollider(rigidBody, transform);
 			}
 
-			if (HasComponent(ComponentTypes::CircleCollider))
+			if (HasComponent(ComponentType::CircleCollider))
 			{
 				CreateCircleCollider(rigidBody, transform);
 			}
@@ -162,7 +200,7 @@ namespace Chilli {
 	void Entity::UpdatePhysics()
 	{
 		auto& transform = GetTransformComponent();
-		const auto& rb2d = std::static_pointer_cast<RigidBody2DComponent>(GetComponentByType(ComponentTypes::RigidBody2D));
+		const auto& rb2d = std::static_pointer_cast<RigidBody2DComponent>(GetComponentByType(ComponentType::RigidBody2D));
 		if (rb2d)
 		{
 			const auto& position = rb2d->GetBody()->GetPosition();
@@ -174,7 +212,7 @@ namespace Chilli {
 
 	b2Body* Entity::CreateRigidBody(std::unique_ptr<b2World>& physicsWorld, const std::shared_ptr<TransformComponent> transform)
 	{
-		const auto& rb2d = std::static_pointer_cast<RigidBody2DComponent>(GetComponentByType(ComponentTypes::RigidBody2D));
+		const auto& rb2d = std::static_pointer_cast<RigidBody2DComponent>(GetComponentByType(ComponentType::RigidBody2D));
 		b2BodyDef bodyDef;
 		bodyDef.position.Set(transform->Translation().x, transform->Translation().y);
 		bodyDef.angle = transform->Rotation().z;
@@ -201,7 +239,7 @@ namespace Chilli {
 
 	void Entity::CreateBoxCollider(b2Body* rigidBody, const std::shared_ptr<TransformComponent> transform)
 	{
-		const auto& bc2d = std::static_pointer_cast<BoxCollider2DComponent>(GetComponentByType(ComponentTypes::BoxCollider2D));
+		const auto& bc2d = std::static_pointer_cast<BoxCollider2DComponent>(GetComponentByType(ComponentType::BoxCollider2D));
 		b2PolygonShape boxShape;
 		boxShape.SetAsBox(bc2d->GetSize().x * transform->Scale().x,
 			bc2d->GetSize().y * transform->Scale().y);
@@ -216,7 +254,7 @@ namespace Chilli {
 
 	void Entity::CreateCircleCollider(b2Body* rigidBody, const std::shared_ptr<TransformComponent> transform)
 	{
-		const auto& circleCollider = std::static_pointer_cast<CircleColliderComponent>(GetComponentByType(ComponentTypes::CircleCollider));
+		const auto& circleCollider = std::static_pointer_cast<CircleColliderComponent>(GetComponentByType(ComponentType::CircleCollider));
 		b2CircleShape circleShape;
 		circleShape.m_p.Set(circleCollider->GetOffset().x, circleCollider->GetOffset().y);
 		circleShape.m_radius = transform->Scale().x * circleCollider->GetRadius();
@@ -234,7 +272,7 @@ namespace Chilli {
 		return m_components;
 	}
 
-	std::shared_ptr<Component>  Entity::GetComponentByType(ComponentTypes type)
+	std::shared_ptr<Component>  Entity::GetComponentByType(ComponentType type)
 	{
 		for (const auto& comp : m_components)
 		{
@@ -244,7 +282,7 @@ namespace Chilli {
 		return nullptr;
 	}
 
-	bool Entity::HasComponent(ComponentTypes type)
+	bool Entity::HasComponent(ComponentType type)
 	{
 		auto contains = std::find_if(m_components.cbegin(), m_components.cend(), [type](const std::shared_ptr<Component> rhs) {
 			return rhs->GetComponentType() == type;
@@ -252,7 +290,7 @@ namespace Chilli {
 		return contains != m_components.cend();
 	}
 
-	void Entity::AddComponent(ComponentTypes type)
+	void Entity::AddComponent(ComponentType type)
 	{
 		if (auto contains = std::find_if(m_components.cbegin(), m_components.cend(), [type](const std::shared_ptr<Component> rhs) {
 			return rhs->GetComponentType() == type;
@@ -260,19 +298,19 @@ namespace Chilli {
 		{
 			switch (type)
 			{
-			case ComponentTypes::Mesh:
+			case ComponentType::Mesh:
 				m_components.emplace_back(ComponentFactory::MakeMeshComponent());
 				break;
-			case ComponentTypes::RigidBody2D:
+			case ComponentType::RigidBody2D:
 				m_components.emplace_back(ComponentFactory::MakeRigidBody2DComponent());
 				break;
-			case ComponentTypes::BoxCollider2D:
+			case ComponentType::BoxCollider2D:
 				m_components.emplace_back(ComponentFactory::MakeBoxCollider2DComponent());
 				break;
-			case ComponentTypes::CircleCollider:
+			case ComponentType::CircleCollider:
 				m_components.emplace_back(ComponentFactory::MakeCircleColliderComponent());
 				break;
-			case ComponentTypes::Script:
+			case ComponentType::Script:
 				m_components.emplace_back(ComponentFactory::MakeScriptComponent());
 				break;
 			}
@@ -284,7 +322,7 @@ namespace Chilli {
 		m_components.push_back(component);
 	}
 
-	void Entity::RemoveComponent(ComponentTypes type)
+	void Entity::RemoveComponent(ComponentType type)
 	{
 		if (auto m_compoIterator = std::find_if(m_components.begin(), m_components.end(), [type](const std::shared_ptr<Component> rhs)
 			{
@@ -292,7 +330,7 @@ namespace Chilli {
 			}); m_compoIterator != m_components.end())
 		{
 			m_components.erase(m_compoIterator);
-			if (type == ComponentTypes::Script)
+			if (type == ComponentType::Script)
 				ScriptInstanceRepository::RemoveScriptInstance(Uuid.Get());
 		}
 	}

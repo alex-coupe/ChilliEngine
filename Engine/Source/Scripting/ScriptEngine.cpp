@@ -59,7 +59,7 @@ namespace Chilli {
         auto currentScene = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene();
         for (const auto& entity : currentScene->GetEntities())
         {
-            if (entity->HasComponent(ComponentTypes::Script))
+            if (entity->HasComponent(ComponentType::Script))
             {
                 const auto& scriptInstance = ScriptInstanceRepository::GetScriptInstanceByEntityId(entity->Uuid.Get());
                 mono_runtime_invoke(scriptInstance->GetCreateMethod(), scriptInstance->GetMonoObject(), nullptr, nullptr);
@@ -72,7 +72,7 @@ namespace Chilli {
         auto currentScene = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene();
         for (const auto& entity : currentScene->GetEntities())
         {
-            if (entity->HasComponent(ComponentTypes::Script))
+            if (entity->HasComponent(ComponentType::Script))
             {
                 float dt = DependencyResolver().ResolveDependency<Timer>()->GetDeltaTime();
                 void* deltaTime = &dt;
@@ -92,7 +92,7 @@ namespace Chilli {
         auto currentScene = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene();
         for (const auto& entity : currentScene->GetEntities())
         {
-            if (entity->HasComponent(ComponentTypes::Script))
+            if (entity->HasComponent(ComponentType::Script))
             {
                 const auto& scriptInstance = ScriptInstanceRepository::GetScriptInstanceByEntityId(entity->Uuid.Get());
                 mono_runtime_invoke(scriptInstance->GetDestroyMethod(), scriptInstance->GetMonoObject(), nullptr, nullptr);

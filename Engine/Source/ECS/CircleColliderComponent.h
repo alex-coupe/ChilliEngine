@@ -11,6 +11,7 @@ namespace Chilli {
 			float restitution = 0.0f, float restThreshold = 0.5f);
 		CircleColliderComponent(CircleColliderComponent& rhs);
 		virtual const std::string Serialize(uint64_t entityId)const override;
+		virtual void Clone(const std::shared_ptr<Component>& rhs)override;
 		float& GetRadius();
 		DirectX::XMFLOAT2& GetOffset();
 		float& GetDensity();

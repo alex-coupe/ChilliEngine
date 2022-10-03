@@ -11,6 +11,7 @@ namespace Chilli {
 			float restitution = 0.0f, float restThreshold = 0.5f);
 		BoxCollider2DComponent(BoxCollider2DComponent& rhs);
 		virtual const std::string Serialize(uint64_t entityId)const override;
+		virtual void Clone(const std::shared_ptr<Component>& rhs)override;
 		DirectX::XMFLOAT2& GetSize();
 		DirectX::XMFLOAT2& GetOffset();
 		float& GetDensity();

@@ -16,6 +16,24 @@ namespace Chilli {
         }
     }
 
+    Scene::Scene(const Scene& rhs)
+        :Uuid(rhs.Uuid), m_name(rhs.m_name)
+    {
+        for (const auto& entity : rhs.m_entities)
+        {
+            m_entities.emplace_back(std::make_shared<Entity>(*entity));
+        }
+    }
+
+    void Scene::Clone(const std::shared_ptr<Scene>& scene)
+    {
+        m_name = scene->m_name;
+        for (int i = 0; i < m_entities.size(); i++)
+        {
+            m_entities[i]->Clone(*scene->m_entities[i]);
+        }
+    }
+
     const std::string Scene::Serialize()
     {
         std::stringstream ss;

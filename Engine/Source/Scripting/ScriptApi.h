@@ -10,6 +10,6 @@ namespace Chilli {
 	private:
 		static void RegisterComponents();
 		template <typename T>
-		static void RegisterComponent(ComponentTypes type);
+		static void RegisterComponent(ComponentType type);
 	};
 }

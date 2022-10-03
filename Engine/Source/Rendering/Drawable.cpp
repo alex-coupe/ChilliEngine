@@ -5,8 +5,8 @@ namespace Chilli {
 	Drawable::Drawable(const std::shared_ptr<Direct3D>& d3d, const std::shared_ptr<Entity>& entity)
 		:m_direct3d(d3d), m_entity(entity)
 	{
-		auto transform = std::static_pointer_cast<TransformComponent>(m_entity->GetComponentByType(ComponentTypes::Transform));
-		auto mesh = std::static_pointer_cast<MeshComponent>(m_entity->GetComponentByType(ComponentTypes::Mesh));
+		auto transform = std::static_pointer_cast<TransformComponent>(m_entity->GetComponentByType(ComponentType::Transform));
+		auto mesh = std::static_pointer_cast<MeshComponent>(m_entity->GetComponentByType(ComponentType::Mesh));
 		
 		if (transform != nullptr && mesh->GetMesh() != nullptr)
 		{
@@ -55,7 +55,7 @@ namespace Chilli {
 
 	void Drawable::Update()
 	{
-		auto mesh = std::static_pointer_cast<MeshComponent>(m_entity->GetComponentByType(ComponentTypes::Mesh));
+		auto mesh = std::static_pointer_cast<MeshComponent>(m_entity->GetComponentByType(ComponentType::Mesh));
 
 		if (mesh != nullptr)
 		{
@@ -79,7 +79,7 @@ namespace Chilli {
 			m_vertexBuffer.reset();
 			m_indexBuffer.reset();
 		}
-		auto tranformComp = std::static_pointer_cast<TransformComponent>(m_entity->GetComponentByType(ComponentTypes::Transform));
+		auto tranformComp = std::static_pointer_cast<TransformComponent>(m_entity->GetComponentByType(ComponentType::Transform));
 		if (tranformComp)
 		{
 			m_transform = tranformComp->GetTransformMatrix();

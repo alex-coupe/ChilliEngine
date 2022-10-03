@@ -16,6 +16,7 @@ namespace Chilli {
 	public:
 		Scene(const std::string& name);
 		Scene(const std::string& name, UUID uuid, const rapidjson::Value& entities);
+		Scene(const Scene& rhs);
 		const std::string Serialize();
 		void AddEntity(const std::string& name);
 		void RemoveEntity(UUID uuid);
@@ -29,6 +30,7 @@ namespace Chilli {
 		void StartScene();
 		void UpdateScene();
 		void StopScene();
+		void Clone(const std::shared_ptr<Scene>& scene);
 	private:
 		std::string m_name;
 		SceneState m_sceneState = SceneState::Edit;

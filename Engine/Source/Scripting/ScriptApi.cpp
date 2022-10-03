@@ -61,7 +61,7 @@ namespace Chilli {
 		const auto& rb2d = std::static_pointer_cast<RigidBody2DComponent>(DependencyResolver::ResolveDependency<ProjectManager>()
 			->GetCurrentScene()
 			->GetEntityByUUID(entId)
-			->GetComponentByType(ComponentTypes::RigidBody2D));
+			->GetComponentByType(ComponentType::RigidBody2D));
 		
 		if (!rb2d)
 			return;
@@ -75,7 +75,7 @@ namespace Chilli {
 		const auto& rb2d = std::static_pointer_cast<RigidBody2DComponent>(DependencyResolver::ResolveDependency<ProjectManager>()
 			->GetCurrentScene()
 			->GetEntityByUUID(entId)
-			->GetComponentByType(ComponentTypes::RigidBody2D));
+			->GetComponentByType(ComponentType::RigidBody2D));
 
 		if (!rb2d)
 			return;
@@ -95,7 +95,7 @@ namespace Chilli {
 
 #pragma endregion
 	template <typename T>
-	void ScriptApi::RegisterComponent(ComponentTypes type)
+	void ScriptApi::RegisterComponent(ComponentType type)
 	{
 		std::string_view typeName = typeid(T).name();
 		size_t pos = typeName.find_last_of(':');
@@ -113,12 +113,12 @@ namespace Chilli {
 	}
 	void ScriptApi::RegisterComponents()
 	{
-		RegisterComponent<TransformComponent>(ComponentTypes::Transform);
-		RegisterComponent<MeshComponent>(ComponentTypes::Mesh);
-		RegisterComponent<RigidBody2DComponent>(ComponentTypes::RigidBody2D);
-		RegisterComponent<BoxCollider2DComponent>(ComponentTypes::BoxCollider2D);
-		RegisterComponent<CircleColliderComponent>(ComponentTypes::CircleCollider);
-		RegisterComponent<ScriptComponent>(ComponentTypes::Script);
+		RegisterComponent<TransformComponent>(ComponentType::Transform);
+		RegisterComponent<MeshComponent>(ComponentType::Mesh);
+		RegisterComponent<RigidBody2DComponent>(ComponentType::RigidBody2D);
+		RegisterComponent<BoxCollider2DComponent>(ComponentType::BoxCollider2D);
+		RegisterComponent<CircleColliderComponent>(ComponentType::CircleCollider);
+		RegisterComponent<ScriptComponent>(ComponentType::Script);
 	}
 	void ScriptApi::Init()
 	{

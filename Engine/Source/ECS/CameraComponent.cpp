@@ -1,7 +1,7 @@
 #include "CameraComponent.h"
 namespace Chilli {
 	CameraComponent::CameraComponent()
-		:Component(ComponentTypes::Camera, "Camera")
+		:Component(ComponentType::Camera, "Camera")
 	{
 	}
 
@@ -9,5 +9,11 @@ namespace Chilli {
 	{
 		std::stringstream ss;
 		return  ss.str();
+	}
+
+	void CameraComponent::Clone(const std::shared_ptr<Component>& rhs)
+	{
+		const auto& comp = std::static_pointer_cast<CameraComponent>(rhs);
+		m_cameraType = comp->m_cameraType;
 	}
 }
