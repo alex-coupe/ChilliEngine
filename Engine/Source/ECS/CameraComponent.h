@@ -13,9 +13,9 @@ namespace Chilli {
 	public:
 		CameraComponent();
 		virtual const std::string Serialize(uint64_t entityId)const override;
-
+		virtual void Clone(const std::shared_ptr<Component>& rhs)override;
 	private:
-		CameraType m_type = CameraType::Perspective;
+		CameraType m_cameraType;
 		std::unique_ptr<Camera> m_camera;
 	};
 

@@ -2,17 +2,24 @@
 #include "../ResourceSystem/ProjectManager.h"
 namespace Chilli {
 	ScriptComponent::ScriptComponent()
-		: Component(ComponentTypes::Script, "Script")
+		: Component(ComponentType::Script, "Script")
 	{}
 
 	ScriptComponent::ScriptComponent(const std::string & scriptName)
-		: Component(ComponentTypes::Script, "Script"),m_scriptName(scriptName)
+		: Component(ComponentType::Script, "Script"),m_scriptName(scriptName)
 	{}
 
 	ScriptComponent::ScriptComponent(const ScriptComponent& rhs)
-		: Component(ComponentTypes::Script, "Script")
+		: Component(ComponentType::Script, "Script")
 	{
+		CHILLI_INFO("Script CC");
 		m_scriptName = rhs.m_scriptName;
+	}
+
+	void ScriptComponent::Clone(const std::shared_ptr<Component>& rhs)
+	{
+		const auto comp = std::static_pointer_cast<ScriptComponent>(rhs);
+		m_scriptName = comp->m_scriptName;
 	}
 
 	const std::string ScriptComponent::Serialize(uint64_t entityId) const

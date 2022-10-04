@@ -12,6 +12,7 @@ namespace Chilli {
 			DirectX::XMFLOAT3 scale = {1.0f,1.0f,1.0f});
 		TransformComponent(const TransformComponent& rhs);
 		virtual const std::string Serialize(uint64_t entityId)const override;
+		virtual void Clone(const std::shared_ptr<Component>& rhs) override;
 		DirectX::XMMATRIX GetTransformMatrix()const;
 		DirectX::XMFLOAT3& Translation();
 		DirectX::XMFLOAT3& Rotation();

@@ -19,13 +19,14 @@ namespace Chilli {
 		void GoToScene(std::string& sceneName);
 		void GoToPreviousScene();
 		void GoToNextScene();
-		void StartCurrentScene()const;
-		void StopCurrentScene()const;
+		void StartCurrentScene();
+		void StopCurrentScene();
 		void UpdateCurrentScene()const;
 		const std::vector<std::shared_ptr<Scene>>& GetAllScenes()const;
 	private:
-		std::shared_ptr<Scene> CopyCurrentScene()const;
+		void CopyCurrentScene();
 		std::vector<std::shared_ptr<Scene>> m_scenes;
-		std::shared_ptr<Scene> m_currentScene;
+		std::shared_ptr<Scene> m_currentScene = nullptr;
+		std::shared_ptr<Scene> m_currentSceneCopy = nullptr;
 	};
 }

@@ -1,7 +1,7 @@
 #include "BoxCollider2DComponent.h"
 namespace Chilli {
 	BoxCollider2DComponent::BoxCollider2DComponent(DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 offset, float density, float friction, float restitution, float restThreshold)
-		:Component(ComponentTypes::BoxCollider2D, "BoxCollider2D"),
+		:Component(ComponentType::BoxCollider2D, "BoxCollider2D"),
 		m_size(size), m_offset(offset), m_density(density), m_friction(friction), m_restitution(restitution),
 		m_restitutionThreshold(restThreshold)
 	{
@@ -16,6 +16,17 @@ namespace Chilli {
 		m_friction = rhs.m_friction;
 		m_restitution = rhs.m_restitution;
 		m_restitutionThreshold = rhs.m_restitutionThreshold;
+	}
+
+	void BoxCollider2DComponent::Clone(const std::shared_ptr<Component>& rhs)
+	{
+		const auto& comp = std::static_pointer_cast<BoxCollider2DComponent>(rhs);
+		m_size = comp->m_size;
+		m_offset = comp->m_offset;
+		m_density = comp->m_density;
+		m_friction = comp->m_friction;
+		m_restitution = comp->m_restitution;
+		m_restitutionThreshold = comp->m_restitutionThreshold;
 	}
 
 	const std::string BoxCollider2DComponent::Serialize(uint64_t entityId) const

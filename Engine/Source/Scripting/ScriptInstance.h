@@ -1,6 +1,7 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
 #include "Script.h"
+#include <DirectXMath.h>
 
 namespace Chilli {
 
@@ -40,6 +41,8 @@ namespace Chilli {
 	public:
 		ScriptInstance(MonoClass* scriptClass, uint64_t entityId);
 		~ScriptInstance();
+		void OnSceneStart();
+		void OnSceneStop();
 		const bool HasFields()const;
 		MonoObject* GetMonoObject()const;
 		MonoMethod* GetDestroyMethod()const;
@@ -73,5 +76,7 @@ namespace Chilli {
 		MonoMethod* m_destroyMethod = nullptr;
 		std::string m_className;
 		std::unordered_map<std::string, Field> m_fields;
+		std::unordered_map<std::string, Field> m_fieldsCopy;
+		
 	};
 }

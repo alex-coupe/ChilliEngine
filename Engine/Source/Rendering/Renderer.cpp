@@ -70,8 +70,8 @@ namespace Chilli {
 			m_drawables.clear();
 			for (const auto& entity : entities)
 			{
-				if (entity->HasComponent(ComponentTypes::Mesh)
-					&& entity->HasComponent(ComponentTypes::Transform))
+				if (entity->HasComponent(ComponentType::Mesh)
+					&& entity->HasComponent(ComponentType::Transform))
 				{
 					std::unique_ptr<Drawable> drawable = std::make_unique<Drawable>(m_direct3d, entity);
 

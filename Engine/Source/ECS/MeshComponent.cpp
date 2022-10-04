@@ -3,17 +3,25 @@
 
 namespace Chilli {
 	MeshComponent::MeshComponent()
-		: Component(ComponentTypes::Mesh, "Mesh"), m_color(1.0f, 0.2f, 0.5f, 1.0f)
+		: Component(ComponentType::Mesh, "Mesh"), m_color(1.0f, 0.2f, 0.5f, 1.0f)
 	{}
 
 	MeshComponent::MeshComponent(UUID meshUuid)
-		: Component(ComponentTypes::Mesh, "Mesh"), m_meshUuid(meshUuid), m_color(1.0f, 0.2f, 0.5f, 1.0f)
+		: Component(ComponentType::Mesh, "Mesh"), m_meshUuid(meshUuid), m_color(1.0f, 1.0f, 1.0f, 1.0f)
 	{}
 
 	MeshComponent::MeshComponent(const MeshComponent& rhs)
 		:Component(rhs.m_type, rhs.m_name)
 	{
+		m_color = rhs.m_color;
 		m_meshUuid = rhs.m_meshUuid;
+	}
+
+	void MeshComponent::Clone(const std::shared_ptr<Component>& rhs)
+	{
+		const auto& comp = std::static_pointer_cast<MeshComponent>(rhs);
+		m_color = comp->m_color;
+		m_meshUuid = comp->m_meshUuid;
 	}
 
 	const std::string MeshComponent::Serialize(uint64_t entityId) const

@@ -401,7 +401,7 @@ namespace Chilli {
 				{
 					if (ImGui::Selectable(componentsList[i]))
 					{
-						selectedEntity->AddComponent((ComponentTypes)i);
+						selectedEntity->AddComponent((ComponentType)i);
 					}
 				}
 				ImGui::EndPopup();
@@ -412,7 +412,7 @@ namespace Chilli {
 			{
 				switch (component->GetComponentType())
 				{
-				case ComponentTypes::Mesh:
+				case ComponentType::Mesh:
 				{
 					const auto& meshComp = std::static_pointer_cast<MeshComponent>(component);
 					ImGui::BeginChild("Mesh", ImVec2(0, 140), true);
@@ -442,12 +442,12 @@ namespace Chilli {
 					ImGui::Spacing();
 					if (ImGui::Button("Remove Component"))
 					{
-						selectedEntity->RemoveComponent(ComponentTypes::Mesh);
+						selectedEntity->RemoveComponent(ComponentType::Mesh);
 					}
 					ImGui::EndChild();
 				}
 				break;
-				case ComponentTypes::RigidBody2D:
+				case ComponentType::RigidBody2D:
 				{
 					const auto& rb2d = std::static_pointer_cast<RigidBody2DComponent>(component);
 					ImGui::BeginChild("RigidBody 2D", ImVec2(0, 130), true);
@@ -474,12 +474,12 @@ namespace Chilli {
 					ImGui::Spacing();
 					if (ImGui::Button("Remove Component"))
 					{
-						selectedEntity->RemoveComponent(ComponentTypes::RigidBody2D);
+						selectedEntity->RemoveComponent(ComponentType::RigidBody2D);
 					}
 					ImGui::EndChild();
 				}
 				break;
-				case ComponentTypes::Transform:
+				case ComponentType::Transform:
 				{
 					const auto& transformComp = std::static_pointer_cast<TransformComponent>(component);
 					ImGui::BeginChild("Transform", ImVec2(0, 130), true);
@@ -495,7 +495,7 @@ namespace Chilli {
 					ImGui::EndChild();
 				}
 				break;
-				case ComponentTypes::BoxCollider2D:
+				case ComponentType::BoxCollider2D:
 				{
 					auto bc2d = std::static_pointer_cast<BoxCollider2DComponent>(component);
 					ImGui::BeginChild("BoxCollider 2D", ImVec2(0, 200), true);
@@ -511,12 +511,12 @@ namespace Chilli {
 					ImGui::Spacing();
 					if (ImGui::Button("Remove Component"))
 					{
-						selectedEntity->RemoveComponent(ComponentTypes::RigidBody2D);
+						selectedEntity->RemoveComponent(ComponentType::RigidBody2D);
 					}
 					ImGui::EndChild();
 				}
 				break;
-				case ComponentTypes::CircleCollider:
+				case ComponentType::CircleCollider:
 				{
 					auto circleCollider = std::static_pointer_cast<CircleColliderComponent>(component);
 					ImGui::BeginChild("Circle Collider", ImVec2(0, 200), true);
@@ -531,12 +531,12 @@ namespace Chilli {
 					ImGui::Spacing();
 					if (ImGui::Button("Remove Component"))
 					{
-						selectedEntity->RemoveComponent(ComponentTypes::RigidBody2D);
+						selectedEntity->RemoveComponent(ComponentType::RigidBody2D);
 					}
 					ImGui::EndChild();
 				}
 				break;
-				case ComponentTypes::Script:
+				case ComponentType::Script:
 				{
 					const auto& scriptComp = std::static_pointer_cast<ScriptComponent>(component);
 					ImGui::BeginChild("Script", ImVec2(0, 140), true);
@@ -671,7 +671,7 @@ namespace Chilli {
 					ImGui::Spacing();
 					if (ImGui::Button("Remove Component"))
 					{
-						selectedEntity->RemoveComponent(ComponentTypes::Script);
+						selectedEntity->RemoveComponent(ComponentType::Script);
 					}
 					ImGui::EndChild();
 				}

@@ -16,6 +16,24 @@ namespace Chilli {
         }
     }
 
+    Scene::Scene(const Scene& rhs)
+        :Uuid(rhs.Uuid), m_name(rhs.m_name)
+    {
+        for (const auto& entity : rhs.m_entities)
+        {
+            m_entities.emplace_back(std::make_shared<Entity>(*entity));
+        }
+    }
+
+    void Scene::Clone(const std::shared_ptr<Scene>& scene)
+    {
+        m_name = scene->m_name;
+        for (int i = 0; i < m_entities.size(); i++)
+        {
+            m_entities[i]->Clone(*scene->m_entities[i]);
+        }
+    }
+
     const std::string Scene::Serialize()
     {
         std::stringstream ss;
@@ -71,8 +89,11 @@ namespace Chilli {
         m_b2World = std::make_unique<b2World>(m_gravity);
         for (const auto& entity : m_entities)
         {
-            auto clone = Entity::Clone(*entity);
-            m_entitiesClone.emplace_back(clone);
+            if (entity->HasComponent(ComponentType::Script))
+            {
+                const auto& scriptInst = ScriptInstanceRepository::GetScriptInstanceByEntityId(entity->Uuid.Get());
+                scriptInst->OnSceneStart();
+            }
             entity->InitPhysics(m_b2World);
         }
     }
@@ -90,9 +111,14 @@ namespace Chilli {
     void Scene::StopScene()
     {
         ScriptEngine::InvokeDestroyMethod();
-        m_entities.clear();
-        m_entities = m_entitiesClone;
-        m_entitiesClone.clear();
+        for (const auto& entity : m_entities)
+        {
+            if (entity->HasComponent(ComponentType::Script))
+            {
+                const auto& scriptInst = ScriptInstanceRepository::GetScriptInstanceByEntityId(entity->Uuid.Get());
+                scriptInst->OnSceneStop();
+            }
+        }
     }
 
     const std::string& Scene::GetName() const
