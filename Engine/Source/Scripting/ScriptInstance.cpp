@@ -46,6 +46,73 @@ namespace Chilli {
         mono_field_get_value(m_monoObject, field.ClassField, buffer);
     }
 
+    void ScriptInstance::OnSceneStart()
+    {
+        for (const auto field : m_fields)
+        {
+            m_fieldsCopy.emplace(field.first, field.second);
+        }
+    }
+
+    void ScriptInstance::OnSceneStop()
+    {
+        for (const auto& field : m_fieldsCopy)
+        {
+            auto original = m_fields.find(field.first);
+            if (original != m_fields.end())
+            {
+                switch (original->second.Type)
+                {
+                case FieldType::Float:
+                    SetFieldValue<float>(original->first, *(float*)field.second.FieldValueBuffer);
+                break;
+                case FieldType::Bool:
+                    SetFieldValue<bool>(original->first, *(bool*)field.second.FieldValueBuffer);
+                    break;
+                case FieldType::Byte:
+                    SetFieldValue<unsigned char>(original->first, *(unsigned char*)field.second.FieldValueBuffer);
+                    break;
+                case FieldType::Char:
+                    SetFieldValue<char>(original->first, *field.second.FieldValueBuffer);
+                    break;
+                case FieldType::Double:
+                    SetFieldValue<double>(original->first, *(double*)field.second.FieldValueBuffer);
+                    break;
+                case FieldType::Entity:
+                case FieldType::ULong:
+                    SetFieldValue<uint64_t>(original->first, *(uint64_t*)field.second.FieldValueBuffer);
+                    break;
+                case FieldType::Int:
+                    SetFieldValue<int>(original->first, *(int*)field.second.FieldValueBuffer);
+                    break;
+                case FieldType::Long:
+                    SetFieldValue<long>(original->first, *(long*)field.second.FieldValueBuffer);
+                    break;
+                case FieldType::Short:
+                    SetFieldValue<short>(original->first, *(short*)field.second.FieldValueBuffer);
+                    break;
+                case FieldType::UInt:
+                    SetFieldValue<unsigned int>(original->first, *(unsigned int*)field.second.FieldValueBuffer);
+                    break;
+                case FieldType::UShort:
+                    SetFieldValue<unsigned short>(original->first, *(unsigned short*)field.second.FieldValueBuffer);
+                    break;
+                case FieldType::Vector2:
+                    SetFieldValue<DirectX::XMFLOAT2>(original->first, *(DirectX::XMFLOAT2*)field.second.FieldValueBuffer);
+                    break;
+                case FieldType::Vector3:
+                    SetFieldValue<DirectX::XMFLOAT3>(original->first, *(DirectX::XMFLOAT3*)field.second.FieldValueBuffer);
+                    break;
+                case FieldType::Vector4:
+                    SetFieldValue<DirectX::XMFLOAT4>(original->first, *(DirectX::XMFLOAT4*)field.second.FieldValueBuffer);
+                    break;
+                default:break;
+                }
+            }
+        }
+        m_fieldsCopy.clear();
+    }
+
     void ScriptInstance::SetFieldValueInternal(const std::string& fieldName, void* buffer)const
     {
 

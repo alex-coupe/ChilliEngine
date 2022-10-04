@@ -89,6 +89,11 @@ namespace Chilli {
         m_b2World = std::make_unique<b2World>(m_gravity);
         for (const auto& entity : m_entities)
         {
+            if (entity->HasComponent(ComponentType::Script))
+            {
+                const auto& scriptInst = ScriptInstanceRepository::GetScriptInstanceByEntityId(entity->Uuid.Get());
+                scriptInst->OnSceneStart();
+            }
             entity->InitPhysics(m_b2World);
         }
     }
@@ -106,6 +111,14 @@ namespace Chilli {
     void Scene::StopScene()
     {
         ScriptEngine::InvokeDestroyMethod();
+        for (const auto& entity : m_entities)
+        {
+            if (entity->HasComponent(ComponentType::Script))
+            {
+                const auto& scriptInst = ScriptInstanceRepository::GetScriptInstanceByEntityId(entity->Uuid.Get());
+                scriptInst->OnSceneStop();
+            }
+        }
     }
 
     const std::string& Scene::GetName() const
