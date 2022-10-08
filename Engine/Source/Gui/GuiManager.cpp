@@ -28,7 +28,17 @@ namespace Chilli {
 	{
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 		ImGui::StyleColorsDark();
+
+		ImGuiStyle& style = ImGui::GetStyle();
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			style.WindowRounding = 0.0f;
+			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+		}
 	}
 
 	void GuiManager::Shutdown()
@@ -54,22 +64,27 @@ namespace Chilli {
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
+		
+		ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 	}
 
 	void GuiManager::EndFrame()
 	{
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+		}
 	}
 
 	void GuiManager::BuildScenePreviewWindow(Renderer* renderer)
 	{
 		ImGuiWindowFlags window_flags = 0;
-		window_flags |= ImGuiWindowFlags_NoMove;
-		window_flags |= ImGuiWindowFlags_NoResize;
-		window_flags |= ImGuiWindowFlags_NoCollapse;
 		ImGui::Begin("Scene Preview", 0, window_flags);
-		ImGui::Image(renderer->GetFrameBuffer()->GetShaderResourceView().Get(), ImVec2(1200, 620));
+		ImGui::Image(renderer->GetFrameBuffer()->GetShaderResourceView().Get(), ImGui::GetContentRegionAvail());
 		if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsWindowHovered()
 			&& DependencyResolver::ResolveDependency<ProjectManager>
 			()->GetCurrentScene()->GetSceneState() == SceneState::Edit)
@@ -92,27 +107,27 @@ namespace Chilli {
 				renderer->GetEditorCamera()->UpdateRotation(deltaY, deltaX);
 			}
 
-			if (ImGui::IsKeyDown((int)Key::W))
+			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_W))
 			{
 				renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ 0.00f,0.00f,0.01f });
 			}
 
-			if (ImGui::IsKeyDown((int)Key::A))
+			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_A))
 			{
 				renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ -0.01f,0.00f,0.0f });
 			}
 
-			if (ImGui::IsKeyDown((int)Key::S))
+			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_S))
 			{
 				renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ 0.00f,0.00f,-0.01f });
 			}
 
-			if (ImGui::IsKeyDown((int)Key::D))
+			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_D))
 			{
 				renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ 0.01f,0.00f,0.0f });
 			}
 
-			if (ImGui::IsKeyDown((int)Key::Space))
+			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_Space))
 			{
 				renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ 0.00f,0.01f,0.0f });
 			}
@@ -210,9 +225,7 @@ namespace Chilli {
 	void GuiManager::BuildAssetManager()
 	{
 		ImGuiWindowFlags window_flags = 0;
-		window_flags |= ImGuiWindowFlags_NoMove;
-		window_flags |= ImGuiWindowFlags_NoResize;
-		window_flags |= ImGuiWindowFlags_NoCollapse;
+		
 
 		ImGui::Begin("Assets", 0, window_flags);
 		ImGui::BeginGroup();
@@ -354,9 +367,7 @@ namespace Chilli {
 	void GuiManager::BuildSceneHierarchy()
 	{
 		ImGuiWindowFlags window_flags = 0;
-		window_flags |= ImGuiWindowFlags_NoMove;
-		window_flags |= ImGuiWindowFlags_NoResize;
-		window_flags |= ImGuiWindowFlags_NoCollapse;
+		
 		ImGui::Begin("Scene Hierarchy", 0, window_flags);
 		const auto& scenes = DependencyResolver::ResolveDependency<ProjectManager>()->GetScenes();
 		for (const auto& scene : scenes)
@@ -380,9 +391,7 @@ namespace Chilli {
 	void GuiManager::BuildEntityInspector()
 	{
 		ImGuiWindowFlags window_flags = 0;
-		window_flags |= ImGuiWindowFlags_NoMove;
-		window_flags |= ImGuiWindowFlags_NoResize;
-		window_flags |= ImGuiWindowFlags_NoCollapse;
+		
 		ImGui::Begin("Inspector", 0, window_flags);
 		const auto& meshes = DependencyResolver::ResolveDependency<ProjectManager>()->GetMeshes();
 		const auto& scripts = ScriptEngine::GetAvailableScripts();
