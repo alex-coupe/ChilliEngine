@@ -64,12 +64,8 @@ namespace Chilli {
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
-		ImGuiIO& io = ImGui::GetIO();
-		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
-		{
-			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-			ImGui::DockSpace(dockspace_id);
-		}
+		
+		ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 	}
 
 	void GuiManager::EndFrame()
@@ -88,7 +84,7 @@ namespace Chilli {
 	{
 		ImGuiWindowFlags window_flags = 0;
 		ImGui::Begin("Scene Preview", 0, window_flags);
-		ImGui::Image(renderer->GetFrameBuffer()->GetShaderResourceView().Get(), ImVec2(1200, 620));
+		ImGui::Image(renderer->GetFrameBuffer()->GetShaderResourceView().Get(), ImGui::GetContentRegionAvail());
 		if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsWindowHovered()
 			&& DependencyResolver::ResolveDependency<ProjectManager>
 			()->GetCurrentScene()->GetSceneState() == SceneState::Edit)
