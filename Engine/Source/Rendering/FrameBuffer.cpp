@@ -43,15 +43,32 @@ namespace Chilli {
 			CHILLI_ERROR("Error Creating Shader Resource View", result);
 	}
 
-	void FrameBuffer::SetAsRenderTarget()
+	void FrameBuffer::Bind()
 	{
 		m_d3d->GetContext()->OMSetRenderTargets(1, m_renderTargetView.GetAddressOf(), m_d3d->GetDepthStencil().Get());
 		m_d3d->GetContext()->ClearRenderTargetView(m_renderTargetView.Get(), DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f, 1.0f });
 		m_d3d->GetContext()->ClearDepthStencilView(m_d3d->GetDepthStencil().Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 	}
 
+	void FrameBuffer::Unbind()
+	{
+		ID3D11RenderTargetView* nullViews[] = { nullptr };
+		m_d3d->GetContext()->OMSetRenderTargets(1, nullViews, 0);
+	}
+
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> FrameBuffer::GetShaderResourceView()const
 	{
 		return m_shaderResourceView;
+	}
+
+	FrameBuffer::~FrameBuffer()
+	{
+		m_renderTargetTexture->Release();
+		m_renderTargetTexture.Reset();
+		m_renderTargetView->Release();
+		m_renderTargetView.Reset();
+		m_shaderResourceView->Release();
+		m_shaderResourceView.Reset();
+
 	}
 }

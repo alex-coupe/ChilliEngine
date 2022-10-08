@@ -114,10 +114,10 @@ namespace Chilli {
 			break;
 		case EventType::WindowResized:
 			RECT rect;
-			if (GetWindowRect(data_in->handle, &rect))
+			if (GetClientRect(data_in->handle, &rect))
 			{
-				m_screenWidth = static_cast<int64_t>(rect.right) - rect.left;
-				m_screenHeight = static_cast<int64_t>(rect.bottom) - rect.top;
+				m_screenWidth = rect.right - rect.left;
+				m_screenHeight = rect.bottom - rect.top;
 			}
 			break;
 		}

@@ -24,6 +24,11 @@ namespace Chilli {
 
 	Renderer::~Renderer()
 	{
+		m_frameBuffer.release();
+		m_drawables.clear();
+		m_color.reset();
+		m_transformationCBuff.reset();
+		m_direct3d->ShutdownD3D();
 		m_direct3d.reset();
 	}
 
@@ -54,12 +59,19 @@ namespace Chilli {
 			return false;
 		}
 
-		m_event->Subscribe(EventType::WindowResized, [this]() {
-			m_direct3d->HandleWindowResize(m_direct3d->GetWindowWidth(), m_direct3d->GetWindowWidth());
+		m_event->Subscribe(EventType::WindowResized, [m_event,this]() {
+			HandleResize(m_event->GetScreenWidth(), m_event->GetScreenHeight());
 			});
 
-
 		return true;
+	}
+
+	void Renderer::HandleResize(int64_t width, int64_t height)
+	{
+		m_frameBuffer->Unbind();
+		m_frameBuffer.release();
+		m_direct3d->HandleWindowResize(width, height);
+		m_frameBuffer = std::make_unique<FrameBuffer>(width, height, m_direct3d);
 	}
 
 	void Renderer::ProcessFrame()
@@ -79,7 +91,7 @@ namespace Chilli {
 				}
 			}
 		}
-		m_frameBuffer->SetAsRenderTarget();
+		m_frameBuffer->Bind();
 		for (const auto& drawable : m_drawables)
 		{
 			drawable->Update();

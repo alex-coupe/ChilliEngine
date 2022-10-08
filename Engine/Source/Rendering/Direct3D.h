@@ -37,17 +37,17 @@ namespace Chilli {
 		Microsoft::WRL::ComPtr<ID3D11Device> GetDevice();
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetContext();
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> GetDepthStencil()const;
-	private:
-		void SetUpD3D();
+		Microsoft::WRL::ComPtr<ID3D11Debug> DebugInfo();
 		void ShutdownD3D();
-		
+	private:
+		void SetUpD3D();		
 		Microsoft::WRL::ComPtr<IDXGISwapChain> m_swapChain;
 		Microsoft::WRL::ComPtr<ID3D11Device> m_device;
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_context;
-		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_backBuffer;
-		Microsoft::WRL::ComPtr<ID3D11Resource> m_bufferTexture;
+		ID3D11RenderTargetView* m_backBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> m_bufferTexture;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depthStencil;
-		Microsoft::WRL::ComPtr<ID3D11InfoQueue> m_debugInfo;
+		Microsoft::WRL::ComPtr<ID3D11Debug> m_debugInfo;
 		HRESULT m_result = 0;
 		HWND m_handle;
 		int64_t m_width;

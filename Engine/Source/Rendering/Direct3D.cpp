@@ -17,12 +17,12 @@ namespace Chilli {
 
 	void Direct3D::BeginFrameR()
 	{
-		m_context->ClearRenderTargetView(m_backBuffer.Get(), DirectX::XMVECTORF32{ 1.0f, 0.0f, 0.0f, 1.0f });
+		m_context->ClearRenderTargetView(m_backBuffer, DirectX::XMVECTORF32{ 1.0f, 0.0f, 0.0f, 1.0f });
 		m_context->ClearDepthStencilView(m_depthStencil.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 	}
 	void Direct3D::BeginFrame()
 	{
-		m_context->ClearRenderTargetView(m_backBuffer.Get(), DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f, 1.0f });
+		m_context->ClearRenderTargetView(m_backBuffer, DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f, 1.0f });
 		m_context->ClearDepthStencilView(m_depthStencil.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 	}
 
@@ -46,8 +46,73 @@ namespace Chilli {
 		if (width == m_width && height == m_height)
 			return;
 
-		CHILLI_INFO("Calling HandleWindowResize");
+		m_width = width;
+		m_height = height;
 
+		CHILLI_INFO("Calling HandleWindowResize");
+		ID3D11RenderTargetView* nullViews[] = { nullptr };
+		m_context->OMSetRenderTargets(1, nullViews, 0);
+		m_backBuffer->Release();
+		m_depthStencil->Release();
+		m_bufferTexture->Release();
+	
+		GFX_THROW_ERR(m_swapChain->ResizeBuffers(0, (UINT)width, (UINT)height, DXGI_FORMAT_UNKNOWN, 0));
+
+		
+		GFX_THROW_ERR(m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
+			(void**)m_bufferTexture.GetAddressOf()));
+
+	
+		GFX_THROW_ERR(m_device->CreateRenderTargetView(m_bufferTexture.Get(), NULL, &m_backBuffer));
+
+		D3D11_DEPTH_STENCIL_DESC depth_stencil = {};
+
+		depth_stencil.DepthEnable = TRUE;
+		depth_stencil.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		depth_stencil.DepthFunc = D3D11_COMPARISON_LESS;
+
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
+
+		GFX_THROW_ERR(m_device->CreateDepthStencilState(&depth_stencil, depthStencilState.GetAddressOf()));
+
+		m_context->OMSetDepthStencilState(depthStencilState.Get(), 1u);
+
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> depth_texture;
+		D3D11_TEXTURE2D_DESC depth_desc = {};
+		depth_desc.Usage = D3D11_USAGE_DEFAULT;
+		depth_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		depth_desc.Width = static_cast<unsigned int>(width);
+		depth_desc.Height = static_cast<unsigned int>(height);
+		depth_desc.MipLevels = 1u;
+		depth_desc.ArraySize = 1u;
+		depth_desc.Format = DXGI_FORMAT_D32_FLOAT;
+		depth_desc.SampleDesc.Count = 1u;
+		depth_desc.SampleDesc.Quality = 0u;
+
+		GFX_THROW_ERR(m_device->CreateTexture2D(&depth_desc, nullptr, depth_texture.GetAddressOf()));
+
+		D3D11_DEPTH_STENCIL_VIEW_DESC depth_view = {};
+		depth_view.Format = DXGI_FORMAT_D32_FLOAT;
+		depth_view.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		depth_view.Texture2D.MipSlice = 0u;
+
+		GFX_THROW_ERR(m_device->CreateDepthStencilView(depth_texture.Get(), &depth_view, m_depthStencil.GetAddressOf()));
+
+		m_context->OMSetRenderTargets(1, &m_backBuffer, m_depthStencil.Get());
+
+		// Set up the viewport.
+		D3D11_VIEWPORT vp;
+		vp.Width = static_cast<float>(width);
+		vp.Height = static_cast<float>(height);
+		vp.MinDepth = 0.0f;
+		vp.MaxDepth = 1.0f;
+		vp.TopLeftX = 0;
+		vp.TopLeftY = 0;
+		m_context->RSSetViewports(1, &vp);
+		if (ImGuiViewport* viewport = ImGui::GetMainViewport())
+		{
+			viewport->PlatformRequestResize = true;
+		}
 	}
 
 	int64_t Direct3D::GetWindowWidth() const
@@ -98,7 +163,7 @@ namespace Chilli {
 			NULL, NULL, D3D11_SDK_VERSION, &swap_chain, m_swapChain.GetAddressOf(),
 			m_device.GetAddressOf(), NULL, m_context.GetAddressOf()));
 
-		GFX_THROW_ERR(m_device->QueryInterface(__uuidof(ID3D11InfoQueue), &m_debugInfo));
+		GFX_THROW_ERR(m_device->QueryInterface(__uuidof(ID3D11Debug), &m_debugInfo));
 
 		GFX_THROW_ERR(m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &m_bufferTexture));
 
@@ -138,7 +203,7 @@ namespace Chilli {
 		GFX_THROW_ERR(m_device->CreateDepthStencilView(depth_texture.Get(), &depth_view, m_depthStencil.GetAddressOf()));
 
 		//Set the render target view to the back buffer that we created above
-		m_context->OMSetRenderTargets(1, m_backBuffer.GetAddressOf(), m_depthStencil.Get());
+		m_context->OMSetRenderTargets(1, &m_backBuffer, m_depthStencil.Get());
 
 		//Create the Viewport
 		D3D11_VIEWPORT view_port = {};
@@ -156,16 +221,21 @@ namespace Chilli {
 
 	void Direct3D::SetBackBufferRenderTarget()
 	{
-		m_context->OMSetRenderTargets(1, m_backBuffer.GetAddressOf(), m_depthStencil.Get());
+		m_context->OMSetRenderTargets(1, &m_backBuffer, m_depthStencil.Get());
 	}
-
+	Microsoft::WRL::ComPtr<ID3D11Debug> Direct3D::DebugInfo()
+	{
+		return m_debugInfo;
+	}
 	void Direct3D::ShutdownD3D()
 	{
-		m_context->OMSetRenderTargets(0, 0, 0);
-		m_swapChain->Release();
-		m_device->Release();
-		m_context->Release();
-		m_depthStencil->Release();
+		m_bufferTexture.Reset();
+		m_depthStencil.Reset();
+		m_backBuffer->Release();
+		m_debugInfo.Reset();
+		m_device.Reset();
+		m_context.Reset();
+		m_swapChain.Reset();
 	}
 }
 
