@@ -47,6 +47,15 @@ namespace Chilli {
 		return SystemType::Renderer;
 
 	}
+	void Renderer::UpdateEditorCamera(float width, float height)
+	{
+		if (width == 0 || height == 0)
+			return;
+
+			m_aspectRatio = height / width;
+			m_projMatrix = DirectX::XMMatrixPerspectiveLH(1.0f, m_aspectRatio, 0.5f, 100.0f);
+		
+	}
 
 	bool Renderer::Init()
 	{

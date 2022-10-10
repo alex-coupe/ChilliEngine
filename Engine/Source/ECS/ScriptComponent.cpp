@@ -12,7 +12,6 @@ namespace Chilli {
 	ScriptComponent::ScriptComponent(const ScriptComponent& rhs)
 		: Component(ComponentType::Script, "Script")
 	{
-		CHILLI_INFO("Script CC");
 		m_scriptName = rhs.m_scriptName;
 	}
 

@@ -9,7 +9,6 @@ namespace Chilli {
 	TransformComponent::TransformComponent(const TransformComponent& rhs)
 		:Component(rhs.m_type, rhs.m_name)
 	{
-		CHILLI_INFO("Transform CC");
 		m_rotation = rhs.m_rotation;
 		m_scale = rhs.m_scale;
 		m_translation = rhs.m_translation;
