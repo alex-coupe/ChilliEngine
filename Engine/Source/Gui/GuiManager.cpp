@@ -20,6 +20,8 @@ namespace Chilli {
 	bool GuiManager::initialMousePos = true;
 	float GuiManager::mouseX = 0.0f;
 	float GuiManager::mouseY = 0.0f;
+	float GuiManager::scenePreviewWindowWidth = 0.0f;
+	float GuiManager::scenePreviewWindowHeight = 0.0f;
 	std::shared_ptr<Asset> GuiManager::selectedAsset = nullptr;
 	std::shared_ptr<Scene> GuiManager::selectedScene = nullptr;
 	std::shared_ptr<Entity> GuiManager::selectedEntity = nullptr;
@@ -84,7 +86,15 @@ namespace Chilli {
 	{
 		ImGuiWindowFlags window_flags = 0;
 		ImGui::Begin("Scene Preview", 0, window_flags);
-		ImGui::Image(renderer->GetFrameBuffer()->GetShaderResourceView().Get(), ImGui::GetContentRegionAvail());
+		auto regionAvailable = ImGui::GetContentRegionAvail();
+		if (scenePreviewWindowWidth != regionAvailable.x || scenePreviewWindowHeight != regionAvailable.y)
+		{
+			scenePreviewWindowWidth = regionAvailable.x;
+			scenePreviewWindowHeight = regionAvailable.y;
+			renderer->UpdateEditorCamera(regionAvailable.x, regionAvailable.y);
+		}
+		
+		ImGui::Image(renderer->GetFrameBuffer()->GetShaderResourceView().Get(), regionAvailable);
 		if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsWindowHovered()
 			&& DependencyResolver::ResolveDependency<ProjectManager>
 			()->GetCurrentScene()->GetSceneState() == SceneState::Edit)

@@ -7,7 +7,9 @@ namespace Chilli {
 	class CHILLI_API FrameBuffer {
 	public:
 		FrameBuffer(uint64_t width, uint64_t  height, const std::shared_ptr<Direct3D>& d3d);
-		void SetAsRenderTarget();
+		~FrameBuffer();
+		void Bind();
+		void Unbind();
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetShaderResourceView()const;
 	private:
 		const std::shared_ptr<Direct3D>& m_d3d;

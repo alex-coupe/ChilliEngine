@@ -35,6 +35,8 @@ namespace Chilli {
 		static bool initialMousePos;
 		static float mouseX;
 		static float mouseY;
+		static float scenePreviewWindowWidth;
+		static float scenePreviewWindowHeight;
 		static std::shared_ptr<Asset> selectedAsset;
 		static std::shared_ptr<Entity> selectedEntity;
 		static std::shared_ptr<Scene> selectedScene;

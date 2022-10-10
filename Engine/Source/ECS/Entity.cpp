@@ -151,6 +151,24 @@ namespace Chilli {
 				m_components.emplace_back(std::make_shared<ScriptComponent>(*pointer));
 			}
 				break;
+			case ComponentType::RigidBody2D:
+			{
+				auto pointer = std::static_pointer_cast<RigidBody2DComponent>(component);
+				m_components.emplace_back(std::make_shared<RigidBody2DComponent>(*pointer));
+			}
+			break;
+			case ComponentType::BoxCollider2D:
+			{
+				auto pointer = std::static_pointer_cast<BoxCollider2DComponent>(component);
+				m_components.emplace_back(std::make_shared<BoxCollider2DComponent>(*pointer));
+			}
+			break;
+			case ComponentType::CircleCollider:
+			{
+				auto pointer = std::static_pointer_cast<CircleColliderComponent>(component);
+				m_components.emplace_back(std::make_shared<CircleColliderComponent>(*pointer));
+			}
+			break;
 			}
 		}
 	}
