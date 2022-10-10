@@ -63,12 +63,8 @@ namespace Chilli {
 
 	FrameBuffer::~FrameBuffer()
 	{
-		m_renderTargetTexture->Release();
 		m_renderTargetTexture.Reset();
-		m_renderTargetView->Release();
 		m_renderTargetView.Reset();
-		m_shaderResourceView->Release();
 		m_shaderResourceView.Reset();
-
 	}
 }

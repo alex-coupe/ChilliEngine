@@ -24,11 +24,11 @@ namespace Chilli {
 
 	Renderer::~Renderer()
 	{
-		m_frameBuffer.release();
+		m_frameBuffer.reset();
+		m_editorCamera.reset();
 		m_drawables.clear();
 		m_color.reset();
 		m_transformationCBuff.reset();
-		m_direct3d->ShutdownD3D();
 		m_direct3d.reset();
 	}
 
@@ -68,8 +68,9 @@ namespace Chilli {
 
 	void Renderer::HandleResize(int64_t width, int64_t height)
 	{
-		m_frameBuffer->Unbind();
-		m_frameBuffer.release();
+		if (width == 0 || height == 0)
+			return;
+		m_frameBuffer.reset();
 		m_direct3d->HandleWindowResize(width, height);
 		m_frameBuffer = std::make_unique<FrameBuffer>(width, height, m_direct3d);
 	}

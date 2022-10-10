@@ -26,7 +26,6 @@ namespace Chilli {
 		Direct3D& operator=(const Direct3D&) = delete;
 		Direct3D(Direct3D&&)noexcept = default;
 		void BeginFrame();
-		void BeginFrameR();
 		void EndFrame();
 		void Draw(UINT vertexCount, UINT startVertex)const;
 		void DrawIndexed(UINT count)const;
@@ -37,15 +36,13 @@ namespace Chilli {
 		Microsoft::WRL::ComPtr<ID3D11Device> GetDevice();
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetContext();
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> GetDepthStencil()const;
-		Microsoft::WRL::ComPtr<ID3D11Debug> DebugInfo();
-		void ShutdownD3D();
 	private:
 		void SetUpD3D();		
 		Microsoft::WRL::ComPtr<IDXGISwapChain> m_swapChain;
 		Microsoft::WRL::ComPtr<ID3D11Device> m_device;
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_context;
-		ID3D11RenderTargetView* m_backBuffer;
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> m_bufferTexture;
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_backBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Resource> m_bufferTexture;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depthStencil;
 		Microsoft::WRL::ComPtr<ID3D11Debug> m_debugInfo;
 		HRESULT m_result = 0;
