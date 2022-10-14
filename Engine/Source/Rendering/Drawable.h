@@ -10,16 +10,15 @@
 #include "Texture.h"
 #include "Sampler.h"
 #include "VertexTypes.h"
-
+#include "EditorCamera.h"
 #include "../ECS/Entity.h"
 namespace Chilli {
 	class CHILLI_API Drawable {
 	public:
 		Drawable(const std::shared_ptr<Direct3D>& d3d, const std::shared_ptr<Entity>& entity);
-		const DirectX::XMMATRIX& GetTransform()const;
-		const DirectX::XMFLOAT4& GetColor()const;
 		void Draw()const;
 		void Update();
+		const DirectX::XMMATRIX& GetTransform()const;
 	private:
 		std::shared_ptr<Direct3D> m_direct3d;
 		std::unique_ptr<VertexBuffer> m_vertexBuffer;
@@ -28,8 +27,8 @@ namespace Chilli {
 		std::unique_ptr<InputLayout> m_inputLayout;
 		std::unique_ptr<Topology> m_topology;
 		std::unique_ptr<IndexBuffer> m_indexBuffer;
-		DirectX::XMMATRIX m_transform = {};
-		DirectX::XMFLOAT4 m_color = {};
+		DirectX::XMMATRIX m_transformMatrix;
+		std::unique_ptr<ConstantBuffer<DirectX::XMFLOAT4>> m_color;
 		const std::shared_ptr<Entity> m_entity;
 	};
 }

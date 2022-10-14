@@ -13,9 +13,7 @@ namespace Chilli {
 	{
 		m_direct3d = std::make_shared<Direct3D>((HWND)handle, width, height);
 		m_transformationCBuff = std::make_unique<ConstantBuffer<DirectX::XMMATRIX>>(ConstantBufferType::Vertex, m_direct3d);
-		m_color = std::make_unique<ConstantBuffer<DirectX::XMFLOAT4>>(ConstantBufferType::Pixel, m_direct3d);
 		m_transformationCBuff->Bind();
-		m_color->Bind();
 		m_editorCamera = std::make_unique<EditorCamera>(1.0f, m_aspectRatio, 0.5f, 100.0f);
 		m_frameBuffer = std::make_unique<FrameBuffer>(width, height, m_direct3d);
 	}
@@ -25,8 +23,6 @@ namespace Chilli {
 		m_frameBuffer.reset();
 		m_editorCamera.reset();
 		m_drawables.clear();
-		m_color.reset();
-		m_transformationCBuff.reset();
 		m_direct3d.reset();
 	}
 
@@ -92,7 +88,6 @@ namespace Chilli {
 			drawable->Update();
 			auto transform = DirectX::XMMatrixTranspose(drawable->GetTransform() * m_editorCamera->GetViewProjMatrix());
 			m_transformationCBuff->Update(transform);
-			m_color->Update(drawable->GetColor());
 			drawable->Draw();
 		}
 		m_direct3d->SetBackBufferRenderTarget();

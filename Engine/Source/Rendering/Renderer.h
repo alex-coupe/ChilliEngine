@@ -28,7 +28,6 @@ namespace Chilli {
 		std::shared_ptr<ProjectManager> m_sceneManager;
 		std::vector<std::unique_ptr<Drawable>> m_drawables;
 		std::unique_ptr<ConstantBuffer<DirectX::XMMATRIX>> m_transformationCBuff;
-		std::unique_ptr<ConstantBuffer<DirectX::XMFLOAT4>> m_color;
 		std::unique_ptr<EditorCamera> m_editorCamera;
 		std::unique_ptr<FrameBuffer> m_frameBuffer;
 	};

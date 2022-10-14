@@ -10,9 +10,10 @@ namespace Chilli {
 		
 		if (transform != nullptr && mesh->GetMesh() != nullptr)
 		{
-			m_transform = transform->GetTransformMatrix();
 			m_vertexBuffer = std::make_unique<VertexBuffer>(mesh->GetVertices(), m_direct3d);
 			m_indexBuffer = std::make_unique<IndexBuffer>(mesh->GetIndices(), m_direct3d);
+			m_color = std::make_unique<ConstantBuffer<DirectX::XMFLOAT4>>(ConstantBufferType::Pixel, m_direct3d);
+			m_color->Bind();
 		}
 
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
@@ -33,15 +34,6 @@ namespace Chilli {
 		m_topology->Bind();
 	}
 
-	const DirectX::XMMATRIX& Drawable::GetTransform() const
-	{
-		return m_transform;
-	}
-
-	const DirectX::XMFLOAT4& Drawable::GetColor() const
-	{
-		return m_color;
-	}
 
 	void Drawable::Draw() const
 	{
@@ -53,13 +45,20 @@ namespace Chilli {
 		}
 	}
 
+	const DirectX::XMMATRIX& Drawable::GetTransform()const
+	{
+		return m_transformMatrix;
+	}
+
 	void Drawable::Update()
 	{
-		auto mesh = std::static_pointer_cast<MeshComponent>(m_entity->GetComponentByType(ComponentType::Mesh));
-
+		const auto& mesh = std::static_pointer_cast<MeshComponent>(m_entity->GetComponentByType(ComponentType::Mesh));
+		const auto& tranformComp = std::static_pointer_cast<TransformComponent>(m_entity->GetComponentByType(ComponentType::Transform));
+		
+		m_transformMatrix = tranformComp->GetTransformMatrix();
 		if (mesh != nullptr)
 		{
-			m_color = mesh->Color();
+			m_color->Update(mesh->Color());
 			if (m_indexBuffer == nullptr)
 				m_indexBuffer = std::make_unique<IndexBuffer>(mesh->GetIndices(), m_direct3d);
 
@@ -79,10 +78,6 @@ namespace Chilli {
 			m_vertexBuffer.reset();
 			m_indexBuffer.reset();
 		}
-		auto tranformComp = std::static_pointer_cast<TransformComponent>(m_entity->GetComponentByType(ComponentType::Transform));
-		if (tranformComp)
-		{
-			m_transform = tranformComp->GetTransformMatrix();
-		}
+		
 	}
 }
