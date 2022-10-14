@@ -12,8 +12,6 @@ namespace Chilli {
 		: m_aspectRatio((float)height / (float)width)
 	{
 		m_direct3d = std::make_shared<Direct3D>((HWND)handle, width, height);
-		m_transformationCBuff = std::make_unique<ConstantBuffer<DirectX::XMMATRIX>>(ConstantBufferType::Vertex, m_direct3d);
-		m_transformationCBuff->Bind();
 		m_editorCamera = std::make_unique<EditorCamera>(1.0f, m_aspectRatio, 0.5f, 100.0f);
 		m_frameBuffer = std::make_unique<FrameBuffer>(width, height, m_direct3d);
 	}
@@ -22,7 +20,7 @@ namespace Chilli {
 	{
 		m_frameBuffer.reset();
 		m_editorCamera.reset();
-		m_drawables.clear();
+		m_renderJobs.clear();
 		m_direct3d.reset();
 	}
 
@@ -68,27 +66,24 @@ namespace Chilli {
 	void Renderer::ProcessFrame()
 	{
 		auto& entities = m_sceneManager->GetCurrentScene()->GetEntities();
-		if (m_drawables.size() != m_sceneManager->GetCurrentScene()->GetEntities().size())
+		if (m_renderJobs.size() != m_sceneManager->GetCurrentScene()->GetEntities().size())
 		{
-			m_drawables.clear();
+			m_renderJobs.clear();
 			for (const auto& entity : entities)
 			{
 				if (entity->HasComponent(ComponentType::Mesh)
 					&& entity->HasComponent(ComponentType::Transform))
 				{
-					std::unique_ptr<Drawable> drawable = std::make_unique<Drawable>(m_direct3d, entity);
-
-					m_drawables.push_back(std::move(drawable));
+					m_renderJobs.emplace_back(RenderJob(m_direct3d,entity));
 				}
 			}
 		}
 		m_frameBuffer->Bind();
-		for (const auto& drawable : m_drawables)
+		for (auto& job : m_renderJobs)
 		{
-			drawable->Update();
-			auto transform = DirectX::XMMatrixTranspose(drawable->GetTransform() * m_editorCamera->GetViewProjMatrix());
-			m_transformationCBuff->Update(transform);
-			drawable->Draw();
+			job.Update(m_editorCamera);
+			
+			job.Draw();
 		}
 		m_direct3d->SetBackBufferRenderTarget();
 		m_direct3d->BeginFrame();

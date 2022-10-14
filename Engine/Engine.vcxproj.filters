@@ -96,7 +96,7 @@
     <ClInclude Include="Source\ResourceSystem\Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Rendering\Drawable.h">
+    <ClInclude Include="Source\Rendering\RenderJob.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Rendering\Camera.h">
@@ -245,7 +245,7 @@
     <ClCompile Include="Source\ECS\MeshComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Rendering\Drawable.cpp">
+    <ClCompile Include="Source\Rendering\RenderJob.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Rendering\EditorCamera.cpp">

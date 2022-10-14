@@ -3,7 +3,7 @@
 #include "../Core/SubSystem.h"
 #include "FrameBuffer.h"
 #include "../ResourceSystem/ProjectManager.h"
-#include "Drawable.h"
+#include "RenderJob.h"
 #include "EditorCamera.h"
 
 namespace Chilli {
@@ -26,8 +26,7 @@ namespace Chilli {
 		std::shared_ptr<Direct3D> m_direct3d;
 		float m_aspectRatio;
 		std::shared_ptr<ProjectManager> m_sceneManager;
-		std::vector<std::unique_ptr<Drawable>> m_drawables;
-		std::unique_ptr<ConstantBuffer<DirectX::XMMATRIX>> m_transformationCBuff;
+		std::vector<RenderJob> m_renderJobs;
 		std::unique_ptr<EditorCamera> m_editorCamera;
 		std::unique_ptr<FrameBuffer> m_frameBuffer;
 	};

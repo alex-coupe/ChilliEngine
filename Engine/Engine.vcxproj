@@ -194,7 +194,7 @@
     <ClInclude Include="Source\Gui\ImGui\imstb_truetype.h" />
     <ClInclude Include="Source\Rendering\Camera.h" />
     <ClInclude Include="Source\Rendering\ConstantBuffer.h" />
-    <ClInclude Include="Source\Rendering\Drawable.h" />
+    <ClInclude Include="Source\Rendering\RenderJob.h" />
     <ClInclude Include="Source\Rendering\EditorCamera.h" />
     <ClInclude Include="Source\Rendering\FrameBuffer.h" />
     <ClInclude Include="Source\Rendering\IndexBuffer.h" />
@@ -246,7 +246,7 @@
     <ClCompile Include="Source\Gui\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Source\Gui\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\Rendering\EditorCamera.cpp" />
-    <ClCompile Include="Source\Rendering\Drawable.cpp" />
+    <ClCompile Include="Source\Rendering\RenderJob.cpp" />
     <ClCompile Include="Source\Rendering\FrameBuffer.cpp" />
     <ClCompile Include="Source\Rendering\IndexBuffer.cpp" />
     <ClCompile Include="Source\Rendering\InputLayout.cpp" />
