@@ -65,8 +65,8 @@ namespace Chilli {
 
 	void Renderer::ProcessFrame()
 	{
-		auto& entities = m_sceneManager->GetCurrentScene()->GetEntities();
-		if (m_renderJobs.size() != m_sceneManager->GetCurrentScene()->GetEntities().size())
+		const auto& entities = m_sceneManager->GetCurrentScene()->GetEntities();
+		if (m_renderJobs.size() != entities.size())
 		{
 			m_renderJobs.clear();
 			for (const auto& entity : entities)
