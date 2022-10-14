@@ -91,7 +91,7 @@ namespace Chilli {
 		{
 			scenePreviewWindowWidth = regionAvailable.x;
 			scenePreviewWindowHeight = regionAvailable.y;
-			renderer->UpdateEditorCamera(regionAvailable.x, regionAvailable.y);
+			renderer->GetEditorCamera()->OnResize(regionAvailable.x, regionAvailable.y);
 		}
 		
 		ImGui::Image(renderer->GetFrameBuffer()->GetShaderResourceView().Get(), regionAvailable);
@@ -99,48 +99,27 @@ namespace Chilli {
 			&& DependencyResolver::ResolveDependency<ProjectManager>
 			()->GetCurrentScene()->GetSceneState() == SceneState::Edit)
 		{
-			if (initialMousePos)
-			{
-				auto pos = ImGui::GetMousePos();
-				mouseX = pos.x;
-				mouseY = pos.y;
-				initialMousePos = false;
-			}
-			else
-			{
-				auto pos = ImGui::GetMousePos();
-				auto deltaX = mouseX - pos.x;
-				auto deltaY = mouseY - pos.y;
-
-				mouseX = pos.x;
-				mouseY = pos.y;
-				renderer->GetEditorCamera()->UpdateRotation(deltaY, deltaX);
-			}
+			
 
 			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_W))
 			{
-				renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ 0.00f,0.00f,0.01f });
-			}
+					}
 
 			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_A))
 			{
-				renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ -0.01f,0.00f,0.0f });
-			}
+				}
 
 			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_S))
 			{
-				renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ 0.00f,0.00f,-0.01f });
-			}
+					}
 
 			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_D))
 			{
-				renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ 0.01f,0.00f,0.0f });
-			}
+					}
 
 			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_Space))
 			{
-				renderer->GetEditorCamera()->UpdatePosition(DirectX::XMFLOAT3{ 0.00f,0.01f,0.0f });
-			}
+					}
 		}
 		ImGui::End();
 	}

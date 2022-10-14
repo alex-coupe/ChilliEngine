@@ -12,13 +12,11 @@ namespace Chilli {
 		: m_aspectRatio((float)height / (float)width)
 	{
 		m_direct3d = std::make_shared<Direct3D>((HWND)handle, width, height);
-		m_projMatrix = DirectX::XMMatrixPerspectiveLH(1.0f, m_aspectRatio, 0.5f, 100.0f);
 		m_transformationCBuff = std::make_unique<ConstantBuffer<DirectX::XMMATRIX>>(ConstantBufferType::Vertex, m_direct3d);
 		m_color = std::make_unique<ConstantBuffer<DirectX::XMFLOAT4>>(ConstantBufferType::Pixel, m_direct3d);
 		m_transformationCBuff->Bind();
 		m_color->Bind();
-		DirectX::XMFLOAT3 camPosition = { 0.0f,0.0f,-5.0f };
-		m_editorCamera = std::make_unique<Camera>(camPosition, (float)width, (float)height);
+		m_editorCamera = std::make_unique<EditorCamera>(1.0f, m_aspectRatio, 0.5f, 100.0f);
 		m_frameBuffer = std::make_unique<FrameBuffer>(width, height, m_direct3d);
 	}
 
@@ -32,14 +30,9 @@ namespace Chilli {
 		m_direct3d.reset();
 	}
 
-	const std::unique_ptr<Camera>& Renderer::GetEditorCamera()
+	const std::unique_ptr<EditorCamera>& Renderer::GetEditorCamera()
 	{
 		return m_editorCamera;
-	}
-
-	const DirectX::XMMATRIX& Renderer::GetProjectionMatrix() const
-	{
-		return m_projMatrix;
 	}
 
 	SystemType Renderer::GetSystemType()
@@ -47,15 +40,7 @@ namespace Chilli {
 		return SystemType::Renderer;
 
 	}
-	void Renderer::UpdateEditorCamera(float width, float height)
-	{
-		if (width == 0 || height == 0)
-			return;
-
-			m_aspectRatio = height / width;
-			m_projMatrix = DirectX::XMMatrixPerspectiveLH(1.0f, m_aspectRatio, 0.5f, 100.0f);
-		
-	}
+	
 
 	bool Renderer::Init()
 	{
@@ -105,7 +90,7 @@ namespace Chilli {
 		for (const auto& drawable : m_drawables)
 		{
 			drawable->Update();
-			auto transform = DirectX::XMMatrixTranspose(drawable->GetTransform() * m_editorCamera->GetViewMatrix() * GetProjectionMatrix());
+			auto transform = DirectX::XMMatrixTranspose(drawable->GetTransform() * m_editorCamera->GetViewProjMatrix());
 			m_transformationCBuff->Update(transform);
 			m_color->Update(drawable->GetColor());
 			drawable->Draw();
