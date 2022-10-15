@@ -99,27 +99,46 @@ namespace Chilli {
 			&& DependencyResolver::ResolveDependency<ProjectManager>
 			()->GetCurrentScene()->GetSceneState() == SceneState::Edit)
 		{
-			
-
 			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_W))
 			{
-					}
+				renderer->GetEditorCamera()->UpdatePosition(Direction::Forward);
+			}
 
 			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_A))
 			{
-				}
+				renderer->GetEditorCamera()->UpdatePosition(Direction::Left);
+			}
 
 			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_S))
 			{
-					}
+				renderer->GetEditorCamera()->UpdatePosition(Direction::Backward);
+			}
 
 			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_D))
 			{
-					}
+				renderer->GetEditorCamera()->UpdatePosition(Direction::Right);
+			}
 
-			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_Space))
+			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_Q))
 			{
-					}
+				renderer->GetEditorCamera()->UpdateRotation(0.0f,1.0f);
+			}
+
+			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_E))
+			{
+				renderer->GetEditorCamera()->UpdateRotation(0.0f, -1.0f);
+			}
+
+			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_UpArrow))
+			{
+				renderer->GetEditorCamera()->UpdateRotation(1.0f, 0.0f);
+			}
+
+			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_DownArrow))
+			{
+				renderer->GetEditorCamera()->UpdateRotation(-1.0f, 0.0f);
+			}
+
 		}
 		ImGui::End();
 	}

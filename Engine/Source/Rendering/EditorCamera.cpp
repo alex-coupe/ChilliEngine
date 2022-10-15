@@ -28,5 +28,42 @@ namespace Chilli {
 		return m_viewMatrix * m_projMatrix;
 	}
 
+	void EditorCamera::UpdatePosition(const Direction dir)
+	{
+		float camSpeed = m_speed * DependencyResolver::ResolveDependency<Timer>()->GetDeltaTime();
+		switch (dir)
+		{
+		case Direction::Forward:
+			m_position += camSpeed * m_target;
+			break;
+		case Direction::Backward:
+			m_position -= camSpeed * m_target;
+			break;
+		case Direction::Left:
+			m_position += XMVector3Normalize(XMVector3Cross(m_target, m_up)) * camSpeed;
+			break;
+		case Direction::Right:
+			m_position -= XMVector3Normalize(XMVector3Cross(m_target, m_up)) * camSpeed;
+			break;
+		}
+		m_viewMatrix = XMMatrixLookAtLH(m_position, m_position + m_target, m_up);
+	}
+
+	void EditorCamera::UpdateRotation(float yoffset, float xoffset)
+	{
+		float sensitivity = 0.1f;
+		xoffset *= sensitivity;
+		yoffset *= sensitivity;
+
+		m_yaw += xoffset;
+		m_pitch += yoffset;
+
+		auto x = cos(XMConvertToRadians(m_yaw)) * cos(XMConvertToRadians(m_pitch));
+		auto y = sin(XMConvertToRadians(m_pitch));
+		auto z = sin(XMConvertToRadians(m_yaw)) * cos(XMConvertToRadians(m_pitch));
+		auto direction = XMVectorSet(x, y, z, 1.0f);
+		m_target = XMVector3Normalize(direction);
+		m_viewMatrix = XMMatrixLookAtLH(m_position, m_position + m_target, m_up);
+	}
 	
 }
