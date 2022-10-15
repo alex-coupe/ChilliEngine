@@ -39,5 +39,25 @@ namespace Chilli
             InternalCalls.RigidBody2DComponent_ApplyLinearImpulseToCenter(Entity.ID, ref impulse, wake);
         }
     }
+
+    public class CircleColliderComponent : Component
+    {
+
+    }
+
+    public class MeshComponent : Component
+    {
+
+    }
+
+    public class ScriptComponent : Component
+    {
+
+    }
+
+    public class BoxCollider2DComponent : Component
+    {
+
+    }
 }
 

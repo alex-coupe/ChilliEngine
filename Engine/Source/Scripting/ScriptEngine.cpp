@@ -95,7 +95,8 @@ namespace Chilli {
             if (entity->HasComponent(ComponentType::Script))
             {
                 const auto& scriptInstance = ScriptInstanceRepository::GetScriptInstanceByEntityId(entity->Uuid.Get());
-                mono_runtime_invoke(scriptInstance->GetDestroyMethod(), scriptInstance->GetMonoObject(), nullptr, nullptr);
+                if (scriptInstance->GetDestroyMethod())
+                    mono_runtime_invoke(scriptInstance->GetDestroyMethod(), scriptInstance->GetMonoObject(), nullptr, nullptr);
             }
         }
     }
