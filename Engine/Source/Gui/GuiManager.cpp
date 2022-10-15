@@ -86,6 +86,7 @@ namespace Chilli {
 	{
 		ImGuiWindowFlags window_flags = 0;
 		ImGui::Begin("Scene Preview", 0, window_flags);
+		
 		auto regionAvailable = ImGui::GetContentRegionAvail();
 		if (scenePreviewWindowWidth != regionAvailable.x || scenePreviewWindowHeight != regionAvailable.y)
 		{
@@ -99,6 +100,25 @@ namespace Chilli {
 			&& DependencyResolver::ResolveDependency<ProjectManager>
 			()->GetCurrentScene()->GetSceneState() == SceneState::Edit)
 		{
+			ImGui::SetMouseCursor(ImGuiMouseCursor_None);
+			if (initialMousePos)
+			{
+				auto winSize = ImGui::GetWindowSize();
+				auto winPos = ImGui::GetWindowPos();
+				mouseX = winPos.x + (winSize.x / 2);
+				mouseY = winPos.y + (winSize.y / 2);
+				initialMousePos = false;
+			}
+			else
+			{
+				auto mousePos = ImGui::GetMousePos();
+				float xoffset = mousePos.x - mouseX;
+				float yoffset = mouseY - mousePos.y;
+				mouseX = mousePos.x;
+				mouseY = mousePos.y;
+
+				renderer->GetEditorCamera()->UpdateRotation(yoffset, xoffset);
+			}
 			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_W))
 			{
 				renderer->GetEditorCamera()->UpdatePosition(Direction::Forward);
@@ -118,27 +138,6 @@ namespace Chilli {
 			{
 				renderer->GetEditorCamera()->UpdatePosition(Direction::Right);
 			}
-
-			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_Q))
-			{
-				renderer->GetEditorCamera()->UpdateRotation(0.0f,1.0f);
-			}
-
-			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_E))
-			{
-				renderer->GetEditorCamera()->UpdateRotation(0.0f, -1.0f);
-			}
-
-			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_UpArrow))
-			{
-				renderer->GetEditorCamera()->UpdateRotation(1.0f, 0.0f);
-			}
-
-			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_DownArrow))
-			{
-				renderer->GetEditorCamera()->UpdateRotation(-1.0f, 0.0f);
-			}
-
 		}
 		ImGui::End();
 	}

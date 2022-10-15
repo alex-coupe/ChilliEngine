@@ -51,19 +51,23 @@ namespace Chilli {
 
 	void EditorCamera::UpdateRotation(float yoffset, float xoffset)
 	{
-		float sensitivity = 0.1f;
-		xoffset *= sensitivity;
-		yoffset *= sensitivity;
+		
+		xoffset *= m_sensitivity;
+		yoffset *= m_sensitivity;
 
-		m_yaw += xoffset;
+		m_yaw -= xoffset;
 		m_pitch += yoffset;
 
-		auto x = cos(XMConvertToRadians(m_yaw)) * cos(XMConvertToRadians(m_pitch));
-		auto y = sin(XMConvertToRadians(m_pitch));
-		auto z = sin(XMConvertToRadians(m_yaw)) * cos(XMConvertToRadians(m_pitch));
-		auto direction = XMVectorSet(x, y, z, 1.0f);
+		if (m_pitch > 89.0f)
+			m_pitch = 89.0f;
+		if (m_pitch < -89.0f)
+			m_pitch = -89.0f;
+
+		auto direction = XMVectorSet(
+			cos(XMConvertToRadians(m_yaw)) * cos(XMConvertToRadians(m_pitch)),
+			sin(XMConvertToRadians(m_pitch)), 
+			sin(XMConvertToRadians(m_yaw)) * cos(XMConvertToRadians(m_pitch)), 1.0f);
 		m_target = XMVector3Normalize(direction);
 		m_viewMatrix = XMMatrixLookAtLH(m_position, m_position + m_target, m_up);
 	}
-	
 }

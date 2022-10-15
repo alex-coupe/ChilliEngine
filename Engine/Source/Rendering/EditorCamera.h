@@ -16,6 +16,7 @@ namespace Chilli {
 		void UpdatePosition(const Direction dir);
 		void UpdateRotation(float yoffset, float xoffset);
 	private:
+		float m_sensitivity = 1.0f;
 		float m_fov;
 		float m_aspectRatio;
 		float m_nearClip;
