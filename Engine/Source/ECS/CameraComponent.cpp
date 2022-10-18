@@ -1,8 +1,18 @@
 #include "CameraComponent.h"
 namespace Chilli {
-	CameraComponent::CameraComponent()
-		:Component(ComponentType::Camera, "Camera")
+	CameraComponent::CameraComponent(float fov, float nearClip, float farClip)
+		:Component(ComponentType::Camera, "Camera"), m_cameraType(CameraType::Scene), m_projectionType(ProjectionType::Perspective)
 	{
+	}
+
+	CameraComponent::CameraComponent(CameraComponent& rhs)
+		:Component(rhs.m_type,rhs.m_name)
+	{
+		m_cameraType = rhs.m_cameraType;
+		m_fov = rhs.m_fov;
+		m_farClip = rhs.m_farClip;
+		m_nearClip = rhs.m_nearClip;
+		m_projectionType = rhs.m_projectionType;
 	}
 
 	const std::string CameraComponent::Serialize(uint64_t entityId) const

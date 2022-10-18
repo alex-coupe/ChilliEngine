@@ -47,11 +47,11 @@ namespace Chilli {
 		}
 	}
 
-	void RenderJob::Update(const std::unique_ptr<EditorCamera>& editorCam)
+	void RenderJob::Update(Camera* cam)
 	{
 		const auto& mesh = std::static_pointer_cast<MeshComponent>(m_entity->GetComponentByType(ComponentType::Mesh));
 		const auto& tranformComp = std::static_pointer_cast<TransformComponent>(m_entity->GetComponentByType(ComponentType::Transform));
-		auto transform = DirectX::XMMatrixTranspose(tranformComp->GetTransformMatrix() * editorCam->GetViewProjMatrix());
+		auto transform = DirectX::XMMatrixTranspose(tranformComp->GetTransformMatrix() * cam->GetViewProjMatrix());
 		m_transformationCBuff->Update(transform);
 		
 		if (mesh != nullptr)

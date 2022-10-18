@@ -12,8 +12,9 @@ namespace Chilli {
 		: m_aspectRatio((float)height / (float)width)
 	{
 		m_direct3d = std::make_shared<Direct3D>((HWND)handle, width, height);
-		m_editorCamera = std::make_unique<EditorCamera>(1.0f, m_aspectRatio, 0.5f, 100.0f);
+		m_editorCamera = std::make_unique<Camera>(1.0f, m_aspectRatio, 0.5f, 100.0f,CameraType::Editor,ProjectionType::Perspective);
 		m_frameBuffer = std::make_unique<FrameBuffer>(width, height, m_direct3d);
+		m_renderCamera = m_editorCamera.get();
 	}
 
 	Renderer::~Renderer()
@@ -24,7 +25,7 @@ namespace Chilli {
 		m_direct3d.reset();
 	}
 
-	const std::unique_ptr<EditorCamera>& Renderer::GetEditorCamera()
+	const std::unique_ptr<Camera>& Renderer::GetEditorCamera()
 	{
 		return m_editorCamera;
 	}
@@ -81,8 +82,7 @@ namespace Chilli {
 		m_frameBuffer->Bind();
 		for (auto& job : m_renderJobs)
 		{
-			job.Update(m_editorCamera);
-			
+			job.Update(m_renderCamera);
 			job.Draw();
 		}
 		m_direct3d->SetBackBufferRenderTarget();

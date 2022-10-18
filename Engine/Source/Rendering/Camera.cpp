@@ -1,34 +1,40 @@
-#include "EditorCamera.h"
+#include "Camera.h"
 
 namespace Chilli {
 	using namespace DirectX;
-	EditorCamera::EditorCamera(float fov, float aspectRatio, float nearClip, float farClip)
-		:m_fov(fov), m_aspectRatio(aspectRatio), m_nearClip(nearClip), m_farClip(farClip),
-		Camera(XMMatrixPerspectiveLH(fov, m_aspectRatio, nearClip, farClip))
+	Camera::Camera(float fov, float aspectRatio, float nearClip, float farClip, CameraType camType, ProjectionType projType)
+		:m_fov(fov), m_aspectRatio(aspectRatio), m_nearClip(nearClip), m_farClip(farClip),m_cameraType(camType), m_projectionType(projType)
 	{
 		m_position = XMVectorSet(0.0f, 0.0f, -5.0f, 1.0f);
 		m_target = XMVectorSet(0.0f, 0.0f, 1.0f, 1.0f);
 		m_up = XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
 		m_viewMatrix = XMMatrixLookAtLH(m_position, m_position + m_target, m_up);
+		if (m_projectionType == ProjectionType::Perspective)
+			m_projMatrix = XMMatrixPerspectiveLH(fov, m_aspectRatio, nearClip, farClip);
+		else
+			m_projMatrix = XMMatrixOrthographicLH(800,600,m_nearClip,m_farClip);
 	}
 
-	void EditorCamera::OnResize(const float newWidth, const float newHeight)
+	void Camera::OnResize(const float newWidth, const float newHeight)
 	{
 		m_aspectRatio = newHeight / newWidth;
-		m_projMatrix = DirectX::XMMatrixPerspectiveLH(m_fov, m_aspectRatio, m_nearClip, m_farClip);
+		if (m_projectionType == ProjectionType::Perspective)
+			m_projMatrix = XMMatrixPerspectiveLH(m_fov, m_aspectRatio, m_nearClip, m_farClip);
+		else
+			m_projMatrix = XMMatrixOrthographicLH(800, 600, m_nearClip, m_farClip);
 	}
 
-	const DirectX::XMMATRIX& EditorCamera::GetViewMatrix()const
+	const DirectX::XMMATRIX& Camera::GetViewMatrix()const
 	{
 		return m_viewMatrix;
 	}
 
-	const DirectX::XMMATRIX EditorCamera::GetViewProjMatrix()const
+	const DirectX::XMMATRIX Camera::GetViewProjMatrix()const
 	{
 		return m_viewMatrix * m_projMatrix;
 	}
 
-	void EditorCamera::UpdatePosition(const Direction dir)
+	void Camera::UpdatePosition(const Direction dir)
 	{
 		float camSpeed = m_speed * DependencyResolver::ResolveDependency<Timer>()->GetDeltaTime();
 		switch (dir)
@@ -49,9 +55,8 @@ namespace Chilli {
 		m_viewMatrix = XMMatrixLookAtLH(m_position, m_position + m_target, m_up);
 	}
 
-	void EditorCamera::UpdateRotation(float yoffset, float xoffset)
+	void Camera::UpdateRotation(float yoffset, float xoffset)
 	{
-		
 		xoffset *= m_sensitivity;
 		yoffset *= m_sensitivity;
 

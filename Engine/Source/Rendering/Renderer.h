@@ -4,7 +4,7 @@
 #include "FrameBuffer.h"
 #include "../ResourceSystem/ProjectManager.h"
 #include "RenderJob.h"
-#include "EditorCamera.h"
+#include "Camera.h"
 
 namespace Chilli {
 
@@ -19,7 +19,7 @@ namespace Chilli {
 		const std::unique_ptr<FrameBuffer>& GetFrameBuffer()const;
 		bool Init();
 		void HandleResize(int64_t width, int64_t height);
-		const std::unique_ptr<EditorCamera>& GetEditorCamera();
+		const std::unique_ptr<Camera>& GetEditorCamera();
 		void ProcessFrame()override;
 		const std::shared_ptr<Direct3D>& GetD3D()const;
 	private:
@@ -27,7 +27,8 @@ namespace Chilli {
 		float m_aspectRatio;
 		std::shared_ptr<ProjectManager> m_sceneManager;
 		std::vector<RenderJob> m_renderJobs;
-		std::unique_ptr<EditorCamera> m_editorCamera;
+		std::unique_ptr<Camera> m_editorCamera;
+		Camera* m_renderCamera;
 		std::unique_ptr<FrameBuffer> m_frameBuffer;
 	};
 }
