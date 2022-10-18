@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include "../ResourceSystem/ProjectManager.h"
 
 namespace Chilli {
 
@@ -364,8 +365,8 @@ namespace Chilli {
 		{
 			m_components.erase(m_compoIterator);
 			if (type == ComponentType::Script)
-				ScriptInstanceRepository::RemoveScriptInstance(Uuid.Get());
-		}
+				ScriptInstanceRepository::RemoveScriptInstance(Uuid.Get());	
+		}	
 	}
 
 	const std::string Entity::Serialize() const

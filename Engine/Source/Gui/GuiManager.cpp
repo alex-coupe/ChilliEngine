@@ -140,6 +140,8 @@ namespace Chilli {
 			}
 		}
 		ImGui::End();
+		if (ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+			initialMousePos = true;
 	}
 
 	void GuiManager::BuildMenuBar()
@@ -436,7 +438,7 @@ namespace Chilli {
 					if (ImGui::Button("Select"))
 						ImGui::OpenPopup("meshDropdown");
 					ImGui::SameLine();
-					ImGui::TextUnformatted(!meshComp->GetMesh() ? "<None>" :
+					ImGui::TextUnformatted(!meshComp->HasMesh() ? "<None>" :
 						meshComp->GetMesh()->GetName().stem().generic_string().c_str());
 					if (ImGui::BeginPopup("meshDropdown"))
 					{
