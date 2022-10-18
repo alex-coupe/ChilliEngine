@@ -2,10 +2,10 @@
 
 namespace Chilli {
 	using namespace DirectX;
-	Camera::Camera(float fov, float aspectRatio, float nearClip, float farClip, CameraType camType, ProjectionType projType)
-		:m_fov(fov), m_aspectRatio(aspectRatio), m_nearClip(nearClip), m_farClip(farClip),m_cameraType(camType), m_projectionType(projType)
+	Camera::Camera(float fov, float aspectRatio, float nearClip, float farClip, CameraType camType, ProjectionType projType,XMFLOAT3 position)
+		:m_fov(fov), m_aspectRatio(aspectRatio), m_nearClip(nearClip), m_farClip(farClip),m_cameraType(camType),m_projectionType(projType)
 	{
-		m_position = XMVectorSet(0.0f, 0.0f, -5.0f, 1.0f);
+		m_position = XMVectorSet(position.x, position.y, position.z, 1.0f);
 		m_target = XMVectorSet(0.0f, 0.0f, 1.0f, 1.0f);
 		m_up = XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
 		m_viewMatrix = XMMatrixLookAtLH(m_position, m_position + m_target, m_up);

@@ -5,6 +5,7 @@
 #include "../Core/UUID.h"
 #include <memory>
 #include "../Scripting/ScriptEngine.h"
+#include "../Rendering/Camera.h"
 
 namespace Chilli {
 
@@ -33,6 +34,7 @@ namespace Chilli {
 		void Clone(const std::shared_ptr<Scene>& scene);
 	private:
 		std::string m_name;
+		std::unique_ptr<Camera> m_sceneCamera;
 		SceneState m_sceneState = SceneState::Edit;
 		std::vector<std::shared_ptr<Entity>> m_entities;
 		std::unique_ptr<b2World> m_b2World = nullptr;

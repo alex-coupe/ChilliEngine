@@ -16,7 +16,7 @@ namespace Chilli {
 	};
 	class CHILLI_API Camera {
 	public:
-		Camera(float fov, float aspectRatio, float nearClip, float farClip, CameraType camType, ProjectionType projType);
+		Camera(float fov, float aspectRatio, float nearClip, float farClip, CameraType camType, ProjectionType projType, DirectX::XMFLOAT3 position = {0.0f,0.0f,-5.0f});
 		void OnResize(const float newWidth, const float newHeight);
 		const DirectX::XMMATRIX& GetViewMatrix()const;
 		const DirectX::XMMATRIX GetViewProjMatrix()const;

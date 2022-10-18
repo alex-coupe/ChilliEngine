@@ -97,6 +97,16 @@ namespace Chilli {
 		return m_frameBuffer;
 	}
 
+	void Renderer::SetRenderCamera(Camera* cam)
+	{
+		m_renderCamera = cam;
+	}
+
+	const float Renderer::GetAspectRatio()const
+	{
+		return m_aspectRatio;
+	}
+
 	const std::shared_ptr<Direct3D>& Renderer::GetD3D() const
 	{
 		return m_direct3d;

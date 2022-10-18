@@ -30,4 +30,9 @@ namespace Chilli {
 	{
 		return std::make_shared<ScriptComponent>();
 	}
+
+	std::shared_ptr<CameraComponent> ComponentFactory::MakeCameraComponent()
+	{
+		return std::make_shared<CameraComponent>();
+	}
 }

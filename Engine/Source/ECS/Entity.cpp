@@ -46,6 +46,12 @@ namespace Chilli {
 					components[i]["Restitution"].GetFloat(), components[i]["RestitutionThreshold"].GetFloat()));
 			}
 			break;
+			case (int)ComponentType::Camera:
+			{
+				m_components.emplace_back(std::make_shared<CameraComponent>((ProjectionType)components[i]["ProjectionType"].GetInt(),
+					components[i]["Fov"].GetFloat(),components[i]["NearClip"].GetFloat(), components[i]["FarClip"].GetFloat()));
+			}
+			break;
 			case (int)ComponentType::Script:
 				m_components.emplace_back(std::make_shared<ScriptComponent>(components[i]["ScriptClassName"].GetString()));
 				auto scriptInstance = ScriptInstanceRepository::MakeScriptInstance(components[i]["ScriptClassName"].GetString(),Uuid.Get());
@@ -167,6 +173,12 @@ namespace Chilli {
 			{
 				auto pointer = std::static_pointer_cast<CircleColliderComponent>(component);
 				m_components.emplace_back(std::make_shared<CircleColliderComponent>(*pointer));
+			}
+			break;
+			case ComponentType::Camera:
+			{
+				auto pointer = std::static_pointer_cast<CameraComponent>(component);
+				m_components.emplace_back(std::make_shared<CameraComponent>(*pointer));
 			}
 			break;
 			}
@@ -330,6 +342,9 @@ namespace Chilli {
 				break;
 			case ComponentType::Script:
 				m_components.emplace_back(ComponentFactory::MakeScriptComponent());
+				break;
+			case ComponentType::Camera:
+				m_components.emplace_back(ComponentFactory::MakeCameraComponent());
 				break;
 			}
 		}

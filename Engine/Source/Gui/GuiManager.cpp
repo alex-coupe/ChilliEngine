@@ -552,6 +552,40 @@ namespace Chilli {
 					ImGui::EndChild();
 				}
 				break;
+				case ComponentType::Camera:
+				{
+					auto camera = std::static_pointer_cast<CameraComponent>(component);
+					ImGui::BeginChild("Camera", ImVec2(0, 200), true);
+					ImGui::Text("Camera");
+					ImGui::DragFloat("Fov", &camera->GetFov(), 0.5f);
+					ImGui::DragFloat("Near Clip", &camera->GetNearClip(), 0.5f);
+					ImGui::DragFloat("Far Clip", &camera->GetFarClip(), 0.5f);
+					const char* projectionTypeOptions[] = { "Perspective","Orthographic" };
+					const char* currentProjectionTypeSelected = projectionTypeOptions[(int)camera->GetProjectionType()];
+					if (ImGui::BeginCombo("Projection Type", currentProjectionTypeSelected))
+					{
+						for (int i = 0; i <= 1; i++)
+						{
+							bool isSelected = currentProjectionTypeSelected == projectionTypeOptions[i];
+							if (ImGui::Selectable(projectionTypeOptions[i], isSelected))
+							{
+								currentProjectionTypeSelected = projectionTypeOptions[i];
+								camera->SetProjectionType((ProjectionType)i);
+							}
+
+							if (isSelected)
+								ImGui::SetItemDefaultFocus();
+						}
+						ImGui::EndCombo();
+					}
+					ImGui::Spacing();
+					if (ImGui::Button("Remove Component"))
+					{
+						selectedEntity->RemoveComponent(ComponentType::Camera);
+					}
+					ImGui::EndChild();
+				}
+				break;
 				case ComponentType::Script:
 				{
 					const auto& scriptComp = std::static_pointer_cast<ScriptComponent>(component);

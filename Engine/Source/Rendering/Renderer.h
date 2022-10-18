@@ -20,8 +20,10 @@ namespace Chilli {
 		bool Init();
 		void HandleResize(int64_t width, int64_t height);
 		const std::unique_ptr<Camera>& GetEditorCamera();
+		void SetRenderCamera(Camera* camera);
 		void ProcessFrame()override;
 		const std::shared_ptr<Direct3D>& GetD3D()const;
+		const float GetAspectRatio()const;
 	private:
 		std::shared_ptr<Direct3D> m_direct3d;
 		float m_aspectRatio;
