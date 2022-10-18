@@ -25,7 +25,7 @@ namespace Chilli {
 				break;
 			}
 			case (int)ComponentType::Mesh:
-				m_components.emplace_back(std::make_shared<MeshComponent>(components[i]["MeshUuid"].GetInt()));
+				m_components.emplace_back(std::make_shared<MeshComponent>(components[i]["MeshUuid"].GetInt64()));
 				break;
 			case (int)ComponentType::RigidBody2D:
 				m_components.emplace_back(std::make_shared<RigidBody2DComponent>((BodyType)components[i]["BodyType"].GetInt(), (bool)components[i]["FixedRotation"].GetInt()));
@@ -367,6 +367,11 @@ namespace Chilli {
 			if (type == ComponentType::Script)
 				ScriptInstanceRepository::RemoveScriptInstance(Uuid.Get());	
 		}	
+	}
+
+	void Entity::AddCameraComponent()
+	{
+		m_components.emplace_back(std::make_shared<CameraComponent>());
 	}
 
 	const std::string Entity::Serialize() const
