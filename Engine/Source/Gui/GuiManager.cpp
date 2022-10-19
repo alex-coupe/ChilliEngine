@@ -428,6 +428,9 @@ namespace Chilli {
 
 			for (const auto& component : selectedEntity->GetComponents())
 			{
+				if (component == nullptr)
+					return;
+
 				switch (component->GetComponentType())
 				{
 				case ComponentType::Mesh:

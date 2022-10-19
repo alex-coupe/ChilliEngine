@@ -2,11 +2,11 @@
 
 namespace Chilli {
 
-	RenderJob::RenderJob(const std::shared_ptr<Direct3D>& d3d, const std::shared_ptr<Entity>& entity)
+	RenderJob::RenderJob(const std::shared_ptr<Direct3D>& d3d, Entity& entity)
 		:m_direct3d(d3d), m_entity(entity)
 	{
-		auto transform = std::static_pointer_cast<TransformComponent>(m_entity->GetComponentByType(ComponentType::Transform));
-		auto mesh = std::static_pointer_cast<MeshComponent>(m_entity->GetComponentByType(ComponentType::Mesh));
+		auto transform = std::static_pointer_cast<TransformComponent>(m_entity.GetComponentByType(ComponentType::Transform));
+		auto mesh = std::static_pointer_cast<MeshComponent>(m_entity.GetComponentByType(ComponentType::Mesh));
 		
 		if (transform != nullptr && mesh->GetMesh() != nullptr)
 		{
@@ -49,8 +49,8 @@ namespace Chilli {
 
 	void RenderJob::Update(Camera* cam)
 	{
-		const auto& meshComponent = std::static_pointer_cast<MeshComponent>(m_entity->GetComponentByType(ComponentType::Mesh));
-		const auto& tranformComp = std::static_pointer_cast<TransformComponent>(m_entity->GetComponentByType(ComponentType::Transform));
+		const auto& meshComponent = std::static_pointer_cast<MeshComponent>(m_entity.GetComponentByType(ComponentType::Mesh));
+		const auto& tranformComp = std::static_pointer_cast<TransformComponent>(m_entity.GetComponentByType(ComponentType::Transform));
 		
 		if (meshComponent->HasMesh())
 		{

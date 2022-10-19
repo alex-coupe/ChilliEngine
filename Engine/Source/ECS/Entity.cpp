@@ -1,5 +1,6 @@
 #include "Entity.h"
 #include "../ResourceSystem/ProjectManager.h"
+#include "../Rendering/Renderer.h"
 
 namespace Chilli {
 
@@ -26,6 +27,7 @@ namespace Chilli {
 			}
 			case (int)ComponentType::Mesh:
 				m_components.emplace_back(std::make_shared<MeshComponent>(components[i]["MeshUuid"].GetInt64()));
+				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this);
 				break;
 			case (int)ComponentType::RigidBody2D:
 				m_components.emplace_back(std::make_shared<RigidBody2DComponent>((BodyType)components[i]["BodyType"].GetInt(), (bool)components[i]["FixedRotation"].GetInt()));
@@ -330,6 +332,7 @@ namespace Chilli {
 			switch (type)
 			{
 			case ComponentType::Mesh:
+				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this);
 				m_components.emplace_back(ComponentFactory::MakeMeshComponent());
 				break;
 			case ComponentType::RigidBody2D:
@@ -351,11 +354,6 @@ namespace Chilli {
 		}
 	}
 
-	void Entity::AddComponent(std::shared_ptr<Component> component)
-	{
-		m_components.push_back(component);
-	}
-
 	void Entity::RemoveComponent(ComponentType type)
 	{
 		if (auto m_compoIterator = std::find_if(m_components.begin(), m_components.end(), [type](const std::shared_ptr<Component> rhs)
@@ -366,6 +364,13 @@ namespace Chilli {
 			m_components.erase(m_compoIterator);
 			if (type == ComponentType::Script)
 				ScriptInstanceRepository::RemoveScriptInstance(Uuid.Get());	
+
+			if (type == ComponentType::Mesh)
+			{
+				DependencyResolver::ResolveDependency<Renderer>()->RemoveRenderJob(m_renderJobId);
+				m_renderJobId = 0;
+			}
+
 		}	
 	}
 

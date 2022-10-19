@@ -71,30 +71,30 @@ namespace Chilli {
 
 	void Renderer::ProcessFrame()
 	{
-		const auto& entities = m_sceneManager->GetCurrentScene()->GetEntities();
-		if (m_renderJobs.size() != entities.size())
-		{
-			m_renderJobs.clear();
-			for (const auto& entity : entities)
-			{
-				if (entity->HasComponent(ComponentType::Mesh)
-					&& entity->HasComponent(ComponentType::Transform))
-				{
-					m_renderJobs.emplace_back(RenderJob(m_direct3d,entity));
-				}
-			}
-		}
 		m_frameBuffer->Bind();
 		for (auto& job : m_renderJobs)
 		{
-			job.Update(m_renderCamera);
-			job.Draw();
+			job.second.Update(m_renderCamera);
+			job.second.Draw();
 		}
 		m_direct3d->SetBackBufferRenderTarget();
 		m_direct3d->BeginFrame();
 		GuiManager::DrawEditorGui(this);
 		m_direct3d->EndFrame();
+	}
 
+	uint64_t Renderer::AddRenderJob(Entity& job)
+	{
+		uint64_t id = UUID().Get();
+		m_renderJobs.emplace(id, RenderJob(m_direct3d, job));
+		return id;
+	}
+
+	void Renderer::RemoveRenderJob(uint64_t jobId)
+	{
+		auto job = m_renderJobs.find(jobId);
+		if (job->first)
+			m_renderJobs.erase(jobId);
 	}
 
 	const std::unique_ptr<FrameBuffer>& Renderer::GetFrameBuffer()const

@@ -16,7 +16,7 @@
 namespace Chilli {
 	class CHILLI_API RenderJob {
 	public:
-		RenderJob(const std::shared_ptr<Direct3D>& d3d, const std::shared_ptr<Entity>& entity);
+		RenderJob(const std::shared_ptr<Direct3D>& d3d, Entity& entity);
 		void Draw()const;
 		void Update(Camera* cam);
 	private:
@@ -30,6 +30,6 @@ namespace Chilli {
 		DirectX::XMMATRIX m_transformMatrix;
 		std::unique_ptr<ConstantBuffer<DirectX::XMFLOAT4>> m_color;
 		std::unique_ptr<ConstantBuffer<DirectX::XMMATRIX>> m_transformationCBuff;
-		const std::shared_ptr<Entity> m_entity;
+		Entity& m_entity;
 	};
 }
