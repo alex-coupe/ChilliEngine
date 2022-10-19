@@ -25,9 +25,14 @@ namespace Chilli {
 		m_direct3d.reset();
 	}
 
-	const std::unique_ptr<Camera>& Renderer::GetEditorCamera()
+	Camera* Renderer::GetActiveCamera()
 	{
-		return m_editorCamera;
+		return m_renderCamera;
+	}
+
+	Camera* Renderer::GetEditorCamera()
+	{
+		return m_editorCamera.get();
 	}
 
 	SystemType Renderer::GetSystemType()

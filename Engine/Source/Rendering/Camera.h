@@ -22,6 +22,7 @@ namespace Chilli {
 		const DirectX::XMMATRIX GetViewProjMatrix()const;
 		const DirectX::XMMATRIX& GetProjMatrix()const;
 		void UpdatePosition(const Direction dir);
+		void UpdatePosition(const DirectX::XMFLOAT3 translation, const DirectX::XMFLOAT3 rotation);
 		void UpdateRotation(float yoffset, float xoffset);
 	private:
 		CameraType m_cameraType;
@@ -33,6 +34,8 @@ namespace Chilli {
 		float m_farClip;
 		float m_pitch = 0.0f;
 		float m_yaw = 90.0f;
+		float m_xRotOffset = 0.0f;
+		float m_yRotOffset = 0.0f;
 		float m_speed = 15.0f;
 		DirectX::XMVECTOR m_position;
 		DirectX::XMVECTOR m_target;

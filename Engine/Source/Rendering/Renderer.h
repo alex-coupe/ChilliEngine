@@ -19,7 +19,8 @@ namespace Chilli {
 		const std::unique_ptr<FrameBuffer>& GetFrameBuffer()const;
 		bool Init();
 		void HandleResize(int64_t width, int64_t height);
-		const std::unique_ptr<Camera>& GetEditorCamera();
+		Camera* GetActiveCamera();
+		Camera* GetEditorCamera();
 		void SetRenderCamera(Camera* camera);
 		void ProcessFrame()override;
 		const std::shared_ptr<Direct3D>& GetD3D()const;

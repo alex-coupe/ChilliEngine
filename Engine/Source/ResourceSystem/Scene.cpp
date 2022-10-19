@@ -119,16 +119,23 @@ namespace Chilli {
     {
         ScriptEngine::InvokeUpdateMethod();
         m_b2World->Step(m_physicsTimestep, m_velocityIterations, m_positionIterations);
-        for (const auto& entities : m_entities)
+        for (const auto& entity : m_entities)
         {
-            entities->UpdatePhysics();
+            if (entity->HasComponent(ComponentType::Camera))
+            {
+                const auto& camComponent = std::static_pointer_cast<CameraComponent>(entity->GetComponentByType(ComponentType::Camera));
+                const auto& transformComponent = std::static_pointer_cast<TransformComponent>(entity->GetComponentByType(ComponentType::Transform));
+
+                m_sceneCamera->UpdatePosition(transformComponent->Translation(),transformComponent->Rotation());
+            }
+            entity->UpdatePhysics();
         }
     }
 
     void Scene::StopScene()
     {
         const auto& renderer = DependencyResolver::ResolveDependency<Renderer>();
-        renderer->SetRenderCamera(renderer->GetEditorCamera().get());
+        renderer->SetRenderCamera(renderer->GetEditorCamera());
         ScriptEngine::InvokeDestroyMethod();
         for (const auto& entity : m_entities)
         {

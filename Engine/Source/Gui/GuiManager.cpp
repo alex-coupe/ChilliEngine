@@ -92,7 +92,7 @@ namespace Chilli {
 		{
 			scenePreviewWindowWidth = regionAvailable.x;
 			scenePreviewWindowHeight = regionAvailable.y;
-			renderer->GetEditorCamera()->OnResize(regionAvailable.x, regionAvailable.y);
+			renderer->GetActiveCamera()->OnResize(regionAvailable.x, regionAvailable.y);
 		}
 		
 		ImGui::Image(renderer->GetFrameBuffer()->GetShaderResourceView().Get(), regionAvailable);
@@ -117,26 +117,26 @@ namespace Chilli {
 				mouseX = mousePos.x;
 				mouseY = mousePos.y;
 
-				renderer->GetEditorCamera()->UpdateRotation(yoffset, xoffset);
+				renderer->GetActiveCamera()->UpdateRotation(yoffset, xoffset);
 			}
 			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_W))
 			{
-				renderer->GetEditorCamera()->UpdatePosition(Direction::Forward);
+				renderer->GetActiveCamera()->UpdatePosition(Direction::Forward);
 			}
 
 			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_A))
 			{
-				renderer->GetEditorCamera()->UpdatePosition(Direction::Left);
+				renderer->GetActiveCamera()->UpdatePosition(Direction::Left);
 			}
 
 			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_S))
 			{
-				renderer->GetEditorCamera()->UpdatePosition(Direction::Backward);
+				renderer->GetActiveCamera()->UpdatePosition(Direction::Backward);
 			}
 
 			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_D))
 			{
-				renderer->GetEditorCamera()->UpdatePosition(Direction::Right);
+				renderer->GetActiveCamera()->UpdatePosition(Direction::Right);
 			}
 		}
 		ImGui::End();
