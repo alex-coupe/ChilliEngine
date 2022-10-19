@@ -92,7 +92,7 @@ namespace Chilli {
 		{
 			scenePreviewWindowWidth = regionAvailable.x;
 			scenePreviewWindowHeight = regionAvailable.y;
-			renderer->GetEditorCamera()->OnResize(regionAvailable.x, regionAvailable.y);
+			renderer->GetActiveCamera()->OnResize(regionAvailable.x, regionAvailable.y);
 		}
 		
 		ImGui::Image(renderer->GetFrameBuffer()->GetShaderResourceView().Get(), regionAvailable);
@@ -117,29 +117,31 @@ namespace Chilli {
 				mouseX = mousePos.x;
 				mouseY = mousePos.y;
 
-				renderer->GetEditorCamera()->UpdateRotation(yoffset, xoffset);
+				renderer->GetActiveCamera()->UpdateRotation(yoffset, xoffset);
 			}
 			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_W))
 			{
-				renderer->GetEditorCamera()->UpdatePosition(Direction::Forward);
+				renderer->GetActiveCamera()->UpdatePosition(Direction::Forward);
 			}
 
 			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_A))
 			{
-				renderer->GetEditorCamera()->UpdatePosition(Direction::Left);
+				renderer->GetActiveCamera()->UpdatePosition(Direction::Left);
 			}
 
 			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_S))
 			{
-				renderer->GetEditorCamera()->UpdatePosition(Direction::Backward);
+				renderer->GetActiveCamera()->UpdatePosition(Direction::Backward);
 			}
 
 			if (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_D))
 			{
-				renderer->GetEditorCamera()->UpdatePosition(Direction::Right);
+				renderer->GetActiveCamera()->UpdatePosition(Direction::Right);
 			}
 		}
 		ImGui::End();
+		if (ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+			initialMousePos = true;
 	}
 
 	void GuiManager::BuildMenuBar()
@@ -426,6 +428,9 @@ namespace Chilli {
 
 			for (const auto& component : selectedEntity->GetComponents())
 			{
+				if (component == nullptr)
+					return;
+
 				switch (component->GetComponentType())
 				{
 				case ComponentType::Mesh:
@@ -436,7 +441,7 @@ namespace Chilli {
 					if (ImGui::Button("Select"))
 						ImGui::OpenPopup("meshDropdown");
 					ImGui::SameLine();
-					ImGui::TextUnformatted(!meshComp->GetMesh() ? "<None>" :
+					ImGui::TextUnformatted(!meshComp->HasMesh() ? "<None>" :
 						meshComp->GetMesh()->GetName().stem().generic_string().c_str());
 					if (ImGui::BeginPopup("meshDropdown"))
 					{
@@ -548,6 +553,40 @@ namespace Chilli {
 					if (ImGui::Button("Remove Component"))
 					{
 						selectedEntity->RemoveComponent(ComponentType::RigidBody2D);
+					}
+					ImGui::EndChild();
+				}
+				break;
+				case ComponentType::Camera:
+				{
+					auto camera = std::static_pointer_cast<CameraComponent>(component);
+					ImGui::BeginChild("Camera", ImVec2(0, 200), true);
+					ImGui::Text("Camera");
+					ImGui::DragFloat("Fov", &camera->GetFov(), 0.5f);
+					ImGui::DragFloat("Near Clip", &camera->GetNearClip(), 0.5f);
+					ImGui::DragFloat("Far Clip", &camera->GetFarClip(), 0.5f);
+					const char* projectionTypeOptions[] = { "Perspective","Orthographic" };
+					const char* currentProjectionTypeSelected = projectionTypeOptions[(int)camera->GetProjectionType()];
+					if (ImGui::BeginCombo("Projection Type", currentProjectionTypeSelected))
+					{
+						for (int i = 0; i <= 1; i++)
+						{
+							bool isSelected = currentProjectionTypeSelected == projectionTypeOptions[i];
+							if (ImGui::Selectable(projectionTypeOptions[i], isSelected))
+							{
+								currentProjectionTypeSelected = projectionTypeOptions[i];
+								camera->SetProjectionType((ProjectionType)i);
+							}
+
+							if (isSelected)
+								ImGui::SetItemDefaultFocus();
+						}
+						ImGui::EndCombo();
+					}
+					ImGui::Spacing();
+					if (ImGui::Button("Remove Component"))
+					{
+						selectedEntity->RemoveComponent(ComponentType::Camera);
 					}
 					ImGui::EndChild();
 				}

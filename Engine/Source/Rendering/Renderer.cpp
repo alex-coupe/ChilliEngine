@@ -12,8 +12,9 @@ namespace Chilli {
 		: m_aspectRatio((float)height / (float)width)
 	{
 		m_direct3d = std::make_shared<Direct3D>((HWND)handle, width, height);
-		m_editorCamera = std::make_unique<EditorCamera>(1.0f, m_aspectRatio, 0.5f, 100.0f);
+		m_editorCamera = std::make_unique<Camera>(1.0f, m_aspectRatio, 0.5f, 100.0f,CameraType::Editor,ProjectionType::Perspective);
 		m_frameBuffer = std::make_unique<FrameBuffer>(width, height, m_direct3d);
+		m_renderCamera = m_editorCamera.get();
 	}
 
 	Renderer::~Renderer()
@@ -24,9 +25,14 @@ namespace Chilli {
 		m_direct3d.reset();
 	}
 
-	const std::unique_ptr<EditorCamera>& Renderer::GetEditorCamera()
+	Camera* Renderer::GetActiveCamera()
 	{
-		return m_editorCamera;
+		return m_renderCamera;
+	}
+
+	Camera* Renderer::GetEditorCamera()
+	{
+		return m_editorCamera.get();
 	}
 
 	SystemType Renderer::GetSystemType()
@@ -65,36 +71,45 @@ namespace Chilli {
 
 	void Renderer::ProcessFrame()
 	{
-		const auto& entities = m_sceneManager->GetCurrentScene()->GetEntities();
-		if (m_renderJobs.size() != entities.size())
-		{
-			m_renderJobs.clear();
-			for (const auto& entity : entities)
-			{
-				if (entity->HasComponent(ComponentType::Mesh)
-					&& entity->HasComponent(ComponentType::Transform))
-				{
-					m_renderJobs.emplace_back(RenderJob(m_direct3d,entity));
-				}
-			}
-		}
 		m_frameBuffer->Bind();
 		for (auto& job : m_renderJobs)
 		{
-			job.Update(m_editorCamera);
-			
-			job.Draw();
+			job.second.Update(m_renderCamera);
+			job.second.Draw();
 		}
 		m_direct3d->SetBackBufferRenderTarget();
 		m_direct3d->BeginFrame();
 		GuiManager::DrawEditorGui(this);
 		m_direct3d->EndFrame();
+	}
 
+	uint64_t Renderer::AddRenderJob(Entity& job)
+	{
+		uint64_t id = UUID().Get();
+		m_renderJobs.emplace(id, RenderJob(m_direct3d, job));
+		return id;
+	}
+
+	void Renderer::RemoveRenderJob(uint64_t jobId)
+	{
+		auto job = m_renderJobs.find(jobId);
+		if (job->first)
+			m_renderJobs.erase(jobId);
 	}
 
 	const std::unique_ptr<FrameBuffer>& Renderer::GetFrameBuffer()const
 	{
 		return m_frameBuffer;
+	}
+
+	void Renderer::SetRenderCamera(Camera* cam)
+	{
+		m_renderCamera = cam;
+	}
+
+	const float Renderer::GetAspectRatio()const
+	{
+		return m_aspectRatio;
 	}
 
 	const std::shared_ptr<Direct3D>& Renderer::GetD3D() const

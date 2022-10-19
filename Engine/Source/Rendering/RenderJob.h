@@ -10,14 +10,15 @@
 #include "Texture.h"
 #include "Sampler.h"
 #include "VertexTypes.h"
-#include "EditorCamera.h"
+#include "Camera.h"
 #include "../ECS/Entity.h"
+
 namespace Chilli {
 	class CHILLI_API RenderJob {
 	public:
-		RenderJob(const std::shared_ptr<Direct3D>& d3d, const std::shared_ptr<Entity>& entity);
+		RenderJob(const std::shared_ptr<Direct3D>& d3d, Entity& entity);
 		void Draw()const;
-		void Update(const std::unique_ptr<EditorCamera>& editorCam);
+		void Update(Camera* cam);
 	private:
 		std::shared_ptr<Direct3D> m_direct3d;
 		std::unique_ptr<VertexBuffer> m_vertexBuffer;
@@ -29,6 +30,6 @@ namespace Chilli {
 		DirectX::XMMATRIX m_transformMatrix;
 		std::unique_ptr<ConstantBuffer<DirectX::XMFLOAT4>> m_color;
 		std::unique_ptr<ConstantBuffer<DirectX::XMMATRIX>> m_transformationCBuff;
-		const std::shared_ptr<Entity> m_entity;
+		Entity& m_entity;
 	};
 }

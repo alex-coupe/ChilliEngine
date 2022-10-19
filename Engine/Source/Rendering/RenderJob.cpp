@@ -2,11 +2,11 @@
 
 namespace Chilli {
 
-	RenderJob::RenderJob(const std::shared_ptr<Direct3D>& d3d, const std::shared_ptr<Entity>& entity)
+	RenderJob::RenderJob(const std::shared_ptr<Direct3D>& d3d, Entity& entity)
 		:m_direct3d(d3d), m_entity(entity)
 	{
-		auto transform = std::static_pointer_cast<TransformComponent>(m_entity->GetComponentByType(ComponentType::Transform));
-		auto mesh = std::static_pointer_cast<MeshComponent>(m_entity->GetComponentByType(ComponentType::Mesh));
+		auto transform = std::static_pointer_cast<TransformComponent>(m_entity.GetComponentByType(ComponentType::Transform));
+		auto mesh = std::static_pointer_cast<MeshComponent>(m_entity.GetComponentByType(ComponentType::Mesh));
 		
 		if (transform != nullptr && mesh->GetMesh() != nullptr)
 		{
@@ -47,28 +47,35 @@ namespace Chilli {
 		}
 	}
 
-	void RenderJob::Update(const std::unique_ptr<EditorCamera>& editorCam)
+	void RenderJob::Update(Camera* cam)
 	{
-		const auto& mesh = std::static_pointer_cast<MeshComponent>(m_entity->GetComponentByType(ComponentType::Mesh));
-		const auto& tranformComp = std::static_pointer_cast<TransformComponent>(m_entity->GetComponentByType(ComponentType::Transform));
-		auto transform = DirectX::XMMatrixTranspose(tranformComp->GetTransformMatrix() * editorCam->GetViewProjMatrix());
-		m_transformationCBuff->Update(transform);
+		const auto& meshComponent = std::static_pointer_cast<MeshComponent>(m_entity.GetComponentByType(ComponentType::Mesh));
+		const auto& tranformComp = std::static_pointer_cast<TransformComponent>(m_entity.GetComponentByType(ComponentType::Transform));
 		
-		if (mesh != nullptr)
+		if (meshComponent->HasMesh())
 		{
-			m_color->Update(mesh->Color());
+			if (!m_transformationCBuff)
+				m_transformationCBuff = std::make_unique<ConstantBuffer<DirectX::XMMATRIX>>(ConstantBufferType::Vertex, m_direct3d);
+			
+			if (!m_color)
+				m_color = std::make_unique<ConstantBuffer<DirectX::XMFLOAT4>>(ConstantBufferType::Pixel, m_direct3d);
+
+			auto transform = DirectX::XMMatrixTranspose(tranformComp->GetTransformMatrix() * cam->GetViewProjMatrix());
+			m_transformationCBuff->Update(transform);
+
+			m_color->Update(meshComponent->Color());
 			if (m_indexBuffer == nullptr)
-				m_indexBuffer = std::make_unique<IndexBuffer>(mesh->GetIndices(), m_direct3d);
+				m_indexBuffer = std::make_unique<IndexBuffer>(meshComponent->GetIndices(), m_direct3d);
 
 			if (m_vertexBuffer == nullptr)
-				m_vertexBuffer = std::make_unique<VertexBuffer>(mesh->GetVertices(), m_direct3d);
+				m_vertexBuffer = std::make_unique<VertexBuffer>(meshComponent->GetVertices(), m_direct3d);
 
-			if (mesh->GetIndices().size() != m_indexBuffer->GetCount())
+			if (meshComponent->GetIndices().size() != m_indexBuffer->GetCount())
 			{
 				m_vertexBuffer.reset();
 				m_indexBuffer.reset();
-				m_vertexBuffer = std::make_unique<VertexBuffer>(mesh->GetVertices(), m_direct3d);
-				m_indexBuffer = std::make_unique<IndexBuffer>(mesh->GetIndices(), m_direct3d);
+				m_vertexBuffer = std::make_unique<VertexBuffer>(meshComponent->GetVertices(), m_direct3d);
+				m_indexBuffer = std::make_unique<IndexBuffer>(meshComponent->GetIndices(), m_direct3d);
 			}
 		}
 		else

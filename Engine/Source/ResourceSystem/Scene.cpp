@@ -1,10 +1,14 @@
 #include "Scene.h"
+#include "../Rendering/Renderer.h"
 
 namespace Chilli {
 
     Scene::Scene(const std::string& name)
         : m_name(name), Uuid()
     {
+        const auto& cameraEntity = std::make_shared<Entity>("Camera");
+        cameraEntity->AddCameraComponent();
+        m_entities.emplace_back(cameraEntity);
     }
 
     Scene::Scene(const std::string& name, UUID uuid, const rapidjson::Value& entities)
@@ -89,6 +93,16 @@ namespace Chilli {
         m_b2World = std::make_unique<b2World>(m_gravity);
         for (const auto& entity : m_entities)
         {
+            if (entity->HasComponent(ComponentType::Camera))
+            {
+                const auto& camComponent = std::static_pointer_cast<CameraComponent>(entity->GetComponentByType(ComponentType::Camera));
+                const auto& transformComponent = std::static_pointer_cast<TransformComponent>(entity->GetComponentByType(ComponentType::Transform));
+                m_sceneCamera = std::make_unique<Camera>(camComponent->GetFov(),
+                    DependencyResolver::ResolveDependency<Renderer>()->GetAspectRatio(),
+                    camComponent->GetNearClip(), camComponent->GetFarClip(), 
+                    CameraType::Scene, camComponent->GetProjectionType(),transformComponent->Translation());
+                DependencyResolver::ResolveDependency<Renderer>()->SetRenderCamera(m_sceneCamera.get());
+            }
             if (entity->HasComponent(ComponentType::Script))
             {
                 const auto& scriptInst = ScriptInstanceRepository::GetScriptInstanceByEntityId(entity->Uuid.Get());
@@ -96,20 +110,32 @@ namespace Chilli {
             }
             entity->InitPhysics(m_b2World);
         }
+
+        if (m_sceneCamera == nullptr)
+            m_sceneState = SceneState::Edit;
     }
 
     void Scene::UpdateScene()
     {
         ScriptEngine::InvokeUpdateMethod();
         m_b2World->Step(m_physicsTimestep, m_velocityIterations, m_positionIterations);
-        for (const auto& entities : m_entities)
+        for (const auto& entity : m_entities)
         {
-            entities->UpdatePhysics();
+            if (entity->HasComponent(ComponentType::Camera))
+            {
+                const auto& camComponent = std::static_pointer_cast<CameraComponent>(entity->GetComponentByType(ComponentType::Camera));
+                const auto& transformComponent = std::static_pointer_cast<TransformComponent>(entity->GetComponentByType(ComponentType::Transform));
+
+                m_sceneCamera->UpdatePosition(transformComponent->Translation(),transformComponent->Rotation());
+            }
+            entity->UpdatePhysics();
         }
     }
 
     void Scene::StopScene()
     {
+        const auto& renderer = DependencyResolver::ResolveDependency<Renderer>();
+        renderer->SetRenderCamera(renderer->GetEditorCamera());
         ScriptEngine::InvokeDestroyMethod();
         for (const auto& entity : m_entities)
         {

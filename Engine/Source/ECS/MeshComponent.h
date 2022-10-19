@@ -17,6 +17,7 @@ namespace Chilli {
 		const std::shared_ptr<Mesh> GetMesh()const;
 		void SetMesh(UUID meshUuid);
 		DirectX::XMFLOAT4& Color();
+		const bool HasMesh()const;
 	private:
 		UUID m_meshUuid;
 		DirectX::XMFLOAT4 m_color;

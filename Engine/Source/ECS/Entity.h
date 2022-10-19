@@ -17,7 +17,6 @@ namespace Chilli {
 		std::shared_ptr<Component> GetComponentByType(ComponentType type);
 		std::shared_ptr<Component> GetComponentByName(const char* name);
 		void AddComponent(ComponentType type);
-		void AddComponent(std::shared_ptr<Component> component);
 		const std::vector<std::shared_ptr<Component>>& GetComponents()const;
 		void RemoveComponent(ComponentType type);
 		bool HasComponent(ComponentType type);
@@ -27,11 +26,13 @@ namespace Chilli {
 		const std::shared_ptr<TransformComponent> GetTransformComponent();
 		void InitPhysics(std::unique_ptr<b2World>& physicsWorld);
 		void UpdatePhysics();
+		void AddCameraComponent();
 	private:
 		b2Body* CreateRigidBody(std::unique_ptr<b2World>& physicsWorld, const std::shared_ptr<TransformComponent> transform);
 		void CreateBoxCollider(b2Body* rigidBody, const std::shared_ptr<TransformComponent> transform);
 		void CreateCircleCollider(b2Body* rigidBody, const std::shared_ptr<TransformComponent> transform);
 		std::string m_name;
 		std::vector<std::shared_ptr<Component>> m_components;
+		int64_t m_renderJobId = 0;
 	};
 }
