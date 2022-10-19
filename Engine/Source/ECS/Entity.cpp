@@ -26,7 +26,7 @@ namespace Chilli {
 				break;
 			}
 			case (int)ComponentType::Mesh:
-				m_components.emplace_back(std::make_shared<MeshComponent>(components[i]["MeshUuid"].GetInt64()));
+				m_components.emplace_back(std::make_shared<MeshComponent>(components[i]["MeshUuid"].GetUint64()));
 				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this);
 				break;
 			case (int)ComponentType::RigidBody2D:
@@ -332,8 +332,8 @@ namespace Chilli {
 			switch (type)
 			{
 			case ComponentType::Mesh:
-				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this);
 				m_components.emplace_back(ComponentFactory::MakeMeshComponent());
+				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this);
 				break;
 			case ComponentType::RigidBody2D:
 				m_components.emplace_back(ComponentFactory::MakeRigidBody2DComponent());

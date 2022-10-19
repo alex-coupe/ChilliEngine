@@ -41,7 +41,6 @@ namespace Chilli {
 
 	}
 	
-
 	bool Renderer::Init()
 	{
 		auto m_event = DependencyResolver::ResolveDependency<Events>();

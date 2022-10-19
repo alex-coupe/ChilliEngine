@@ -321,7 +321,7 @@ namespace Chilli {
 						selectedScene = scene;
 						DependencyResolver::ResolveDependency<ProjectManager>()->SetCurrentScene(scene->Uuid);
 						selectedEntity = nullptr;
-						sceneSelected = selectedScene->Uuid.Get();
+sceneSelected = selectedScene->Uuid.Get();
 					}
 				}
 				if (selectedScene)
@@ -376,7 +376,7 @@ namespace Chilli {
 	void GuiManager::BuildSceneHierarchy()
 	{
 		ImGuiWindowFlags window_flags = 0;
-		
+
 		ImGui::Begin("Scene Hierarchy", 0, window_flags);
 		const auto& scenes = DependencyResolver::ResolveDependency<ProjectManager>()->GetScenes();
 		for (const auto& scene : scenes)
@@ -400,7 +400,7 @@ namespace Chilli {
 	void GuiManager::BuildEntityInspector()
 	{
 		ImGuiWindowFlags window_flags = 0;
-		
+
 		ImGui::Begin("Inspector", 0, window_flags);
 		const auto& meshes = DependencyResolver::ResolveDependency<ProjectManager>()->GetMeshes();
 		const auto& scripts = ScriptEngine::GetAvailableScripts();

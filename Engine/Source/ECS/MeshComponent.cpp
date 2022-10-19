@@ -3,7 +3,7 @@
 
 namespace Chilli {
 	MeshComponent::MeshComponent()
-		: Component(ComponentType::Mesh, "Mesh"), m_color(1.0f, 1.0f, 1.0f, 1.0f)
+		: Component(ComponentType::Mesh, "Mesh"), m_color(1.0f, 1.0f, 1.0f, 1.0f), m_meshUuid(UUID(0))
 	{}
 
 	MeshComponent::MeshComponent(UUID meshUuid)
@@ -31,7 +31,7 @@ namespace Chilli {
 		return  ss.str();
 	}
 
-	const std::vector<VertexPos>& MeshComponent::GetVertices() const
+	const std::vector<VertexPosTexNorm>& MeshComponent::GetVertices() const
 	{
 		return std::static_pointer_cast<Mesh>(DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetByUUID(m_meshUuid, AssetType::Mesh))->GetVertices();
 	}
@@ -43,7 +43,7 @@ namespace Chilli {
 
 	const std::shared_ptr<Mesh> MeshComponent::GetMesh() const
 	{
-		const auto& mesh = std::static_pointer_cast<Mesh>(DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetByUUID(m_meshUuid, AssetType::Mesh));
+		const auto mesh = std::static_pointer_cast<Mesh>(DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetByUUID(m_meshUuid, AssetType::Mesh));
 		if (mesh != nullptr)
 			return mesh;
 

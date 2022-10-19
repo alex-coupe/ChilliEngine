@@ -16,7 +16,7 @@ namespace Chilli {
 		Mesh(const std::filesystem::path& filepath);
 		void ProcessSubMesh(aiNode* node, const aiScene* scene);
 		virtual const std::string Serialize()const override;
-		const std::vector<VertexPos>& GetVertices()const;
+		const std::vector<VertexPosTexNorm>& GetVertices()const;
 		const std::vector<unsigned short>& GetIndices()const;
 		
 	private:
@@ -24,14 +24,14 @@ namespace Chilli {
 		class SubMesh {
 		public:
 			SubMesh(aiMesh* mesh, const aiScene* scene);
-			const std::vector<VertexPos>& GetVertices()const;
+			const std::vector<VertexPosTexNorm>& GetVertices()const;
 			const std::vector<unsigned short>& GetIndices()const;
 		private:
-			std::vector<VertexPos> m_vertices;
+			std::vector<VertexPosTexNorm> m_vertices;
 			std::vector<unsigned short> m_indices;
 		};
 		std::vector<SubMesh> m_subMeshes;
-		std::vector<VertexPos> m_vertices;
+		std::vector<VertexPosTexNorm> m_vertices;
 		std::vector<unsigned short> m_indices;
 	};
 }

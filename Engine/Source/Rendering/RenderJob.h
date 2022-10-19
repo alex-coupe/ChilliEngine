@@ -27,6 +27,8 @@ namespace Chilli {
 		std::unique_ptr<InputLayout> m_inputLayout;
 		std::unique_ptr<Topology> m_topology;
 		std::unique_ptr<IndexBuffer> m_indexBuffer;
+		std::unique_ptr<Sampler> m_sampler;
+		std::unique_ptr<Texture> m_texture;
 		DirectX::XMMATRIX m_transformMatrix;
 		std::unique_ptr<ConstantBuffer<DirectX::XMFLOAT4>> m_color;
 		std::unique_ptr<ConstantBuffer<DirectX::XMMATRIX>> m_transformationCBuff;
