@@ -2,6 +2,7 @@
 #include "../Core/ChilliDefinitions.h"
 #include "Component.h"
 #include "../ResourceSystem/Mesh.h"
+#include "../Rendering/Texture.h"
 
 namespace Chilli {
 
@@ -20,9 +21,11 @@ namespace Chilli {
 		const std::vector<VertexPosTexNorm>& GetVertices()const;
 		const std::vector<unsigned short>& GetIndices()const;
 		const std::shared_ptr<Mesh> GetMesh()const;
+		const std::shared_ptr<Texture> GetTexture()const;
 		void SetMesh(UUID meshUuid);
 		void SetTexture(UUID textureUuid);
 		const bool HasMesh()const;
+		const bool HasTexture()const;
 		Material material;
 	private:
 		UUID m_meshUuid;

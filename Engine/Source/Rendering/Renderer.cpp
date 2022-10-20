@@ -25,6 +25,11 @@ namespace Chilli {
 		m_direct3d.reset();
 	}
 
+	void Renderer::ClearRenderJobs()
+	{
+		m_renderJobs.clear();
+	}
+
 	Camera* Renderer::GetActiveCamera()
 	{
 		return m_renderCamera;

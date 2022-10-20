@@ -126,6 +126,7 @@ namespace Chilli {
 
     void ProjectManager::SetCurrentScene(UUID uuid)
     {
+        DependencyResolver::ResolveDependency<Renderer>()->ClearRenderJobs();
         m_sceneManager->GoToScene(uuid);
     }
 

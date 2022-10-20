@@ -22,9 +22,12 @@ namespace Chilli {
 	private:
 		std::shared_ptr<Direct3D> m_direct3d;
 		std::unique_ptr<VertexBuffer> m_vertexBuffer;
-		std::unique_ptr<Shader> m_vertexShader;
-		std::unique_ptr<Shader> m_pixelShader;
-		std::unique_ptr<InputLayout> m_inputLayout;
+		std::unique_ptr<Shader> m_vertexShaderTexture;
+		std::unique_ptr<Shader> m_vertexShaderColor;
+		std::unique_ptr<Shader> m_pixelShaderTexture;
+		std::unique_ptr<Shader> m_pixelShaderColor;
+		std::unique_ptr<InputLayout> m_inputLayoutTexture;
+		std::unique_ptr<InputLayout> m_inputLayoutColor;
 		std::unique_ptr<Topology> m_topology;
 		std::unique_ptr<IndexBuffer> m_indexBuffer;
 		std::unique_ptr<Sampler> m_sampler;

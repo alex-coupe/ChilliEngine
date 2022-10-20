@@ -58,10 +58,24 @@ namespace Chilli {
 		return nullptr;
 	}
 
+	const std::shared_ptr<Texture> MeshComponent::GetTexture() const
+	{
+		const auto tex = std::static_pointer_cast<Texture>(DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetByUUID(material.textureUuid, AssetType::Texture));
+		if (tex != nullptr)
+			return tex;
+
+		return nullptr;
+	}
+
 	const bool MeshComponent::HasMesh()const
 	{
 		const auto& mesh = std::static_pointer_cast<Mesh>(DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetByUUID(m_meshUuid, AssetType::Mesh));
 		return mesh != nullptr;
+	}
+
+	const bool MeshComponent::HasTexture()const
+	{
+		return material.textureUuid.Get() != 0;
 	}
 
 	void MeshComponent::SetMesh(UUID meshUuid)
