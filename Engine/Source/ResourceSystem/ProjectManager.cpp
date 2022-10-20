@@ -12,6 +12,11 @@ namespace Chilli {
 
     void ProjectManager::LoadProject(const std::string& filename)
     {
+        m_sceneManager.reset();
+        m_assetManager.reset();
+        m_sceneManager = std::make_unique<SceneManager>();
+        m_assetManager = std::make_unique<AssetManager>();
+        
         std::stringstream ss;
         std::ifstream json;
         json.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -130,6 +135,10 @@ namespace Chilli {
         {
         case AssetType::Mesh:
             return m_assetManager->GetMeshByUUID(uuid);
+            break;
+        case AssetType::Texture:
+            return m_assetManager->GetTextureByUUID(uuid);
+            break;
         default:
             return nullptr;
         }

@@ -5,6 +5,11 @@
 
 namespace Chilli {
 
+	struct Material {
+		DirectX::XMFLOAT4 color;
+		UUID textureUuid;
+	};
+
 	class CHILLI_API MeshComponent : public Component {
 	public:
 		MeshComponent();
@@ -16,10 +21,10 @@ namespace Chilli {
 		const std::vector<unsigned short>& GetIndices()const;
 		const std::shared_ptr<Mesh> GetMesh()const;
 		void SetMesh(UUID meshUuid);
-		DirectX::XMFLOAT4& Color();
+		void SetTexture(UUID textureUuid);
 		const bool HasMesh()const;
+		Material material;
 	private:
 		UUID m_meshUuid;
-		DirectX::XMFLOAT4 m_color;
 	};
 }

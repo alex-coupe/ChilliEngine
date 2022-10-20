@@ -377,8 +377,7 @@ namespace Chilli {
 
 	void GuiManager::BuildSceneHierarchy()
 	{
-		if (!selectedScene)
-			selectedScene = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene();
+		selectedScene = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene();
 
 		ImGuiWindowFlags window_flags = 0;
 
@@ -387,7 +386,7 @@ namespace Chilli {
 		ImGui::InputText("Name", buffer, IM_ARRAYSIZE(buffer));
 		if (ImGui::Button("Add Entity"))
 		{
-			DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene()->AddEntity(buffer);
+			selectedScene->AddEntity(buffer);
 			buffer[0] = NULL;
 		}
 		ImGui::Separator();
@@ -447,8 +446,9 @@ namespace Chilli {
 				{
 				case ComponentType::Mesh:
 				{
+					const auto& projManager = DependencyResolver::ResolveDependency<ProjectManager>();
 					const auto& meshComp = std::static_pointer_cast<MeshComponent>(component);
-					ImGui::BeginChild("Mesh", ImVec2(0, 140), true);
+					ImGui::BeginChild("Mesh", ImVec2(0, 200), true);
 					ImGui::Text("Mesh");
 					if (ImGui::Button("Select"))
 						ImGui::OpenPopup("meshDropdown");
@@ -470,8 +470,27 @@ namespace Chilli {
 					}
 					ImGui::Spacing();
 					ImGui::Text("Material");
-					float* color[4] = { &meshComp->Color().x,&meshComp->Color().y,&meshComp->Color().z,&meshComp->Color().w };
+					float* color[4] = { &meshComp->material.color.x,&meshComp->material.color.y,&meshComp->material.color.z,&meshComp->material.color.w };
 					ImGui::ColorPicker4("Diffuse Color",color[0]);
+					if (ImGui::Button("Select Texture"))
+						ImGui::OpenPopup("textureDropdown");
+					ImGui::SameLine();
+					ImGui::TextUnformatted(meshComp->material.textureUuid.Get() == 0 ? "<None>" :
+						projManager->GetAssetByUUID(meshComp->material.textureUuid, AssetType::Texture)
+						->GetFilePath().stem().string().c_str());
+					if (ImGui::BeginPopup("textureDropdown"))
+					{
+						ImGui::Text("Textures");
+						ImGui::Separator();
+						for (const auto& texture : projManager->GetTextures())
+						{
+							if (ImGui::Selectable(texture.second->GetName().stem().generic_string().c_str()))
+							{
+								meshComp->SetTexture(texture.second->Uuid);
+							}
+						}
+						ImGui::EndPopup();
+					}
 					ImGui::Spacing();
 					if (ImGui::Button("Remove Component"))
 					{

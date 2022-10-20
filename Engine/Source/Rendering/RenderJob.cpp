@@ -71,7 +71,7 @@ namespace Chilli {
 			auto transform = DirectX::XMMatrixTranspose(tranformComp->GetTransformMatrix() * cam->GetViewProjMatrix());
 			m_transformationCBuff->Update(transform);
 
-			m_color->Update(meshComponent->Color());
+			m_color->Update(meshComponent->material.color);
 			if (m_indexBuffer == nullptr)
 				m_indexBuffer = std::make_unique<IndexBuffer>(meshComponent->GetIndices(), m_direct3d);
 
