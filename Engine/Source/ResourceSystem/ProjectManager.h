@@ -28,6 +28,7 @@ namespace Chilli {
 		void StopCurrentScene()const;
 		std::shared_ptr<Asset> GetAssetByUUID(UUID uuid, AssetType type);
 		const std::unordered_map<uint64_t, std::shared_ptr<Mesh>>& GetMeshes()const;
+		const std::unordered_map<uint64_t, std::shared_ptr<Texture>>& GetTextures()const;
 		static SystemType GetSystemType();
 		virtual void ProcessFrame()override;
 	private:

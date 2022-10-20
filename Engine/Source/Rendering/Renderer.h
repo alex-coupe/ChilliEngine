@@ -27,6 +27,7 @@ namespace Chilli {
 		const float GetAspectRatio()const;
 		uint64_t AddRenderJob(Entity& job);
 		void RemoveRenderJob(uint64_t jobId);
+		void ClearRenderJobs();
 	private:
 		std::shared_ptr<Direct3D> m_direct3d;
 		float m_aspectRatio;

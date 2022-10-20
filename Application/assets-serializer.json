@@ -1,0 +1,58 @@
+{
+  "ProjectName": "untitled project",
+  "Assets": [
+    {
+      "Uuid": 15865412428337555767,
+      "Type": 0,
+      "FilePath": "Assets/Models/cube.fbx"
+    },
+    {
+      "Uuid": 7119401797446940629,
+      "Type": 2,
+      "FilePath": "Assets/Materials/awesomeface.png"
+    },
+    {
+      "Uuid": 11928640501208683896,
+      "Type": 2,
+      "FilePath": "Assets/Materials/wall.png"
+    },
+    {
+      "Uuid": 6614133729462652641,
+      "Type": 2,
+      "FilePath": "Assets/Materials/container2.png"
+    }
+  ],
+  "Scenes": [
+    {
+      "SceneName": "Scene 1",
+      "Uuid": 13161730199345112559,
+      "Entities": [
+        {
+          "Name": "Camera",
+          "Uuid": 1150791567461248105,
+          "Components": [
+            {
+              "Type": -1,
+              "PosX": 0,
+              "PosY": 0,
+              "PosZ": 0,
+              "RotX": 0,
+              "RotY": 0,
+              "RotZ": 0,
+              "ScaleX": 1,
+              "ScaleY": 1,
+              "ScaleZ": 1
+            },
+            {
+              "Type": 1,
+              "Fov": 1,
+              "FarClip": 100,
+              "NearClip": 0.5,
+              "ProjectionType": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

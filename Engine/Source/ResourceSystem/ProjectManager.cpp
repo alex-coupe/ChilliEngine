@@ -12,6 +12,11 @@ namespace Chilli {
 
     void ProjectManager::LoadProject(const std::string& filename)
     {
+        m_sceneManager.reset();
+        m_assetManager.reset();
+        m_sceneManager = std::make_unique<SceneManager>();
+        m_assetManager = std::make_unique<AssetManager>();
+        
         std::stringstream ss;
         std::ifstream json;
         json.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -86,6 +91,12 @@ namespace Chilli {
         case AssetType::Mesh:
             m_assetManager->AddMesh(filename);
             break;
+        case AssetType::Texture:
+            m_assetManager->AddTexture(filename);
+            break;
+        case AssetType::Script:
+            m_assetManager->AddScript(filename);
+            break;
         default:
             break;
         }
@@ -115,6 +126,7 @@ namespace Chilli {
 
     void ProjectManager::SetCurrentScene(UUID uuid)
     {
+        DependencyResolver::ResolveDependency<Renderer>()->ClearRenderJobs();
         m_sceneManager->GoToScene(uuid);
     }
 
@@ -124,6 +136,10 @@ namespace Chilli {
         {
         case AssetType::Mesh:
             return m_assetManager->GetMeshByUUID(uuid);
+            break;
+        case AssetType::Texture:
+            return m_assetManager->GetTextureByUUID(uuid);
+            break;
         default:
             return nullptr;
         }
@@ -132,6 +148,11 @@ namespace Chilli {
     const std::unordered_map<uint64_t, std::shared_ptr<Mesh>>& ProjectManager::GetMeshes()const
     {
         return m_assetManager->GetMeshes();
+    }
+
+    const std::unordered_map<uint64_t, std::shared_ptr<Texture>>& ProjectManager::GetTextures()const
+    {
+        return m_assetManager->GetTextures();
     }
 
     SystemType ProjectManager::GetSystemType()
