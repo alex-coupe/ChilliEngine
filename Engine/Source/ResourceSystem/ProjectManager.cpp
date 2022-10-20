@@ -86,6 +86,12 @@ namespace Chilli {
         case AssetType::Mesh:
             m_assetManager->AddMesh(filename);
             break;
+        case AssetType::Texture:
+            m_assetManager->AddTexture(filename);
+            break;
+        case AssetType::Script:
+            m_assetManager->AddScript(filename);
+            break;
         default:
             break;
         }
@@ -132,6 +138,11 @@ namespace Chilli {
     const std::unordered_map<uint64_t, std::shared_ptr<Mesh>>& ProjectManager::GetMeshes()const
     {
         return m_assetManager->GetMeshes();
+    }
+
+    const std::unordered_map<uint64_t, std::shared_ptr<Texture>>& ProjectManager::GetTextures()const
+    {
+        return m_assetManager->GetTextures();
     }
 
     SystemType ProjectManager::GetSystemType()

@@ -38,7 +38,7 @@ namespace Chilli {
 		m_sampler = std::make_unique<Sampler>(m_direct3d);
 		m_sampler->Bind();
 
-		m_texture = std::make_unique<Texture>("Assets/Materials/container2.png", m_direct3d);
+		m_texture = std::make_unique<Texture>("Assets/Materials/container2.png");
 		m_texture->Bind();
 	}
 

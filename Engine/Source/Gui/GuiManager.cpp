@@ -7,7 +7,7 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 namespace Chilli {
 
-	const char* GuiManager::assetDropdownList[4] = { "Meshes", "Audio", "Materials", "Scripts" };
+	const char* GuiManager::assetTypesList[6] = { "Meshes", "Scene", "Texture", "Scripts", "Shader", "Sounds"};
 	const char* GuiManager::componentsList[18] =
 	{ "Mesh","Camera","Light","Script","BoxCollider2D","RigidBody2D","CircleCollider",
 		"BoxCollider","CapsuleCollider","MeshCollider","RigidBody","AudioListener","AudioSource",
@@ -234,83 +234,55 @@ namespace Chilli {
 	void GuiManager::BuildAssetManager()
 	{
 		ImGuiWindowFlags window_flags = 0;
-		
-
 		ImGui::Begin("Assets", 0, window_flags);
 		ImGui::BeginGroup();
 		if (ImGui::BeginTabBar("##Tabs", ImGuiTabBarFlags_None))
 		{
-			if (ImGui::BeginTabItem("Assets"))
+			if (ImGui::BeginTabItem("Meshes"))
 			{
-				for (int i = 0; i < IM_ARRAYSIZE(assetDropdownList); i++)
-				{
-					if (ImGui::Selectable(assetDropdownList[i], assetDropdownSelected == i))
-					{
-						assetDropdownSelected = i;
-					}
-
-				}
 				if (ImGui::Button("Add"))
 				{
 					nfdchar_t* outPath = NULL;
 					nfdresult_t result = NFD_ERROR;
-					switch (assetDropdownSelected) {
-					case (int)AssetType::Mesh:
-						result = NFD_OpenDialog("gltf,fbx", NULL, &outPath);
-						break;
-					case (int)AssetType::Audio:
-						result = NFD_OpenDialog("wav,mp3", NULL, &outPath);
-						break;
-					case (int)AssetType::Material:
-						result = NFD_OpenDialog("png,jpg,jpeg,bmp", NULL, &outPath);
-						break;
-					case (int)AssetType::Script:
-						result = NFD_OpenDialog("cs,dll", NULL, &outPath);
-						break;
-					}
-
+					result = NFD_OpenDialog("gltf,fbx", NULL, &outPath);
 					if (result == NFD_OKAY)
 					{
-						DependencyResolver::ResolveDependency<ProjectManager>()->AddAsset(outPath, (AssetType)assetDropdownSelected);
+						DependencyResolver::ResolveDependency<ProjectManager>()->AddAsset(outPath, AssetType::Mesh);
 						free(outPath);
 					}
 				}
 				ImGui::Separator();
-				switch ((AssetType)assetDropdownSelected) 
+				
+				const auto& meshes = DependencyResolver::ResolveDependency<ProjectManager>()->GetMeshes();
+				for (const auto& mesh : meshes)
 				{
-					case AssetType::Mesh:
+					if (ImGui::Selectable(mesh.second->GetName().stem().generic_string().c_str(), assetFrameSelected == mesh.first))
 					{
-						const auto& meshes = DependencyResolver::ResolveDependency<ProjectManager>()->GetMeshes();
-
-						for (const auto& mesh : meshes)
-						{
-							if (ImGui::Selectable(mesh.second->GetName().stem().generic_string().c_str(), assetFrameSelected == mesh.first))
-							{
-								selectedAsset = mesh.second;
-								assetFrameSelected = selectedAsset->Uuid.Get();
-							}
-						}
+						selectedAsset = mesh.second;
+						assetFrameSelected = selectedAsset->Uuid.Get();
 					}
-					if (selectedAsset)
-					{
-						if (ImGui::Button("Remove Asset"))
-						{
-							DependencyResolver::ResolveDependency<ProjectManager>()->RemoveAsset(selectedAsset->Uuid, AssetType::Mesh);
-							selectedAsset = nullptr;
-						}
-					}
-				break;
 				}
+					
+				if (selectedAsset)
+				{
+					if (ImGui::Button("Remove Mesh"))
+					{
+						DependencyResolver::ResolveDependency<ProjectManager>()->RemoveAsset(selectedAsset->Uuid, AssetType::Mesh);
+						selectedAsset = nullptr;
+					}
+				}
+				
 				ImGui::EndTabItem();
 			}
 
 			if (ImGui::BeginTabItem("Scenes"))
 			{
-				static char buffer[128] = "";
+				static char buffer[50] = "";
 				ImGui::InputText("Name", buffer, IM_ARRAYSIZE(buffer));
 				if (ImGui::Button("Add Scene"))
 				{
 					DependencyResolver::ResolveDependency<ProjectManager>()->AddScene(buffer);
+					buffer[0] = NULL;
 				}
 				ImGui::Separator();
 				const auto& scenes = DependencyResolver::ResolveDependency<ProjectManager>()->GetScenes();
@@ -321,7 +293,7 @@ namespace Chilli {
 						selectedScene = scene;
 						DependencyResolver::ResolveDependency<ProjectManager>()->SetCurrentScene(scene->Uuid);
 						selectedEntity = nullptr;
-sceneSelected = selectedScene->Uuid.Get();
+						sceneSelected = selectedScene->Uuid.Get();
 					}
 				}
 				if (selectedScene)
@@ -335,36 +307,66 @@ sceneSelected = selectedScene->Uuid.Get();
 				}
 				ImGui::EndTabItem();
 			}
-			if (ImGui::BeginTabItem("Entities"))
+			if (ImGui::BeginTabItem("Textures"))
 			{
-				if (selectedScene)
+				if (ImGui::Button("Add"))
 				{
-					static char buffer[128] = "";
-					ImGui::InputText("Name", buffer, IM_ARRAYSIZE(buffer));
-					if (ImGui::Button("Add Entity"))
+					nfdchar_t* outPath = NULL;
+					nfdresult_t result = NFD_ERROR;
+					result = NFD_OpenDialog("png,jpg,jpeg", NULL, &outPath);
+					if (result == NFD_OKAY)
 					{
-						selectedScene->AddEntity(buffer);
-					}
-
-					const auto& entities = selectedScene->GetEntities();
-					for (const auto& entity : entities)
-					{
-						if (ImGui::Selectable(entity->GetName().c_str(), entitySelected == entity->Uuid.Get()))
-						{
-							selectedEntity = entity;
-							entitySelected = selectedEntity->Uuid.Get();
-						}
-
-					}
-					if (selectedEntity && selectedScene)
-					{
-						if (ImGui::Button("Remove Entity"))
-						{
-							selectedScene->RemoveEntity(selectedEntity->Uuid);
-							selectedEntity = nullptr;
-						}
+						DependencyResolver::ResolveDependency<ProjectManager>()->AddAsset(outPath, AssetType::Texture);
+						free(outPath);
 					}
 				}
+				ImGui::Separator();
+				const auto& textures = DependencyResolver::ResolveDependency<ProjectManager>()->GetTextures();
+				for (const auto& texture : textures)
+				{
+					if (ImGui::Selectable(texture.second->GetName().stem().generic_string().c_str(), assetFrameSelected == texture.first))
+					{
+						selectedAsset = texture.second;
+						assetFrameSelected = selectedAsset->Uuid.Get();
+					}
+				}
+
+				if (selectedAsset)
+				{
+					if (ImGui::Button("Remove Texture"))
+					{
+						DependencyResolver::ResolveDependency<ProjectManager>()->RemoveAsset(selectedAsset->Uuid, AssetType::Texture);
+						selectedAsset = nullptr;
+					}
+				}
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("Scripts"))
+			{
+				static char buffer[128] = "";
+				ImGui::InputText("Name", buffer, IM_ARRAYSIZE(buffer));
+				if (ImGui::Button("Add Script"))
+				{
+					DependencyResolver::ResolveDependency<ProjectManager>()->AddAsset(buffer,AssetType::Script);
+				}
+				ImGui::Separator();
+				const auto& scripts = ScriptEngine::GetAvailableScripts();
+				for (const auto& script : scripts)
+				{
+					ImGui::Text(script->GetScriptName().c_str());
+				}
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("Shaders"))
+			{
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("Audio"))
+			{
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("Fonts"))
+			{
 				ImGui::EndTabItem();
 			}
 			ImGui::EndTabBar();
@@ -375,15 +377,25 @@ sceneSelected = selectedScene->Uuid.Get();
 
 	void GuiManager::BuildSceneHierarchy()
 	{
+		if (!selectedScene)
+			selectedScene = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene();
+
 		ImGuiWindowFlags window_flags = 0;
 
 		ImGui::Begin("Scene Hierarchy", 0, window_flags);
-		const auto& scenes = DependencyResolver::ResolveDependency<ProjectManager>()->GetScenes();
-		for (const auto& scene : scenes)
+		static char buffer[50] = "";
+		ImGui::InputText("Name", buffer, IM_ARRAYSIZE(buffer));
+		if (ImGui::Button("Add Entity"))
 		{
-			if (ImGui::TreeNode(scene->GetName().c_str()))
+			DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene()->AddEntity(buffer);
+			buffer[0] = NULL;
+		}
+		ImGui::Separator();
+		if (selectedScene)
+		{
+			if (ImGui::TreeNode(selectedScene->GetName().c_str()))
 			{
-				for (const auto& entity : scene->GetEntities())
+				for (const auto& entity : selectedScene->GetEntities())
 				{
 					if (ImGui::Selectable(entity->GetName().c_str(), hierarchySelected == entity->Uuid.Get()))
 					{

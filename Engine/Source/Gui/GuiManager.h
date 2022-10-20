@@ -26,7 +26,7 @@ namespace Chilli {
 		static ImGuiIO* GetIO();
 	private:
 		static int assetDropdownSelected;
-		static const char* assetDropdownList[4];
+		static const char* assetTypesList[6];
 		static const char* componentsList[18];
 		static uint64_t assetFrameSelected;
 		static uint64_t hierarchySelected;
