@@ -622,6 +622,38 @@ namespace Chilli {
 					ImGui::EndChild();
 				}
 				break;
+				case ComponentType::Light:
+				{
+					auto light = std::static_pointer_cast<LightComponent>(component);
+					ImGui::BeginChild("Light", ImVec2(0, 200), true);
+					ImGui::Text("Light");
+					ImGui::ColorPicker3("Color", &light->Color().x);
+					const char* lightTypeOptions[] = { "Directional","PointLight", "Spotlight"};
+					const char* currentLightTypeSelected = lightTypeOptions[(int)light->GetLightType()];
+					if (ImGui::BeginCombo("Light Type", currentLightTypeSelected))
+					{
+						for (int i = 0; i <= 1; i++)
+						{
+							bool isSelected = currentLightTypeSelected == lightTypeOptions[i];
+							if (ImGui::Selectable(lightTypeOptions[i], isSelected))
+							{
+								currentLightTypeSelected = lightTypeOptions[i];
+								light->SetType((LightType)i);
+							}
+
+							if (isSelected)
+								ImGui::SetItemDefaultFocus();
+						}
+						ImGui::EndCombo();
+					}
+					ImGui::Spacing();
+					if (ImGui::Button("Remove Component"))
+					{
+						selectedEntity->RemoveComponent(ComponentType::Light);
+					}
+					ImGui::EndChild();
+				}
+				break;
 				case ComponentType::Script:
 				{
 					const auto& scriptComp = std::static_pointer_cast<ScriptComponent>(component);

@@ -21,6 +21,7 @@ namespace Chilli {
 		const DirectX::XMMATRIX& GetViewMatrix()const;
 		const DirectX::XMMATRIX GetViewProjMatrix()const;
 		const DirectX::XMMATRIX& GetProjMatrix()const;
+		const DirectX::XMVECTOR& GetPosition()const;
 		void UpdatePosition(const Direction dir);
 		void UpdatePosition(const DirectX::XMFLOAT3 translation, const DirectX::XMFLOAT3 rotation);
 		void UpdateRotation(float yoffset, float xoffset);

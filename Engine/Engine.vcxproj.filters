@@ -177,6 +177,12 @@
     <ClInclude Include="Source\Rendering\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Rendering\Light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ECS\LightComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Timer.cpp">
@@ -320,6 +326,12 @@
     <ClCompile Include="Source\Gui\ImGui\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Rendering\Light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ECS\LightComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Source\Rendering\shaders\Pixel_Basic.hlsl" />
@@ -328,5 +340,8 @@
     <FxCompile Include="Source\Rendering\shaders\Pixel_Texture.hlsl" />
     <FxCompile Include="Source\Rendering\shaders\Vertex_Color.hlsl" />
     <FxCompile Include="Source\Rendering\shaders\Pixel_Color.hlsl" />
+    <FxCompile Include="Source\Rendering\shaders\Pixel_Phong.hlsl" />
+    <FxCompile Include="Source\Rendering\shaders\Vertex_Phong.hlsl" />
+    <FxCompile Include="Source\Rendering\shaders\Pixel_PhongCol.hlsl" />
   </ItemGroup>
 </Project>

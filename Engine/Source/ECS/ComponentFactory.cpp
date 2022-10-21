@@ -35,4 +35,9 @@ namespace Chilli {
 	{
 		return std::make_shared<CameraComponent>();
 	}
+
+	std::shared_ptr<LightComponent> ComponentFactory::MakeLightComponent()
+	{
+		return std::make_shared<LightComponent>();
+	}
 }

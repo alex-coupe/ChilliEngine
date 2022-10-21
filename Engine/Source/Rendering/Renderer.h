@@ -5,6 +5,7 @@
 #include "../ResourceSystem/ProjectManager.h"
 #include "RenderJob.h"
 #include "Camera.h"
+#include "Light.h"
 
 namespace Chilli {
 
@@ -28,12 +29,15 @@ namespace Chilli {
 		uint64_t AddRenderJob(Entity& job);
 		void RemoveRenderJob(uint64_t jobId);
 		void ClearRenderJobs();
+		void CreateLight(Entity& lightEntity);
+		void DestroyLight();
 	private:
 		std::shared_ptr<Direct3D> m_direct3d;
 		float m_aspectRatio;
 		std::shared_ptr<ProjectManager> m_sceneManager;
 		std::unordered_map<uint64_t,RenderJob> m_renderJobs;
 		std::unique_ptr<Camera> m_editorCamera;
+		std::unique_ptr<Light> m_light;
 		Camera* m_renderCamera;
 		std::unique_ptr<FrameBuffer> m_frameBuffer;
 	};

@@ -55,6 +55,13 @@ namespace Chilli {
 					components[i]["Fov"].GetFloat(),components[i]["NearClip"].GetFloat(), components[i]["FarClip"].GetFloat()));
 			}
 			break;
+			case (int)ComponentType::Light:
+			{
+				DirectX::XMFLOAT3 color = { components[i]["ColR"].GetFloat(),components[i]["ColG"].GetFloat(),components[i]["ColB"].GetFloat() };
+				m_components.emplace_back(std::make_shared<LightComponent>((LightType)components[i]["LightType"].GetInt(),color));
+				DependencyResolver::ResolveDependency<Renderer>()->CreateLight(*this);
+			}
+			break;
 			case (int)ComponentType::Script:
 				m_components.emplace_back(std::make_shared<ScriptComponent>(components[i]["ScriptClassName"].GetString()));
 				auto scriptInstance = ScriptInstanceRepository::MakeScriptInstance(components[i]["ScriptClassName"].GetString(),Uuid.Get());
@@ -182,6 +189,12 @@ namespace Chilli {
 			{
 				auto pointer = std::static_pointer_cast<CameraComponent>(component);
 				m_components.emplace_back(std::make_shared<CameraComponent>(*pointer));
+			}
+			break;
+			case ComponentType::Light:
+			{
+				auto pointer = std::static_pointer_cast<LightComponent>(component);
+				m_components.emplace_back(std::make_shared<LightComponent>(*pointer));
 			}
 			break;
 			}
@@ -350,6 +363,10 @@ namespace Chilli {
 			case ComponentType::Camera:
 				m_components.emplace_back(ComponentFactory::MakeCameraComponent());
 				break;
+			case ComponentType::Light:
+				m_components.emplace_back(ComponentFactory::MakeLightComponent());
+				DependencyResolver::ResolveDependency<Renderer>()->CreateLight(*this);
+				break;
 			}
 		}
 	}
@@ -369,6 +386,11 @@ namespace Chilli {
 			{
 				DependencyResolver::ResolveDependency<Renderer>()->RemoveRenderJob(m_renderJobId);
 				m_renderJobId = 0;
+			}
+
+			if (type == ComponentType::Light)
+			{
+				DependencyResolver::ResolveDependency<Renderer>()->DestroyLight();
 			}
 
 		}	

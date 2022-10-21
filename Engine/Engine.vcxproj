@@ -179,6 +179,7 @@
     <ClInclude Include="Source\ECS\Component.h" />
     <ClInclude Include="Source\ECS\ComponentFactory.h" />
     <ClInclude Include="Source\ECS\Entity.h" />
+    <ClInclude Include="Source\ECS\LightComponent.h" />
     <ClInclude Include="Source\ECS\MeshComponent.h" />
     <ClInclude Include="Source\ECS\RigidBody2DComponent.h" />
     <ClInclude Include="Source\ECS\ScriptComponent.h" />
@@ -193,6 +194,7 @@
     <ClInclude Include="Source\Gui\ImGui\imstb_textedit.h" />
     <ClInclude Include="Source\Gui\ImGui\imstb_truetype.h" />
     <ClInclude Include="Source\Rendering\ConstantBuffer.h" />
+    <ClInclude Include="Source\Rendering\Light.h" />
     <ClInclude Include="Source\Rendering\RenderJob.h" />
     <ClInclude Include="Source\Rendering\Camera.h" />
     <ClInclude Include="Source\Rendering\FrameBuffer.h" />
@@ -232,6 +234,7 @@
     <ClCompile Include="Source\ECS\CircleColliderComponent.cpp" />
     <ClCompile Include="Source\ECS\ComponentFactory.cpp" />
     <ClCompile Include="Source\ECS\Entity.cpp" />
+    <ClCompile Include="Source\ECS\LightComponent.cpp" />
     <ClCompile Include="Source\ECS\MeshComponent.cpp" />
     <ClCompile Include="Source\ECS\RigidBody2DComponent.cpp" />
     <ClCompile Include="Source\ECS\ScriptComponent.cpp" />
@@ -245,6 +248,7 @@
     <ClCompile Include="Source\Gui\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Source\Gui\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\Rendering\Camera.cpp" />
+    <ClCompile Include="Source\Rendering\Light.cpp" />
     <ClCompile Include="Source\Rendering\RenderJob.cpp" />
     <ClCompile Include="Source\Rendering\FrameBuffer.cpp" />
     <ClCompile Include="Source\Rendering\IndexBuffer.cpp" />
@@ -282,6 +286,18 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
+    <FxCompile Include="Source\Rendering\shaders\Pixel_Phong.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Rendering\shaders\Pixel_PhongCol.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
     <FxCompile Include="Source\Rendering\shaders\Pixel_Texture.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
@@ -295,6 +311,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Source\Rendering\shaders\Vertex_Color.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Rendering\shaders\Vertex_Phong.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

@@ -113,4 +113,9 @@ namespace Chilli {
 		m_target = XMVector3Normalize(direction);
 		m_viewMatrix = XMMatrixLookAtLH(m_position, m_position + m_target, m_up);
 	}
+
+	const DirectX::XMVECTOR& Camera::GetPosition()const
+	{
+		return m_position;
+	}
 }

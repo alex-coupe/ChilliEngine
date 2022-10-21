@@ -5,6 +5,7 @@
 #include "../Core/Window.h"
 #include "../ECS/MeshComponent.h"
 #include "../ECS/TransformComponent.h"
+#include "../ECS/LightComponent.h"
 
 namespace Chilli {
 
@@ -78,8 +79,8 @@ namespace Chilli {
 		m_frameBuffer->Bind();
 		for (auto& job : m_renderJobs)
 		{
-			job.second.Update(m_renderCamera);
-			job.second.Draw();
+			job.second.Update(m_renderCamera, m_light.get());
+			job.second.Draw(m_light.get());
 		}
 		m_direct3d->SetBackBufferRenderTarget();
 		m_direct3d->BeginFrame();
@@ -109,6 +110,20 @@ namespace Chilli {
 	void Renderer::SetRenderCamera(Camera* cam)
 	{
 		m_renderCamera = cam;
+	}
+
+	void Renderer::CreateLight(Entity& lightEnt)
+	{
+		if (lightEnt.HasComponent(ComponentType::Light))
+		{
+			auto lightComp = std::static_pointer_cast<LightComponent>(lightEnt.GetComponentByType(ComponentType::Light));
+			auto transformComp = std::static_pointer_cast<TransformComponent>(lightEnt.GetComponentByType(ComponentType::Light));
+			m_light = std::make_unique<Light>(lightComp->GetLightType(), transformComp->Translation(), transformComp->Rotation(), lightComp->Color(), lightEnt.Uuid);
+		}
+	}
+	void Renderer::DestroyLight()
+	{
+		m_light.reset();
 	}
 
 	const float Renderer::GetAspectRatio()const
