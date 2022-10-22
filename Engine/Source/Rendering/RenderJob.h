@@ -50,13 +50,11 @@ namespace Chilli {
 		struct PhongPixel {
 			alignas(16)DirectX::XMFLOAT3 lightPos;
 			alignas(16)DirectX::XMFLOAT3 lightCol;
-			alignas(16)DirectX::XMFLOAT4 objCol;
 			alignas(16)DirectX::XMFLOAT3 camPos;
-			
-
 		};
 		std::shared_ptr<Mesh> m_baseMesh;
 		std::unique_ptr<ConstantBuffer<Transforms>> m_phongConstantVertexBuffer;
 		std::unique_ptr<ConstantBuffer<PhongPixel>> m_phongConstantPixelBuffer;
+		std::unique_ptr<ConstantBuffer<Material>> m_materialConstantBuffer;
 	};
 }

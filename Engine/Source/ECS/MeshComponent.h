@@ -7,8 +7,10 @@
 namespace Chilli {
 
 	struct Material {
-		DirectX::XMFLOAT4 color;
-		UUID textureUuid;
+		alignas(16)DirectX::XMFLOAT3 ambient;
+		alignas(16)DirectX::XMFLOAT3 diffuse;
+		alignas(16)DirectX::XMFLOAT3 specular;
+		float shininess;
 	};
 
 	class CHILLI_API MeshComponent : public Component {
@@ -29,5 +31,6 @@ namespace Chilli {
 		Material material;
 	private:
 		UUID m_meshUuid;
+		UUID m_textureUuid;
 	};
 }

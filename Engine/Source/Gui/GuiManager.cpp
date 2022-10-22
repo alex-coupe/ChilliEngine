@@ -470,14 +470,15 @@ namespace Chilli {
 					}
 					ImGui::Spacing();
 					ImGui::Text("Material");
-					float* color[4] = { &meshComp->material.color.x,&meshComp->material.color.y,&meshComp->material.color.z,&meshComp->material.color.w };
-					ImGui::ColorPicker4("Diffuse Color",color[0]);
+					ImGui::ColorEdit3("Diffuse Color",&meshComp->material.diffuse.x);
+					ImGui::ColorEdit3("Ambient Color", &meshComp->material.ambient.x);
+					ImGui::ColorEdit3("Specular Color", &meshComp->material.specular.x);
+					ImGui::InputFloat("Shininess", &meshComp->material.shininess);
 					if (ImGui::Button("Select Texture"))
 						ImGui::OpenPopup("textureDropdown");
 					ImGui::SameLine();
-					ImGui::TextUnformatted(meshComp->material.textureUuid.Get() == 0 ? "<None>" :
-						projManager->GetAssetByUUID(meshComp->material.textureUuid, AssetType::Texture)
-						->GetFilePath().stem().string().c_str());
+					ImGui::TextUnformatted(!meshComp->HasTexture() ? "<None>" :
+						meshComp->GetTexture()->GetName().stem().generic_string().c_str());
 					if (ImGui::BeginPopup("textureDropdown"))
 					{
 						ImGui::Text("Textures");
@@ -627,7 +628,7 @@ namespace Chilli {
 					auto light = std::static_pointer_cast<LightComponent>(component);
 					ImGui::BeginChild("Light", ImVec2(0, 200), true);
 					ImGui::Text("Light");
-					ImGui::ColorPicker3("Color", &light->Color().x);
+					ImGui::ColorEdit3("Color", &light->Color().x);
 					const char* lightTypeOptions[] = { "Directional","PointLight", "Spotlight"};
 					const char* currentLightTypeSelected = lightTypeOptions[(int)light->GetLightType()];
 					if (ImGui::BeginCombo("Light Type", currentLightTypeSelected))

@@ -3,19 +3,23 @@
 
 namespace Chilli {
 	MeshComponent::MeshComponent()
-		: Component(ComponentType::Mesh, "Mesh"), m_meshUuid(UUID(0))
+		: Component(ComponentType::Mesh, "Mesh"), m_meshUuid(UUID(0)),m_textureUuid(0)
 	{
 		material = {};
-		material.color = { 1.0f,1.0f,1.0f,1.0f };
-		material.textureUuid = 0;
+		material.ambient = { 1.0f, 0.5f, 0.31f };
+		material.diffuse = { 1.0f, 0.5f, 0.31f };
+		material.specular = { 0.5f, 0.5f, 0.5f };
+		material.shininess = 32.0f;
 	}
 
 	MeshComponent::MeshComponent(UUID meshUuid)
-		: Component(ComponentType::Mesh, "Mesh"), m_meshUuid(meshUuid)
+		: Component(ComponentType::Mesh, "Mesh"), m_meshUuid(meshUuid), m_textureUuid(0)
 	{
 		material = {};
-		material.color = { 1.0f,1.0f,1.0f,1.0f };
-		material.textureUuid = 0;
+		material.ambient = { 1.0f, 0.5f, 0.31f };
+		material.diffuse = { 1.0f, 0.5f, 0.31f };
+		material.specular = { 0.5f, 0.5f, 0.5f };
+		material.shininess = 32.0f;
 	}
 
 	MeshComponent::MeshComponent(const MeshComponent& rhs)
@@ -35,7 +39,13 @@ namespace Chilli {
 	const std::string MeshComponent::Serialize(uint64_t entityId) const
 	{
 		std::stringstream ss;
-		ss << "{ \"Type\":" << static_cast<int>(m_type) << ", \"MeshUuid\":" << m_meshUuid.Get() << "}";
+		ss << "{ \"Type\":" << static_cast<int>(m_type) << ", \"MeshUuid\":" << m_meshUuid.Get()
+		<< ", \"TextureUuid\":" << m_textureUuid.Get() 
+		<< ", \"AmbR\":" << material.ambient.x << ", \"AmbG\":" << material.ambient.y << ", \"AmbB\":" << material.ambient.z
+		<< ", \"DiffR\":" << material.diffuse.x << ", \"DiffG\":" << material.diffuse.y << ", \"DiffB\":" << material.diffuse.z
+		<< ", \"SpecR\":" << material.specular.x << ", \"SpecG\":" << material.specular.y << ", \"SpecB\":" << material.specular.z
+		<< ", \"Shininess\":" << material.shininess
+		<< "}";
 		return  ss.str();
 	}
 
@@ -60,7 +70,7 @@ namespace Chilli {
 
 	const std::shared_ptr<Texture> MeshComponent::GetTexture() const
 	{
-		const auto tex = std::static_pointer_cast<Texture>(DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetByUUID(material.textureUuid, AssetType::Texture));
+		const auto tex = std::static_pointer_cast<Texture>(DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetByUUID(m_textureUuid, AssetType::Texture));
 		if (tex != nullptr)
 			return tex;
 
@@ -75,7 +85,7 @@ namespace Chilli {
 
 	const bool MeshComponent::HasTexture()const
 	{
-		return material.textureUuid.Get() != 0;
+		return m_textureUuid.Get() != 0;
 	}
 
 	void MeshComponent::SetMesh(UUID meshUuid)
@@ -85,7 +95,7 @@ namespace Chilli {
 
 	void MeshComponent::SetTexture(UUID texUuid)
 	{
-		material.textureUuid = texUuid;
+		m_textureUuid = texUuid;
 	}
 }
 

@@ -34,6 +34,7 @@ namespace Chilli {
 				m_indexBuffer = std::make_unique<IndexBuffer>(mesh->GetIndices(), m_direct3d);
 				m_phongConstantVertexBuffer = std::make_unique<ConstantBuffer<Transforms>>(ConstantBufferType::Vertex, m_direct3d);
 				m_phongConstantPixelBuffer = std::make_unique<ConstantBuffer<PhongPixel>>(ConstantBufferType::Pixel, m_direct3d);
+				m_materialConstantBuffer = std::make_unique<ConstantBuffer<Material>>(ConstantBufferType::Pixel, m_direct3d);
 				m_vertexShader = ShaderLibrary::GetCoreShader("VertexPhong");
 				if (mesh->HasTexture())
 				{
@@ -81,6 +82,7 @@ namespace Chilli {
 			{
 				m_phongConstantPixelBuffer->Bind();
 				m_phongConstantVertexBuffer->Bind();
+				m_materialConstantBuffer->Bind(1);
 				Transforms trans = {
 					trans.model = DirectX::XMMatrixTranspose(tranformComp->GetTransformMatrix()),
 					trans.modelViewProj = DirectX::XMMatrixTranspose(tranformComp->GetTransformMatrix() * cam->GetViewProjMatrix())
@@ -89,12 +91,12 @@ namespace Chilli {
 				PhongPixel pp = {
 					pp.lightPos = light->GetPosition(),
 					pp.lightCol = light->GetColor(),
-					pp.objCol = meshComponent->material.color,
 					pp.camPos = DirectX::XMFLOAT3{DirectX::XMVectorGetX(cam->GetPosition()),DirectX::XMVectorGetY(cam->GetPosition()),DirectX::XMVectorGetZ(cam->GetPosition())}
 				};
 
 				m_phongConstantVertexBuffer->Update(trans);
 				m_phongConstantPixelBuffer->Update(pp);
+				m_materialConstantBuffer->Update(meshComponent->material);
 			}
 			else
 			{
@@ -102,7 +104,7 @@ namespace Chilli {
 				m_transformationCBuff->Update(transform);
 				m_transformationCBuff->Bind();
 
-				m_color->Update(meshComponent->material.color);
+				m_color->Update(DirectX::XMFLOAT4(meshComponent->material.diffuse.x, meshComponent->material.diffuse.y, meshComponent->material.diffuse.z, 1.0f));
 				m_color->Bind();
 			}
 
@@ -155,6 +157,7 @@ namespace Chilli {
 		{
 			m_phongConstantVertexBuffer = std::make_unique<ConstantBuffer<Transforms>>(ConstantBufferType::Vertex, m_direct3d);
 			m_phongConstantPixelBuffer = std::make_unique<ConstantBuffer<PhongPixel>>(ConstantBufferType::Pixel, m_direct3d);
+			m_materialConstantBuffer = std::make_unique<ConstantBuffer<Material>>(ConstantBufferType::Pixel, m_direct3d);
 			m_vertexShader = ShaderLibrary::GetCoreShader("VertexPhong");
 			if (mesh->HasTexture())
 			{
