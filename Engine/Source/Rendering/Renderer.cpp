@@ -123,7 +123,7 @@ namespace Chilli {
 		{
 			auto lightComp = std::static_pointer_cast<LightComponent>(lightEnt.GetComponentByType(ComponentType::Light));
 			auto transformComp = std::static_pointer_cast<TransformComponent>(lightEnt.GetComponentByType(ComponentType::Light));
-			m_light = std::make_unique<Light>(lightComp->GetLightType(), transformComp->Translation(), transformComp->Rotation(), lightComp->Color(), lightEnt.Uuid);
+			m_light = std::make_unique<Light>(lightComp->GetLightType(),lightEnt);
 		}
 	}
 	void Renderer::DestroyLight()

@@ -33,7 +33,7 @@ namespace Chilli {
 				m_vertexBuffer = std::make_unique<VertexBuffer>(mesh->GetVertices(), m_direct3d);
 				m_indexBuffer = std::make_unique<IndexBuffer>(mesh->GetIndices(), m_direct3d);
 				m_phongConstantVertexBuffer = std::make_unique<ConstantBuffer<Transforms>>(ConstantBufferType::Vertex, m_direct3d);
-				m_phongConstantPixelBuffer = std::make_unique<ConstantBuffer<PhongPixel>>(ConstantBufferType::Pixel, m_direct3d);
+				m_lightPropsConstantBuffer = std::make_unique<ConstantBuffer<LightProperties>>(ConstantBufferType::Pixel, m_direct3d);
 				m_materialConstantBuffer = std::make_unique<ConstantBuffer<Material>>(ConstantBufferType::Pixel, m_direct3d);
 				m_vertexShader = ShaderLibrary::GetCoreShader("VertexPhong");
 				if (mesh->HasTexture())
@@ -80,22 +80,18 @@ namespace Chilli {
 			
 			if (light)
 			{
-				m_phongConstantPixelBuffer->Bind();
+				m_lightPropsConstantBuffer->Bind();
 				m_phongConstantVertexBuffer->Bind();
 				m_materialConstantBuffer->Bind(1);
 				Transforms trans = {
 					trans.model = DirectX::XMMatrixTranspose(tranformComp->GetTransformMatrix()),
-					trans.modelViewProj = DirectX::XMMatrixTranspose(tranformComp->GetTransformMatrix() * cam->GetViewProjMatrix())
+					trans.modelViewProj = DirectX::XMMatrixTranspose(tranformComp->GetTransformMatrix() * cam->GetViewProjMatrix()),
+					trans.camPos = DirectX::XMFLOAT3(DirectX::XMVectorGetX(cam->GetPosition()),DirectX::XMVectorGetY(cam->GetPosition()),DirectX::XMVectorGetZ(cam->GetPosition()))
 				};
-
-				PhongPixel pp = {
-					pp.lightPos = light->GetPosition(),
-					pp.lightCol = light->GetColor(),
-					pp.camPos = DirectX::XMFLOAT3{DirectX::XMVectorGetX(cam->GetPosition()),DirectX::XMVectorGetY(cam->GetPosition()),DirectX::XMVectorGetZ(cam->GetPosition())}
-				};
-
+							
 				m_phongConstantVertexBuffer->Update(trans);
-				m_phongConstantPixelBuffer->Update(pp);
+				light->Update();
+				m_lightPropsConstantBuffer->Update(light->properties);
 				m_materialConstantBuffer->Update(meshComponent->material);
 			}
 			else
@@ -130,7 +126,7 @@ namespace Chilli {
 			if (m_entity.HasComponent(ComponentType::Light))
 			{
 				auto lightComp = std::static_pointer_cast<LightComponent>(m_entity.GetComponentByType(ComponentType::Light));
-				m_color->Update(DirectX::XMFLOAT4(lightComp->Color().x, lightComp->Color().y, lightComp->Color().z,1.0f));
+				m_color->Update(DirectX::XMFLOAT4(lightComp->Diffuse().x, lightComp->Diffuse().y, lightComp->Diffuse().z, 1.0f));
 				m_color->Bind();
 			}
 
@@ -156,7 +152,7 @@ namespace Chilli {
 		if (light)
 		{
 			m_phongConstantVertexBuffer = std::make_unique<ConstantBuffer<Transforms>>(ConstantBufferType::Vertex, m_direct3d);
-			m_phongConstantPixelBuffer = std::make_unique<ConstantBuffer<PhongPixel>>(ConstantBufferType::Pixel, m_direct3d);
+			m_lightPropsConstantBuffer = std::make_unique<ConstantBuffer<LightProperties>>(ConstantBufferType::Pixel, m_direct3d);
 			m_materialConstantBuffer = std::make_unique<ConstantBuffer<Material>>(ConstantBufferType::Pixel, m_direct3d);
 			m_vertexShader = ShaderLibrary::GetCoreShader("VertexPhong");
 			if (mesh->HasTexture())

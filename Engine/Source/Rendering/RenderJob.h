@@ -46,15 +46,12 @@ namespace Chilli {
 		struct Transforms {
 			DirectX::XMMATRIX model;
 			DirectX::XMMATRIX modelViewProj;
-		};
-		struct PhongPixel {
-			alignas(16)DirectX::XMFLOAT3 lightPos;
-			alignas(16)DirectX::XMFLOAT3 lightCol;
 			alignas(16)DirectX::XMFLOAT3 camPos;
 		};
+		
 		std::shared_ptr<Mesh> m_baseMesh;
 		std::unique_ptr<ConstantBuffer<Transforms>> m_phongConstantVertexBuffer;
-		std::unique_ptr<ConstantBuffer<PhongPixel>> m_phongConstantPixelBuffer;
+		std::unique_ptr<ConstantBuffer<LightProperties>> m_lightPropsConstantBuffer;
 		std::unique_ptr<ConstantBuffer<Material>> m_materialConstantBuffer;
 	};
 }

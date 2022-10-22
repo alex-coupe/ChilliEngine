@@ -59,7 +59,7 @@ namespace Chilli {
 			case (int)ComponentType::Light:
 			{
 				DirectX::XMFLOAT3 color = { components[i]["ColR"].GetFloat(),components[i]["ColG"].GetFloat(),components[i]["ColB"].GetFloat() };
-				m_components.emplace_back(std::make_shared<LightComponent>((LightType)components[i]["LightType"].GetInt(),color));
+				m_components.emplace_back(std::make_shared<LightComponent>((LightType)components[i]["LightType"].GetInt()));
 				DependencyResolver::ResolveDependency<Renderer>()->CreateLight(*this);
 				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this);
 			}

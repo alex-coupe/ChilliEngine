@@ -628,7 +628,9 @@ namespace Chilli {
 					auto light = std::static_pointer_cast<LightComponent>(component);
 					ImGui::BeginChild("Light", ImVec2(0, 200), true);
 					ImGui::Text("Light");
-					ImGui::ColorEdit3("Color", &light->Color().x);
+					ImGui::ColorEdit3("Ambient", &light->Ambient().x);
+					ImGui::ColorEdit3("Diffuse", &light->Diffuse().x);
+					ImGui::ColorEdit3("Specular", &light->Specular().x);
 					const char* lightTypeOptions[] = { "Directional","PointLight", "Spotlight"};
 					const char* currentLightTypeSelected = lightTypeOptions[(int)light->GetLightType()];
 					if (ImGui::BeginCombo("Light Type", currentLightTypeSelected))

@@ -2,14 +2,20 @@
 
 namespace Chilli {
 
-	LightComponent::LightComponent(LightType type, DirectX::XMFLOAT3 col)
-		:Component(ComponentType::Light,"Light"), m_lightType(type), m_color(col)
-	{}
+	LightComponent::LightComponent(LightType type)
+		:Component(ComponentType::Light,"Light"), m_lightType(type)
+	{
+		m_ambient = { 0.2f, 0.2f, 0.2f };
+		m_diffuse = { 0.5f, 0.5f, 0.5f };
+		m_specular = { 1.0f, 1.0f, 1.0f };
+	}
 
 	LightComponent::LightComponent(LightComponent& rhs)
 		:Component(rhs.m_type, rhs.m_name)
 	{
-		m_color = rhs.m_color;
+		m_ambient = rhs.m_ambient;
+		m_diffuse = rhs.m_diffuse;
+		m_specular = rhs.m_specular;
 		m_lightType = rhs.m_lightType;
 	}
 
@@ -21,7 +27,9 @@ namespace Chilli {
 	void LightComponent::Clone(const std::shared_ptr<Component>& rhs)
 	{
 		const auto& comp = std::static_pointer_cast<LightComponent>(rhs);
-		m_color = comp->m_color;
+		m_ambient = comp->m_ambient;
+		m_diffuse = comp->m_diffuse;
+		m_specular = comp->m_specular;
 		m_lightType = comp->m_lightType;
 	}
 
@@ -29,7 +37,10 @@ namespace Chilli {
 	{
 		std::stringstream ss;
 		ss << "{ \"Type\":" << static_cast<int>(m_type) << ", \"LightType\":" << (int)m_lightType
-			<< ", \"ColR\":" << m_color.x << ", \"ColG\":" << m_color.y << ", \"ColB\":" << m_color.z << "}";
+			<< ", \"AmbR\":" << m_ambient.x << ", \"AmbG\":" << m_ambient.y << ", \"AmbB\":" << m_ambient.z 
+			<< ", \"DiffR\":" << m_diffuse.x << ", \"DiffG\":" << m_diffuse.y << ", \"DiffB\":" << m_diffuse.z
+			<< ", \"SpecR\":" << m_specular.x << ", \"SpecG\":" << m_specular.y << ", \"SpecB\":" << m_specular.z
+			<< "}";
 		return  ss.str();
 	}
 
@@ -38,9 +49,19 @@ namespace Chilli {
 		m_lightType = type;
 	}
 
-	DirectX::XMFLOAT3& LightComponent::Color()
+	DirectX::XMFLOAT3& LightComponent::Ambient()
 	{
-		return m_color;
+		return m_ambient;
+	}
+
+	DirectX::XMFLOAT3& LightComponent::Diffuse()
+	{
+		return m_diffuse;
+	}
+
+	DirectX::XMFLOAT3& LightComponent::Specular()
+	{
+		return m_specular;
 	}
 
 }
