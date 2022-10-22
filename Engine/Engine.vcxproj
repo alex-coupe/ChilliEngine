@@ -204,6 +204,7 @@
     <ClInclude Include="Source\Rendering\Renderer.h" />
     <ClInclude Include="Source\Rendering\Sampler.h" />
     <ClInclude Include="Source\Rendering\Shader.h" />
+    <ClInclude Include="Source\Rendering\ShaderLibrary.h" />
     <ClInclude Include="Source\Rendering\stb\stb_image.h" />
     <ClInclude Include="Source\Rendering\Texture.h" />
     <ClInclude Include="Source\Rendering\Topology.h" />
@@ -257,6 +258,7 @@
     <ClCompile Include="Source\Rendering\Renderer.cpp" />
     <ClCompile Include="Source\Rendering\Sampler.cpp" />
     <ClCompile Include="Source\Rendering\Shader.cpp" />
+    <ClCompile Include="Source\Rendering\ShaderLibrary.cpp" />
     <ClCompile Include="Source\Rendering\stb\stb_image.cpp" />
     <ClCompile Include="Source\Rendering\Texture.cpp" />
     <ClCompile Include="Source\Rendering\Topology.cpp" />

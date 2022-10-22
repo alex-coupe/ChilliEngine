@@ -69,6 +69,8 @@ namespace Chilli {
 	{
 		if (width == 0 || height == 0)
 			return;
+
+		m_aspectRatio = (float)height / (float)width;
 		m_frameBuffer.reset();
 		m_direct3d->HandleWindowResize(width, height);
 		m_frameBuffer = std::make_unique<FrameBuffer>(width, height, m_direct3d);
@@ -76,10 +78,13 @@ namespace Chilli {
 
 	void Renderer::ProcessFrame()
 	{
+		auto currentScene = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene();
 		m_frameBuffer->Bind();
 		for (auto& job : m_renderJobs)
 		{
 			job.second.Update(m_renderCamera, m_light.get());
+			if ((currentScene->GetSceneState() == SceneState::Play && job.second.RenderDuringPlay()) 
+				|| currentScene->GetSceneState() == SceneState::Edit)
 			job.second.Draw(m_light.get());
 		}
 		m_direct3d->SetBackBufferRenderTarget();
@@ -91,7 +96,7 @@ namespace Chilli {
 	uint64_t Renderer::AddRenderJob(Entity& job)
 	{
 		uint64_t id = UUID().Get();
-		m_renderJobs.emplace(id, RenderJob(m_direct3d, job));
+		m_renderJobs.emplace(id, std::move(RenderJob(m_direct3d, job)));
 		return id;
 	}
 

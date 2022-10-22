@@ -12,6 +12,7 @@
 #include "VertexTypes.h"
 #include "Camera.h"
 #include "../ECS/Entity.h"
+#include "ShaderLibrary.h"
 
 namespace Chilli {
 	class CHILLI_API RenderJob {
@@ -19,23 +20,25 @@ namespace Chilli {
 		RenderJob(const std::shared_ptr<Direct3D>& d3d, Entity& entity);
 		void Draw(Light* light)const;
 		void Update(Camera* cam, Light* light);
+		bool RenderDuringPlay();
 	private:
+		bool m_renderDuringPlay = true;
+		void CreateSolidJob();
+		void CreateMeshComponentJob(Light* light, std::shared_ptr<MeshComponent> mesh);
 		std::shared_ptr<Direct3D> m_direct3d;
+		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
+		{
+			{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{"TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,12,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			{"Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,20,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		};
 		std::unique_ptr<VertexBuffer> m_vertexBuffer;
-		std::unique_ptr<Shader> m_vertexShaderTexture;
-		std::unique_ptr<Shader> m_vertexShaderColor;
-		std::unique_ptr<Shader> m_vertexShaderPhong;
-		std::unique_ptr<Shader> m_pixelShaderTexture;
-		std::unique_ptr<Shader> m_pixelShaderColor;
-		std::unique_ptr<Shader> m_pixelShaderPhong;
-		std::unique_ptr<Shader> m_pixelShaderPhongColor;
-		std::unique_ptr<InputLayout> m_inputLayoutTexture;
-		std::unique_ptr<InputLayout> m_inputLayoutColor;
-		std::unique_ptr<InputLayout> m_inputLayoutPhong;
+		std::shared_ptr<Shader> m_vertexShader;
+		std::shared_ptr<Shader> m_pixelShader;
+		std::unique_ptr<InputLayout> m_inputLayout;
 		std::unique_ptr<Topology> m_topology;
 		std::unique_ptr<IndexBuffer> m_indexBuffer;
 		std::unique_ptr<Sampler> m_sampler;
-		std::unique_ptr<Texture> m_texture;
 		DirectX::XMMATRIX m_transformMatrix;
 		std::unique_ptr<ConstantBuffer<DirectX::XMFLOAT4>> m_color;
 		std::unique_ptr<ConstantBuffer<DirectX::XMMATRIX>> m_transformationCBuff;
@@ -52,6 +55,7 @@ namespace Chilli {
 			
 
 		};
+		std::shared_ptr<Mesh> m_baseMesh;
 		std::unique_ptr<ConstantBuffer<Transforms>> m_phongConstantVertexBuffer;
 		std::unique_ptr<ConstantBuffer<PhongPixel>> m_phongConstantPixelBuffer;
 	};

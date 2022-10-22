@@ -37,6 +37,8 @@ namespace Chilli {
 
 		DependencyResolver::Add(m_renderer, Renderer::GetSystemType());
 
+		ShaderLibrary::Init(m_renderer->GetD3D());
+
 		m_projectManager = std::make_shared<ProjectManager>();
 		if (m_projectManager == nullptr)
 			CHILLI_ERROR("Failed to create scene manager");
@@ -46,10 +48,12 @@ namespace Chilli {
 			CHILLI_ERROR("Renderer could not init");
 		ScriptEngine::Init();
 		ScriptApi::Init();
+		
 	}
 
 	ChilliEngine::~ChilliEngine()
 	{
+		ShaderLibrary::Shutdown();
 		ScriptEngine::Shutdown();
 		m_projectManager.reset();
 		m_renderer.reset();

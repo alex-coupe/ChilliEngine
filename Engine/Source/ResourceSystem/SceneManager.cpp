@@ -1,4 +1,5 @@
 #include "SceneManager.h"
+#include "../Rendering/Renderer.h"
 
 namespace Chilli {
 	SceneManager::SceneManager()
@@ -11,6 +12,7 @@ namespace Chilli {
 	{
 		m_scenes.clear();
 		m_currentScene.reset();
+		DependencyResolver::ResolveDependency<Renderer>()->ClearRenderJobs();
 		for (unsigned int i = 0; i < scenes.Size(); i++)
 		{
 			m_scenes.emplace_back(std::make_shared<Scene>(scenes[i]["SceneName"].GetString(), scenes[i]["Uuid"].GetUint64(), scenes[i]["Entities"].GetArray()));

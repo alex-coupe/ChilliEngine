@@ -26,7 +26,6 @@ namespace Chilli {
 		const std::shared_ptr<TransformComponent> GetTransformComponent();
 		void InitPhysics(std::unique_ptr<b2World>& physicsWorld);
 		void UpdatePhysics();
-		void AddCameraComponent();
 	private:
 		b2Body* CreateRigidBody(std::unique_ptr<b2World>& physicsWorld, const std::shared_ptr<TransformComponent> transform);
 		void CreateBoxCollider(b2Body* rigidBody, const std::shared_ptr<TransformComponent> transform);

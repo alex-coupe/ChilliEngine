@@ -6,8 +6,8 @@ namespace Chilli {
     Scene::Scene(const std::string& name)
         : m_name(name), Uuid()
     {
-        const auto& cameraEntity = std::make_shared<Entity>("Camera");
-        cameraEntity->AddCameraComponent();
+        auto cameraEntity = std::make_shared<Entity>("Camera");
+        cameraEntity->AddComponent(ComponentType::Camera);
         m_entities.emplace_back(cameraEntity);
     }
 

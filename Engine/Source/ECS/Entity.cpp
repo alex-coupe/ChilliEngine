@@ -53,6 +53,7 @@ namespace Chilli {
 			{
 				m_components.emplace_back(std::make_shared<CameraComponent>((ProjectionType)components[i]["ProjectionType"].GetInt(),
 					components[i]["Fov"].GetFloat(),components[i]["NearClip"].GetFloat(), components[i]["FarClip"].GetFloat()));
+				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this);
 			}
 			break;
 			case (int)ComponentType::Light:
@@ -60,6 +61,7 @@ namespace Chilli {
 				DirectX::XMFLOAT3 color = { components[i]["ColR"].GetFloat(),components[i]["ColG"].GetFloat(),components[i]["ColB"].GetFloat() };
 				m_components.emplace_back(std::make_shared<LightComponent>((LightType)components[i]["LightType"].GetInt(),color));
 				DependencyResolver::ResolveDependency<Renderer>()->CreateLight(*this);
+				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this);
 			}
 			break;
 			case (int)ComponentType::Script:
@@ -330,6 +332,9 @@ namespace Chilli {
 
 	bool Entity::HasComponent(ComponentType type)
 	{
+		if (m_components.size() == 0)
+			return false;
+
 		auto contains = std::find_if(m_components.cbegin(), m_components.cend(), [type](const std::shared_ptr<Component> rhs) {
 			return rhs->GetComponentType() == type;
 			});
@@ -362,10 +367,12 @@ namespace Chilli {
 				break;
 			case ComponentType::Camera:
 				m_components.emplace_back(ComponentFactory::MakeCameraComponent());
+				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this);
 				break;
 			case ComponentType::Light:
 				m_components.emplace_back(ComponentFactory::MakeLightComponent());
 				DependencyResolver::ResolveDependency<Renderer>()->CreateLight(*this);
+				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this);
 				break;
 			}
 		}
@@ -388,17 +395,20 @@ namespace Chilli {
 				m_renderJobId = 0;
 			}
 
+			if (type == ComponentType::Camera)
+			{
+				DependencyResolver::ResolveDependency<Renderer>()->RemoveRenderJob(m_renderJobId);
+				m_renderJobId = 0;
+			}
+
 			if (type == ComponentType::Light)
 			{
+				DependencyResolver::ResolveDependency<Renderer>()->RemoveRenderJob(m_renderJobId);
+				m_renderJobId = 0;
 				DependencyResolver::ResolveDependency<Renderer>()->DestroyLight();
 			}
 
 		}	
-	}
-
-	void Entity::AddCameraComponent()
-	{
-		m_components.emplace_back(std::make_shared<CameraComponent>());
 	}
 
 	const std::string Entity::Serialize() const
@@ -425,8 +435,3 @@ namespace Chilli {
 		return nullptr;
 	}
 }
-
-
-
-
-
