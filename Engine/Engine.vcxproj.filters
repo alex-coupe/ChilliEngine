@@ -350,4 +350,7 @@
     <FxCompile Include="Source\Rendering\shaders\Vertex_Phong.hlsl" />
     <FxCompile Include="Source\Rendering\shaders\Pixel_PhongCol.hlsl" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Source\Rendering\shaders\LightingFuncs.hlsli" />
+  </ItemGroup>
 </Project>

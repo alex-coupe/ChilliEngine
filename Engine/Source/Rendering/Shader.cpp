@@ -10,15 +10,20 @@ namespace Chilli {
 		switch (type)
 		{
 		case ShaderType::Pixel:
-			GFX_THROW_ERR(D3DCompileFromFile(path.c_str(), 0, 0, "main", "ps_4_0", 0, 0, &m_byteCode, nullptr));
+			GFX_THROW_ERR(D3DCompileFromFile(path.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", 0, 0, &m_byteCode, &m_errors));
+			if (FAILED(m_result) && m_errors)
+			{
+				const char* errorMsg = (const char*)m_errors->GetBufferPointer();
+				CHILLI_ERROR(errorMsg);
+			}
 			GFX_THROW_ERR(m_direct3d->GetDevice()->CreatePixelShader(m_byteCode->GetBufferPointer(), m_byteCode->GetBufferSize(), nullptr, &m_pixelShader));
 			break;
 		case ShaderType::Vertex:
-			GFX_THROW_ERR(D3DCompileFromFile(path.c_str(), 0, 0, "main", "vs_4_0", 0, 0, &m_byteCode, nullptr));
+			GFX_THROW_ERR(D3DCompileFromFile(path.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_4_0", 0, 0, &m_byteCode, nullptr));
 			GFX_THROW_ERR(m_direct3d->GetDevice()->CreateVertexShader(m_byteCode->GetBufferPointer(), m_byteCode->GetBufferSize(), nullptr, &m_vertexShader));
 			break;
 		case ShaderType::Geometry:
-			GFX_THROW_ERR(D3DCompileFromFile(path.c_str(), 0, 0, "main", "gs_4_0", 0, 0, &m_byteCode, nullptr));
+			GFX_THROW_ERR(D3DCompileFromFile(path.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "gs_4_0", 0, 0, &m_byteCode, nullptr));
 			GFX_THROW_ERR(m_direct3d->GetDevice()->CreateGeometryShader(m_byteCode->GetBufferPointer(), m_byteCode->GetBufferSize(), nullptr, &m_geometryShader));
 			break;
 		}

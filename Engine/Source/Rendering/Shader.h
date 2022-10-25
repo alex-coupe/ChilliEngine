@@ -18,6 +18,7 @@ namespace Chilli {
 		Microsoft::WRL::ComPtr<ID3D11VertexShader> m_vertexShader = nullptr;
 		Microsoft::WRL::ComPtr<ID3D11GeometryShader> m_geometryShader = nullptr;
 		Microsoft::WRL::ComPtr<ID3DBlob> m_byteCode;
+		Microsoft::WRL::ComPtr<ID3DBlob> m_errors;
 		HRESULT m_result = 0;
 		std::shared_ptr<Direct3D> m_direct3d;
 		ShaderType m_type;
