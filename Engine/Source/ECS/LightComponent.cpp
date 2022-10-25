@@ -2,12 +2,12 @@
 
 namespace Chilli {
 
-	LightComponent::LightComponent(LightType type)
+	LightComponent::LightComponent(LightType type, DirectX::XMFLOAT3 ambient, DirectX::XMFLOAT3 diffuse, DirectX::XMFLOAT3 specular)
 		:Component(ComponentType::Light,"Light"), m_lightType(type)
 	{
-		m_ambient = { 0.2f, 0.2f, 0.2f };
-		m_diffuse = { 0.5f, 0.5f, 0.5f };
-		m_specular = { 1.0f, 1.0f, 1.0f };
+		m_ambient = ambient;
+		m_diffuse = diffuse;
+		m_specular = specular;
 	}
 
 	LightComponent::LightComponent(LightComponent& rhs)

@@ -161,7 +161,7 @@ namespace Chilli {
 				if (ImGui::MenuItem("Open", "Ctrl+O"))
 				{
 					nfdchar_t* outPath = NULL;
-					nfdresult_t result = NFD_OpenDialog("json", NULL, &outPath);
+					nfdresult_t result = NFD_OpenDialog("chilli", NULL, &outPath);
 					if (result == NFD_OKAY)
 					{
 						DependencyResolver::ResolveDependency<ProjectManager>()->LoadProject(outPath);
@@ -177,7 +177,7 @@ namespace Chilli {
 				if (ImGui::MenuItem("Save", "Ctrl+S"))
 				{
 					nfdchar_t* outPath = NULL;
-					nfdresult_t result = NFD_SaveDialog("json", NULL, &outPath);
+					nfdresult_t result = NFD_SaveDialog("chilli", NULL, &outPath);
 					if (result == NFD_OKAY)
 					{
 						DependencyResolver::ResolveDependency<ProjectManager>()->SaveProject(outPath);
@@ -471,7 +471,6 @@ namespace Chilli {
 					ImGui::Spacing();
 					ImGui::Text("Material");
 					ImGui::ColorEdit3("Diffuse Color",&meshComp->material.diffuse.x);
-					ImGui::ColorEdit3("Ambient Color", &meshComp->material.ambient.x);
 					ImGui::ColorEdit3("Specular Color", &meshComp->material.specular.x);
 					ImGui::InputFloat("Shininess", &meshComp->material.shininess);
 					if (ImGui::Button("Select Texture"))
@@ -479,15 +478,34 @@ namespace Chilli {
 					ImGui::SameLine();
 					ImGui::TextUnformatted(!meshComp->HasTexture() ? "<None>" :
 						meshComp->GetTexture()->GetName().stem().generic_string().c_str());
+					const auto textures = projManager->GetTextures();
 					if (ImGui::BeginPopup("textureDropdown"))
 					{
 						ImGui::Text("Textures");
 						ImGui::Separator();
-						for (const auto& texture : projManager->GetTextures())
+						for (const auto& texture : textures)
 						{
 							if (ImGui::Selectable(texture.second->GetName().stem().generic_string().c_str()))
 							{
 								meshComp->SetTexture(texture.second->Uuid);
+							}
+						}
+						ImGui::EndPopup();
+					}
+					if (ImGui::Button("Select Specular Map"))
+						ImGui::OpenPopup("specularDropdown");
+					ImGui::SameLine();
+					ImGui::TextUnformatted(!meshComp->HasSpecularMap() ? "<None>" :
+						meshComp->GetSpecularMap()->GetName().stem().generic_string().c_str());
+					if (ImGui::BeginPopup("specularDropdown"))
+					{
+						ImGui::Text("Textures");
+						ImGui::Separator();
+						for (const auto& texture : textures)
+						{
+							if (ImGui::Selectable(texture.second->GetName().stem().generic_string().c_str()))
+							{
+								meshComp->SetSpecularMap(texture.second->Uuid);
 							}
 						}
 						ImGui::EndPopup();
@@ -584,7 +602,7 @@ namespace Chilli {
 					ImGui::Spacing();
 					if (ImGui::Button("Remove Component"))
 					{
-						selectedEntity->RemoveComponent(ComponentType::RigidBody2D);
+						selectedEntity->RemoveComponent(ComponentType::CircleCollider);
 					}
 					ImGui::EndChild();
 				}

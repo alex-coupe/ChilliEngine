@@ -161,6 +161,8 @@ namespace Chilli {
 				m_sampler->Bind();
 				m_pixelShader = ShaderLibrary::GetCoreShader("PixelPhongTex");
 				mesh->GetTexture()->Bind();
+				if (mesh->HasSpecularMap())
+					mesh->GetSpecularMap()->Bind(1);
 			}
 			else
 			{

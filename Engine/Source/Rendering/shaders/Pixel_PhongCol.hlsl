@@ -8,7 +8,6 @@ cbuffer lightBuffer : register(b0)
 
 cbuffer objectBuffer : register(b1)
 {
-    float3 objAmbient;
     float3 objDiffuse;
     float3 objSpecular;
     float shininess;
@@ -16,7 +15,7 @@ cbuffer objectBuffer : register(b1)
 
 float4 main(float2 TexCoord : TexCoord, float4 pos : SV_Position, float3 normal : NORMAL, float3 worldPos : Position, float3 camPos : Position1) : SV_TARGET
 {
-    float3 ambient = objAmbient * lightAmbient;
+    float3 ambient = objDiffuse * lightAmbient;
     
     float3 lightDir = normalize(lightPos - worldPos);
     float diff = max(dot(normal, lightDir), 0.0);
