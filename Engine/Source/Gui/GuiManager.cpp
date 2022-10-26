@@ -839,6 +839,12 @@ namespace Chilli {
 		}
 		return nullptr;
 	}
+	float GuiManager::GetPreviewWindowAspectRatio()
+	{
+		if (GuiManager::scenePreviewWindowHeight != 0 && GuiManager::scenePreviewWindowWidth != 0)
+			return GuiManager::scenePreviewWindowHeight / GuiManager::scenePreviewWindowWidth;
+		return 0.0f;
+	}
 }
 
 

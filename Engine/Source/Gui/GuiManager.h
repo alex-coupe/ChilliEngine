@@ -24,6 +24,7 @@ namespace Chilli {
 		static void DrawEditorGui(Renderer* renderer);
 		static bool WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 		static ImGuiIO* GetIO();
+		static float GetPreviewWindowAspectRatio();
 	private:
 		static int assetDropdownSelected;
 		static const char* assetTypesList[6];

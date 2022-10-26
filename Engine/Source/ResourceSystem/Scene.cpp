@@ -98,7 +98,7 @@ namespace Chilli {
                 const auto& camComponent = std::static_pointer_cast<CameraComponent>(entity->GetComponentByType(ComponentType::Camera));
                 const auto& transformComponent = std::static_pointer_cast<TransformComponent>(entity->GetComponentByType(ComponentType::Transform));
                 m_sceneCamera = std::make_unique<Camera>(camComponent->GetFov(),
-                    DependencyResolver::ResolveDependency<Renderer>()->GetAspectRatio(),
+                    GuiManager::GetPreviewWindowAspectRatio(),
                     camComponent->GetNearClip(), camComponent->GetFarClip(), 
                     CameraType::Scene, camComponent->GetProjectionType(),transformComponent->Translation());
                 DependencyResolver::ResolveDependency<Renderer>()->SetRenderCamera(m_sceneCamera.get());
