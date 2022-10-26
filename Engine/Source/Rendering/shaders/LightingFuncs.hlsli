@@ -4,6 +4,9 @@ struct lightObj
     float3 ambient;
     float3 diffuse;
     float3 specular;
+    float attlinear;
+    float attconstant;
+    float attquadratic;
 };
 
 struct objMaterial
@@ -38,5 +41,10 @@ float4 CalcDirectionalLight(float3 normal, lightObj dirLight, float3 viewDir, ob
 float4 CalcPointLight(float3 normal, lightObj pointLight, float3 viewDir, float3 worldPos, objMaterial objMat)
 {
     float3 lightDir = normalize(pointLight.vec - worldPos);
-    return CalcLight(lightDir, normal, pointLight, viewDir, objMat);
+    float distance = length(pointLight.vec-worldPos);
+    float attenuation = 1.0 / (pointLight.attconstant + pointLight.attlinear * distance + pointLight.attquadratic * (distance * distance));
+    float4 result = CalcLight(lightDir, normal, pointLight, viewDir, objMat);
+    result.rgb *= attenuation;
+    return result;
+    
 }

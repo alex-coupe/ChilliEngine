@@ -13,6 +13,9 @@ namespace Chilli {
 		properties.ambient = lightComp->Ambient();
 		properties.diffuse = lightComp->Diffuse();
 		properties.specular = lightComp->Specular();
+		properties.linear = lightComp->Linear();
+		properties.constant = lightComp->Constant();
+		properties.quadratic = lightComp->Quadratic();
 	}
 
 	void Light::Update()
@@ -23,6 +26,9 @@ namespace Chilli {
 		properties.ambient = lightComp->Ambient();
 		properties.diffuse = lightComp->Diffuse();
 		properties.specular = lightComp->Specular();
+		properties.linear = lightComp->Linear();
+		properties.constant = lightComp->Constant();
+		properties.quadratic = lightComp->Quadratic();
 	}
 	
 }

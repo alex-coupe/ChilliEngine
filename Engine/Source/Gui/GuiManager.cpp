@@ -649,6 +649,11 @@ namespace Chilli {
 					ImGui::ColorEdit3("Ambient", &light->Ambient().x);
 					ImGui::ColorEdit3("Diffuse", &light->Diffuse().x);
 					ImGui::ColorEdit3("Specular", &light->Specular().x);
+					ImGui::Spacing();
+					ImGui::Text("Attenuation");
+					ImGui::DragFloat("Linear", &light->Linear(), 0.01f,0.0f,1.0f);
+					ImGui::DragFloat("Constant", &light->Constant(), 0.01f,0.0f,1.0f);
+					ImGui::DragFloat("Quadratic", &light->Quadratic(), 0.01f,0.0f,1.0f);
 					const char* lightTypeOptions[] = { "Directional","PointLight", "Spotlight"};
 					const char* currentLightTypeSelected = lightTypeOptions[(int)light->GetLightType()];
 					if (ImGui::BeginCombo("Light Type", currentLightTypeSelected))

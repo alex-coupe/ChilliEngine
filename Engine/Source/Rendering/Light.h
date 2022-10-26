@@ -13,6 +13,10 @@ namespace Chilli {
 		alignas(16)DirectX::XMFLOAT3 ambient;
 		alignas(16)DirectX::XMFLOAT3 diffuse;
 		alignas(16)DirectX::XMFLOAT3 specular;
+		float linear;
+		float quadratic;
+		float constant;
+		float padding;
 	};
 	class CHILLI_API Light {
 	public:
