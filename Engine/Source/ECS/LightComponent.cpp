@@ -2,9 +2,11 @@
 
 namespace Chilli {
 
-	LightComponent::LightComponent(LightType type, DirectX::XMFLOAT3 ambient, DirectX::XMFLOAT3 diffuse, DirectX::XMFLOAT3 specular, float linear,float constant,float quadratic)
+	LightComponent::LightComponent(LightType type, DirectX::XMFLOAT3 ambient, DirectX::XMFLOAT3 diffuse, DirectX::XMFLOAT3 specular, 
+		float linear,float constant,float quadratic, float innerCutOff, float outerCutOff)
 		:Component(ComponentType::Light,"Light"), m_lightType(type), m_ambient(ambient),m_diffuse(diffuse),
-		m_specular(specular),m_linear(linear),m_constant(constant),m_quadratic(quadratic)
+		m_specular(specular),m_linear(linear),m_constant(constant),m_quadratic(quadratic),
+		m_innerCutOff(innerCutOff), m_outerCutOff(outerCutOff)
 	{}
 
 	LightComponent::LightComponent(LightComponent& rhs)
@@ -16,6 +18,8 @@ namespace Chilli {
 		m_linear = rhs.m_linear;
 		m_constant = rhs.m_constant;
 		m_quadratic = rhs.m_quadratic;
+		m_innerCutOff = rhs.m_innerCutOff;
+		m_outerCutOff = rhs.m_outerCutOff;
 		m_lightType = rhs.m_lightType;
 	}
 
@@ -33,6 +37,8 @@ namespace Chilli {
 		m_linear = comp->m_linear;
 		m_constant = comp->m_constant;
 		m_quadratic = comp->m_quadratic;
+		m_innerCutOff = comp->m_innerCutOff;
+		m_outerCutOff = comp->m_outerCutOff;
 		m_lightType = comp->m_lightType;
 	}
 
@@ -81,5 +87,15 @@ namespace Chilli {
 	float& LightComponent::Constant()
 	{
 		return m_constant;
+	}
+
+	float& LightComponent::InnerCutOff()
+	{
+		return m_innerCutOff;
+	}
+
+	float& LightComponent::OuterCutOff()
+	{
+		return m_outerCutOff;
 	}
 }

@@ -654,6 +654,10 @@ namespace Chilli {
 					ImGui::DragFloat("Linear", &light->Linear(), 0.01f,0.0f,1.0f);
 					ImGui::DragFloat("Constant", &light->Constant(), 0.01f,0.0f,1.0f);
 					ImGui::DragFloat("Quadratic", &light->Quadratic(), 0.01f,0.0f,1.0f);
+					ImGui::Spacing();
+					ImGui::DragFloat("Inner Cut Off", &light->InnerCutOff(),0.5f,0.0f,50.0f);
+					ImGui::DragFloat("Outer Cut Off", &light->OuterCutOff(), 0.5f, 0.0f, 50.0f);
+					ImGui::Spacing();
 					const char* lightTypeOptions[] = { "Directional","PointLight", "Spotlight"};
 					const char* currentLightTypeSelected = lightTypeOptions[(int)light->GetLightType()];
 					if (ImGui::BeginCombo("Light Type", currentLightTypeSelected))

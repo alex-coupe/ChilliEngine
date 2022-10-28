@@ -2,13 +2,16 @@
 
 cbuffer lightBuffer : register(b0)
 {
-    float3 lightVector;
+    float3 lightPos;
+    float3 lightDir;
     float3 lightAmbient;
     float3 lightDiffuse;
     float3 lightSpecular;
     float lin;
     float quadratic;
     float constant;
+    float cutOff;
+    float outerCutOff;
 };
 
 cbuffer objectBuffer : register(b1)
@@ -28,13 +31,16 @@ float4 main(float2 TexCoord : TexCoord, float4 pos : SV_Position, float3 normal 
     objMat.specular = objSpecular;
     
     lightObj light;
-    light.vec = lightVector;
+    light.position = lightPos;
+    light.direction = lightDir;
     light.ambient = lightAmbient;
     light.diffuse = lightDiffuse;
     light.specular = lightSpecular;
     light.attlinear = lin;
     light.attconstant = constant;
     light.attquadratic = quadratic;
+    light.cutOff = cutOff;
+    light.outerCutOff = outerCutOff;
     
-    return CalcPointLight(normal, light, viewDir, worldPos, objMat);
+    return CalcSpotLight(normal, light, viewDir, worldPos, objMat);
 }
