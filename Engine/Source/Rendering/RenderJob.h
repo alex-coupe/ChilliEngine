@@ -21,7 +21,6 @@ namespace Chilli {
 	enum class RenderJobType {
 		Camera,Light,Mesh
 	};
-
 	struct LightCount {
 		int dirLightCount = 0;
 		int pointLightCount = 0;
@@ -29,18 +28,24 @@ namespace Chilli {
 		int padding;
 	};
 
+	struct LightBuffer {
+		DirectionalLightData dirLightData = {};
+		PointLightData pointLightData = {};
+		SpotlightData spotLightData = {};
+		LightCount lightCount = {};
+	};
 	class CHILLI_API RenderJob {
 	public:
 		RenderJob(const std::shared_ptr<Direct3D>& d3d, Entity& entity, RenderJobType renderJobType);
 		void Draw(SceneState curr)const;
-		void Update(Camera* cam, Light* light, SceneState currState);
+		void Update(Camera* cam, std::map<uint64_t, std::unique_ptr<Light>>& sceneLights, SceneState currState, LightCount lightCount);
 	private:
 		void CreateLightCasterJob();
 		void UpdateLightCasterJob(Camera* cam);
 		void CreateCameraJob();
 		void UpdateCameraJob(Camera* cam);
 		void CreateMeshJob();
-		void UpdateMeshJob(Camera* cam, SceneState state, Light* light);
+		void UpdateMeshJob(Camera* cam, SceneState state, std::map<uint64_t, std::unique_ptr<Light>>& sceneLights);
 		bool m_renderDuringPlay = true;
 		std::shared_ptr<Direct3D> m_direct3d;
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
@@ -66,13 +71,10 @@ namespace Chilli {
 			alignas(16)DirectX::XMFLOAT3 camPos;
 		};
 		RenderJobType m_renderJobType;
-		LightCount count = {};
 		std::shared_ptr<Mesh> m_baseMesh;
+		LightBuffer m_lightBuffer;
 		std::unique_ptr<ConstantBuffer<Transforms>> m_phongConstantVertexBuffer;
-		std::unique_ptr<ConstantBuffer<DirectionalLightData>> m_dirLightData;
-		std::unique_ptr<ConstantBuffer<SpotlightData>> m_spotLightData;
-		std::unique_ptr<ConstantBuffer<PointLightData>> m_pointLightData;
 		std::unique_ptr<ConstantBuffer<Material>> m_materialConstantBuffer;
-		std::unique_ptr<ConstantBuffer<LightCount>> m_lightCountBuffer;
+		std::unique_ptr<ConstantBuffer<LightBuffer>> m_lightConstantBuffer;
 	};
 }

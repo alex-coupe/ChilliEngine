@@ -76,13 +76,37 @@ namespace Chilli {
 		m_frameBuffer = std::make_unique<FrameBuffer>(width, height, m_direct3d);
 	}
 
+	void Renderer::UpdateLightCount()
+	{
+		m_lightCount.dirLightCount = 0;
+		m_lightCount.pointLightCount = 0;
+		m_lightCount.spotLightCount = 0;
+
+		for (const auto& light : m_lights)
+		{
+			switch (light.second->GetLightType())
+			{
+			case LightType::DirectionalLight:
+				m_lightCount.dirLightCount++;
+				break;
+			case LightType::PointLight:
+				m_lightCount.pointLightCount++;
+				break;
+			case LightType::Spotlight:
+				m_lightCount.spotLightCount++;
+				break;
+			}
+		}
+	}
+
 	void Renderer::ProcessFrame()
 	{
 		auto currentScene = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene();
 		m_frameBuffer->Bind();
+		UpdateLightCount();
 		for (auto& job : m_renderJobs)
 		{
-			job.second.Update(m_renderCamera, m_light.get(), currentScene->GetSceneState());
+			job.second.Update(m_renderCamera, m_lights, currentScene->GetSceneState(), m_lightCount);
 			job.second.Draw(currentScene->GetSceneState());
 		}
 		m_direct3d->SetBackBufferRenderTarget();
@@ -120,12 +144,28 @@ namespace Chilli {
 		if (lightEnt.HasComponent(ComponentType::Light))
 		{
 			auto lightComp = std::static_pointer_cast<LightComponent>(lightEnt.GetComponentByType(ComponentType::Light));
-			m_light = std::make_unique<Light>(lightComp->GetLightType(),lightEnt);
+			auto lightType = lightComp->GetLightType();
+			m_lights.emplace(lightEnt.Uuid.Get(), std::make_unique<Light>(lightType, lightEnt));
+			switch (lightType)
+			{
+			case LightType::DirectionalLight:
+				m_lightCount.dirLightCount++;
+				break;
+			case LightType::PointLight:
+				m_lightCount.pointLightCount++;
+				break;
+			case LightType::Spotlight:
+				m_lightCount.spotLightCount++;
+				break;
+			}
 		}
 	}
-	void Renderer::DestroyLight()
+	void Renderer::DestroyLight(UUID entId)
 	{
-		m_light.reset();
+		auto lightsItr = m_lights.find(entId.Get());
+
+		if (lightsItr != m_lights.end())
+			m_lights.erase(lightsItr);
 	}
 
 	const float Renderer::GetAspectRatio()const

@@ -17,6 +17,7 @@ namespace Chilli {
 		float linear;
 		float quadratic;
 		float constant;
+		float padding;
 	};
 
 	struct DirectionalLightData {

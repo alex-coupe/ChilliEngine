@@ -5,10 +5,6 @@ namespace Chilli {
 	RenderJob::RenderJob(const std::shared_ptr<Direct3D>& d3d, Entity& entity, RenderJobType type)
 		:m_direct3d(d3d), m_entity(entity), m_renderJobType(type)
 	{
-		m_lightCountBuffer = std::make_unique<ConstantBuffer<LightCount>>(ConstantBufferType::Pixel, d3d);
-		count.dirLightCount = 1;
-		m_lightCountBuffer->Update(count);
-		m_lightCountBuffer->Bind(4);
 		switch (m_renderJobType)
 		{
 		case RenderJobType::Camera:
@@ -21,6 +17,8 @@ namespace Chilli {
 			CreateMeshJob();
 			break;
 		}
+		m_lightConstantBuffer = std::make_unique<ConstantBuffer<LightBuffer>>(ConstantBufferType::Pixel, d3d);
+		m_lightBuffer = {};
 	}
 
 	void RenderJob::CreateCameraJob()
@@ -89,9 +87,6 @@ namespace Chilli {
 			m_vertexBuffer = std::make_unique<VertexBuffer>(mesh->GetVertices(), m_direct3d);
 			m_indexBuffer = std::make_unique<IndexBuffer>(mesh->GetIndices(), m_direct3d);
 			m_phongConstantVertexBuffer = std::make_unique<ConstantBuffer<Transforms>>(ConstantBufferType::Vertex, m_direct3d);
-			m_dirLightData = std::make_unique<ConstantBuffer<DirectionalLightData>>(ConstantBufferType::Pixel, m_direct3d);
-			m_spotLightData = std::make_unique<ConstantBuffer<SpotlightData>>(ConstantBufferType::Pixel, m_direct3d);
-			m_pointLightData = std::make_unique<ConstantBuffer<PointLightData>>(ConstantBufferType::Pixel, m_direct3d);
 			m_materialConstantBuffer = std::make_unique<ConstantBuffer<Material>>(ConstantBufferType::Pixel, m_direct3d);
 			
 			if (mesh->HasTexture())
@@ -112,7 +107,7 @@ namespace Chilli {
 		m_topology->Bind();
 	}
 
-	void RenderJob::UpdateMeshJob(Camera* cam, SceneState state, Light* light)
+	void RenderJob::UpdateMeshJob(Camera* cam, SceneState state, std::map<uint64_t, std::unique_ptr<Light>>& sceneLights)
 	{
 		auto meshComponent = std::static_pointer_cast<MeshComponent>(m_entity.GetComponentByType(ComponentType::Mesh));
 		auto tranformComp = std::static_pointer_cast<TransformComponent>(m_entity.GetComponentByType(ComponentType::Transform));
@@ -125,7 +120,7 @@ namespace Chilli {
 		if (!m_vertexBuffer || !m_indexBuffer)
 			CreateMeshJob();
 
-		if (light && state == SceneState::Play)
+		if (sceneLights.size() > 0 && state == SceneState::Play)
 		{
 			if (!m_phongConstantVertexBuffer)
 				m_phongConstantVertexBuffer = std::make_unique<ConstantBuffer<Transforms>>(ConstantBufferType::Vertex, m_direct3d);
@@ -140,41 +135,33 @@ namespace Chilli {
 			
 			m_materialConstantBuffer->Update(meshComponent->material);
 			m_materialConstantBuffer->Bind(0);
-			light->Update();
-			switch (light->GetLightType())
+
+			int plIndex = 0;
+			int slIndex = 0;
+
+			for (auto& light:sceneLights)
 			{
-			case LightType::DirectionalLight:
-				if (!m_dirLightData)
-					m_dirLightData = std::make_unique<ConstantBuffer<DirectionalLightData>>(ConstantBufferType::Pixel, m_direct3d);
-				
-				count.dirLightCount = 1;
-				count.pointLightCount = 0;
-				count.spotLightCount = 0;
-				m_lightCountBuffer->Update(count);
-				m_dirLightData->Update(light->dirLightData);
-				m_dirLightData->Bind(1);
-				break;
-			case LightType::PointLight:
-				if (!m_pointLightData)
-					m_pointLightData = std::make_unique<ConstantBuffer<PointLightData>>(ConstantBufferType::Pixel, m_direct3d);
-				count.dirLightCount = 0;
-				count.pointLightCount = 1;
-				count.spotLightCount = 0;
-				m_lightCountBuffer->Update(count);
-				m_pointLightData->Update(light->pointLightData);
-				m_pointLightData->Bind(2);
-				break;
-			case LightType::Spotlight:
-				if (!m_spotLightData)
-					m_spotLightData = std::make_unique<ConstantBuffer<SpotlightData>>(ConstantBufferType::Pixel, m_direct3d);
-				count.dirLightCount = 0;
-				count.pointLightCount = 0;
-				count.spotLightCount = 1;
-				m_lightCountBuffer->Update(count);
-				m_spotLightData->Update(light->spotlightData);
-				m_spotLightData->Bind(3);
-				break;
+				light.second->Update();
+
+				switch (light.second->GetLightType())
+				{
+				case LightType::DirectionalLight:
+					m_lightBuffer.dirLightData = light.second->dirLightData;
+					break;
+				case LightType::PointLight:
+					m_lightBuffer.pointLightData = light.second->pointLightData;
+					plIndex++;
+					break;
+				case LightType::Spotlight:
+					m_lightBuffer.spotLightData = light.second->spotlightData;
+					slIndex++;
+					break;
+				}
 			}
+				
+			m_lightConstantBuffer->Update(m_lightBuffer);
+			m_lightConstantBuffer->Bind(1);
+			
 			m_materialConstantBuffer = std::make_unique<ConstantBuffer<Material>>(ConstantBufferType::Pixel, m_direct3d);
 			m_vertexShader = ShaderLibrary::GetCoreShader("VertexPhong");
 			if (meshComponent->HasTexture())
@@ -262,11 +249,11 @@ namespace Chilli {
 				m_direct3d->DrawIndexed(m_indexBuffer->GetCount());
 			}
 		}
-		
 	}
 
-	void RenderJob::Update(Camera* cam, Light* light, SceneState currState)
+	void RenderJob::Update(Camera* cam, std::map<uint64_t, std::unique_ptr<Light>>& sceneLights, SceneState currState, LightCount lightCount)
 	{
+		m_lightBuffer.lightCount = lightCount;
 		switch (m_renderJobType)
 		{
 		case RenderJobType::Camera:
@@ -276,7 +263,7 @@ namespace Chilli {
 			UpdateLightCasterJob(cam);
 			break;
 		case RenderJobType::Mesh:
-			UpdateMeshJob(cam, currState, light);
+			UpdateMeshJob(cam, currState, sceneLights);
 			break;
 		}
 	}

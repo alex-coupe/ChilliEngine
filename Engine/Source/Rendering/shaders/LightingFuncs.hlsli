@@ -6,6 +6,13 @@ struct dirLight
     float3 specular;
 };
 
+struct lightCount
+{
+    int dirLightCount;
+    int pointLightCount;
+    int spotLightCount;
+};
+
 struct pointLight
 {
     float3 position;

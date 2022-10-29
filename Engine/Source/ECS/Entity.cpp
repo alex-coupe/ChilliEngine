@@ -411,9 +411,8 @@ namespace Chilli {
 			{
 				DependencyResolver::ResolveDependency<Renderer>()->RemoveRenderJob(m_renderJobId);
 				m_renderJobId = 0;
-				DependencyResolver::ResolveDependency<Renderer>()->DestroyLight();
+				DependencyResolver::ResolveDependency<Renderer>()->DestroyLight(Uuid);
 			}
-
 		}	
 	}
 
