@@ -32,7 +32,7 @@ namespace Chilli {
 		LightCount lightCount = {};
 		DirectionalLightData dirLightData = {};
 		PointLightData pointLightData[4] = {};
-		SpotlightData spotLightData[1] = {};
+		SpotlightData spotLightData[4] = {};
 	};
 	class CHILLI_API RenderJob {
 	public:

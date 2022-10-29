@@ -1,6 +1,6 @@
 #include "LightingFuncs.hlsli"
 #define MAX_POINTLIGHT_COUNT 4
-#define MAX_SPOTLIGHT_COUNT 1
+#define MAX_SPOTLIGHT_COUNT 4
 
 Texture2D diffuseMap : register(t0);
 Texture2D specularMap : register(t1);
@@ -39,7 +39,7 @@ float4 main(float2 TexCoord : TexCoord, float4 pos : SV_Position, float3 normal 
         result += CalcPointLight(normal, pointlights[i], viewDir, worldPos, objMat);
   
     int spotLightCount = min(lightcount.spotLightCount, MAX_SPOTLIGHT_COUNT);
-    for (int j = 0; j <= spotLightCount; j++) 
+    for (int j = 0; j < spotLightCount; j++) 
         result += CalcSpotLight(normal, spotlights[j], viewDir, worldPos, objMat);
           
     return result;
