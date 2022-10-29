@@ -1,6 +1,6 @@
 #include "LightingFuncs.hlsli"
 #define MAX_POINTLIGHT_COUNT 4
-#define MAX_SPOTLIGHT_COUNT 4
+#define MAX_SPOTLIGHT_COUNT 1
 
 Texture2D diffuseMap : register(t0);
 Texture2D specularMap : register(t1);
@@ -15,10 +15,10 @@ cbuffer objectBuffer : register(b0)
 
 cbuffer lightBuffer : register(b1)
 {
-    dirLight dirlight;
-    pointLight pointlight; //s[MAX_POINTLIGHT_COUNT];
-    spotLight spotlight; //s[MAX_SPOTLIGHT_COUNT];
     lightCount lightcount;
+    dirLight dirlight;
+    pointLight pointlights[MAX_POINTLIGHT_COUNT];
+    spotLight spotlights[MAX_SPOTLIGHT_COUNT];
 };
 
 float4 main(float2 TexCoord : TexCoord, float4 pos : SV_Position, float3 normal : NORMAL, float3 worldPos : Position, float3 camPos: Position1) : SV_TARGET
@@ -34,15 +34,13 @@ float4 main(float2 TexCoord : TexCoord, float4 pos : SV_Position, float3 normal 
    if (lightcount.dirLightCount > 0)      
         result += CalcDirectionalLight(normal, dirlight, viewDir, objMat);
     
-   // int pointLightCount = min(lightcount.pointLightCount, MAX_POINTLIGHT_COUNT);
-    //for (int i = 0; i <= pointLightCount; i++) 
-    if (lightcount.pointLightCount > 0)   
-        result += CalcPointLight(normal, pointlight, viewDir, worldPos, objMat);
-  /*
+   int pointLightCount = min(lightcount.pointLightCount, MAX_POINTLIGHT_COUNT);
+    for (int i = 0; i < pointLightCount; i++)  
+        result += CalcPointLight(normal, pointlights[i], viewDir, worldPos, objMat);
+  
     int spotLightCount = min(lightcount.spotLightCount, MAX_SPOTLIGHT_COUNT);
-    for (int j = 0; j <= spotLightCount; j++) */
-    if (lightcount.spotLightCount > 0) 
-        result += CalcSpotLight(normal, spotlight, viewDir, worldPos, objMat);
+    for (int j = 0; j <= spotLightCount; j++) 
+        result += CalcSpotLight(normal, spotlights[j], viewDir, worldPos, objMat);
           
     return result;
 }

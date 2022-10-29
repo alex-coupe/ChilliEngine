@@ -149,11 +149,11 @@ namespace Chilli {
 					m_lightBuffer.dirLightData = light.second->dirLightData;
 					break;
 				case LightType::PointLight:
-					m_lightBuffer.pointLightData = light.second->pointLightData;
+					m_lightBuffer.pointLightData[plIndex] = light.second->pointLightData;
 					plIndex++;
 					break;
 				case LightType::Spotlight:
-					m_lightBuffer.spotLightData = light.second->spotlightData;
+					m_lightBuffer.spotLightData[slIndex] = light.second->spotlightData;
 					slIndex++;
 					break;
 				}

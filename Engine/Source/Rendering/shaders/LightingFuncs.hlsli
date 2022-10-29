@@ -11,6 +11,7 @@ struct lightCount
     int dirLightCount;
     int pointLightCount;
     int spotLightCount;
+    float padding;
 };
 
 struct pointLight

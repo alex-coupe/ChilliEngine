@@ -25,14 +25,14 @@ namespace Chilli {
 		int dirLightCount = 0;
 		int pointLightCount = 0;
 		int spotLightCount = 0;
-		int padding;
+		float padding;
 	};
 
 	struct LightBuffer {
-		DirectionalLightData dirLightData = {};
-		PointLightData pointLightData = {};
-		SpotlightData spotLightData = {};
 		LightCount lightCount = {};
+		DirectionalLightData dirLightData = {};
+		PointLightData pointLightData[4] = {};
+		SpotlightData spotLightData[1] = {};
 	};
 	class CHILLI_API RenderJob {
 	public:
