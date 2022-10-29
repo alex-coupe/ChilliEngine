@@ -50,6 +50,7 @@ namespace Chilli {
 			<< ", \"DiffR\":" << m_diffuse.x << ", \"DiffG\":" << m_diffuse.y << ", \"DiffB\":" << m_diffuse.z
 			<< ", \"SpecR\":" << m_specular.x << ", \"SpecG\":" << m_specular.y << ", \"SpecB\":" << m_specular.z
 			<< ", \"Linear\":" << m_linear << ", \"Quadratic\":" << m_quadratic << ", \"Constant\":" << m_constant
+			<< ", \"InnerCutOff\":" << m_innerCutOff << ", \"OuterCutOff\":" << m_outerCutOff
 			<< "}";
 		return  ss.str();
 	}

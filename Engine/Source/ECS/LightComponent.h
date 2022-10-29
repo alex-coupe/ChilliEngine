@@ -7,7 +7,7 @@ namespace Chilli {
 
 	class CHILLI_API LightComponent : public Component {
 	public:
-		LightComponent(LightType type = LightType::DirectionalLight, DirectX::XMFLOAT3 ambient = { 0.2f, 0.2f, 0.2f }, DirectX::XMFLOAT3 diffuse = { 0.5f, 0.5f, 0.5f }, DirectX::XMFLOAT3 specular ={ 1.0f, 1.0f, 1.0f },
+		LightComponent(LightType type = LightType::DirectionalLight, DirectX::XMFLOAT3 ambient = { 0.2f, 0.2f, 0.2f }, DirectX::XMFLOAT3 diffuse = { 1.0f, 1.0f, 1.0f }, DirectX::XMFLOAT3 specular ={ 1.0f, 1.0f, 1.0f },
 			float linear = 0.09f, float constant = 1.0f,float quadratic = 0.032f, float innerCutOff = 12.5f, float outerCutOff = 17.5f);
 		LightComponent(LightComponent& rhs);
 		virtual const std::string Serialize(uint64_t entityId)const override;

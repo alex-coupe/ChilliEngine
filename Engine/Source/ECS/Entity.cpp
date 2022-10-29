@@ -65,7 +65,8 @@ namespace Chilli {
 				DirectX::XMFLOAT3 diffuse = { components[i]["DiffR"].GetFloat(),components[i]["DiffG"].GetFloat(),components[i]["DiffB"].GetFloat() };
 				DirectX::XMFLOAT3 specular = { components[i]["SpecR"].GetFloat(),components[i]["SpecG"].GetFloat(),components[i]["SpecB"].GetFloat() };
 				m_components.emplace_back(std::make_shared<LightComponent>((LightType)components[i]["LightType"].GetInt(),
-					ambient,diffuse,specular, components[i]["Linear"].GetFloat(), components[i]["Constant"].GetFloat(), components[i]["Quadratic"].GetFloat()));
+					ambient,diffuse,specular, components[i]["Linear"].GetFloat(), components[i]["Constant"].GetFloat(), components[i]["Quadratic"].GetFloat()
+					, components[i]["InnerCutOff"].GetFloat(), components[i]["OuterCutOff"].GetFloat()));
 				DependencyResolver::ResolveDependency<Renderer>()->CreateLight(*this);
 				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this, RenderJobType::Light);
 			}
