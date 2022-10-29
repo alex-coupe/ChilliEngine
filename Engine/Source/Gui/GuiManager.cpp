@@ -161,7 +161,7 @@ namespace Chilli {
 				if (ImGui::MenuItem("Open", "Ctrl+O"))
 				{
 					nfdchar_t* outPath = NULL;
-					nfdresult_t result = NFD_OpenDialog("json", NULL, &outPath);
+					nfdresult_t result = NFD_OpenDialog("chilli", NULL, &outPath);
 					if (result == NFD_OKAY)
 					{
 						DependencyResolver::ResolveDependency<ProjectManager>()->LoadProject(outPath);
@@ -177,7 +177,7 @@ namespace Chilli {
 				if (ImGui::MenuItem("Save", "Ctrl+S"))
 				{
 					nfdchar_t* outPath = NULL;
-					nfdresult_t result = NFD_SaveDialog("json", NULL, &outPath);
+					nfdresult_t result = NFD_SaveDialog("chilli", NULL, &outPath);
 					if (result == NFD_OKAY)
 					{
 						DependencyResolver::ResolveDependency<ProjectManager>()->SaveProject(outPath);
@@ -470,23 +470,42 @@ namespace Chilli {
 					}
 					ImGui::Spacing();
 					ImGui::Text("Material");
-					float* color[4] = { &meshComp->material.color.x,&meshComp->material.color.y,&meshComp->material.color.z,&meshComp->material.color.w };
-					ImGui::ColorPicker4("Diffuse Color",color[0]);
+					ImGui::ColorEdit3("Diffuse Color",&meshComp->material.diffuse.x);
+					ImGui::ColorEdit3("Specular Color", &meshComp->material.specular.x);
+					ImGui::InputFloat("Shininess", &meshComp->material.shininess);
 					if (ImGui::Button("Select Texture"))
 						ImGui::OpenPopup("textureDropdown");
 					ImGui::SameLine();
-					ImGui::TextUnformatted(meshComp->material.textureUuid.Get() == 0 ? "<None>" :
-						projManager->GetAssetByUUID(meshComp->material.textureUuid, AssetType::Texture)
-						->GetFilePath().stem().string().c_str());
+					ImGui::TextUnformatted(!meshComp->HasTexture() ? "<None>" :
+						meshComp->GetTexture()->GetName().stem().generic_string().c_str());
+					const auto textures = projManager->GetTextures();
 					if (ImGui::BeginPopup("textureDropdown"))
 					{
 						ImGui::Text("Textures");
 						ImGui::Separator();
-						for (const auto& texture : projManager->GetTextures())
+						for (const auto& texture : textures)
 						{
 							if (ImGui::Selectable(texture.second->GetName().stem().generic_string().c_str()))
 							{
 								meshComp->SetTexture(texture.second->Uuid);
+							}
+						}
+						ImGui::EndPopup();
+					}
+					if (ImGui::Button("Select Specular Map"))
+						ImGui::OpenPopup("specularDropdown");
+					ImGui::SameLine();
+					ImGui::TextUnformatted(!meshComp->HasSpecularMap() ? "<None>" :
+						meshComp->GetSpecularMap()->GetName().stem().generic_string().c_str());
+					if (ImGui::BeginPopup("specularDropdown"))
+					{
+						ImGui::Text("Textures");
+						ImGui::Separator();
+						for (const auto& texture : textures)
+						{
+							if (ImGui::Selectable(texture.second->GetName().stem().generic_string().c_str()))
+							{
+								meshComp->SetSpecularMap(texture.second->Uuid);
 							}
 						}
 						ImGui::EndPopup();
@@ -583,7 +602,7 @@ namespace Chilli {
 					ImGui::Spacing();
 					if (ImGui::Button("Remove Component"))
 					{
-						selectedEntity->RemoveComponent(ComponentType::RigidBody2D);
+						selectedEntity->RemoveComponent(ComponentType::CircleCollider);
 					}
 					ImGui::EndChild();
 				}
@@ -618,6 +637,56 @@ namespace Chilli {
 					if (ImGui::Button("Remove Component"))
 					{
 						selectedEntity->RemoveComponent(ComponentType::Camera);
+					}
+					ImGui::EndChild();
+				}
+				break;
+				case ComponentType::Light:
+				{
+					auto light = std::static_pointer_cast<LightComponent>(component);
+					ImGui::BeginChild("Light", ImVec2(0, 200), true);
+					ImGui::Text("Light");
+					const char* lightTypeOptions[] = { "Directional Light","Point Light", "Spotlight" };
+					const char* currentLightTypeSelected = lightTypeOptions[(int)light->GetLightType()];
+					if (ImGui::BeginCombo("Light Type", currentLightTypeSelected))
+					{
+						for (int i = 0; i <= 2; i++)
+						{
+							bool isSelected = currentLightTypeSelected == lightTypeOptions[i];
+							if (ImGui::Selectable(lightTypeOptions[i], isSelected))
+							{
+								currentLightTypeSelected = lightTypeOptions[i];
+								light->SetType((LightType)i);
+							}
+
+							if (isSelected)
+								ImGui::SetItemDefaultFocus();
+						}
+						ImGui::EndCombo();
+					}
+					ImGui::Spacing();
+					ImGui::ColorEdit3("Ambient", &light->Ambient().x);
+					ImGui::ColorEdit3("Diffuse", &light->Diffuse().x);
+					ImGui::ColorEdit3("Specular", &light->Specular().x);
+					if (light->GetLightType() != LightType::DirectionalLight)
+					{
+						ImGui::Spacing();
+						ImGui::Text("Attenuation");
+						ImGui::DragFloat("Linear", &light->Linear(), 0.01f, 0.0f, 1.0f);
+						ImGui::DragFloat("Constant", &light->Constant(), 0.01f, 0.0f, 1.0f);
+						ImGui::DragFloat("Quadratic", &light->Quadratic(), 0.01f, 0.0f, 1.0f);
+					}
+					if (light->GetLightType() == LightType::Spotlight)
+					{
+						ImGui::Spacing();
+						ImGui::DragFloat("Inner Cut Off", &light->InnerCutOff(), 0.5f, 0.0f, 50.0f);
+						ImGui::DragFloat("Outer Cut Off", &light->OuterCutOff(), 0.5f, 0.0f, 50.0f);
+					}
+					ImGui::Spacing();
+					
+					if (ImGui::Button("Remove Component"))
+					{
+						selectedEntity->RemoveComponent(ComponentType::Light);
 					}
 					ImGui::EndChild();
 				}
@@ -780,6 +849,12 @@ namespace Chilli {
 			return &ImGui::GetIO();
 		}
 		return nullptr;
+	}
+	float GuiManager::GetPreviewWindowAspectRatio()
+	{
+		if (GuiManager::scenePreviewWindowHeight != 0 && GuiManager::scenePreviewWindowWidth != 0)
+			return GuiManager::scenePreviewWindowHeight / GuiManager::scenePreviewWindowWidth;
+		return 0.0f;
 	}
 }
 

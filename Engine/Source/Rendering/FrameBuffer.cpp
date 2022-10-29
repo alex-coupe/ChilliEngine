@@ -46,7 +46,7 @@ namespace Chilli {
 	void FrameBuffer::Bind()
 	{
 		m_d3d->GetContext()->OMSetRenderTargets(1, m_renderTargetView.GetAddressOf(), m_d3d->GetDepthStencil().Get());
-		m_d3d->GetContext()->ClearRenderTargetView(m_renderTargetView.Get(), DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f, 1.0f });
+		m_d3d->GetContext()->ClearRenderTargetView(m_renderTargetView.Get(), DirectX::XMVECTORF32{ 0.0f, 0.48f, 0.64f, 1.0f });
 		m_d3d->GetContext()->ClearDepthStencilView(m_d3d->GetDepthStencil().Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 	}
 

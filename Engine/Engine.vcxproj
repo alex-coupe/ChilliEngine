@@ -179,6 +179,7 @@
     <ClInclude Include="Source\ECS\Component.h" />
     <ClInclude Include="Source\ECS\ComponentFactory.h" />
     <ClInclude Include="Source\ECS\Entity.h" />
+    <ClInclude Include="Source\ECS\LightComponent.h" />
     <ClInclude Include="Source\ECS\MeshComponent.h" />
     <ClInclude Include="Source\ECS\RigidBody2DComponent.h" />
     <ClInclude Include="Source\ECS\ScriptComponent.h" />
@@ -193,6 +194,7 @@
     <ClInclude Include="Source\Gui\ImGui\imstb_textedit.h" />
     <ClInclude Include="Source\Gui\ImGui\imstb_truetype.h" />
     <ClInclude Include="Source\Rendering\ConstantBuffer.h" />
+    <ClInclude Include="Source\Rendering\Light.h" />
     <ClInclude Include="Source\Rendering\RenderJob.h" />
     <ClInclude Include="Source\Rendering\Camera.h" />
     <ClInclude Include="Source\Rendering\FrameBuffer.h" />
@@ -202,6 +204,7 @@
     <ClInclude Include="Source\Rendering\Renderer.h" />
     <ClInclude Include="Source\Rendering\Sampler.h" />
     <ClInclude Include="Source\Rendering\Shader.h" />
+    <ClInclude Include="Source\Rendering\ShaderLibrary.h" />
     <ClInclude Include="Source\Rendering\stb\stb_image.h" />
     <ClInclude Include="Source\Rendering\Texture.h" />
     <ClInclude Include="Source\Rendering\Topology.h" />
@@ -232,6 +235,7 @@
     <ClCompile Include="Source\ECS\CircleColliderComponent.cpp" />
     <ClCompile Include="Source\ECS\ComponentFactory.cpp" />
     <ClCompile Include="Source\ECS\Entity.cpp" />
+    <ClCompile Include="Source\ECS\LightComponent.cpp" />
     <ClCompile Include="Source\ECS\MeshComponent.cpp" />
     <ClCompile Include="Source\ECS\RigidBody2DComponent.cpp" />
     <ClCompile Include="Source\ECS\ScriptComponent.cpp" />
@@ -245,6 +249,7 @@
     <ClCompile Include="Source\Gui\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Source\Gui\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\Rendering\Camera.cpp" />
+    <ClCompile Include="Source\Rendering\Light.cpp" />
     <ClCompile Include="Source\Rendering\RenderJob.cpp" />
     <ClCompile Include="Source\Rendering\FrameBuffer.cpp" />
     <ClCompile Include="Source\Rendering\IndexBuffer.cpp" />
@@ -253,6 +258,7 @@
     <ClCompile Include="Source\Rendering\Renderer.cpp" />
     <ClCompile Include="Source\Rendering\Sampler.cpp" />
     <ClCompile Include="Source\Rendering\Shader.cpp" />
+    <ClCompile Include="Source\Rendering\ShaderLibrary.cpp" />
     <ClCompile Include="Source\Rendering\stb\stb_image.cpp" />
     <ClCompile Include="Source\Rendering\Texture.cpp" />
     <ClCompile Include="Source\Rendering\Topology.cpp" />
@@ -282,6 +288,26 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
+    <FxCompile Include="Source\Rendering\shaders\Pixel_Phong.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Source\Rendering\shaders\Pixel_PhongCol.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Source\Rendering\shaders\Pixel_Texture.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
@@ -300,12 +326,19 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
+    <FxCompile Include="Source\Rendering\shaders\Vertex_Phong.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="Source\Rendering\shaders\Vertex_Texture.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
+    <None Include="Source\Rendering\shaders\LightingFuncs.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

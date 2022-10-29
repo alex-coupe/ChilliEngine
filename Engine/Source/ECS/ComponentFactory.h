@@ -6,6 +6,7 @@
 #include "CircleColliderComponent.h"
 #include "ScriptComponent.h"
 #include "CameraComponent.h"
+#include "LightComponent.h"
 
 namespace Chilli {
 	class CHILLI_API ComponentFactory {
@@ -17,6 +18,7 @@ namespace Chilli {
 		static std::shared_ptr<RigidBody2DComponent> MakeRigidBody2DComponent();
 		static std::shared_ptr<ScriptComponent> MakeScriptComponent();
 		static std::shared_ptr<CameraComponent> MakeCameraComponent();
+		static std::shared_ptr<LightComponent> MakeLightComponent();
 	};
 
 } 

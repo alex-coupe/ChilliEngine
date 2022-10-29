@@ -6,8 +6,8 @@ namespace Chilli {
     Scene::Scene(const std::string& name)
         : m_name(name), Uuid()
     {
-        const auto& cameraEntity = std::make_shared<Entity>("Camera");
-        cameraEntity->AddCameraComponent();
+        auto cameraEntity = std::make_shared<Entity>("Camera");
+        cameraEntity->AddComponent(ComponentType::Camera);
         m_entities.emplace_back(cameraEntity);
     }
 
@@ -98,7 +98,7 @@ namespace Chilli {
                 const auto& camComponent = std::static_pointer_cast<CameraComponent>(entity->GetComponentByType(ComponentType::Camera));
                 const auto& transformComponent = std::static_pointer_cast<TransformComponent>(entity->GetComponentByType(ComponentType::Transform));
                 m_sceneCamera = std::make_unique<Camera>(camComponent->GetFov(),
-                    DependencyResolver::ResolveDependency<Renderer>()->GetAspectRatio(),
+                    GuiManager::GetPreviewWindowAspectRatio(),
                     camComponent->GetNearClip(), camComponent->GetFarClip(), 
                     CameraType::Scene, camComponent->GetProjectionType(),transformComponent->Translation());
                 DependencyResolver::ResolveDependency<Renderer>()->SetRenderCamera(m_sceneCamera.get());

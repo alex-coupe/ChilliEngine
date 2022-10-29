@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -45,9 +46,9 @@
     <Compile Include="..\Application\Assets\Scripts\Test.cs">
       <Link>Source\Test.cs</Link>
     </Compile>
-	  <Compile Include="..\Application\Assets\Scripts\TestTwo.cs">
-		  <Link>Source\TestTwo.cs</Link>
-	  </Compile>
+    <Compile Include="..\Application\Assets\Scripts\TestTwo.cs">
+      <Link>Source\TestTwo.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ChilliScriptCore\ChilliScriptCore.csproj">

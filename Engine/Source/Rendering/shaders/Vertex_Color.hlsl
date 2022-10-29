@@ -1,4 +1,3 @@
-
 cbuffer buffer
 {
 	matrix transform;

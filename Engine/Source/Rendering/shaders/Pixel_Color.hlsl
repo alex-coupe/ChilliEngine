@@ -5,5 +5,5 @@ cbuffer buffer
 
 float4 main() : SV_TARGET
 {
-	return color;
+    return color;
 }

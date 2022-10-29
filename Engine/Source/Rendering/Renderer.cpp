@@ -5,6 +5,7 @@
 #include "../Core/Window.h"
 #include "../ECS/MeshComponent.h"
 #include "../ECS/TransformComponent.h"
+#include "../ECS/LightComponent.h"
 
 namespace Chilli {
 
@@ -68,18 +69,45 @@ namespace Chilli {
 	{
 		if (width == 0 || height == 0)
 			return;
+
+		m_aspectRatio = (float)height / (float)width;
 		m_frameBuffer.reset();
 		m_direct3d->HandleWindowResize(width, height);
 		m_frameBuffer = std::make_unique<FrameBuffer>(width, height, m_direct3d);
 	}
 
+	void Renderer::UpdateLightCount()
+	{
+		m_lightCount.dirLightCount = 0;
+		m_lightCount.pointLightCount = 0;
+		m_lightCount.spotLightCount = 0;
+
+		for (const auto& light : m_lights)
+		{
+			switch (light.second->GetLightType())
+			{
+			case LightType::DirectionalLight:
+				m_lightCount.dirLightCount++;
+				break;
+			case LightType::PointLight:
+				m_lightCount.pointLightCount++;
+				break;
+			case LightType::Spotlight:
+				m_lightCount.spotLightCount++;
+				break;
+			}
+		}
+	}
+
 	void Renderer::ProcessFrame()
 	{
+		auto currentScene = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene();
 		m_frameBuffer->Bind();
+		UpdateLightCount();
 		for (auto& job : m_renderJobs)
 		{
-			job.second.Update(m_renderCamera);
-			job.second.Draw();
+			job.second.Update(m_renderCamera, m_lights, currentScene->GetSceneState(), m_lightCount);
+			job.second.Draw(currentScene->GetSceneState());
 		}
 		m_direct3d->SetBackBufferRenderTarget();
 		m_direct3d->BeginFrame();
@@ -87,10 +115,10 @@ namespace Chilli {
 		m_direct3d->EndFrame();
 	}
 
-	uint64_t Renderer::AddRenderJob(Entity& job)
+	uint64_t Renderer::AddRenderJob(Entity& entity, RenderJobType type)
 	{
 		uint64_t id = UUID().Get();
-		m_renderJobs.emplace(id, RenderJob(m_direct3d, job));
+		m_renderJobs.emplace(id, std::move(RenderJob(m_direct3d, entity, type)));
 		return id;
 	}
 
@@ -109,6 +137,35 @@ namespace Chilli {
 	void Renderer::SetRenderCamera(Camera* cam)
 	{
 		m_renderCamera = cam;
+	}
+
+	void Renderer::CreateLight(Entity& lightEnt)
+	{
+		if (lightEnt.HasComponent(ComponentType::Light))
+		{
+			auto lightComp = std::static_pointer_cast<LightComponent>(lightEnt.GetComponentByType(ComponentType::Light));
+			auto lightType = lightComp->GetLightType();
+			m_lights.emplace(lightEnt.Uuid.Get(), std::make_unique<Light>(lightType, lightEnt));
+			switch (lightType)
+			{
+			case LightType::DirectionalLight:
+				m_lightCount.dirLightCount++;
+				break;
+			case LightType::PointLight:
+				m_lightCount.pointLightCount++;
+				break;
+			case LightType::Spotlight:
+				m_lightCount.spotLightCount++;
+				break;
+			}
+		}
+	}
+	void Renderer::DestroyLight(UUID entId)
+	{
+		auto lightsItr = m_lights.find(entId.Get());
+
+		if (lightsItr != m_lights.end())
+			m_lights.erase(lightsItr);
 	}
 
 	const float Renderer::GetAspectRatio()const
