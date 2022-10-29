@@ -194,9 +194,7 @@
     <ClInclude Include="Source\Gui\ImGui\imstb_textedit.h" />
     <ClInclude Include="Source\Gui\ImGui\imstb_truetype.h" />
     <ClInclude Include="Source\Rendering\ConstantBuffer.h" />
-    <ClInclude Include="Source\Rendering\DirectionalLight.h" />
     <ClInclude Include="Source\Rendering\Light.h" />
-    <ClInclude Include="Source\Rendering\PointLight.h" />
     <ClInclude Include="Source\Rendering\RenderJob.h" />
     <ClInclude Include="Source\Rendering\Camera.h" />
     <ClInclude Include="Source\Rendering\FrameBuffer.h" />
@@ -207,7 +205,6 @@
     <ClInclude Include="Source\Rendering\Sampler.h" />
     <ClInclude Include="Source\Rendering\Shader.h" />
     <ClInclude Include="Source\Rendering\ShaderLibrary.h" />
-    <ClInclude Include="Source\Rendering\Spotlight.h" />
     <ClInclude Include="Source\Rendering\stb\stb_image.h" />
     <ClInclude Include="Source\Rendering\Texture.h" />
     <ClInclude Include="Source\Rendering\Topology.h" />
@@ -252,8 +249,7 @@
     <ClCompile Include="Source\Gui\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Source\Gui\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\Rendering\Camera.cpp" />
-    <ClCompile Include="Source\Rendering\DirectionalLight.cpp" />
-    <ClCompile Include="Source\Rendering\PointLight.cpp" />
+    <ClCompile Include="Source\Rendering\Light.cpp" />
     <ClCompile Include="Source\Rendering\RenderJob.cpp" />
     <ClCompile Include="Source\Rendering\FrameBuffer.cpp" />
     <ClCompile Include="Source\Rendering\IndexBuffer.cpp" />
@@ -263,7 +259,6 @@
     <ClCompile Include="Source\Rendering\Sampler.cpp" />
     <ClCompile Include="Source\Rendering\Shader.cpp" />
     <ClCompile Include="Source\Rendering\ShaderLibrary.cpp" />
-    <ClCompile Include="Source\Rendering\Spotlight.cpp" />
     <ClCompile Include="Source\Rendering\stb\stb_image.cpp" />
     <ClCompile Include="Source\Rendering\Texture.cpp" />
     <ClCompile Include="Source\Rendering\Topology.cpp" />

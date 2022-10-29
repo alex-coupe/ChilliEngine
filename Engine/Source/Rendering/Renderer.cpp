@@ -120,18 +120,7 @@ namespace Chilli {
 		if (lightEnt.HasComponent(ComponentType::Light))
 		{
 			auto lightComp = std::static_pointer_cast<LightComponent>(lightEnt.GetComponentByType(ComponentType::Light));
-			switch (lightComp->GetLightType())
-			{
-			case LightType::DirectionalLight:
-				m_light = std::make_unique<DirectionalLight>(lightEnt);
-				break;
-			case LightType::PointLight:
-				m_light = std::make_unique<PointLight>(lightEnt);
-				break;
-			case LightType::Spotlight:
-				m_light = std::make_unique<Spotlight>(lightEnt);
-				break;
-			}
+			m_light = std::make_unique<Light>(lightComp->GetLightType(),lightEnt);
 		}
 	}
 	void Renderer::DestroyLight()

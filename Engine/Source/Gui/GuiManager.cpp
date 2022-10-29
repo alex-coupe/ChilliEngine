@@ -646,23 +646,11 @@ namespace Chilli {
 					auto light = std::static_pointer_cast<LightComponent>(component);
 					ImGui::BeginChild("Light", ImVec2(0, 200), true);
 					ImGui::Text("Light");
-					ImGui::ColorEdit3("Ambient", &light->Ambient().x);
-					ImGui::ColorEdit3("Diffuse", &light->Diffuse().x);
-					ImGui::ColorEdit3("Specular", &light->Specular().x);
-					ImGui::Spacing();
-					ImGui::Text("Attenuation");
-					ImGui::DragFloat("Linear", &light->Linear(), 0.01f,0.0f,1.0f);
-					ImGui::DragFloat("Constant", &light->Constant(), 0.01f,0.0f,1.0f);
-					ImGui::DragFloat("Quadratic", &light->Quadratic(), 0.01f,0.0f,1.0f);
-					ImGui::Spacing();
-					ImGui::DragFloat("Inner Cut Off", &light->InnerCutOff(),0.5f,0.0f,50.0f);
-					ImGui::DragFloat("Outer Cut Off", &light->OuterCutOff(), 0.5f, 0.0f, 50.0f);
-					ImGui::Spacing();
-					const char* lightTypeOptions[] = { "Directional","PointLight", "Spotlight"};
+					const char* lightTypeOptions[] = { "Directional Light","Point Light", "Spotlight" };
 					const char* currentLightTypeSelected = lightTypeOptions[(int)light->GetLightType()];
 					if (ImGui::BeginCombo("Light Type", currentLightTypeSelected))
 					{
-						for (int i = 0; i <= 1; i++)
+						for (int i = 0; i <= 2; i++)
 						{
 							bool isSelected = currentLightTypeSelected == lightTypeOptions[i];
 							if (ImGui::Selectable(lightTypeOptions[i], isSelected))
@@ -677,6 +665,25 @@ namespace Chilli {
 						ImGui::EndCombo();
 					}
 					ImGui::Spacing();
+					ImGui::ColorEdit3("Ambient", &light->Ambient().x);
+					ImGui::ColorEdit3("Diffuse", &light->Diffuse().x);
+					ImGui::ColorEdit3("Specular", &light->Specular().x);
+					if (light->GetLightType() != LightType::DirectionalLight)
+					{
+						ImGui::Spacing();
+						ImGui::Text("Attenuation");
+						ImGui::DragFloat("Linear", &light->Linear(), 0.01f, 0.0f, 1.0f);
+						ImGui::DragFloat("Constant", &light->Constant(), 0.01f, 0.0f, 1.0f);
+						ImGui::DragFloat("Quadratic", &light->Quadratic(), 0.01f, 0.0f, 1.0f);
+					}
+					if (light->GetLightType() == LightType::Spotlight)
+					{
+						ImGui::Spacing();
+						ImGui::DragFloat("Inner Cut Off", &light->InnerCutOff(), 0.5f, 0.0f, 50.0f);
+						ImGui::DragFloat("Outer Cut Off", &light->OuterCutOff(), 0.5f, 0.0f, 50.0f);
+					}
+					ImGui::Spacing();
+					
 					if (ImGui::Button("Remove Component"))
 					{
 						selectedEntity->RemoveComponent(ComponentType::Light);

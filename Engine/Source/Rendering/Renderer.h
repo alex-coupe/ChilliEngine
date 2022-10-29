@@ -5,9 +5,7 @@
 #include "../ResourceSystem/ProjectManager.h"
 #include "RenderJob.h"
 #include "Camera.h"
-#include "DirectionalLight.h"
-#include "Spotlight.h"
-#include "PointLight.h"
+#include "Light.h"
 
 namespace Chilli {
 

@@ -13,9 +13,7 @@
 #include "Camera.h"
 #include "../ECS/Entity.h"
 #include "ShaderLibrary.h"
-#include "PointLight.h"
-#include "DirectionalLight.h"
-#include "Spotlight.h"
+#include "Light.h"
 #include "../ResourceSystem/Scene.h"
 
 namespace Chilli {
@@ -68,6 +66,7 @@ namespace Chilli {
 			alignas(16)DirectX::XMFLOAT3 camPos;
 		};
 		RenderJobType m_renderJobType;
+		LightCount count = {};
 		std::shared_ptr<Mesh> m_baseMesh;
 		std::unique_ptr<ConstantBuffer<Transforms>> m_phongConstantVertexBuffer;
 		std::unique_ptr<ConstantBuffer<DirectionalLightData>> m_dirLightData;

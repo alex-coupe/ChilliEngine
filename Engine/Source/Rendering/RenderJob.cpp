@@ -6,7 +6,6 @@ namespace Chilli {
 		:m_direct3d(d3d), m_entity(entity), m_renderJobType(type)
 	{
 		m_lightCountBuffer = std::make_unique<ConstantBuffer<LightCount>>(ConstantBufferType::Pixel, d3d);
-		LightCount count = {};
 		count.dirLightCount = 1;
 		m_lightCountBuffer->Update(count);
 		m_lightCountBuffer->Bind(4);
@@ -147,19 +146,32 @@ namespace Chilli {
 			case LightType::DirectionalLight:
 				if (!m_dirLightData)
 					m_dirLightData = std::make_unique<ConstantBuffer<DirectionalLightData>>(ConstantBufferType::Pixel, m_direct3d);
-				m_dirLightData->Update(static_cast<DirectionalLight*>(light)->data);
+				
+				count.dirLightCount = 1;
+				count.pointLightCount = 0;
+				count.spotLightCount = 0;
+				m_lightCountBuffer->Update(count);
+				m_dirLightData->Update(light->dirLightData);
 				m_dirLightData->Bind(1);
 				break;
 			case LightType::PointLight:
 				if (!m_pointLightData)
 					m_pointLightData = std::make_unique<ConstantBuffer<PointLightData>>(ConstantBufferType::Pixel, m_direct3d);
-				m_pointLightData->Update(static_cast<PointLight*>(light)->data);
+				count.dirLightCount = 0;
+				count.pointLightCount = 1;
+				count.spotLightCount = 0;
+				m_lightCountBuffer->Update(count);
+				m_pointLightData->Update(light->pointLightData);
 				m_pointLightData->Bind(2);
 				break;
 			case LightType::Spotlight:
 				if (!m_spotLightData)
 					m_spotLightData = std::make_unique<ConstantBuffer<SpotlightData>>(ConstantBufferType::Pixel, m_direct3d);
-				m_spotLightData->Update(static_cast<Spotlight*>(light)->data);
+				count.dirLightCount = 0;
+				count.pointLightCount = 0;
+				count.spotLightCount = 1;
+				m_lightCountBuffer->Update(count);
+				m_spotLightData->Update(light->spotlightData);
 				m_spotLightData->Bind(3);
 				break;
 			}
