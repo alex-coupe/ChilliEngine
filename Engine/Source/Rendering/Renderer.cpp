@@ -82,10 +82,8 @@ namespace Chilli {
 		m_frameBuffer->Bind();
 		for (auto& job : m_renderJobs)
 		{
-			job.second.Update(m_renderCamera, m_light.get());
-			if ((currentScene->GetSceneState() == SceneState::Play && job.second.RenderDuringPlay()) 
-				|| currentScene->GetSceneState() == SceneState::Edit)
-			job.second.Draw(m_light.get());
+			job.second.Update(m_renderCamera, m_light.get(), currentScene->GetSceneState());
+			job.second.Draw(currentScene->GetSceneState());
 		}
 		m_direct3d->SetBackBufferRenderTarget();
 		m_direct3d->BeginFrame();
@@ -93,10 +91,10 @@ namespace Chilli {
 		m_direct3d->EndFrame();
 	}
 
-	uint64_t Renderer::AddRenderJob(Entity& job)
+	uint64_t Renderer::AddRenderJob(Entity& entity, RenderJobType type)
 	{
 		uint64_t id = UUID().Get();
-		m_renderJobs.emplace(id, std::move(RenderJob(m_direct3d, job)));
+		m_renderJobs.emplace(id, std::move(RenderJob(m_direct3d, entity, type)));
 		return id;
 	}
 
@@ -122,8 +120,18 @@ namespace Chilli {
 		if (lightEnt.HasComponent(ComponentType::Light))
 		{
 			auto lightComp = std::static_pointer_cast<LightComponent>(lightEnt.GetComponentByType(ComponentType::Light));
-			auto transformComp = std::static_pointer_cast<TransformComponent>(lightEnt.GetComponentByType(ComponentType::Light));
-			m_light = std::make_unique<Light>(lightComp->GetLightType(),lightEnt);
+			switch (lightComp->GetLightType())
+			{
+			case LightType::DirectionalLight:
+				m_light = std::make_unique<DirectionalLight>(lightEnt);
+				break;
+			case LightType::PointLight:
+				m_light = std::make_unique<PointLight>(lightEnt);
+				break;
+			case LightType::Spotlight:
+				m_light = std::make_unique<Spotlight>(lightEnt);
+				break;
+			}
 		}
 	}
 	void Renderer::DestroyLight()

@@ -5,7 +5,9 @@
 #include "../ResourceSystem/ProjectManager.h"
 #include "RenderJob.h"
 #include "Camera.h"
-#include "Light.h"
+#include "DirectionalLight.h"
+#include "Spotlight.h"
+#include "PointLight.h"
 
 namespace Chilli {
 
@@ -26,7 +28,7 @@ namespace Chilli {
 		void ProcessFrame()override;
 		const std::shared_ptr<Direct3D>& GetD3D()const;
 		const float GetAspectRatio()const;
-		uint64_t AddRenderJob(Entity& job);
+		uint64_t AddRenderJob(Entity& job, RenderJobType type);
 		void RemoveRenderJob(uint64_t jobId);
 		void ClearRenderJobs();
 		void CreateLight(Entity& lightEntity);

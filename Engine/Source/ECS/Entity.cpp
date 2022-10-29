@@ -30,7 +30,7 @@ namespace Chilli {
 				DirectX::XMFLOAT3 specular = { components[i]["SpecR"].GetFloat(), components[i]["SpecG"].GetFloat(), components[i]["SpecB"].GetFloat() };
 				m_components.emplace_back(std::make_shared<MeshComponent>(components[i]["MeshUuid"].GetUint64(), components[i]["TextureUuid"].GetUint64(), components[i]["SpecularMapUuid"].GetUint64(),
 					diffuse,specular,components[i]["Shininess"].GetFloat()));
-				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this);
+				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this, RenderJobType::Mesh);
 				break;
 			case (int)ComponentType::RigidBody2D:
 				m_components.emplace_back(std::make_shared<RigidBody2DComponent>((BodyType)components[i]["BodyType"].GetInt(), (bool)components[i]["FixedRotation"].GetInt()));
@@ -56,7 +56,7 @@ namespace Chilli {
 			{
 				m_components.emplace_back(std::make_shared<CameraComponent>((ProjectionType)components[i]["ProjectionType"].GetInt(),
 					components[i]["Fov"].GetFloat(),components[i]["NearClip"].GetFloat(), components[i]["FarClip"].GetFloat()));
-				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this);
+				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this, RenderJobType::Camera);
 			}
 			break;
 			case (int)ComponentType::Light:
@@ -67,7 +67,7 @@ namespace Chilli {
 				m_components.emplace_back(std::make_shared<LightComponent>((LightType)components[i]["LightType"].GetInt(),
 					ambient,diffuse,specular, components[i]["Linear"].GetFloat(), components[i]["Constant"].GetFloat(), components[i]["Quadratic"].GetFloat()));
 				DependencyResolver::ResolveDependency<Renderer>()->CreateLight(*this);
-				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this);
+				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this, RenderJobType::Light);
 			}
 			break;
 			case (int)ComponentType::Script:
@@ -357,7 +357,7 @@ namespace Chilli {
 			{
 			case ComponentType::Mesh:
 				m_components.emplace_back(ComponentFactory::MakeMeshComponent());
-				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this);
+				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this, RenderJobType::Mesh);
 				break;
 			case ComponentType::RigidBody2D:
 				m_components.emplace_back(ComponentFactory::MakeRigidBody2DComponent());
@@ -373,12 +373,12 @@ namespace Chilli {
 				break;
 			case ComponentType::Camera:
 				m_components.emplace_back(ComponentFactory::MakeCameraComponent());
-				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this);
+				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this, RenderJobType::Camera);
 				break;
 			case ComponentType::Light:
 				m_components.emplace_back(ComponentFactory::MakeLightComponent());
 				DependencyResolver::ResolveDependency<Renderer>()->CreateLight(*this);
-				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this);
+				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this, RenderJobType::Light);
 				break;
 			}
 		}

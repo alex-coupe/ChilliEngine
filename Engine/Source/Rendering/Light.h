@@ -6,27 +6,20 @@
 
 namespace Chilli {
 	enum class LightType {
-		Directional, Point, Spotlight
-	};
-	struct LightProperties {
-		alignas(16)DirectX::XMFLOAT3 position;
-		alignas(16)DirectX::XMFLOAT3 direction;
-		alignas(16)DirectX::XMFLOAT3 ambient;
-		alignas(16)DirectX::XMFLOAT3 diffuse;
-		alignas(16)DirectX::XMFLOAT3 specular;
-		float linear;
-		float quadratic;
-		float constant;
-		float cutOff;
-		float outerCutOff;
+		DirectionalLight, PointLight, Spotlight
 	};
 	class CHILLI_API Light {
 	public:
-		Light(LightType type, Entity& entity);
-		LightProperties properties;
-		void Update();
-	private:
-		LightType m_type;
+		Light(LightType type, UUID entityId) 
+			:m_lightType(type), m_entityId(entityId)
+		{}
+		virtual void Update() = 0;
+		LightType GetLightType()
+		{
+			return m_lightType;
+		}
+	protected:
+		LightType m_lightType;
 		UUID m_entityId;
 	};
 }

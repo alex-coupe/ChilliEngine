@@ -13,18 +13,37 @@
 #include "Camera.h"
 #include "../ECS/Entity.h"
 #include "ShaderLibrary.h"
+#include "PointLight.h"
+#include "DirectionalLight.h"
+#include "Spotlight.h"
+#include "../ResourceSystem/Scene.h"
 
 namespace Chilli {
+
+	enum class RenderJobType {
+		Camera,Light,Mesh
+	};
+
+	struct LightCount {
+		int dirLightCount = 0;
+		int pointLightCount = 0;
+		int spotLightCount = 0;
+		int padding;
+	};
+
 	class CHILLI_API RenderJob {
 	public:
-		RenderJob(const std::shared_ptr<Direct3D>& d3d, Entity& entity);
-		void Draw(Light* light)const;
-		void Update(Camera* cam, Light* light);
-		bool RenderDuringPlay();
+		RenderJob(const std::shared_ptr<Direct3D>& d3d, Entity& entity, RenderJobType renderJobType);
+		void Draw(SceneState curr)const;
+		void Update(Camera* cam, Light* light, SceneState currState);
 	private:
+		void CreateLightCasterJob();
+		void UpdateLightCasterJob(Camera* cam);
+		void CreateCameraJob();
+		void UpdateCameraJob(Camera* cam);
+		void CreateMeshJob();
+		void UpdateMeshJob(Camera* cam, SceneState state, Light* light);
 		bool m_renderDuringPlay = true;
-		void CreateSolidJob();
-		void CreateMeshComponentJob(Light* light, std::shared_ptr<MeshComponent> mesh);
 		std::shared_ptr<Direct3D> m_direct3d;
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
@@ -48,10 +67,13 @@ namespace Chilli {
 			DirectX::XMMATRIX modelViewProj;
 			alignas(16)DirectX::XMFLOAT3 camPos;
 		};
-		
+		RenderJobType m_renderJobType;
 		std::shared_ptr<Mesh> m_baseMesh;
 		std::unique_ptr<ConstantBuffer<Transforms>> m_phongConstantVertexBuffer;
-		std::unique_ptr<ConstantBuffer<LightProperties>> m_lightPropsConstantBuffer;
+		std::unique_ptr<ConstantBuffer<DirectionalLightData>> m_dirLightData;
+		std::unique_ptr<ConstantBuffer<SpotlightData>> m_spotLightData;
+		std::unique_ptr<ConstantBuffer<PointLightData>> m_pointLightData;
 		std::unique_ptr<ConstantBuffer<Material>> m_materialConstantBuffer;
+		std::unique_ptr<ConstantBuffer<LightCount>> m_lightCountBuffer;
 	};
 }
