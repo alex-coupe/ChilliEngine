@@ -88,6 +88,13 @@ namespace Chilli {
 		ImGui::Begin("Scene Preview", 0, window_flags);
 		
 		auto regionAvailable = ImGui::GetContentRegionAvail();
+
+		if (regionAvailable.x == 0 || regionAvailable.y == 0)
+		{
+			ImGui::End();
+			return;
+		}
+
 		if (scenePreviewWindowWidth != regionAvailable.x || scenePreviewWindowHeight != regionAvailable.y)
 		{
 			scenePreviewWindowWidth = regionAvailable.x;

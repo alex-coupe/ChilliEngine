@@ -15,6 +15,7 @@ namespace Chilli {
 
 	public:
 		ChilliEngine();
+		ChilliEngine(const std::string& projectFile);
 		~ChilliEngine();
 		ChilliEngine(const ChilliEngine&) = delete;
 		ChilliEngine& operator=(const ChilliEngine&) = delete;
@@ -27,5 +28,7 @@ namespace Chilli {
 		std::unique_ptr<Window> m_window;
 		std::shared_ptr<ProjectManager> m_projectManager;
 		std::shared_ptr<GuiManager> m_guiManager;
+		std::string m_projectPath;
+		static bool s_AppMode;
 	};
 }
