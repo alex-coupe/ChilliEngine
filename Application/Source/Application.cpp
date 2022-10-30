@@ -2,7 +2,7 @@
 
 Application::Application()
 {
-	m_engine = std::make_unique<Chilli::ChilliEngine>("Assets/Scenes/3d_test.chilli");
+	m_engine = std::make_unique<Chilli::ChilliEngine>();
 }
 
 Application::~Application()

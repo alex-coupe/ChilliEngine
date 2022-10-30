@@ -135,7 +135,6 @@ namespace Chilli {
     void Scene::StopScene()
     {
         const auto& renderer = DependencyResolver::ResolveDependency<Renderer>();
-        renderer->SetRenderCamera(renderer->GetEditorCamera());
         ScriptEngine::InvokeDestroyMethod();
         for (const auto& entity : m_entities)
         {

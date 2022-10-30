@@ -21,7 +21,6 @@ namespace Chilli {
 		bool Init();
 		void HandleResize(int64_t width, int64_t height);
 		Camera* GetActiveCamera();
-		Camera* GetEditorCamera();
 		void SetRenderCamera(Camera* camera);
 		void ProcessFrame()override;
 		const std::shared_ptr<Direct3D>& GetD3D()const;
@@ -37,7 +36,6 @@ namespace Chilli {
 		float m_aspectRatio;
 		std::shared_ptr<ProjectManager> m_sceneManager;
 		std::unordered_map<uint64_t,RenderJob> m_renderJobs;
-		std::unique_ptr<Camera> m_editorCamera;
 		std::map<uint64_t,std::unique_ptr<Light>> m_lights;
 		Camera* m_renderCamera;
 		LightCount m_lightCount = {};

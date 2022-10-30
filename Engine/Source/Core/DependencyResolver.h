@@ -7,7 +7,7 @@
 
 namespace Chilli {
 
-	class DependencyResolver {
+	class CHILLI_API DependencyResolver {
 	public:
 		template<typename U>
 		static std::shared_ptr<U> ResolveDependency()
