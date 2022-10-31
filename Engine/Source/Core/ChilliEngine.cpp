@@ -9,17 +9,15 @@ namespace Chilli {
 			m_timer->ProcessFrame();
 			m_events->ProcessFrame();
 			m_projectManager->ProcessFrame();
-			for (const auto& layer : m_layers)
-			{
-				layer->OnUpdate();
-			}
+			m_appLayer->OnUpdate();
 			m_renderer->ProcessFrame();
 		}
 	}
 
-	void ChilliEngine::AddLayer(const std::shared_ptr<Layer>& layer)
+	void ChilliEngine::SetAppLayer(const std::shared_ptr<Layer>& layer)
 	{
-		m_layers.emplace_back(layer);
+		m_appLayer = layer;
+		m_renderer->SetAppLayer(layer);
 	}
 
 	ChilliEngine::ChilliEngine()

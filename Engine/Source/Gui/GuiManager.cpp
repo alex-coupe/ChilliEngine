@@ -53,7 +53,7 @@ namespace Chilli {
 	void GuiManager::DrawEditorGui(Renderer* renderer)
 	{
 		BeginFrame();
-		BuildMenuBar();
+		//BuildMenuBar();
 		BuildAssetManager();
 		BuildSceneHierarchy();
 		BuildEntityInspector();
@@ -102,7 +102,7 @@ namespace Chilli {
 			renderer->GetActiveCamera()->OnResize(regionAvailable.x, regionAvailable.y);
 		}
 		
-		ImGui::Image(renderer->GetFrameBuffer()->GetShaderResourceView().Get(), regionAvailable);
+		//ImGui::Image(renderer->GetFrameBuffer()->GetShaderResourceView().Get(), regionAvailable);
 		if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsWindowHovered()
 			&& DependencyResolver::ResolveDependency<ProjectManager>
 			()->GetCurrentScene()->GetSceneState() == SceneState::Edit)
@@ -856,6 +856,10 @@ namespace Chilli {
 			return &ImGui::GetIO();
 		}
 		return nullptr;
+	}
+	ImGuiContext* GuiManager::GetContext()
+	{
+		return ImGui::GetCurrentContext();
 	}
 	float GuiManager::GetPreviewWindowAspectRatio()
 	{

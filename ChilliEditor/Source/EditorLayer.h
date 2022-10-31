@@ -3,9 +3,7 @@
 #include "Rendering/Renderer.h"
 #include "ResourceSystem/ProjectManager.h"
 #include "EditorPanels/MenuBar.h"
-#include "Gui/ImGui/imgui.h"
-#include "Gui/ImGui/imgui_impl_dx11.h"
-#include "Gui/ImGui/imgui_impl_win32.h"
+#include "EditorPanels/ScenePreview.h"
 
 namespace Chilli {
 	class EditorLayer : public Layer {
@@ -13,8 +11,12 @@ namespace Chilli {
 		EditorLayer();
 		virtual void OnUpdate()override;
 		virtual void OnRender()override;
+		virtual void OnRenderGui()override;
+		virtual void OnResize()override;
+		virtual float GetDisplayAspectRatio()override;
 	private:
 		std::unique_ptr<Camera> m_editorCamera = nullptr;
-		std::vector<std::shared_ptr<EditorPanel>> m_editorPanels;
+		std::shared_ptr<MenuBar> m_menuBar;
+		std::shared_ptr<ScenePreview> m_scenePreview;
 	};
 }

@@ -13,12 +13,10 @@ namespace Chilli {
 		: m_aspectRatio((float)height / (float)width)
 	{
 		m_direct3d = std::make_shared<Direct3D>((HWND)handle, width, height);
-		m_frameBuffer = std::make_unique<FrameBuffer>(width, height, m_direct3d);
 	}
 
 	Renderer::~Renderer()
 	{
-		m_frameBuffer.reset();
 		m_renderJobs.clear();
 		m_direct3d.reset();
 	}
@@ -63,9 +61,8 @@ namespace Chilli {
 			return;
 
 		m_aspectRatio = (float)height / (float)width;
-		m_frameBuffer.reset();
 		m_direct3d->HandleWindowResize(width, height);
-		m_frameBuffer = std::make_unique<FrameBuffer>(width, height, m_direct3d);
+		m_appLayer->OnResize();	
 	}
 
 	void Renderer::UpdateLightCount()
@@ -91,19 +88,27 @@ namespace Chilli {
 		}
 	}
 
-	void Renderer::ProcessFrame()
+	void Renderer::ProcessRenderJobs()
 	{
 		auto currentScene = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene();
-		m_frameBuffer->Bind();
+
 		UpdateLightCount();
 		for (auto& job : m_renderJobs)
 		{
 			job.second.Update(m_renderCamera, m_lights, currentScene->GetSceneState(), m_lightCount);
 			job.second.Draw(currentScene->GetSceneState());
 		}
+	}
+
+	void Renderer::ProcessFrame()
+	{
+		m_appLayer->OnRender();
+		ProcessRenderJobs();
 		m_direct3d->SetBackBufferRenderTarget();
-		m_direct3d->BeginFrame();
-		GuiManager::DrawEditorGui(this);
+		m_direct3d->ClearBackBuffer();
+		GuiManager::BeginFrame();
+		m_appLayer->OnRenderGui();
+		GuiManager::EndFrame();
 		m_direct3d->EndFrame();
 	}
 
@@ -119,11 +124,6 @@ namespace Chilli {
 		auto job = m_renderJobs.find(jobId);
 		if (job->first)
 			m_renderJobs.erase(jobId);
-	}
-
-	const std::unique_ptr<FrameBuffer>& Renderer::GetFrameBuffer()const
-	{
-		return m_frameBuffer;
 	}
 
 	void Renderer::SetRenderCamera(Camera* cam)
@@ -168,5 +168,14 @@ namespace Chilli {
 	const std::shared_ptr<Direct3D>& Renderer::GetD3D() const
 	{
 		return m_direct3d;
+	}
+
+	void Renderer::SetAppLayer(const std::shared_ptr<Layer>& layer)
+	{
+		m_appLayer = layer;
+	}
+	float Renderer::GetDisplayWindowAspectRatio() const
+	{
+		return m_appLayer->GetDisplayAspectRatio();
 	}
 }

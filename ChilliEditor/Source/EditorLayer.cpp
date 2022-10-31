@@ -2,23 +2,11 @@
 
 Chilli::EditorLayer::EditorLayer()
 {
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;      
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-	ImGui::StyleColorsDark();
-
-	ImGuiStyle& style = ImGui::GetStyle();
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		style.WindowRounding = 0.0f;
-		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-	}
-
-	m_editorPanels.emplace_back(std::make_shared<MenuBar>());
-	//m_editorCamera = std::make_unique<Camera>(1.0f, m_aspectRatio, 0.5f, 100.0f, CameraType::Editor, ProjectionType::Perspective);
-	DependencyResolver::ResolveDependency<Renderer>()->SetRenderCamera(m_editorCamera.get());
+	auto renderer = DependencyResolver::ResolveDependency<Renderer>();
+	m_menuBar = std::make_shared<MenuBar>();
+	m_scenePreview = std::make_shared<ScenePreview>();
+	m_editorCamera = std::make_unique<Camera>(1.0f, renderer->GetAspectRatio(), 0.5f, 100.0f, CameraType::Editor, ProjectionType::Perspective);
+	renderer->SetRenderCamera(m_editorCamera.get());
 }
 
 void Chilli::EditorLayer::OnUpdate()
@@ -31,27 +19,25 @@ void Chilli::EditorLayer::OnUpdate()
 		DependencyResolver::ResolveDependency<Renderer>()->SetRenderCamera(m_editorCamera.get());
 		break;
 	}
-
 }
 
 void Chilli::EditorLayer::OnRender()
 {
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
+	m_scenePreview->BindFrameBuffer();
+}
 
-	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-	for (const auto& panel : m_editorPanels)
-	{
-		panel->Draw();
-	}
+void Chilli::EditorLayer::OnRenderGui()
+{
+	m_menuBar->DrawGui();
+	m_scenePreview->DrawGui();
+}
 
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-	}
+void Chilli::EditorLayer::OnResize()
+{
+	m_scenePreview->Resize();
+}
+
+float Chilli::EditorLayer::GetDisplayAspectRatio()
+{
+	return m_scenePreview->GetAspectRatio();
 }

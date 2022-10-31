@@ -1,11 +1,12 @@
 #pragma once
-#include "../EditorPanel.h"
+#include "Core/ChilliDefinitions.h"
+#include "Rendering/Renderer.h"
+#include "ResourceSystem/ProjectManager.h"
 
 namespace Chilli {
-	class MenuBar : public EditorPanel {
+	class MenuBar {
 	public:
-		MenuBar();
-		virtual void Draw()override;
+		void DrawGui();
 	private:
 		std::string m_savePath = "";
 		void NewProject();

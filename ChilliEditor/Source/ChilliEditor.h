@@ -17,7 +17,7 @@ namespace Chilli {
 		ChilliEditor(ChilliEditor&&) = default;
 		void Run();
 	private:
-		EditorLayer m_editorLayer;
+		std::shared_ptr<EditorLayer> m_editorLayer;
 		std::unique_ptr<ChilliEngine> m_engine = nullptr;
 	};
 }

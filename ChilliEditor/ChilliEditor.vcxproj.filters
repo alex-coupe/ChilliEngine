@@ -21,10 +21,19 @@
     <ClInclude Include="Source\EditorLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\EditorPanel.h">
+    <ClInclude Include="Source\EditorPanels\MenuBar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\EditorPanels\MenuBar.h">
+    <ClInclude Include="Source\EditorPanels\ScenePreview.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EditorPanels\AssetPanel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EditorPanels\SceneHierarchy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EditorPanels\EntityInspector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\ImGui\imconfig.h">
@@ -84,6 +93,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\ImGui\imgui_widgets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EditorPanels\ScenePreview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,13 +1,9 @@
 #include "MenuBar.h"
+#include "Gui/ImGui/imgui.h"
 
 namespace Chilli {
 
-	MenuBar::MenuBar()
-		:EditorPanel("Menu Bar")
-	{
-	}
-
-	void MenuBar::Draw()
+	void MenuBar::DrawGui()
 	{
 		if (ImGui::BeginMainMenuBar())
 		{
@@ -23,6 +19,7 @@ namespace Chilli {
 					SaveProject();
 
 				if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
+					SaveAs();
 
 				ImGui::EndMenu();
 			}
@@ -72,6 +69,8 @@ namespace Chilli {
 		//Shortcuts
 		bool shift = ImGui::IsKeyPressed(ImGuiKey::ImGuiKey_LeftShift) || ImGui::IsKeyPressed(ImGuiKey::ImGuiKey_RightShift);
 		bool control = ImGui::IsKeyPressed(ImGuiKey::ImGuiKey_LeftCtrl) || ImGui::IsKeyPressed(ImGuiKey::ImGuiKey_RightCtrl);
+
+		bool N = ImGui::IsKeyPressed(ImGuiKey::ImGuiKey_N);
 
 		if (control && ImGui::IsKeyPressed(ImGuiKey::ImGuiKey_N))
 			NewProject();

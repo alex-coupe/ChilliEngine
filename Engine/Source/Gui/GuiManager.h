@@ -24,7 +24,10 @@ namespace Chilli {
 		static void DrawEditorGui(Renderer* renderer);
 		static bool WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 		static ImGuiIO* GetIO();
+		static ImGuiContext* GetContext();
 		static float GetPreviewWindowAspectRatio();
+		static void BeginFrame();
+		static void EndFrame();
 	private:
 		static int assetDropdownSelected;
 		static const char* assetTypesList[6];
@@ -41,8 +44,7 @@ namespace Chilli {
 		static std::shared_ptr<Asset> selectedAsset;
 		static std::shared_ptr<Entity> selectedEntity;
 		static std::shared_ptr<Scene> selectedScene;
-		static void BeginFrame();
-		static void EndFrame();
+		
 		static void BuildMenuBar();
 		static void BuildAssetManager();
 		static void BuildSceneHierarchy();

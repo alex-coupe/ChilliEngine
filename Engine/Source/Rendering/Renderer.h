@@ -6,6 +6,7 @@
 #include "RenderJob.h"
 #include "Camera.h"
 #include "Light.h"
+#include "../Core/Layer.h"
 
 namespace Chilli {
 
@@ -17,12 +18,12 @@ namespace Chilli {
 		Renderer& operator=(const Renderer&) = delete;
 		Renderer(Renderer&&)noexcept = default;
 		static SystemType GetSystemType();
-		const std::unique_ptr<FrameBuffer>& GetFrameBuffer()const;
 		bool Init();
 		void HandleResize(int64_t width, int64_t height);
 		Camera* GetActiveCamera();
 		void SetRenderCamera(Camera* camera);
 		void ProcessFrame()override;
+		void ProcessRenderJobs();
 		const std::shared_ptr<Direct3D>& GetD3D()const;
 		const float GetAspectRatio()const;
 		uint64_t AddRenderJob(Entity& job, RenderJobType type);
@@ -30,6 +31,8 @@ namespace Chilli {
 		void ClearRenderJobs();
 		void CreateLight(Entity& lightEntity);
 		void DestroyLight(UUID entId);
+		void SetAppLayer(const std::shared_ptr<Layer>& layer);
+		float GetDisplayWindowAspectRatio()const;
 	private:
 		std::shared_ptr<Direct3D> m_direct3d;
 		void UpdateLightCount();
@@ -39,6 +42,6 @@ namespace Chilli {
 		std::map<uint64_t,std::unique_ptr<Light>> m_lights;
 		Camera* m_renderCamera;
 		LightCount m_lightCount = {};
-		std::unique_ptr<FrameBuffer> m_frameBuffer;
+		std::shared_ptr<Layer> m_appLayer;
 	};
 }

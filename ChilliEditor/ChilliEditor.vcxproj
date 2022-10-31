@@ -110,7 +110,6 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Mono\include\;$(SolutionDir)Dependencies/box2d/include;$(SolutionDir)Dependencies/SpdLog;$(SolutionDir)Dependencies/RapidJson/Include;$(SolutionDir)Engine/Source;$(SolutionDir)Dependencies/Assimp/include;$(SolutionDir)Engine\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>/NODEFAULTLIB:library %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,7 +128,6 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)Engine\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>/NODEFAULTLIB %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,8 +146,11 @@
   <ItemGroup>
     <ClInclude Include="Source\ChilliEditor.h" />
     <ClInclude Include="Source\EditorLayer.h" />
-    <ClInclude Include="Source\EditorPanel.h" />
+    <ClInclude Include="Source\EditorPanels\AssetPanel.h" />
+    <ClInclude Include="Source\EditorPanels\EntityInspector.h" />
     <ClInclude Include="Source\EditorPanels\MenuBar.h" />
+    <ClInclude Include="Source\EditorPanels\SceneHierarchy.h" />
+    <ClInclude Include="Source\EditorPanels\ScenePreview.h" />
     <ClInclude Include="Source\ImGui\imconfig.h" />
     <ClInclude Include="Source\ImGui\imgui.h" />
     <ClInclude Include="Source\ImGui\imgui_impl_dx11.h" />
@@ -163,6 +164,7 @@
     <ClCompile Include="Source\ChilliEditor.cpp" />
     <ClCompile Include="Source\EditorLayer.cpp" />
     <ClCompile Include="Source\EditorPanels\MenuBar.cpp" />
+    <ClCompile Include="Source\EditorPanels\ScenePreview.cpp" />
     <ClCompile Include="Source\ImGui\imgui.cpp" />
     <ClCompile Include="Source\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Source\ImGui\imgui_draw.cpp" />

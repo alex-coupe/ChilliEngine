@@ -21,9 +21,9 @@ namespace Chilli {
 		ChilliEngine& operator=(const ChilliEngine&) = delete;
 		ChilliEngine(ChilliEngine&&) = default;
 		void Run();
-		void AddLayer(const std::shared_ptr<Layer>& layer);
+		void SetAppLayer(const std::shared_ptr<Layer>& layer);
 	private:
-		std::vector<std::shared_ptr<Layer>> m_layers;
+		std::shared_ptr<Layer> m_appLayer;
 		std::shared_ptr<Events> m_events;
 		std::shared_ptr<Timer> m_timer;
 		std::shared_ptr<Renderer> m_renderer;
