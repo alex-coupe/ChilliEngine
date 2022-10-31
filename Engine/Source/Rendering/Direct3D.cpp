@@ -16,7 +16,7 @@ namespace Chilli {
 	}
 
 	
-	void Direct3D::BeginFrame()
+	void Direct3D::ClearBackBuffer()
 	{
 		m_context->ClearRenderTargetView(m_backBuffer.Get(), DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f, 1.0f });
 		m_context->ClearDepthStencilView(m_depthStencil.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);

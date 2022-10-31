@@ -25,7 +25,7 @@ namespace Chilli {
 		Direct3D(const Direct3D&) = delete;
 		Direct3D& operator=(const Direct3D&) = delete;
 		Direct3D(Direct3D&&)noexcept = default;
-		void BeginFrame();
+		void ClearBackBuffer();
 		void EndFrame();
 		void Draw(UINT vertexCount, UINT startVertex)const;
 		void DrawIndexed(UINT count)const;

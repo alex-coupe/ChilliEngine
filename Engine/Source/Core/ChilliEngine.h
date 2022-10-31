@@ -8,6 +8,7 @@
 #include "../Gui/GuiManager.h"
 #include "../ResourceSystem/ProjectManager.h"
 #include "../Rendering/Renderer.h"
+#include "Layer.h"
 
 namespace Chilli {
 
@@ -20,7 +21,9 @@ namespace Chilli {
 		ChilliEngine& operator=(const ChilliEngine&) = delete;
 		ChilliEngine(ChilliEngine&&) = default;
 		void Run();
+		void SetAppLayer(const std::shared_ptr<Layer>& layer);
 	private:
+		std::shared_ptr<Layer> m_appLayer;
 		std::shared_ptr<Events> m_events;
 		std::shared_ptr<Timer> m_timer;
 		std::shared_ptr<Renderer> m_renderer;

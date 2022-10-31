@@ -52,6 +52,7 @@ namespace Chilli {
         {
             m_sceneManager->LoadScenes(document["Scenes"].GetArray());
         }
+        m_appLayer->OnSceneChange();
     }
 
     void ProjectManager::SaveProject(const std::string& filename)
@@ -72,6 +73,11 @@ namespace Chilli {
         m_assetManager->Reset();
         m_sceneManager->Reset();
         m_projectName = "Untitled Project";
+    }
+
+    void ProjectManager::SetAppLayer(const std::shared_ptr<Layer>& layer)
+    {
+        m_appLayer = layer;
     }
 
     void ProjectManager::AddScene(const std::string& name)
@@ -109,6 +115,8 @@ namespace Chilli {
         case AssetType::Mesh:
             m_assetManager->RemoveMesh(uuid);
             break;
+        case AssetType::Texture:
+            m_assetManager->RemoveTexture(uuid);
         default:
             return;
         }   
@@ -126,6 +134,9 @@ namespace Chilli {
 
     void ProjectManager::SetCurrentScene(UUID uuid)
     {
+        if (GetCurrentScene()->Uuid.Get() == uuid.Get())
+            return;
+
         DependencyResolver::ResolveDependency<Renderer>()->ClearRenderJobs();
         m_sceneManager->GoToScene(uuid);
     }

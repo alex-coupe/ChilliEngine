@@ -1,6 +1,7 @@
 #include "ChilliEngine.h"
 
 namespace Chilli {
+
 	void ChilliEngine::Run()
 	{
 		while (m_window->Update())
@@ -8,8 +9,16 @@ namespace Chilli {
 			m_timer->ProcessFrame();
 			m_events->ProcessFrame();
 			m_projectManager->ProcessFrame();
+			m_appLayer->OnUpdate();
 			m_renderer->ProcessFrame();
 		}
+	}
+
+	void ChilliEngine::SetAppLayer(const std::shared_ptr<Layer>& layer)
+	{
+		m_appLayer = layer;
+		m_renderer->SetAppLayer(layer);
+		m_projectManager->SetAppLayer(layer);
 	}
 
 	ChilliEngine::ChilliEngine()
@@ -48,7 +57,7 @@ namespace Chilli {
 			CHILLI_ERROR("Renderer could not init");
 		ScriptEngine::Init();
 		ScriptApi::Init();
-		
+
 	}
 
 	ChilliEngine::~ChilliEngine()

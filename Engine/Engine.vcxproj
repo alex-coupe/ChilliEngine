@@ -168,6 +168,7 @@
     <ClInclude Include="Source\Core\ChilliDefinitions.h" />
     <ClInclude Include="Source\Core\ChilliEngine.h" />
     <ClInclude Include="Source\Core\DependencyResolver.h" />
+    <ClInclude Include="Source\Core\Layer.h" />
     <ClInclude Include="Source\Core\Platform\WindowsPlatform.h" />
     <ClInclude Include="Source\Core\SubSystem.h" />
     <ClInclude Include="Source\Core\Events.h" />
