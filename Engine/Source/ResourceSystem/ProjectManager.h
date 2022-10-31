@@ -8,6 +8,7 @@
 #include "../ECS/Component.h"
 #include "SceneManager.h"
 #include "AssetManager.h"
+#include "../Core/Layer.h"
 
 namespace Chilli {
 
@@ -17,6 +18,7 @@ namespace Chilli {
 		void LoadProject(const std::string& filename);
 		void SaveProject(const std::string& filename);
 		void NewProject();
+		void SetAppLayer(const std::shared_ptr<Layer>& layer);
 		void AddScene(const std::string& name);
 		void RemoveScene(UUID uuid);
 		std::vector<std::shared_ptr<Scene>> GetScenes()const;
@@ -35,5 +37,6 @@ namespace Chilli {
 		std::unique_ptr<SceneManager> m_sceneManager = nullptr;
 		std::unique_ptr<AssetManager> m_assetManager = nullptr;
 		std::string m_projectName = "untitled project";
+		std::shared_ptr<Layer> m_appLayer;
 	};
 }

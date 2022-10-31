@@ -163,7 +163,10 @@
   <ItemGroup>
     <ClCompile Include="Source\ChilliEditor.cpp" />
     <ClCompile Include="Source\EditorLayer.cpp" />
+    <ClCompile Include="Source\EditorPanels\AssetPanel.cpp" />
+    <ClCompile Include="Source\EditorPanels\EntityInspector.cpp" />
     <ClCompile Include="Source\EditorPanels\MenuBar.cpp" />
+    <ClCompile Include="Source\EditorPanels\SceneHierarchy.cpp" />
     <ClCompile Include="Source\EditorPanels\ScenePreview.cpp" />
     <ClCompile Include="Source\ImGui\imgui.cpp" />
     <ClCompile Include="Source\ImGui\imgui_demo.cpp" />

@@ -1,5 +1,4 @@
 #include "MenuBar.h"
-#include "Gui/ImGui/imgui.h"
 
 namespace Chilli {
 

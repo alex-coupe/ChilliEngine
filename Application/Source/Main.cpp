@@ -3,7 +3,7 @@
 int main()
 {
 	{
-		std::unique_ptr<Application> application = std::make_unique<Application>();
+		std::unique_ptr<Chilli::Application> application = std::make_unique<Chilli::Application>();
 		application->Run();
 	}
 	return 0;

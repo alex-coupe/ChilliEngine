@@ -104,11 +104,12 @@ namespace Chilli {
 	{
 		m_appLayer->OnRender();
 		ProcessRenderJobs();
-		m_direct3d->SetBackBufferRenderTarget();
-		m_direct3d->ClearBackBuffer();
-		GuiManager::BeginFrame();
-		m_appLayer->OnRenderGui();
-		GuiManager::EndFrame();
+		if (m_appLayer->HasGui())
+		{
+			GuiManager::BeginFrame();
+			m_appLayer->OnRenderGui();
+			GuiManager::EndFrame();
+		}
 		m_direct3d->EndFrame();
 	}
 

@@ -9,6 +9,8 @@ namespace Chilli {
 		DirectionalLight, PointLight, Spotlight
 	};
 
+	class Entity;
+
 	struct PointLightData {
 		alignas(16)DirectX::XMFLOAT3 position;
 		alignas(16)DirectX::XMFLOAT3 ambient;

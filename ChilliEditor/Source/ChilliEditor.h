@@ -16,6 +16,9 @@ namespace Chilli {
 		ChilliEditor& operator=(const ChilliEditor&) = delete;
 		ChilliEditor(ChilliEditor&&) = default;
 		void Run();
+		static std::shared_ptr<Asset> s_selectedAsset;
+		static std::shared_ptr<Scene> s_selectedScene;
+		static std::shared_ptr<Entity> s_selectedEntity;
 	private:
 		std::shared_ptr<EditorLayer> m_editorLayer;
 		std::unique_ptr<ChilliEngine> m_engine = nullptr;

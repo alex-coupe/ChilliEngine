@@ -18,6 +18,7 @@ namespace Chilli {
 	{
 		m_appLayer = layer;
 		m_renderer->SetAppLayer(layer);
+		m_projectManager->SetAppLayer(layer);
 	}
 
 	ChilliEngine::ChilliEngine()
