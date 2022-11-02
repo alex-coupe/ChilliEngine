@@ -159,6 +159,53 @@ namespace Chilli {
 					ImGui::EndChild();
 				}
 				break;
+				case ComponentType::ID:
+				{
+					const auto& idComp = std::static_pointer_cast<IDComponent>(component);
+					ImGui::BeginChild("Id", ImVec2(0, 80), true);
+					static char nameBuffer[50];
+					strcpy_s(nameBuffer, idComp->GetName().c_str());
+					ImGui::InputText("Name", nameBuffer,IM_ARRAYSIZE(nameBuffer));
+
+					if (ImGui::BeginPopupContextItem("add tag popup"))
+					{
+						static char tagBuffer[50] = "";
+						ImGui::Text("Add Tag");
+						ImGui::InputText("Tag Name", tagBuffer, IM_ARRAYSIZE(tagBuffer));
+						if (ImGui::Button("Ok"))
+						{
+							ImGui::CloseCurrentPopup();
+							m_tags.emplace_back(std::string(tagBuffer));
+						}
+						ImGui::SameLine();
+						if (ImGui::Button("Cancel"))
+							ImGui::CloseCurrentPopup();
+						ImGui::EndPopup();
+					}
+					
+					if (ImGui::BeginCombo("Tag", idComp->GetTag().c_str()))
+					{
+						for (int i = 0; i < m_tags.size(); i++)
+						{
+							bool selected = m_tags[i] == idComp->GetTag();
+							if (ImGui::Checkbox(m_tags[i].c_str(), &selected))
+							{
+								idComp->SetTag(m_tags[i]);
+							}
+						}
+						ImGui::EndCombo();
+					}
+					if (nameBuffer != idComp->GetName().c_str())
+						idComp->SetName(nameBuffer);
+
+					ImGui::Spacing();
+					
+					if (ImGui::Button("Add Tag..."))
+						ImGui::OpenPopup("add tag popup");					
+					
+					ImGui::EndChild();
+				}
+				break;
 				case ComponentType::BoxCollider2D:
 				{
 					auto bc2d = std::static_pointer_cast<BoxCollider2DComponent>(component);

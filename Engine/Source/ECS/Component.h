@@ -9,10 +9,10 @@
 namespace Chilli {
 
 	enum class ComponentType : int {
-		Transform=-1, Mesh=0,Camera=1,Light=2,Script=3,BoxCollider2D=4, RigidBody2D = 5,
-		CircleCollider= 6, BoxCollider=7,CapsuleCollider=8,MeshCollider=9,
-		RigidBody=10,AudioListener=11,AudioSource=12,Sprite=13,ParticleEmitter=14,Animation=15,
-		Pathfinding=16,Skybox=17
+		ID = -2, Transform, Mesh,Camera,Light,Script,BoxCollider2D, RigidBody2D,
+		CircleCollider, BoxCollider,CapsuleCollider,MeshCollider,
+		RigidBody,AudioListener,AudioSource,Sprite,ParticleEmitter,Animation,
+		Pathfinding,Skybox
 	};
 
 	class CHILLI_API Component {
