@@ -7,6 +7,7 @@ namespace Chilli {
 	Entity::Entity(const std::string& name)
 		: m_name(name), Uuid()
 	{
+		m_components.emplace_back(ComponentFactory::MakeIDComponent(name));
 		m_components.emplace_back(ComponentFactory::MakeTransformComponent());
 	}
 
@@ -23,6 +24,11 @@ namespace Chilli {
 				DirectX::XMFLOAT3 rotation = { components[i]["RotX"].GetFloat(),components[i]["RotY"].GetFloat(), components[i]["RotZ"].GetFloat() };
 				DirectX::XMFLOAT3 scale = { components[i]["ScaleX"].GetFloat(),components[i]["ScaleY"].GetFloat(), components[i]["ScaleZ"].GetFloat() };
 				m_components.emplace_back(std::make_shared<TransformComponent>(translation, rotation, scale));
+				break;
+			}
+			case (int)ComponentType::ID:
+			{
+				m_components.emplace_back(std::make_shared<IDComponent>(components[i]["EntName"].GetString(), components[i]["EntTag"].GetString()));
 				break;
 			}
 			case (int)ComponentType::Mesh:
@@ -164,6 +170,12 @@ namespace Chilli {
 				m_components.emplace_back(std::make_shared<TransformComponent>(*pointer));
 			}
 				break;
+			case ComponentType::ID:
+			{
+				auto pointer = std::static_pointer_cast<IDComponent>(component);
+				m_components.emplace_back(std::make_shared<IDComponent>(*pointer));
+			}
+			break;
 			case ComponentType::Mesh:
 			{
 				auto pointer = std::static_pointer_cast<MeshComponent>(component);
@@ -221,17 +233,18 @@ namespace Chilli {
 
 	const std::string& Entity::GetName()const
 	{
-		return m_name;
+		if (m_components.size() < 1)
+			return "";
+
+		return std::static_pointer_cast<IDComponent>(m_components[0])->GetName();
 	}
 
 	const std::shared_ptr<TransformComponent> Entity::GetTransformComponent()
 	{
-		for (const auto& comp : m_components)
-		{
-			if (comp->GetComponentType() == ComponentType::Transform)
-				return std::static_pointer_cast<TransformComponent>(comp);
-		}
-		return nullptr;
+		if (m_components.size() < 2)
+			return nullptr;
+
+		return std::static_pointer_cast<TransformComponent>(m_components[1]);
 	}
 
 	void Entity::InitPhysics(std::unique_ptr<b2World>& physicsWorld)
