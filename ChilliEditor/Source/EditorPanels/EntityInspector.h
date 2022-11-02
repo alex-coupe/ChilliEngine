@@ -7,7 +7,7 @@ namespace Chilli {
 	public:
 		void DrawGui();
 	private:
-		std::vector<std::string> m_tags = { "Player", "Camera"};
+		std::vector<std::string> m_tags;
 		const char* m_componentsList[18] =
 		{ "Mesh","Camera","Light","Script","BoxCollider2D","RigidBody2D","CircleCollider",
 			"BoxCollider","CapsuleCollider","MeshCollider","RigidBody","AudioListener","AudioSource",
