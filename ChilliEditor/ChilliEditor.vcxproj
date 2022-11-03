@@ -147,6 +147,7 @@
     <ClInclude Include="Source\ChilliEditor.h" />
     <ClInclude Include="Source\EditorLayer.h" />
     <ClInclude Include="Source\EditorPanels\AssetPanel.h" />
+    <ClInclude Include="Source\EditorPanels\ToolBar.h" />
     <ClInclude Include="Source\EditorPanels\EntityInspector.h" />
     <ClInclude Include="Source\EditorPanels\MenuBar.h" />
     <ClInclude Include="Source\EditorPanels\SceneHierarchy.h" />
@@ -164,6 +165,7 @@
     <ClCompile Include="Source\ChilliEditor.cpp" />
     <ClCompile Include="Source\EditorLayer.cpp" />
     <ClCompile Include="Source\EditorPanels\AssetPanel.cpp" />
+    <ClCompile Include="Source\EditorPanels\ToolBar.cpp" />
     <ClCompile Include="Source\EditorPanels\EntityInspector.cpp" />
     <ClCompile Include="Source\EditorPanels\MenuBar.cpp" />
     <ClCompile Include="Source\EditorPanels\SceneHierarchy.cpp" />

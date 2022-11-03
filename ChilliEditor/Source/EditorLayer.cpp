@@ -11,6 +11,8 @@ namespace Chilli {
 		m_assetPanel = std::make_shared<AssetPanel>();
 		m_sceneHierarchy = std::make_shared<SceneHierarchy>();
 		m_entityInspector = std::make_shared<EntityInspector>();
+		m_toolBar = std::make_shared<ToolBar>();
+
 		m_editorCamera = std::make_unique<Camera>(1.0f, renderer->GetAspectRatio(), 0.5f, 100.0f, CameraType::Editor, ProjectionType::Perspective);
 		renderer->SetRenderCamera(m_editorCamera.get());
 	}
@@ -47,6 +49,7 @@ namespace Chilli {
 		m_assetPanel->DrawGui();
 		m_sceneHierarchy->DrawGui();
 		m_entityInspector->DrawGui();
+		m_toolBar->DrawGui();
 	}
 
 	void EditorLayer::OnResize()

@@ -43,6 +43,11 @@ namespace Chilli {
 
 	}
 
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> Texture::GetShaderResourceView()const
+	{
+		return m_textureView;
+	}
+
 	Texture::Texture(const std::filesystem::path& path, const UUID uuid)
 		:Asset(AssetType::Texture, path, uuid)
 	{

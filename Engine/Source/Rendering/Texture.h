@@ -10,6 +10,7 @@ namespace Chilli {
 		Texture(const std::filesystem::path& path);
 		Texture(const std::filesystem::path& path, const UUID uuid);
 		void Bind(UINT slot = 0u)const;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetShaderResourceView()const;
 		virtual const std::string Serialize()const override;
 	private:
 		unsigned char* m_data = nullptr;

@@ -22,48 +22,11 @@ namespace Chilli {
 
 				ImGui::EndMenu();
 			}
-
-			if (ImGui::BeginMenu("Scene"))
-			{
-				auto sceneState = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene()->GetSceneState();
-
-				if (sceneState == SceneState::Edit)
-				{
-					if (ImGui::MenuItem("Play"))
-					{
-						DependencyResolver::ResolveDependency<ProjectManager>()->PlayCurrentScene();
-					}
-				}
-
-				if (sceneState == SceneState::Play)
-				{
-					if (ImGui::MenuItem("Stop"))
-					{
-						DependencyResolver::ResolveDependency<ProjectManager>()->StopCurrentScene();
-					}
-				}
-
-				if (sceneState == SceneState::Edit)
-				{
-					if (ImGui::MenuItem("Simulate"))
-					{
-						DependencyResolver::ResolveDependency<ProjectManager>()->PlayCurrentScene();
-					}
-				}
-
-				if (sceneState == SceneState::Play)
-				{
-					if (ImGui::MenuItem("Pause"))
-					{
-						DependencyResolver::ResolveDependency<ProjectManager>()->StopCurrentScene();
-					}
-				}
-				ImGui::EndMenu();
-			}
-			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
-				1000.0 / float(ImGui::GetIO().Framerate), float(ImGui::GetIO().Framerate));
-			ImGui::EndMainMenuBar();
 		}
+
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
+			1000.0 / float(ImGui::GetIO().Framerate), float(ImGui::GetIO().Framerate));
+		ImGui::EndMainMenuBar();
 
 		//Shortcuts
 		bool shift = ImGui::IsKeyPressed(ImGuiKey::ImGuiKey_LeftShift) || ImGui::IsKeyPressed(ImGuiKey::ImGuiKey_RightShift);
