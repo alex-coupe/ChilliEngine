@@ -16,7 +16,7 @@ namespace Chilli {
     {
         for (unsigned int i = 0; i < entities.Size(); i++)
         {
-            m_entities.emplace_back(std::make_shared<Entity>(entities[i]["Name"].GetString(), entities[i]["Uuid"].GetUint64(), entities[i]["Components"].GetArray()));
+            m_entities.emplace_back(std::make_shared<Entity>(entities[i]["Uuid"].GetUint64(), entities[i]["Components"].GetArray()));
         }
     }
 
