@@ -10,7 +10,6 @@ namespace Chilli {
 		MenuBar(std::unique_ptr<Window>& window);
 		void DrawGui();
 	private:
-		std::string m_savePath = "";
 		std::unique_ptr<Window>& m_window;
 		void NewProject();
 		void SaveProject();

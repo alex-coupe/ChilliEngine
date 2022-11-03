@@ -7,15 +7,19 @@ namespace Chilli {
     ProjectManager::ProjectManager()
     {
         m_sceneManager = std::make_unique<SceneManager>();
-        m_assetManager = std::make_unique<AssetManager>();
     }
 
-    void ProjectManager::LoadProject(const std::string& filename)
+    void ProjectManager::LoadProject(const std::filesystem::path filename)
     {
+        m_projectOpen = true;
+        m_projectFilePath = filename.stem().generic_string();
+        m_projectDir = filename.parent_path().generic_string();
+        ScriptEngine::Init();
+        ScriptApi::Init();
         m_sceneManager.reset();
         m_assetManager.reset();
         m_sceneManager = std::make_unique<SceneManager>();
-        m_assetManager = std::make_unique<AssetManager>();
+        m_assetManager = std::make_unique<AssetManager>(m_projectDir);
         
         std::stringstream ss;
         std::ifstream json;
@@ -59,7 +63,6 @@ namespace Chilli {
     {
         std::stringstream ss;
         std::ofstream outputStream;
-
         ss << "{ \"ProjectName\":\"" << m_projectName << "\", \"Assets\":["
         << m_assetManager->SaveAssets() << "], \"Scenes\":[ " 
         << m_sceneManager->SaveScenes() << "]}";
@@ -68,11 +71,34 @@ namespace Chilli {
         outputStream.close();
     }
 
-    void ProjectManager::NewProject()
+    void ProjectManager::NewProject(const std::string& projName, const std::string& projDir)
     {
-        m_assetManager->Reset();
         m_sceneManager->Reset();
-        m_projectName = "Untitled Project";
+        m_projectDir = projDir + "\\" + projName;
+        m_projectName = projName;
+        m_projectFilePath = m_projectDir + "\\" + projName + ".chilli";
+        m_assetManager = std::make_unique<AssetManager>(m_projectDir);
+        m_projectOpen = true;
+        std::filesystem::create_directory(m_projectDir);
+        std::filesystem::create_directory(m_projectDir + "\\Assets");
+        std::filesystem::create_directory(m_projectDir + "\\Assets\\Meshes");
+        std::filesystem::create_directory(m_projectDir + "\\Assets\\Textures");
+        std::filesystem::create_directory(m_projectDir + "\\Assets\\Scripts");
+        std::filesystem::create_directory(m_projectDir + "\\Assets\\Scripts\\bin");
+        std::filesystem::create_directory(m_projectDir + "\\Assets\\Audio");
+        SaveProject(m_projectFilePath);
+        ScriptEngine::Init();
+        ScriptApi::Init();
+    }
+
+    const std::string& ProjectManager::GetProjectDirectory()const
+    {
+        return m_projectDir;
+    }
+
+    const std::string& ProjectManager::GetProjectFilePath()const
+    {
+        return m_projectFilePath;
     }
 
     void ProjectManager::SetAppLayer(const std::shared_ptr<Layer>& layer)
@@ -117,6 +143,7 @@ namespace Chilli {
             break;
         case AssetType::Texture:
             m_assetManager->RemoveTexture(uuid);
+            break;
         default:
             return;
         }   
@@ -184,5 +211,15 @@ namespace Chilli {
     void ProjectManager::ProcessFrame()
     {
         m_sceneManager->UpdateCurrentScene();
+    }
+
+    bool ProjectManager::GetProjectOpen()const
+    {
+        return m_projectOpen;
+    }
+
+    void ProjectManager::SetProjectNotOpen()
+    {
+        m_projectOpen = false;
     }
 }

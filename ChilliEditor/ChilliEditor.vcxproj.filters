@@ -63,6 +63,9 @@
     <ClInclude Include="Source\EditorPanels\ToolBar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\EditorPanels\SplashPanel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
@@ -111,6 +114,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\EditorPanels\ToolBar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EditorPanels\SplashPanel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

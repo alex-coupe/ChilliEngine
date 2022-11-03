@@ -8,6 +8,7 @@
 #include "EditorPanels/SceneHierarchy.h"
 #include "EditorPanels/EntityInspector.h"
 #include "EditorPanels/ToolBar.h"
+#include "EditorPanels/SplashPanel.h"
 
 namespace Chilli {
 	class EditorLayer : public Layer {
@@ -28,5 +29,6 @@ namespace Chilli {
 		std::shared_ptr<SceneHierarchy> m_sceneHierarchy;
 		std::shared_ptr<EntityInspector> m_entityInspector;
 		std::shared_ptr<ToolBar> m_toolBar;
+		std::shared_ptr<SplashPanel> m_splashPanel;
 	};
 }

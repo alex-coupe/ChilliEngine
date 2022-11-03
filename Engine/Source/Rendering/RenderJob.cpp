@@ -23,7 +23,7 @@ namespace Chilli {
 
 	void RenderJob::CreateCameraJob()
 	{
-		Mesh mesh("Assets/Models/cam.fbx");
+		Mesh mesh("C:\\Dev\\ChilliEngine\\ChilliEditor\\Resources\\cam.fbx");
 		m_vertexBuffer = std::make_unique<VertexBuffer>(mesh.GetVertices(), m_direct3d);
 		m_indexBuffer = std::make_unique<IndexBuffer>(mesh.GetIndices(), m_direct3d);
 
@@ -49,7 +49,7 @@ namespace Chilli {
 
 	void RenderJob::CreateLightCasterJob()
 	{
-		Mesh mesh("Assets/Models/lamp.fbx");
+		Mesh mesh("C:\\Dev\\ChilliEngine\\ChilliEditor\\Resources\\lamp.fbx");
 		m_vertexBuffer = std::make_unique<VertexBuffer>(mesh.GetVertices(), m_direct3d);
 		m_indexBuffer = std::make_unique<IndexBuffer>(mesh.GetIndices(), m_direct3d);
 

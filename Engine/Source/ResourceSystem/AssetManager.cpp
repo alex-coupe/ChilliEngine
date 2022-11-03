@@ -11,11 +11,11 @@ namespace Chilli {
             switch (assets[i]["Type"].GetInt())
             {
                 case (int)AssetType::Mesh:
-                    m_meshes.insert({ assets[i]["Uuid"].GetUint64(),std::make_shared<Mesh>(assets[i]["FilePath"].GetString(),
+                    m_meshes.insert({ assets[i]["Uuid"].GetUint64(),std::make_shared<Mesh>(m_projDir +"\\" + assets[i]["FilePath"].GetString(),
                         assets[i]["Uuid"].GetUint64()) });
                     break;
                 case (int)AssetType::Texture:
-                    m_textures.insert({ assets[i]["Uuid"].GetUint64(),std::make_shared<Texture>(assets[i]["FilePath"].GetString(),
+                    m_textures.insert({ assets[i]["Uuid"].GetUint64(),std::make_shared<Texture>(m_projDir + "\\" + assets[i]["FilePath"].GetString(),
                         assets[i]["Uuid"].GetUint64()) });
                     break;
                 default:
@@ -74,7 +74,7 @@ namespace Chilli {
 
     void AssetManager::AddScript(const std::filesystem::path& filename)
     {
-        std::string basePath("Assets\\Scripts\\");
+        std::string basePath(m_projDir + "Assets\\Scripts\\");
         std::string fullPath = basePath + filename.string()+".cs";
         std::ofstream script(fullPath);
         script << "using Chilli;"

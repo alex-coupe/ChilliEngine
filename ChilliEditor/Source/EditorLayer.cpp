@@ -12,6 +12,7 @@ namespace Chilli {
 		m_sceneHierarchy = std::make_shared<SceneHierarchy>();
 		m_entityInspector = std::make_shared<EntityInspector>();
 		m_toolBar = std::make_shared<ToolBar>();
+		m_splashPanel = std::make_shared<SplashPanel>();
 
 		m_editorCamera = std::make_unique<Camera>(1.0f, renderer->GetAspectRatio(), 0.5f, 100.0f, CameraType::Editor, ProjectionType::Perspective);
 		renderer->SetRenderCamera(m_editorCamera.get());
@@ -42,14 +43,20 @@ namespace Chilli {
 	void EditorLayer::OnRenderGui()
 	{
 		auto renderer = DependencyResolver::ResolveDependency<Renderer>();
+		auto projMan = DependencyResolver::ResolveDependency<ProjectManager>();
 		renderer->GetD3D()->SetBackBufferRenderTarget();
 		renderer->GetD3D()->ClearBackBuffer();
-		m_menuBar->DrawGui();
-		m_scenePreview->DrawGui();
-		m_assetPanel->DrawGui();
-		m_sceneHierarchy->DrawGui();
-		m_entityInspector->DrawGui();
-		m_toolBar->DrawGui();
+		m_splashPanel->DrawGui();
+		if (projMan->GetProjectOpen())
+		{
+			m_menuBar->DrawGui();
+			m_scenePreview->DrawGui();
+			m_assetPanel->DrawGui();
+			m_sceneHierarchy->DrawGui();
+			m_entityInspector->DrawGui();
+			m_toolBar->DrawGui();
+		}
+		
 	}
 
 	void EditorLayer::OnResize()

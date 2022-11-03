@@ -55,16 +55,16 @@ namespace Chilli {
 
 	void MenuBar::NewProject()
 	{
-		DependencyResolver::ResolveDependency<ProjectManager>()->NewProject();
+		DependencyResolver::ResolveDependency<ProjectManager>()->SetProjectNotOpen();
 	}
 
 	void MenuBar::SaveProject()
 	{	
-		if (m_savePath == "")
+		auto& fullpath = DependencyResolver::ResolveDependency<ProjectManager>()->GetProjectFilePath();
+		if (fullpath == "")
 		{
 			nfdchar_t* outPath = NULL;
 			nfdresult_t result = NFD_SaveDialog("chilli", NULL, &outPath);
-			m_savePath = outPath;
 			if (result == NFD_OKAY)
 			{
 				DependencyResolver::ResolveDependency<ProjectManager>()->SaveProject(outPath);
@@ -72,7 +72,7 @@ namespace Chilli {
 			}
 		}
 		else
-			DependencyResolver::ResolveDependency<ProjectManager>()->SaveProject(m_savePath);
+			DependencyResolver::ResolveDependency<ProjectManager>()->SaveProject(fullpath);
 
 	}
 
@@ -91,7 +91,6 @@ namespace Chilli {
 	{
 		nfdchar_t* outPath = NULL;
 		nfdresult_t result = NFD_SaveDialog("chilli", NULL, &outPath);
-		m_savePath = outPath;
 		if (result == NFD_OKAY)
 		{
 			DependencyResolver::ResolveDependency<ProjectManager>()->SaveProject(outPath);
