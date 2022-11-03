@@ -34,11 +34,12 @@ void Chilli::SceneHierarchy::DrawGui()
 			{
 				if (!entity)
 					continue;
-
+				ImGui::PushID(static_cast<int>(entity->Uuid.Get()));
 				if (ImGui::Selectable(entity->GetName().c_str(), ChilliEditor::s_selectedEntity && ChilliEditor::s_selectedEntity->Uuid.Get() == entity->Uuid.Get()))
 				{
 					ChilliEditor::s_selectedEntity = entity;
 				}
+				ImGui::PopID();
 				if (ImGui::BeginPopupContextItem())
 				{
 					if (ImGui::Selectable("Remove Entity"))
@@ -51,6 +52,7 @@ void Chilli::SceneHierarchy::DrawGui()
 					{
 						ImGui::CloseCurrentPopup();
 						ChilliEditor::s_selectedScene->RemoveEntity(entity->Uuid);
+						ChilliEditor::s_selectedEntity = nullptr;
 						option = 0;
 					}
 					if (option == 2)
