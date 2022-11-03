@@ -234,7 +234,7 @@ namespace Chilli {
 	const std::string& Entity::GetName()const
 	{
 		if (m_components.size() < 1)
-			return "";
+			return m_name;
 
 		return std::static_pointer_cast<IDComponent>(m_components[0])->GetName();
 	}
@@ -369,6 +369,9 @@ namespace Chilli {
 		{
 			switch (type)
 			{
+			case ComponentType::Transform:
+				m_components.emplace_back(ComponentFactory::MakeTransformComponent());
+				break;
 			case ComponentType::Mesh:
 				m_components.emplace_back(ComponentFactory::MakeMeshComponent());
 				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this, RenderJobType::Mesh);

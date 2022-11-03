@@ -5,7 +5,7 @@ void Chilli::SceneHierarchy::DrawGui()
 {
 	ImGui::Begin("Scene Hierarchy", 0);
 	
-	if (ImGui::BeginPopupContextItem("add entity popup"))
+	if (ImGui::BeginPopupContextItem("add_entity_popup"))
 	{
 		static char entityName[50] = "";
 		ImGui::Text("Add Entity");
@@ -21,24 +21,52 @@ void Chilli::SceneHierarchy::DrawGui()
 			ImGui::CloseCurrentPopup();
 		ImGui::EndPopup();
 	}
+	
 	if (ChilliEditor::s_selectedScene)
 	{
 		if (ImGui::Button("Add Entity"))
-			ImGui::OpenPopup("add entity popup"); 
+			ImGui::OpenPopup("add_entity_popup"); 
 		ImGui::Separator();
+		static int option = 0;
 		if (ImGui::TreeNode(ChilliEditor::s_selectedScene->GetName().c_str()))
 		{
 			for (const auto& entity : ChilliEditor::s_selectedScene->GetEntities())
 			{
+				if (!entity)
+					continue;
+
 				if (ImGui::Selectable(entity->GetName().c_str(), ChilliEditor::s_selectedEntity && ChilliEditor::s_selectedEntity->Uuid.Get() == entity->Uuid.Get()))
 				{
 					ChilliEditor::s_selectedEntity = entity;
+				}
+				if (ImGui::BeginPopupContextItem())
+				{
+					if (ImGui::Selectable("Remove Entity"))
+						option = 1;
+					ImGui::Separator();
+					if (ImGui::Selectable("Duplicate Entity")) 
+						option = 2;
+
+					if (option == 1)
+					{
+						ImGui::CloseCurrentPopup();
+						ChilliEditor::s_selectedScene->RemoveEntity(entity->Uuid);
+						option = 0;
+					}
+					if (option == 2)
+					{
+						ImGui::CloseCurrentPopup();
+						ChilliEditor::s_selectedScene->DuplicateEntity(entity);
+						option = 0;
+					}
+					
+					ImGui::EndPopup();
 				}
 			}
 			ImGui::TreePop();
 		}
 
-		ImGui::OpenPopupOnItemClick("add entity popup", ImGuiPopupFlags_MouseButtonRight);
+		
 	}
 	ImGui::End();
 }

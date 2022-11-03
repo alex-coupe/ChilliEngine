@@ -20,6 +20,7 @@ namespace Chilli {
 		Scene(const Scene& rhs);
 		const std::string Serialize();
 		void AddEntity(const std::string& name);
+		void DuplicateEntity(const std::shared_ptr<Entity> entity);
 		void RemoveEntity(UUID uuid);
 		const std::vector<std::shared_ptr<Entity>>& GetEntities()const;
 		std::shared_ptr<Entity> GetEntityByUUID(UUID uuid)const;

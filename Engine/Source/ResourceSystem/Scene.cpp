@@ -38,6 +38,22 @@ namespace Chilli {
         }
     }
 
+    void Scene::DuplicateEntity(const std::shared_ptr<Entity> entity)
+    {
+       auto& dupe = m_entities.emplace_back(std::make_shared<Entity>(entity->GetName() + " - Duplicate"));
+       dupe->RemoveComponent(ComponentType::Transform);
+       for (auto& comp : entity->GetComponents())
+       {
+           if (comp->GetComponentType() != ComponentType::ID)
+           {
+               dupe->AddComponent(comp->GetComponentType());
+               auto newComp = dupe->GetComponentByType(comp->GetComponentType());
+               newComp->Clone(comp);
+           }
+       }
+       std::static_pointer_cast<IDComponent>(dupe->GetComponentByType(ComponentType::ID))->SetName(entity->GetName() + " - Copy");
+    }
+
     const std::string Scene::Serialize()
     {
         std::stringstream ss;
