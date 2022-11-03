@@ -5,14 +5,14 @@
 namespace Chilli {
 
 	Entity::Entity(const std::string& name)
-		: m_name(name), Uuid()
+		: Uuid()
 	{
 		m_components.emplace_back(ComponentFactory::MakeIDComponent(name));
 		m_components.emplace_back(ComponentFactory::MakeTransformComponent());
 	}
 
-	Entity::Entity(const std::string& name, UUID uuid, const rapidjson::Value& components)
-		: m_name(name), Uuid(uuid)
+	Entity::Entity(UUID uuid, const rapidjson::Value& components)
+		: Uuid(uuid)
 	{
 		for (unsigned int i = 0; i < components.Size(); i++)
 		{
@@ -158,7 +158,6 @@ namespace Chilli {
 	}
 
 	Entity::Entity(const Entity& rhs)
-		: m_name(rhs.m_name)
 	{
 		for (const auto& component : rhs.m_components)
 		{
@@ -224,7 +223,6 @@ namespace Chilli {
 
 	void Entity::Clone(const Entity& rhs)
 	{
-		m_name = rhs.m_name;
 		for (int i = 0; i < m_components.size(); i++)
 		{
 			m_components[i]->Clone(rhs.m_components[i]);
@@ -233,9 +231,6 @@ namespace Chilli {
 
 	const std::string& Entity::GetName()const
 	{
-		if (m_components.size() < 1)
-			return m_name;
-
 		return std::static_pointer_cast<IDComponent>(m_components[0])->GetName();
 	}
 
@@ -436,7 +431,7 @@ namespace Chilli {
 	const std::string Entity::Serialize() const
 	{
 		std::stringstream ss;
-		ss << "{\"Name\":\"" << m_name << "\", \"Uuid\":" << Uuid.Get() << ", \"Components\":[";
+		ss << "{\"Uuid\":" << Uuid.Get() << ", \"Components\":[";
 		for (size_t i = 0; i < m_components.size(); i++)
 		{
 			ss << m_components[i]->Serialize(Uuid.Get());

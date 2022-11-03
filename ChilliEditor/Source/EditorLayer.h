@@ -7,11 +7,12 @@
 #include "EditorPanels/AssetPanel.h"
 #include "EditorPanels/SceneHierarchy.h"
 #include "EditorPanels/EntityInspector.h"
+#include "EditorPanels/ToolBar.h"
 
 namespace Chilli {
 	class EditorLayer : public Layer {
 	public:
-		EditorLayer();
+		EditorLayer(std::unique_ptr<Window>& window);
 		virtual void OnUpdate()override;
 		virtual void OnRender()override;
 		virtual void OnRenderGui()override;
@@ -26,5 +27,6 @@ namespace Chilli {
 		std::shared_ptr<AssetPanel> m_assetPanel;
 		std::shared_ptr<SceneHierarchy> m_sceneHierarchy;
 		std::shared_ptr<EntityInspector> m_entityInspector;
+		std::shared_ptr<ToolBar> m_toolBar;
 	};
 }
