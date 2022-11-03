@@ -4,9 +4,14 @@
 namespace Chilli {
 	Window::Window()
 	{
-#ifdef _WIN32
-		m_platform = std::make_unique<WindowsPlatform>(m_width, m_height);
-#endif 
+		#ifdef _WIN32
+			m_platform = std::make_unique<WindowsPlatform>(m_width, m_height);
+		#endif 
+	}
+
+	void Window::Quit()
+	{
+		m_platform->Quit();
 	}
 
 	void* Window::GetWindowHandle()

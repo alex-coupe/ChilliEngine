@@ -90,6 +90,15 @@ namespace Chilli {
 			CHILLI_WARN("Failed setting window title");
 	}
 
+	int WindowsPlatform::Quit()
+	{
+		if (MessageBox(m_handle, L"Really quit?", L"Chilli Engine", MB_OKCANCEL) == IDOK)
+		{
+			PostQuitMessage(0);
+		}
+		return 0;
+	}
+
 	LRESULT WindowsPlatform::MyWinProc(HWND handle, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 		GuiManager::WndProcHandler(handle, msg, wParam, lParam);
@@ -98,11 +107,7 @@ namespace Chilli {
 		switch (msg)
 		{
 		case WM_CLOSE:
-			if (MessageBox(m_handle, L"Really quit?", L"Chilli Engine", MB_OKCANCEL) == IDOK)
-			{
-				PostQuitMessage(0);
-			}
-			return 0;
+			Quit();
 		case WM_SETFOCUS:
 		case WM_KILLFOCUS:
 		case WM_MOUSEMOVE:

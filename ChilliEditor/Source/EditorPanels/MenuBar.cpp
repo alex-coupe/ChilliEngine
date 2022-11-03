@@ -1,7 +1,10 @@
 #include "MenuBar.h"
 
 namespace Chilli {
-
+	MenuBar::MenuBar(std::unique_ptr<Window>& window)
+		:m_window(window)
+	{
+	}
 	void MenuBar::DrawGui()
 	{
 		if (ImGui::BeginMainMenuBar())
@@ -19,6 +22,9 @@ namespace Chilli {
 
 				if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
 					SaveAs();
+
+				if (ImGui::MenuItem("Exit", "Alt-F4"))
+					m_window->Quit();
 
 				ImGui::EndMenu();
 			}

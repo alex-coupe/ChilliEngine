@@ -12,7 +12,7 @@
 namespace Chilli {
 	class EditorLayer : public Layer {
 	public:
-		EditorLayer();
+		EditorLayer(std::unique_ptr<Window>& window);
 		virtual void OnUpdate()override;
 		virtual void OnRender()override;
 		virtual void OnRenderGui()override;

@@ -3,10 +3,10 @@
 
 namespace Chilli {
 	
-	EditorLayer::EditorLayer()
+	EditorLayer::EditorLayer(std::unique_ptr<Window>& window)
 	{
 		auto renderer = DependencyResolver::ResolveDependency<Renderer>();
-		m_menuBar = std::make_shared<MenuBar>();
+		m_menuBar = std::make_shared<MenuBar>(window);
 		m_scenePreview = std::make_shared<ScenePreview>();
 		m_assetPanel = std::make_shared<AssetPanel>();
 		m_sceneHierarchy = std::make_shared<SceneHierarchy>();

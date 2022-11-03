@@ -14,6 +14,11 @@ namespace Chilli {
 		}
 	}
 
+	std::unique_ptr<Window>& ChilliEngine::GetWindow()
+	{
+		return m_window;
+	}
+
 	void ChilliEngine::SetAppLayer(const std::shared_ptr<Layer>& layer)
 	{
 		m_appLayer = layer;

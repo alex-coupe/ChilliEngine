@@ -10,11 +10,12 @@
 #endif
 
 namespace Chilli {
-	class Window {
+	class CHILLI_API Window {
 	public:
 		Window();
 		bool Update();
 		void* GetWindowHandle();
+		void Quit();
 		~Window();
 		const int GetWidth()const;
 		const int GetHeight()const;

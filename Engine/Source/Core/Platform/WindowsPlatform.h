@@ -13,6 +13,7 @@ namespace Chilli {
 		HWND GetHandle();
 		~WindowsPlatform();
 		bool Update();
+		int Quit();
 		void SetTitle(const char* title);
 	private:
 		HWND m_handle = nullptr;
