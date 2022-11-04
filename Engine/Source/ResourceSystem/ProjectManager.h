@@ -37,6 +37,7 @@ namespace Chilli {
 		void SetProjectNotOpen();
 		const std::string& GetProjectFilePath()const;
 		const std::string& GetProjectDirectory()const;
+		const std::string& GetProjectName()const;
 	private:
 		std::unique_ptr<SceneManager> m_sceneManager = nullptr;
 		std::unique_ptr<AssetManager> m_assetManager = nullptr;

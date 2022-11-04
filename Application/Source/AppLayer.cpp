@@ -1,6 +1,7 @@
 #include "AppLayer.h"
 
-Chilli::AppLayer::AppLayer()
+Chilli::AppLayer::AppLayer(std::unique_ptr<Window>& window)
+	:m_window(window)
 {
 	auto renderer = DependencyResolver::ResolveDependency<Renderer>();
 	m_screenWidth = static_cast<float>(renderer->GetD3D()->GetWindowWidth());
@@ -9,6 +10,12 @@ Chilli::AppLayer::AppLayer()
 
 void Chilli::AppLayer::OnUpdate()
 {
+}
+
+void Chilli::AppLayer::OnOpen()
+{
+	const auto& title = DependencyResolver::ResolveDependency<ProjectManager>()->GetProjectName();
+	m_window->SetTitle(title.c_str());
 }
 
 void Chilli::AppLayer::OnRender()

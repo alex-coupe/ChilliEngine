@@ -8,6 +8,7 @@ namespace Chilli {
 		virtual void OnUpdate() = 0;
 		virtual void OnRender() = 0;
 		virtual void OnRenderGui() = 0;
+		virtual void OnOpen() = 0;
 		virtual void OnResize() = 0;
 		virtual bool HasGui() = 0;
 		virtual void OnSceneChange() = 0;

@@ -12,7 +12,8 @@ namespace Chilli {
     void ProjectManager::LoadProject(const std::filesystem::path filename)
     {
         m_projectOpen = true;
-        m_projectFilePath = filename.stem().generic_string();
+        m_projectName = filename.stem().generic_string();
+        m_projectFilePath = m_projectDir + "\\" + m_projectName + ".chilli";
         m_projectDir = filename.parent_path().generic_string();
         ScriptEngine::Init();
         ScriptApi::Init();
@@ -20,7 +21,7 @@ namespace Chilli {
         m_assetManager.reset();
         m_sceneManager = std::make_unique<SceneManager>();
         m_assetManager = std::make_unique<AssetManager>(m_projectDir);
-        
+        m_appLayer->OnOpen();
         std::stringstream ss;
         std::ifstream json;
         json.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -221,6 +222,11 @@ namespace Chilli {
     bool ProjectManager::GetProjectOpen()const
     {
         return m_projectOpen;
+    }
+
+    const std::string& ProjectManager::GetProjectName()const
+    {
+        return m_projectName;
     }
 
     void ProjectManager::SetProjectNotOpen()

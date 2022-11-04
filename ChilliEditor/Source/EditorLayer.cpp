@@ -4,7 +4,9 @@
 namespace Chilli {
 	
 	EditorLayer::EditorLayer(std::unique_ptr<Window>& window)
+		:m_window(window)
 	{
+		ImGui::SetCurrentContext(GuiManager::GetContext());
 		auto renderer = DependencyResolver::ResolveDependency<Renderer>();
 		m_menuBar = std::make_shared<MenuBar>(window);
 		m_scenePreview = std::make_shared<ScenePreview>();
@@ -13,9 +15,17 @@ namespace Chilli {
 		m_entityInspector = std::make_shared<EntityInspector>();
 		m_toolBar = std::make_shared<ToolBar>();
 		m_splashPanel = std::make_shared<SplashPanel>();
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		const auto& font = io.Fonts->AddFontFromFileTTF("Resources\\Fonts\\Roboto-Regular.ttf", 16.0f);
 
 		m_editorCamera = std::make_unique<Camera>(1.0f, renderer->GetAspectRatio(), 0.5f, 100.0f, CameraType::Editor, ProjectionType::Perspective);
 		renderer->SetRenderCamera(m_editorCamera.get());
+	}
+
+	void EditorLayer::OnOpen()
+	{
+		const auto& title = "Chilli Engine | " + DependencyResolver::ResolveDependency<ProjectManager>()->GetProjectName();
+		m_window->SetTitle(title.c_str());
 	}
 
 	void EditorLayer::OnSceneChange()

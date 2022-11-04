@@ -18,6 +18,7 @@ namespace Chilli {
 		virtual void OnRender()override;
 		virtual void OnRenderGui()override;
 		virtual void OnSceneChange()override;
+		virtual void OnOpen()override;
 		virtual void OnResize()override;
 		virtual bool HasGui()override;
 		virtual float GetDisplayAspectRatio()override;
@@ -30,5 +31,6 @@ namespace Chilli {
 		std::shared_ptr<EntityInspector> m_entityInspector;
 		std::shared_ptr<ToolBar> m_toolBar;
 		std::shared_ptr<SplashPanel> m_splashPanel;
+		const std::unique_ptr<Window>& m_window;
 	};
 }

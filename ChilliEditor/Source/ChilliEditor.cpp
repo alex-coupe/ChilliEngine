@@ -10,7 +10,6 @@ namespace Chilli {
 	{
 		m_engine = std::make_unique<ChilliEngine>();
 		m_engine->SetAppLayer(std::make_shared<EditorLayer>(m_engine->GetWindow()));
-		ImGui::SetCurrentContext(GuiManager::GetContext());
 	}
 
 	ChilliEditor::~ChilliEditor()
