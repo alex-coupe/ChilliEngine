@@ -187,6 +187,12 @@
     <ClInclude Include="Source\ECS\ScriptComponent.h" />
     <ClInclude Include="Source\ECS\TransformComponent.h" />
     <ClInclude Include="Source\Gui\GuiManager.h" />
+    <ClInclude Include="Source\Gui\ImGuizmo\GraphEditor.h" />
+    <ClInclude Include="Source\Gui\ImGuizmo\ImCurveEdit.h" />
+    <ClInclude Include="Source\Gui\ImGuizmo\ImGradient.h" />
+    <ClInclude Include="Source\Gui\ImGuizmo\ImGuizmo.h" />
+    <ClInclude Include="Source\Gui\ImGuizmo\ImSequencer.h" />
+    <ClInclude Include="Source\Gui\ImGuizmo\ImZoomSlider.h" />
     <ClInclude Include="Source\Gui\ImGui\imconfig.h" />
     <ClInclude Include="Source\Gui\ImGui\imgui.h" />
     <ClInclude Include="Source\Gui\ImGui\imgui_impl_dx11.h" />
@@ -244,6 +250,11 @@
     <ClCompile Include="Source\ECS\ScriptComponent.cpp" />
     <ClCompile Include="Source\ECS\TransformComponent.cpp" />
     <ClCompile Include="Source\Gui\GuiManager.cpp" />
+    <ClCompile Include="Source\Gui\ImGuizmo\GraphEditor.cpp" />
+    <ClCompile Include="Source\Gui\ImGuizmo\ImCurveEdit.cpp" />
+    <ClCompile Include="Source\Gui\ImGuizmo\ImGradient.cpp" />
+    <ClCompile Include="Source\Gui\ImGuizmo\ImGuizmo.cpp" />
+    <ClCompile Include="Source\Gui\ImGuizmo\ImSequencer.cpp" />
     <ClCompile Include="Source\Gui\ImGui\imgui.cpp" />
     <ClCompile Include="Source\Gui\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Source\Gui\ImGui\imgui_draw.cpp" />

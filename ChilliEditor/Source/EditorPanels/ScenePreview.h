@@ -8,7 +8,7 @@ namespace Chilli {
 	public:
 		ScenePreview();
 		void BindFrameBuffer();
-		void DrawGui();
+		void DrawGui(const std::unique_ptr<Camera>& editorCam);
 		void Resize();
 		float GetAspectRatio()const;
 	private:

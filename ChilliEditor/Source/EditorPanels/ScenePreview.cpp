@@ -1,4 +1,5 @@
 #include "ScenePreview.h"
+#include "../ChilliEditor.h"
 
 Chilli::ScenePreview::ScenePreview()
 {
@@ -11,7 +12,7 @@ void Chilli::ScenePreview::BindFrameBuffer()
 	m_frameBuffer->Bind();
 }
 
-void Chilli::ScenePreview::DrawGui()
+void Chilli::ScenePreview::DrawGui(const std::unique_ptr<Camera>& editorCam)
 {
 	ImGui::Begin("Scene Preview", 0);
 
@@ -33,7 +34,36 @@ void Chilli::ScenePreview::DrawGui()
 	}
 
 	ImGui::Image(m_frameBuffer->GetShaderResourceView().Get(), regionAvailable);
-	if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsWindowHovered()
+
+	if (ChilliEditor::s_selectedEntity)
+	{
+		ImGuizmo::SetOrthographic(false);
+		ImGuizmo::SetDrawlist();
+		auto pos = ImGui::GetWindowPos();
+		
+		ImGuizmo::SetRect(pos.x, pos.y, m_scenePreviewWindowWidth, m_scenePreviewWindowHeight);
+
+		const auto& cameraProj = editorCam->GetProjMatrix();
+		const auto& cameraView = editorCam->GetViewMatrix();
+		const auto& tc = ChilliEditor::s_selectedEntity->GetTransformComponent();
+		const auto& transform = tc->GetTransformMatrix();
+		DirectX::XMFLOAT4X4 projTemp;
+		DirectX::XMFLOAT4X4 viewTemp;
+		DirectX::XMFLOAT4X4 transformTemp;
+		DirectX::XMStoreFloat4x4(&projTemp, cameraProj);
+		DirectX::XMStoreFloat4x4(&viewTemp, cameraView);
+		DirectX::XMStoreFloat4x4(&transformTemp, transform);
+		
+		ImGuizmo::Manipulate(&viewTemp.m[0][0], &projTemp.m[0][0], ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, &transformTemp.m[0][0]);
+
+		if (ImGuizmo::IsUsing())
+		{
+			tc->Translation() = { transformTemp.m[3][0],transformTemp.m[3][1],transformTemp.m[3][2] };
+		}
+	}
+
+	if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsWindowHovered() 
+		&& ImGui::IsKeyDown(ImGuiKey_LeftCtrl)
 		&& DependencyResolver::ResolveDependency<ProjectManager>
 		()->GetCurrentScene()->GetSceneState() == SceneState::Edit)
 	{

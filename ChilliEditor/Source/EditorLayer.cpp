@@ -62,7 +62,7 @@ namespace Chilli {
 		if (projMan->GetProjectOpen())
 		{
 			m_menuBar->DrawGui();
-			m_scenePreview->DrawGui();
+			m_scenePreview->DrawGui(m_editorCamera);
 			m_assetPanel->DrawGui();
 			m_sceneHierarchy->DrawGui();
 			m_entityInspector->DrawGui();
