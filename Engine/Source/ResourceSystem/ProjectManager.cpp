@@ -85,6 +85,11 @@ namespace Chilli {
         std::filesystem::create_directory(m_projectDir + "\\Assets\\Textures");
         std::filesystem::create_directory(m_projectDir + "\\Assets\\Scripts");
         std::filesystem::create_directory(m_projectDir + "\\Assets\\Scripts\\bin");
+        std::filesystem::copy("C:\\Dev\\ChilliEngine\\ApplicationScripts\\", m_projectDir + "\\Assets\\Scripts\\bin\\ApplicationScripts\\");
+        std::filesystem::copy("C:\\Dev\\ChilliEngine\\ApplicationScripts\\Properties", m_projectDir + "\\Assets\\Scripts\\bin\\ApplicationScripts\\Properties");
+        std::filesystem::copy("C:\\Dev\\ChilliEngine\\ChilliScriptCore\\", m_projectDir + "\\Assets\\Scripts\\bin\\ChilliScriptCore\\");
+        std::filesystem::copy("C:\\Dev\\ChilliEngine\\ChilliScriptCore\\Properties", m_projectDir + "\\Assets\\Scripts\\bin\\ChilliScriptCore\\Properties");
+        std::filesystem::copy("C:\\Dev\\ChilliEngine\\ChilliScriptCore\\Source", m_projectDir + "\\Assets\\Scripts\\bin\\ChilliScriptCore\\Source");
         std::filesystem::create_directory(m_projectDir + "\\Assets\\Audio");
         SaveProject(m_projectFilePath);
         ScriptEngine::Init();
