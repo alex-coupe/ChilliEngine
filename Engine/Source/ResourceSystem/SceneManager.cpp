@@ -2,12 +2,7 @@
 #include "../Rendering/Renderer.h"
 
 namespace Chilli {
-	SceneManager::SceneManager()
-	{
-		m_scenes.emplace_back(std::make_shared<Scene>("Scene 1"));
-		m_currentScene = m_scenes.front();
-	}
-
+	
 	void SceneManager::LoadScenes(const rapidjson::Value& scenes)
 	{
 		m_scenes.clear();
@@ -35,13 +30,15 @@ namespace Chilli {
 	void SceneManager::Reset()
 	{
 		m_scenes.clear();
-		m_scenes.emplace_back(std::make_shared<Scene>("Scene 1"));
-		m_currentScene = m_scenes.front();
+		m_currentScene = nullptr;
 	}
 
 	void SceneManager::AddScene(const std::string& name)
 	{
-		m_scenes.emplace_back(std::make_shared<Scene>(name));
+		auto& scene = m_scenes.emplace_back(std::make_shared<Scene>(name));
+		auto cameraEntity = std::make_shared<Entity>("Camera");
+		cameraEntity->AddComponent(ComponentType::Camera);
+		scene->AddEntity(cameraEntity);
 	}
 
 	void SceneManager::RemoveScene(UUID uuid)
@@ -115,6 +112,11 @@ namespace Chilli {
 		m_currentScene->StopScene();
 		m_currentScene->Clone(m_currentSceneCopy);
 		m_currentSceneCopy = nullptr;
+	}
+
+	bool SceneManager::HasScenes()const
+	{
+		return m_scenes.size() > 0 && m_currentScene;
 	}
 
 	void SceneManager::UpdateCurrentScene()const

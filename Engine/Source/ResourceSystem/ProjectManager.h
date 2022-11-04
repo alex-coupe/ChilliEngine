@@ -15,9 +15,9 @@ namespace Chilli {
 	class CHILLI_API ProjectManager : public SubSystem {
 	public:
 		ProjectManager();
-		void LoadProject(const std::string& filename);
+		void LoadProject(const std::filesystem::path filename);
 		void SaveProject(const std::string& filename);
-		void NewProject();
+		void NewProject(const std::string& projName, const std::string& projDir);
 		void SetAppLayer(const std::shared_ptr<Layer>& layer);
 		void AddScene(const std::string& name);
 		void RemoveScene(UUID uuid);
@@ -33,10 +33,19 @@ namespace Chilli {
 		const std::unordered_map<uint64_t, std::shared_ptr<Texture>>& GetTextures()const;
 		static SystemType GetSystemType();
 		virtual void ProcessFrame()override;
+		bool GetProjectOpen()const;
+		void SetProjectNotOpen();
+		const std::string& GetProjectFilePath()const;
+		const std::string& GetProjectDirectory()const;
+		const std::string& GetProjectName()const;
+		const bool IsEditor()const;
 	private:
 		std::unique_ptr<SceneManager> m_sceneManager = nullptr;
 		std::unique_ptr<AssetManager> m_assetManager = nullptr;
-		std::string m_projectName = "untitled project";
+		std::string m_projectName;
+		std::string m_projectDir; 
+		std::string m_projectFilePath;
+		bool m_projectOpen = false;
 		std::shared_ptr<Layer> m_appLayer;
 	};
 }

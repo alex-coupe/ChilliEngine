@@ -15,7 +15,8 @@ namespace Chilli {
     {
         mono_set_assemblies_path("..\\Dependencies\\Mono\\lib");
 
-        s_domain = mono_jit_init("ChilliJITRuntime");
+        if (!s_domain)
+            s_domain = mono_jit_init("ChilliJITRuntime");
 
         if (s_domain == nullptr)
         {
@@ -23,13 +24,24 @@ namespace Chilli {
             return;
         }
 
-        s_appDomain = mono_domain_create_appdomain(nullptr, nullptr);
+        if (!s_appDomain)
+            s_appDomain = mono_domain_create_appdomain(nullptr, nullptr);
+        
+        auto& projectDir = DependencyResolver::ResolveDependency<ProjectManager>()->GetProjectDirectory();
+       
+        auto coreAssemblyPath = projectDir + "\\" + "Assets\\Scripts\\bin\\ChilliScriptCore.dll";
+        auto appAssemblyPath = projectDir + "\\" + "Assets\\Scripts\\bin\\ApplicationScripts.dll";
+        s_chilliCoreAssembly = mono_domain_assembly_open(s_domain, coreAssemblyPath.c_str());
+        s_applicationScriptsAssembly = mono_domain_assembly_open(s_domain, appAssemblyPath.c_str());
 
-        s_chilliCoreAssembly = mono_domain_assembly_open(s_domain, "Assets\\Scripts\\bin\\ChilliScriptCore.dll");
-        s_applicationScriptsAssembly = mono_domain_assembly_open(s_domain, "Assets\\Scripts\\bin\\ApplicationScripts.dll");
-        s_coreAssemblyImage = mono_assembly_get_image(s_chilliCoreAssembly);      
-        s_applicationScriptsImage = mono_assembly_get_image(s_applicationScriptsAssembly);
-        BuildAvailableScripts();
+        if (s_chilliCoreAssembly)
+            s_coreAssemblyImage = mono_assembly_get_image(s_chilliCoreAssembly);   
+
+        if (s_applicationScriptsAssembly)
+        {
+            s_applicationScriptsImage = mono_assembly_get_image(s_applicationScriptsAssembly);
+            BuildAvailableScripts();
+        }
     }
 
     MonoDomain* ScriptEngine::GetAppDomain()
@@ -119,7 +131,9 @@ namespace Chilli {
 
     void ScriptEngine::Shutdown()
     {
-        mono_domain_unload(s_appDomain);
-        mono_jit_cleanup(s_domain);
+        if (s_appDomain)
+            mono_domain_unload(s_appDomain);
+        if (s_domain)
+            mono_jit_cleanup(s_domain);
     }
 }

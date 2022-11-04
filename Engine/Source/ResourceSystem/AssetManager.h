@@ -13,7 +13,9 @@ namespace Chilli {
 	class CHILLI_API AssetManager
 	{
 	public:
-		AssetManager() = default;
+		AssetManager(const std::string& projDir)
+			:m_projDir(projDir)
+		{}
 		void Reset();
 		void LoadAssets(const rapidjson::Value& assets);
 		std::string SaveAssets()const;
@@ -27,6 +29,7 @@ namespace Chilli {
 		const std::unordered_map<uint64_t, std::shared_ptr<Mesh>>& GetMeshes()const;
 		const std::unordered_map<uint64_t, std::shared_ptr<Texture>>& GetTextures()const;
 	private:
+		std::string m_projDir;
 		std::unordered_map<uint64_t, std::shared_ptr<Mesh>> m_meshes;
 		std::unordered_map<uint64_t, std::shared_ptr<Texture>> m_textures;
 	};

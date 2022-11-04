@@ -43,7 +43,7 @@ namespace Chilli {
 	const std::string IDComponent::Serialize(uint64_t entityId)const
 	{
 		std::stringstream ss;
-		ss << "{ \"EntName\":" << m_entityName << ", \"EntTag\":" << m_entityTag << "}";
+		ss << "{ \"Type\":" << static_cast<int>(m_type) << ", \"EntName\": \""  << m_entityName << "\", \"EntTag\": \"" << m_entityTag << "\"}";
 		return  ss.str();
 	}
 }

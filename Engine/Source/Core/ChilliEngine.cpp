@@ -60,9 +60,6 @@ namespace Chilli {
 
 		if (!m_renderer->Init())
 			CHILLI_ERROR("Renderer could not init");
-		ScriptEngine::Init();
-		ScriptApi::Init();
-
 	}
 
 	ChilliEngine::~ChilliEngine()

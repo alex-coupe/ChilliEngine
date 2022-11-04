@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Application\Assets\Scripts\bin\</OutputPath>
+    <OutputPath>..\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -26,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Application\Assets\Scripts\bin\</OutputPath>
+    <OutputPath>..\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -43,18 +43,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="..\Application\Assets\Scripts\Test.cs">
-      <Link>Source\Test.cs</Link>
-    </Compile>
-    <Compile Include="..\Application\Assets\Scripts\TestTwo.cs">
-      <Link>Source\TestTwo.cs</Link>
-    </Compile>
+    <Compile Include="..\..\*.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ChilliScriptCore\ChilliScriptCore.csproj">
       <Project>{554e9689-7d32-43c1-9538-f98ef268ca47}</Project>
       <Name>ChilliScriptCore</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Source\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
