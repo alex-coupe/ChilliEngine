@@ -18,5 +18,6 @@ namespace Chilli {
 		bool m_initialMousePos = true;
 		float m_mouseX;
 		float m_mouseY;
+		int m_guizmoType = -1;
 	};
 }
