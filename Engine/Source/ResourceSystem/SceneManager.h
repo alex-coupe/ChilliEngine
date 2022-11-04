@@ -6,7 +6,6 @@ namespace Chilli {
 
 	class CHILLI_API SceneManager {
 	public:
-		SceneManager();
 		void LoadScenes(const rapidjson::Value& scenes);
 		std::string SaveScenes()const;
 		void Reset();
@@ -22,6 +21,7 @@ namespace Chilli {
 		void StartCurrentScene();
 		void StopCurrentScene();
 		void UpdateCurrentScene()const;
+		bool HasScenes()const;
 		const std::vector<std::shared_ptr<Scene>>& GetAllScenes()const;
 	private:
 		void CopyCurrentScene();

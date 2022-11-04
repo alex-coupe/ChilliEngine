@@ -62,7 +62,8 @@ namespace Chilli {
 			{
 				m_components.emplace_back(std::make_shared<CameraComponent>((ProjectionType)components[i]["ProjectionType"].GetInt(),
 					components[i]["Fov"].GetFloat(),components[i]["NearClip"].GetFloat(), components[i]["FarClip"].GetFloat()));
-				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this, RenderJobType::Camera);
+				if (DependencyResolver::ResolveDependency<ProjectManager>()->IsEditor())
+					m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this, RenderJobType::Camera);
 			}
 			break;
 			case (int)ComponentType::Light:
@@ -73,8 +74,10 @@ namespace Chilli {
 				m_components.emplace_back(std::make_shared<LightComponent>((LightType)components[i]["LightType"].GetInt(),
 					ambient,diffuse,specular, components[i]["Linear"].GetFloat(), components[i]["Constant"].GetFloat(), components[i]["Quadratic"].GetFloat()
 					, components[i]["InnerCutOff"].GetFloat(), components[i]["OuterCutOff"].GetFloat()));
-				DependencyResolver::ResolveDependency<Renderer>()->CreateLight(*this);
-				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this, RenderJobType::Light);
+				const auto& renderer = DependencyResolver::ResolveDependency<Renderer>();
+				renderer->CreateLight(*this);
+				if (DependencyResolver::ResolveDependency<ProjectManager>()->IsEditor())
+					m_renderJobId = renderer->AddRenderJob(*this, RenderJobType::Light);
 			}
 			break;
 			case (int)ComponentType::Script:

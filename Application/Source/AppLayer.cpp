@@ -1,7 +1,7 @@
 #include "AppLayer.h"
 
 Chilli::AppLayer::AppLayer(std::unique_ptr<Window>& window)
-	:m_window(window)
+	:m_window(window),Layer(LayerType::App)
 {
 	auto renderer = DependencyResolver::ResolveDependency<Renderer>();
 	m_screenWidth = static_cast<float>(renderer->GetD3D()->GetWindowWidth());

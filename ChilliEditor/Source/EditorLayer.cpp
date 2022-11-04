@@ -4,7 +4,7 @@
 namespace Chilli {
 	
 	EditorLayer::EditorLayer(std::unique_ptr<Window>& window)
-		:m_window(window)
+		:m_window(window), Layer(LayerType::Editor)
 	{
 		ImGui::SetCurrentContext(GuiManager::GetContext());
 		auto renderer = DependencyResolver::ResolveDependency<Renderer>();
@@ -35,13 +35,15 @@ namespace Chilli {
 
 	void EditorLayer::OnUpdate()
 	{
-		const auto sceneState = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene()->GetSceneState();
-
-		switch (sceneState)
+		const auto& currentScene = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene();
+		if (currentScene)
 		{
-		case SceneState::Edit:
-			DependencyResolver::ResolveDependency<Renderer>()->SetRenderCamera(m_editorCamera.get());
-			break;
+			switch (currentScene->GetSceneState())
+			{
+			case SceneState::Edit:
+				DependencyResolver::ResolveDependency<Renderer>()->SetRenderCamera(m_editorCamera.get());
+				break;
+			}
 		}
 	}
 

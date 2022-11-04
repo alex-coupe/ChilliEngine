@@ -9,6 +9,11 @@ namespace Chilli {
         m_sceneManager = std::make_unique<SceneManager>();
     }
 
+    const bool ProjectManager::IsEditor()const
+    {
+        return m_appLayer->GetLayerType() == LayerType::Editor;
+    }
+
     void ProjectManager::LoadProject(const std::filesystem::path filename)
     {
         m_projectOpen = true;
@@ -92,6 +97,7 @@ namespace Chilli {
         std::filesystem::copy("C:\\Dev\\ChilliEngine\\ChilliScriptCore\\Properties", m_projectDir + "\\Assets\\Scripts\\bin\\ChilliScriptCore\\Properties");
         std::filesystem::copy("C:\\Dev\\ChilliEngine\\ChilliScriptCore\\Source", m_projectDir + "\\Assets\\Scripts\\bin\\ChilliScriptCore\\Source");
         std::filesystem::create_directory(m_projectDir + "\\Assets\\Audio");
+        m_sceneManager->AddScene("Scene 1");
         SaveProject(m_projectFilePath);
         ScriptEngine::Init();
         ScriptApi::Init();
@@ -216,7 +222,8 @@ namespace Chilli {
 
     void ProjectManager::ProcessFrame()
     {
-        m_sceneManager->UpdateCurrentScene();
+        if (m_sceneManager->HasScenes())
+            m_sceneManager->UpdateCurrentScene();
     }
 
     bool ProjectManager::GetProjectOpen()const

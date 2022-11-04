@@ -34,14 +34,6 @@ namespace Chilli {
         s_chilliCoreAssembly = mono_domain_assembly_open(s_domain, coreAssemblyPath.c_str());
         s_applicationScriptsAssembly = mono_domain_assembly_open(s_domain, appAssemblyPath.c_str());
 
-        if (!s_chilliCoreAssembly)
-        {
-            std::ifstream src("C:\\Dev\\ChilliEngine\\ChilliScriptCore\\bin\\Release\\ChilliScriptCore.dll", std::ios::binary);
-            std::ofstream dest(projectDir + "\\" + "Assets\\Scripts\\bin\\ChilliScriptCore.dll", std::ios::binary);
-            dest << src.rdbuf();
-            s_chilliCoreAssembly = mono_domain_assembly_open(s_domain, coreAssemblyPath.c_str());
-        }
-
         if (s_chilliCoreAssembly)
             s_coreAssemblyImage = mono_assembly_get_image(s_chilliCoreAssembly);   
 
