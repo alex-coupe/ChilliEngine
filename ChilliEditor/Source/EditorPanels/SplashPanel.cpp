@@ -8,7 +8,7 @@ void Chilli::SplashPanel::DrawGui() const
 	if (!projOpen)
 		ImGui::OpenPopup("Splashscreen");
 
-	if (ImGui::BeginPopupModal("Splashscreen"))
+	if (ImGui::BeginPopupModal("Splashscreen", NULL, ImGuiWindowFlags_NoDecoration))
 	{
 		static char projectNameBuffer[50];
 		ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.2f, 1.0f), "New Project");
@@ -24,7 +24,7 @@ void Chilli::SplashPanel::DrawGui() const
 
 			ImGui::SameLine();
 			ImGui::Text(outPath != NULL ? outPath : "Not Selected");
-
+			ImGui::Spacing();
 			if (ImGui::Button("Create Project") && projectNameBuffer[0] != NULL && outPath != NULL)
 			{
 				projMan->NewProject(projectNameBuffer, outPath);
