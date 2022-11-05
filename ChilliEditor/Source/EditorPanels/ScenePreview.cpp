@@ -39,13 +39,15 @@ void Chilli::ScenePreview::DrawGui(const std::unique_ptr<Camera>& editorCam)
 	{
 		if (ImGui::IsKeyPressed(ImGuiKey_1, false) && ImGui::IsWindowHovered())
 			m_guizmoType = ImGuizmo::TRANSLATE;
-
 		if (ImGui::IsKeyPressed(ImGuiKey_2, false) && ImGui::IsWindowHovered())
-			m_guizmoType = ImGuizmo::ROTATE;
-
+			m_guizmoType = ImGuizmo::ROTATE_X;
 		if (ImGui::IsKeyPressed(ImGuiKey_3, false) && ImGui::IsWindowHovered())
+			m_guizmoType = ImGuizmo::ROTATE_Y;
+		if (ImGui::IsKeyPressed(ImGuiKey_4, false) && ImGui::IsWindowHovered())
+			m_guizmoType = ImGuizmo::ROTATE_Z;
+		if (ImGui::IsKeyPressed(ImGuiKey_5, false) && ImGui::IsWindowHovered())
 			m_guizmoType = ImGuizmo::SCALE;
-
+		
 		if (ImGui::IsKeyPressed(ImGuiKey_0, false) && ImGui::IsWindowHovered())
 			m_guizmoType = -1;
 
@@ -60,32 +62,35 @@ void Chilli::ScenePreview::DrawGui(const std::unique_ptr<Camera>& editorCam)
 			const auto& cameraProj = editorCam->GetProjMatrix();
 			const auto& cameraView = editorCam->GetViewMatrix();
 			const auto& tc = ChilliEditor::s_selectedEntity->GetTransformComponent();
-			const auto& transform = tc->GetTransformMatrix();
+			
+			float tmpMat[16];
+			ImGuizmo::RecomposeMatrixFromComponents(&tc->Translation().x, &tc->Rotation().x, &tc->Scale().x, tmpMat);
+			
 			DirectX::XMFLOAT4X4 projTemp;
 			DirectX::XMFLOAT4X4 viewTemp;
-			DirectX::XMFLOAT4X4 transformTemp;
+			
 			DirectX::XMStoreFloat4x4(&projTemp, cameraProj);
 			DirectX::XMStoreFloat4x4(&viewTemp, cameraView);
-			DirectX::XMStoreFloat4x4(&transformTemp, transform);
-
+			
 			ImGuizmo::Manipulate(&viewTemp.m[0][0], &projTemp.m[0][0],
-				(ImGuizmo::OPERATION)m_guizmoType, ImGuizmo::LOCAL, &transformTemp.m[0][0]);
+				(ImGuizmo::OPERATION)m_guizmoType, ImGuizmo::LOCAL, tmpMat);
 
 			if (ImGuizmo::IsUsing())
 			{
-				DirectX::XMVECTOR translation;
-				DirectX::XMVECTOR rotation;
-				DirectX::XMVECTOR scale;
-				DirectX::XMMATRIX transforms = DirectX::XMMatrixSet(
-					transformTemp.m[0][0], transformTemp.m[0][1], transformTemp.m[0][2], transformTemp.m[0][3],
-					transformTemp.m[1][0], transformTemp.m[1][1], transformTemp.m[1][2], transformTemp.m[1][3],
-					transformTemp.m[2][0], transformTemp.m[2][1], transformTemp.m[2][2], transformTemp.m[2][3],
-					transformTemp.m[3][0], transformTemp.m[3][1], transformTemp.m[3][2], transformTemp.m[3][3]);
-				DirectX::XMMatrixDecompose(&scale, &rotation, &translation, transforms);
+				float translation[3] = {0.0f,0.0f,0.0f};
+				float rotation[3] = { 0.0f,0.0f,0.0f };
+				float scale[3] = { 0.0f,0.0f,0.0f };
 
-				tc->Translation() = { DirectX::XMVectorGetX(translation),DirectX::XMVectorGetY(translation),DirectX::XMVectorGetZ(translation) };
-				tc->RotQuart() = rotation;
-				tc->Scale() = { DirectX::XMVectorGetX(scale),DirectX::XMVectorGetY(scale),DirectX::XMVectorGetZ(scale) };
+				ImGuizmo::DecomposeMatrixToComponents(tmpMat, translation, rotation, scale);
+				tc->Translation() = { translation[0],translation[1],translation[2] };
+				if (m_guizmoType == ImGuizmo::ROTATE_X)
+					tc->Rotation().x += rotation[0] - tc->Rotation().x;
+				if (m_guizmoType == ImGuizmo::ROTATE_Y)
+					tc->Rotation().y += rotation[1] - tc->Rotation().y;
+				if (m_guizmoType == ImGuizmo::ROTATE_Z)
+					tc->Rotation().z += rotation[2] - tc->Rotation().z;
+				
+				tc->Scale() = { scale[0],scale[1],scale[2] };
 			}
 		}
 	}

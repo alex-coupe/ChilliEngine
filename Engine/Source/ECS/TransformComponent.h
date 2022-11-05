@@ -16,11 +16,9 @@ namespace Chilli {
 		DirectX::XMMATRIX GetTransformMatrix()const;
 		DirectX::XMFLOAT3& Translation();
 		DirectX::XMFLOAT3& Rotation();
-		DirectX::XMVECTOR& RotQuart();
 		DirectX::XMFLOAT3& Scale();
 	private:
 		DirectX::XMFLOAT3 m_translation;
-		DirectX::XMVECTOR m_rotQuart;
 		DirectX::XMFLOAT3 m_rotation;
 		DirectX::XMFLOAT3 m_scale;		
 	};
