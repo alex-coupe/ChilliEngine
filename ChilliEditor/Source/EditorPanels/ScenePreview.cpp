@@ -1,5 +1,6 @@
 #include "ScenePreview.h"
-
+#include "../ChilliEditor.h"
+using namespace DirectX;
 Chilli::ScenePreview::ScenePreview()
 {
 	auto renderer = DependencyResolver::ResolveDependency<Renderer>();
@@ -11,7 +12,7 @@ void Chilli::ScenePreview::BindFrameBuffer()
 	m_frameBuffer->Bind();
 }
 
-void Chilli::ScenePreview::DrawGui()
+void Chilli::ScenePreview::DrawGui(const std::unique_ptr<Camera>& editorCam)
 {
 	ImGui::Begin("Scene Preview", 0);
 
@@ -33,7 +34,68 @@ void Chilli::ScenePreview::DrawGui()
 	}
 
 	ImGui::Image(m_frameBuffer->GetShaderResourceView().Get(), regionAvailable);
-	if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsWindowHovered()
+
+	if (DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene()->GetSceneState() != SceneState::Play)
+	{
+		if (ImGui::IsKeyPressed(ImGuiKey_1, false) && ImGui::IsWindowHovered())
+			m_guizmoType = ImGuizmo::TRANSLATE;
+		if (ImGui::IsKeyPressed(ImGuiKey_2, false) && ImGui::IsWindowHovered())
+			m_guizmoType = ImGuizmo::ROTATE_X;
+		if (ImGui::IsKeyPressed(ImGuiKey_3, false) && ImGui::IsWindowHovered())
+			m_guizmoType = ImGuizmo::ROTATE_Y;
+		if (ImGui::IsKeyPressed(ImGuiKey_4, false) && ImGui::IsWindowHovered())
+			m_guizmoType = ImGuizmo::ROTATE_Z;
+		if (ImGui::IsKeyPressed(ImGuiKey_5, false) && ImGui::IsWindowHovered())
+			m_guizmoType = ImGuizmo::SCALE;
+		
+		if (ImGui::IsKeyPressed(ImGuiKey_0, false) && ImGui::IsWindowHovered())
+			m_guizmoType = -1;
+
+		if (ChilliEditor::s_selectedEntity && m_guizmoType != -1)
+		{
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+			auto pos = ImGui::GetWindowPos();
+		
+			ImGuizmo::SetRect(pos.x, pos.y, m_scenePreviewWindowWidth, m_scenePreviewWindowHeight);
+
+			const auto& cameraProj = editorCam->GetProjMatrix();
+			const auto& cameraView = editorCam->GetViewMatrix();
+			const auto& tc = ChilliEditor::s_selectedEntity->GetTransformComponent();
+			
+			float tmpMat[16];
+			ImGuizmo::RecomposeMatrixFromComponents(&tc->Translation().x, &tc->Rotation().x, &tc->Scale().x, tmpMat);
+			
+			DirectX::XMFLOAT4X4 projTemp;
+			DirectX::XMFLOAT4X4 viewTemp;
+			
+			DirectX::XMStoreFloat4x4(&projTemp, cameraProj);
+			DirectX::XMStoreFloat4x4(&viewTemp, cameraView);
+			
+			ImGuizmo::Manipulate(&viewTemp.m[0][0], &projTemp.m[0][0],
+				(ImGuizmo::OPERATION)m_guizmoType, ImGuizmo::LOCAL, tmpMat);
+
+			if (ImGuizmo::IsUsing())
+			{
+				float translation[3] = {0.0f,0.0f,0.0f};
+				float rotation[3] = { 0.0f,0.0f,0.0f };
+				float scale[3] = { 0.0f,0.0f,0.0f };
+
+				ImGuizmo::DecomposeMatrixToComponents(tmpMat, translation, rotation, scale);
+				tc->Translation() = { translation[0],translation[1],translation[2] };
+				if (m_guizmoType == ImGuizmo::ROTATE_X)
+					tc->Rotation().x += rotation[0] - tc->Rotation().x;
+				if (m_guizmoType == ImGuizmo::ROTATE_Y)
+					tc->Rotation().y += rotation[1] - tc->Rotation().y;
+				if (m_guizmoType == ImGuizmo::ROTATE_Z)
+					tc->Rotation().z += rotation[2] - tc->Rotation().z;
+				
+				tc->Scale() = { scale[0],scale[1],scale[2] };
+			}
+		}
+	}
+
+	if (ImGui::IsMouseDown(ImGuiMouseButton_Right) && ImGui::IsWindowHovered() 
 		&& DependencyResolver::ResolveDependency<ProjectManager>
 		()->GetCurrentScene()->GetSceneState() == SceneState::Edit)
 	{

@@ -8,7 +8,7 @@ namespace Chilli {
 	public:
 		ScenePreview();
 		void BindFrameBuffer();
-		void DrawGui();
+		void DrawGui(const std::unique_ptr<Camera>& editorCam);
 		void Resize();
 		float GetAspectRatio()const;
 	private:
@@ -18,5 +18,6 @@ namespace Chilli {
 		bool m_initialMousePos = true;
 		float m_mouseX;
 		float m_mouseY;
+		int m_guizmoType = -1;
 	};
 }

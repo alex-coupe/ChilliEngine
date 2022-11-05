@@ -3,8 +3,7 @@ namespace Chilli {
 
 	TransformComponent::TransformComponent(DirectX::XMFLOAT3 translation, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 scale)
 		:Component(ComponentType::Transform, "Transform"), m_translation(translation), m_rotation(rotation), m_scale(scale)
-	{
-	}
+	{}
 
 	TransformComponent::TransformComponent(const TransformComponent& rhs)
 		:Component(rhs.m_type, rhs.m_name)
@@ -50,11 +49,11 @@ namespace Chilli {
 
 
 	DirectX::XMMATRIX TransformComponent::GetTransformMatrix() const
-	{
+	{		
+		auto rot = DirectX::XMQuaternionRotationRollPitchYaw(DirectX::XMConvertToRadians(m_rotation.x), DirectX::XMConvertToRadians(m_rotation.y), DirectX::XMConvertToRadians(m_rotation.z));
 		return
 			DirectX::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z) *
-			DirectX::XMMatrixRotationRollPitchYaw(m_rotation.x, m_rotation.y, m_rotation.z) *
+			DirectX::XMMatrixRotationQuaternion(rot) *
 			DirectX::XMMatrixTranslation(m_translation.x, m_translation.y, m_translation.z);
-
 	}
 }
