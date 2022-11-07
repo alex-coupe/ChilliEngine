@@ -31,6 +31,7 @@ namespace Chilli {
 		void RemoveChild(const UUID childId);
 		bool HasChildren()const;
 		bool HasParent();
+		bool HasChild(UUID childId);
 		const std::vector<std::shared_ptr<Entity>> GetChildren()const;
 		const std::shared_ptr<Entity> GetParent()const;
 		const UUID GetParentId()const;

@@ -17,7 +17,7 @@ namespace Chilli {
 	const std::string Mesh::Serialize() const
 	{
 		std::stringstream ss;
-		ss << "{ \"Uuid\":" << Uuid.Get() << ", \"Type\":" << static_cast<int>(m_type) << ", \"FilePath\": \"Assets/Models/" << m_filePath.filename().string() << "\"}";
+		ss << "{ \"Uuid\":" << Uuid.Get() << ", \"Type\":" << static_cast<int>(m_type) << ", \"FilePath\": \"Assets/Meshes/" << m_filePath.filename().string() << "\"}";
 		return  ss.str();
 	}
 

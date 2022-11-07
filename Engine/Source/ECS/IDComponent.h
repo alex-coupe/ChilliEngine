@@ -16,6 +16,6 @@ namespace Chilli {
 		void SetTag(const std::string& tag);
 	private:
 		std::string m_entityName;
-		std::string m_entityTag;
+		std::string m_entityTag = "";
 	};
 }

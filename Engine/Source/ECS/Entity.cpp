@@ -442,7 +442,20 @@ namespace Chilli {
 
 	void Entity::SetParent(const UUID parentId)
 	{
+		auto parentCopy = m_parent;
 		m_parent = parentId;
+
+		if (parentId == 0 && parentCopy != 0)
+			DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene()
+			->GetEntityByUUID(parentCopy)->RemoveChild(Uuid);
+		else if (parentId != 0 && parentCopy == 0)
+			GetParent()->AddChild(Uuid);
+		else if (parentId != 0 && parentCopy != 0)
+		{
+			DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene()
+				->GetEntityByUUID(parentCopy)->RemoveChild(Uuid);
+			GetParent()->AddChild(Uuid);
+		}
 	}
 
 	void Entity::RemoveChild(const UUID childId)
@@ -491,6 +504,14 @@ namespace Chilli {
 	bool Entity::HasParent()
 	{
 		return m_parent.Get() != 0;
+	}
+
+	bool Entity::HasChild(UUID childId)
+	{
+		for (const auto& id : m_children)
+			if (id == childId)
+				return true;
+		return false;
 	}
 
 	const std::string Entity::Serialize() const

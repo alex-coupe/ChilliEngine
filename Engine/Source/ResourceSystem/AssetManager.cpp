@@ -11,11 +11,11 @@ namespace Chilli {
             switch (assets[i]["Type"].GetInt())
             {
                 case (int)AssetType::Mesh:
-                    m_meshes.insert({ assets[i]["Uuid"].GetUint64(),std::make_shared<Mesh>(m_projDir +"\\" + assets[i]["FilePath"].GetString(),
+                    m_meshes.insert({ assets[i]["Uuid"].GetUint64(),std::make_shared<Mesh>(m_projDir +"/" + assets[i]["FilePath"].GetString(),
                         assets[i]["Uuid"].GetUint64()) });
                     break;
                 case (int)AssetType::Texture:
-                    m_textures.insert({ assets[i]["Uuid"].GetUint64(),std::make_shared<Texture>(m_projDir + "\\" + assets[i]["FilePath"].GetString(),
+                    m_textures.insert({ assets[i]["Uuid"].GetUint64(),std::make_shared<Texture>(m_projDir + "/" + assets[i]["FilePath"].GetString(),
                         assets[i]["Uuid"].GetUint64()) });
                     break;
                 default:

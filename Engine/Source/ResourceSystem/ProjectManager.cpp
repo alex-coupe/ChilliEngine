@@ -17,9 +17,9 @@ namespace Chilli {
     void ProjectManager::LoadProject(const std::filesystem::path filename)
     {
         m_projectOpen = true;
+        m_projectDir = filename.parent_path().generic_string();
         m_projectName = filename.stem().generic_string();
         m_projectFilePath = m_projectDir + "\\" + m_projectName + ".chilli";
-        m_projectDir = filename.parent_path().generic_string();
         ScriptEngine::Init();
         ScriptApi::Init();
         m_sceneManager.reset();
