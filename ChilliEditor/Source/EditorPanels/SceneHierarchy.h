@@ -8,5 +8,7 @@ namespace Chilli {
 	class SceneHierarchy  {
 	public:
 		void DrawGui();
+	private:
+		void DrawEntityNode(const std::shared_ptr<Entity> entity)const;
 	};
 }

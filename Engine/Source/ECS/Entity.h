@@ -10,8 +10,8 @@ namespace Chilli {
 
 	class CHILLI_API Entity {
 	public:
-		Entity(const std::string& name);
-		Entity(UUID uuid, const rapidjson::Value& components);
+		Entity(const std::string& name, UUID parent);
+		Entity(UUID uuid, UUID parent, const rapidjson::Value& children, const rapidjson::Value& components);
 		Entity(const Entity& rhs);
 		void Clone(const Entity& rhs);
 		std::shared_ptr<Component> GetComponentByType(ComponentType type);
@@ -26,11 +26,21 @@ namespace Chilli {
 		const std::shared_ptr<TransformComponent> GetTransformComponent();
 		void InitPhysics(std::unique_ptr<b2World>& physicsWorld);
 		void UpdatePhysics();
+		void SetParent(const UUID parentId);
+		void AddChild(const UUID childId);
+		void RemoveChild(const UUID childId);
+		bool HasChildren()const;
+		bool HasParent();
+		const std::vector<std::shared_ptr<Entity>> GetChildren()const;
+		const std::shared_ptr<Entity> GetParent()const;
+		const UUID GetParentId()const;
 	private:
 		b2Body* CreateRigidBody(std::unique_ptr<b2World>& physicsWorld, const std::shared_ptr<TransformComponent> transform);
 		void CreateBoxCollider(b2Body* rigidBody, const std::shared_ptr<TransformComponent> transform);
 		void CreateCircleCollider(b2Body* rigidBody, const std::shared_ptr<TransformComponent> transform);
 		std::vector<std::shared_ptr<Component>> m_components;
+		UUID m_parent;
+		std::vector<UUID> m_children;
 		int64_t m_renderJobId = 0;
 	};
 }
