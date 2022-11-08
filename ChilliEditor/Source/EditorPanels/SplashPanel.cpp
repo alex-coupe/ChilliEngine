@@ -10,6 +10,9 @@ void Chilli::SplashPanel::DrawGui() const
 
 	if (ImGui::BeginPopupModal("Splashscreen", NULL, ImGuiWindowFlags_NoDecoration))
 	{
+		ImGui::PushFont(GuiManager::GetIO()->Fonts->Fonts[1]);
+		ImGui::Text("Chilli Engine");
+		ImGui::PopFont();
 		static char projectNameBuffer[50];
 		ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.2f, 1.0f), "New Project");
 		ImGui::InputText("Project Name", projectNameBuffer,IM_ARRAYSIZE(projectNameBuffer));

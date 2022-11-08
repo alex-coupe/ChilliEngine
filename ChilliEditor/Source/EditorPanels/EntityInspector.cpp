@@ -151,15 +151,76 @@ namespace Chilli {
 		ImGui::End();
 	}
 
+	void EntityInspector::DrawVec3Control(const char* label, DirectX::XMFLOAT3& values, float resetValue)
+	{
+		auto boldFont = GuiManager::GetIO()->Fonts->Fonts[2];
+		ImGui::PushID(label);
+		ImGui::Columns(2);
+		ImGui::SetColumnWidth(0, 100.0f);
+		ImGui::Text(label);
+		ImGui::NextColumn();
+		ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+		float lineHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y + 2.0f;
+		ImVec2 buttonSize = { lineHeight + 3.0f,lineHeight };
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.2f, 0.2f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+
+		ImGui::PushFont(boldFont);
+		if (ImGui::Button("X", buttonSize))
+			values.x = resetValue;
+		ImGui::PopFont();
+
+		ImGui::PopStyleColor(3);
+		ImGui::SameLine();
+		ImGui::DragFloat("##x", &values.x, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.7f, 0.2f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.8f, 0.3f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+
+		ImGui::PushFont(boldFont);
+		if (ImGui::Button("Y", buttonSize))
+			values.y = resetValue;
+		ImGui::PopFont();
+
+		ImGui::PopStyleColor(3);
+		ImGui::SameLine();
+		ImGui::DragFloat("##y", &values.y, 0.1f,0.0f, 0.0f, "%.2f");
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.25f, 0.8f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.35f, 0.9f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.25f, 0.8f, 1.0f));
+
+		ImGui::PushFont(boldFont);
+		if (ImGui::Button("Z", buttonSize))
+			values.z = resetValue;
+		ImGui::PopFont();
+
+		ImGui::PopStyleColor(3);
+		ImGui::SameLine();
+		ImGui::DragFloat("##z", &values.z, 0.1f,0.0f,0.0f,"%.2f");
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+		ImGui::PopStyleVar();
+		ImGui::Columns(1);
+		ImGui::PopID();
+	}
+
 	void EntityInspector::DrawTransformComponentGui(const std::shared_ptr<Component> comp)
 	{
 		const auto& transformComp = std::static_pointer_cast<TransformComponent>(comp);
-		float* transforms[3] = { &transformComp->Translation().x,&transformComp->Translation().y, &transformComp->Translation().z };
-		float* rotation[3] = { &transformComp->Rotation().x,&transformComp->Rotation().y, &transformComp->Rotation().z };
-		float* scale[3] = { &transformComp->Scale().x,&transformComp->Scale().y, &transformComp->Scale().z };
-		ImGui::InputFloat3("Translation", transforms[0]);
-		ImGui::InputFloat3("Rotation", rotation[0]);
-		ImGui::InputFloat3("Scale", scale[0]);
+		ImGui::Spacing();
+		DrawVec3Control("Translation", transformComp->Translation());
+		DrawVec3Control("Rotation", transformComp->Rotation());
+		DrawVec3Control("Scale", transformComp->Scale(),1.0f);
 		ImGui::Spacing();
 	}
 

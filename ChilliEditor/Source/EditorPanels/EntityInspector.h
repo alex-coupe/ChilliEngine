@@ -2,12 +2,15 @@
 #include <vector>
 #include <string>
 #include "ECS/Component.h"
+#include "../ImGui/imgui_internal.h"
+#include <DirectXMath.h>
 
 namespace Chilli {
 	class EntityInspector {
 	public:
 		void DrawGui();
 	private:
+		void DrawVec3Control(const char* label, DirectX::XMFLOAT3& values, float resetValue = 0.0f);
 		void DrawTransformComponentGui(const std::shared_ptr<Component> comp);
 		void DrawScriptComponentGui(const std::shared_ptr<Component> comp);
 		void DrawMeshComponentGui(const std::shared_ptr<Component> comp);
