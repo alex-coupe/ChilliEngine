@@ -8,9 +8,6 @@ namespace Chilli {
 		ImGui::Begin("Inspector");
 		if (ChilliEditor::s_selectedEntity)
 		{
-			if (ImGui::Button("Add Component"))
-				ImGui::OpenPopup("addComponent");
-
 			if (ImGui::BeginPopup("addComponent"))
 			{
 				ImGui::Text("Add Component");
@@ -25,10 +22,7 @@ namespace Chilli {
 				}
 				ImGui::EndPopup();
 			}
-			ImGui::Spacing();
-			ImGui::Separator();
-			ImGui::Spacing();
-
+			
 			if (ImGui::BeginPopupContextItem("add tag popup"))
 			{
 				static char tagBuffer[50] = "";
@@ -52,10 +46,10 @@ namespace Chilli {
 					const auto& idComp = std::static_pointer_cast<IDComponent>(component);
 					static char nameBuffer[50];
 					strcpy_s(nameBuffer, idComp->GetName().c_str());
-					ImGui::Text("Name");
-					ImGui::PushID("Name");
-					ImGui::InputText("", nameBuffer, IM_ARRAYSIZE(nameBuffer));
-					ImGui::PopID();
+					ImGui::InputText("##name", nameBuffer, IM_ARRAYSIZE(nameBuffer));
+					ImGui::SameLine();
+					if (ImGui::Button("+",ImVec2(25.0f,25.0f)))
+						ImGui::OpenPopup("addComponent");
 
 					if (nameBuffer != idComp->GetName().c_str())
 						idComp->SetName(nameBuffer);
@@ -115,7 +109,7 @@ namespace Chilli {
 					continue;
 				}
 				
-				if (ImGui::TreeNodeEx(component->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed))
+				if (ImGui::TreeNodeEx(component->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth))
 				{
 					switch (component->GetComponentType())
 					{

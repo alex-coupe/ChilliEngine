@@ -16,9 +16,9 @@ namespace Chilli {
 		m_toolBar = std::make_shared<ToolBar>();
 		m_splashPanel = std::make_shared<SplashPanel>();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
-		io.Fonts->AddFontFromFileTTF("Resources\\Fonts\\Roboto-Regular.ttf", 15.0f);
-		io.Fonts->AddFontFromFileTTF("Resources\\Fonts\\Roboto-Regular.ttf", 20.0f);
-		io.Fonts->AddFontFromFileTTF("Resources\\Fonts\\Roboto-Bold.ttf", 15.0f);
+		io.Fonts->AddFontFromFileTTF("Resources\\Fonts\\Roboto-Regular.ttf", 18.0f);
+		io.Fonts->AddFontFromFileTTF("Resources\\Fonts\\Roboto-Regular.ttf", 24.0f);
+		io.Fonts->AddFontFromFileTTF("Resources\\Fonts\\Roboto-Bold.ttf", 18.0f);
 
 		m_editorCamera = std::make_unique<Camera>(1.0f, renderer->GetAspectRatio(), 0.5f, 100.0f, CameraType::Editor, ProjectionType::Perspective);
 		renderer->SetRenderCamera(m_editorCamera.get());
