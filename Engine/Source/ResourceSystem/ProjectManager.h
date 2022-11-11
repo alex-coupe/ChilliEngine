@@ -23,6 +23,7 @@ namespace Chilli {
 		void RemoveScene(UUID uuid);
 		std::vector<std::shared_ptr<Scene>> GetScenes()const;
 		void AddAsset(const std::filesystem::path& filename, AssetType type);
+		void CreateMaterial(Material mat);
 		void RemoveAsset(UUID uuid, AssetType type);
 		std::shared_ptr<Scene> GetCurrentScene()const;
 		void SetCurrentScene(UUID uuid);
@@ -31,6 +32,8 @@ namespace Chilli {
 		std::shared_ptr<Asset> GetAssetByUUID(UUID uuid, AssetType type);
 		const std::unordered_map<uint64_t, std::shared_ptr<Mesh>>& GetMeshes()const;
 		const std::unordered_map<uint64_t, std::shared_ptr<Texture>>& GetTextures()const;
+		const std::unordered_map<uint64_t, Material>& GetMaterials()const;
+		const Material& GetMaterial(uint64_t materialId);
 		static SystemType GetSystemType();
 		virtual void ProcessFrame()override;
 		bool GetProjectOpen()const;

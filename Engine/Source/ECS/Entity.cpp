@@ -37,10 +37,7 @@ namespace Chilli {
 				break;
 			}
 			case (int)ComponentType::Mesh:
-				DirectX::XMFLOAT3 diffuse = { components[i]["DiffR"].GetFloat(), components[i]["DiffG"].GetFloat(), components[i]["DiffB"].GetFloat() };
-				DirectX::XMFLOAT3 specular = { components[i]["SpecR"].GetFloat(), components[i]["SpecG"].GetFloat(), components[i]["SpecB"].GetFloat() };
-				m_components.emplace_back(std::make_shared<MeshComponent>(components[i]["MeshUuid"].GetUint64(), components[i]["TextureUuid"].GetUint64(), components[i]["SpecularMapUuid"].GetUint64(),
-					diffuse,specular,components[i]["Shininess"].GetFloat()));
+				m_components.emplace_back(std::make_shared<MeshComponent>(components[i]["MeshUuid"].GetUint64(), components[i]["MaterialUuid"].GetUint64()));
 				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this, RenderJobType::Mesh);
 				break;
 			case (int)ComponentType::RigidBody2D:

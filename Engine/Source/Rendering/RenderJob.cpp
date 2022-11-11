@@ -87,7 +87,7 @@ namespace Chilli {
 			m_vertexBuffer = std::make_unique<VertexBuffer>(mesh->GetVertices(), m_direct3d);
 			m_indexBuffer = std::make_unique<IndexBuffer>(mesh->GetIndices(), m_direct3d);
 			m_phongConstantVertexBuffer = std::make_unique<ConstantBuffer<Transforms>>(ConstantBufferType::Vertex, m_direct3d);
-			m_materialConstantBuffer = std::make_unique<ConstantBuffer<Material>>(ConstantBufferType::Pixel, m_direct3d);
+			m_materialConstantBuffer = std::make_unique<ConstantBuffer<ObjectMaterial>>(ConstantBufferType::Pixel, m_direct3d);
 			
 			if (mesh->HasTexture())
 			{
@@ -133,7 +133,7 @@ namespace Chilli {
 			m_phongConstantVertexBuffer->Bind();
 			m_phongConstantVertexBuffer->Update(trans);
 			
-			m_materialConstantBuffer->Update(meshComponent->material);
+			m_materialConstantBuffer->Update(meshComponent->GetObjectMaterial());
 			m_materialConstantBuffer->Bind(0);
 
 			int plIndex = 0;
@@ -162,7 +162,7 @@ namespace Chilli {
 			m_lightConstantBuffer->Update(m_lightBuffer);
 			m_lightConstantBuffer->Bind(1);
 			
-			m_materialConstantBuffer = std::make_unique<ConstantBuffer<Material>>(ConstantBufferType::Pixel, m_direct3d);
+			m_materialConstantBuffer = std::make_unique<ConstantBuffer<ObjectMaterial>>(ConstantBufferType::Pixel, m_direct3d);
 			m_vertexShader = ShaderLibrary::GetCoreShader("VertexPhong");
 			if (meshComponent->HasTexture())
 			{
@@ -189,8 +189,8 @@ namespace Chilli {
 			auto transform = DirectX::XMMatrixTranspose(tranformComp->GetTransformMatrix() * cam->GetViewProjMatrix());
 			m_transformationCBuff->Update(transform);
 			m_transformationCBuff->Bind();
-
-			m_color->Update(DirectX::XMFLOAT4(meshComponent->material.diffuse.x, meshComponent->material.diffuse.y, meshComponent->material.diffuse.z, 1.0f));
+			auto& material = meshComponent->GetMaterial();
+			m_color->Update(DirectX::XMFLOAT4(material.DiffuseColor[0], material.DiffuseColor[1], material.DiffuseColor[2], 1.0f));
 			m_color->Bind();
 			
 			if (meshComponent->HasTexture())

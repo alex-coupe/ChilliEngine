@@ -360,65 +360,48 @@ namespace Chilli {
 	{
 		const auto& projManager = DependencyResolver::ResolveDependency<ProjectManager>();
 		const auto& meshComp = std::static_pointer_cast<MeshComponent>(comp);
-		if (ImGui::Button("Select"))
-			ImGui::OpenPopup("meshDropdown");
-		ImGui::SameLine();
-		ImGui::TextUnformatted(!meshComp->HasMesh() ? "<None>" :
-			meshComp->GetMesh()->GetName().stem().generic_string().c_str());
-		if (ImGui::BeginPopup("meshDropdown"))
+		ImGui::Spacing();
+		ImGui::Text("Mesh");
+		if (ImGui::BeginCombo("##mesh", meshComp->meshUuid == 0 ? "None" : meshComp->GetMesh()->GetName().stem().string().c_str()))
 		{
-			ImGui::Text("Meshes");
-			ImGui::Separator();
-			for (const auto& mesh : DependencyResolver::ResolveDependency<ProjectManager>()->GetMeshes())
+			bool noneSelected = meshComp->meshUuid == 0;
+			if (ImGui::Checkbox("None", &noneSelected))
 			{
-				if (ImGui::Selectable(mesh.second->GetName().stem().generic_string().c_str()))
+				meshComp->meshUuid = 0;
+			}
+
+			for (const auto& mesh : projManager->GetMeshes())
+			{
+				bool selected = mesh.first == meshComp->meshUuid;
+				if (ImGui::Checkbox(mesh.second->GetName().stem().string().c_str(), &selected))
 				{
-					meshComp->SetMesh(mesh.second->Uuid);
+					meshComp->meshUuid = mesh.first;
 				}
 			}
-			ImGui::EndPopup();
+			ImGui::EndCombo();
 		}
 		ImGui::Spacing();
 		ImGui::Text("Material");
-		ImGui::ColorEdit3("Diffuse Color", &meshComp->material.diffuse.x);
-		ImGui::ColorEdit3("Specular Color", &meshComp->material.specular.x);
-		ImGui::InputFloat("Shininess", &meshComp->material.shininess);
-		if (ImGui::Button("Select Texture"))
-			ImGui::OpenPopup("textureDropdown");
-		ImGui::SameLine();
-		ImGui::TextUnformatted(!meshComp->HasTexture() ? "<None>" :
-			meshComp->GetTexture()->GetName().stem().generic_string().c_str());
-		const auto& textures = projManager->GetTextures();
-		if (ImGui::BeginPopup("textureDropdown"))
+		if (ImGui::BeginCombo("##material", meshComp->materialUuid == 0 ? "None" : meshComp->GetMaterial().Name.c_str()))
 		{
-			ImGui::Text("Textures");
-			ImGui::Separator();
-			for (const auto& texture : textures)
+			bool noneSelected = meshComp->materialUuid == 0;
+			if (ImGui::Checkbox("None", &noneSelected))
 			{
-				if (ImGui::Selectable(texture.second->GetName().stem().generic_string().c_str()))
+				meshComp->materialUuid = 0;
+			}
+			
+			for (const auto& material : projManager->GetMaterials())
+			{
+				if (material.first == 0)
+					continue;
+
+				bool selected = material.first == meshComp->materialUuid;
+				if (ImGui::Checkbox(material.second.Name.c_str(), &selected))
 				{
-					meshComp->SetTexture(texture.second->Uuid);
+					meshComp->materialUuid = material.first;
 				}
 			}
-			ImGui::EndPopup();
-		}
-		if (ImGui::Button("Select Specular Map"))
-			ImGui::OpenPopup("specularDropdown");
-		ImGui::SameLine();
-		ImGui::TextUnformatted(!meshComp->HasSpecularMap() ? "<None>" :
-			meshComp->GetSpecularMap()->GetName().stem().generic_string().c_str());
-		if (ImGui::BeginPopup("specularDropdown"))
-		{
-			ImGui::Text("Textures");
-			ImGui::Separator();
-			for (const auto& texture : textures)
-			{
-				if (ImGui::Selectable(texture.second->GetName().stem().generic_string().c_str()))
-				{
-					meshComp->SetSpecularMap(texture.second->Uuid);
-				}
-			}
-			ImGui::EndPopup();
+			ImGui::EndCombo();
 		}
 		ImGui::Spacing();
 		if (ImGui::Button("Remove Component"))

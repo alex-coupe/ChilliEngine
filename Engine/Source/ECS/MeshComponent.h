@@ -3,10 +3,11 @@
 #include "Component.h"
 #include "../ResourceSystem/Mesh.h"
 #include "../Rendering/Texture.h"
+#include "../ResourceSystem/Material.h"
 
 namespace Chilli {
 
-	struct Material {
+	struct ObjectMaterial {
 		alignas(16)DirectX::XMFLOAT3 diffuse;
 		alignas(16)DirectX::XMFLOAT3 specular;
 		float shininess;
@@ -15,7 +16,7 @@ namespace Chilli {
 	class CHILLI_API MeshComponent : public Component {
 	public:
 		MeshComponent();
-		MeshComponent(UUID meshUuid, UUID textureUuid,UUID specularUuid,DirectX::XMFLOAT3 diffuse, DirectX::XMFLOAT3 specular, float shininess);
+		MeshComponent(UUID meshUuid,UUID materialUuid);
 		MeshComponent(const MeshComponent& rhs);
 		virtual const std::string Serialize(uint64_t entityId)const override;
 		virtual void Clone(const std::shared_ptr<Component>& rhs)override;
@@ -24,16 +25,15 @@ namespace Chilli {
 		const std::shared_ptr<Mesh> GetMesh()const;
 		const std::shared_ptr<Texture> GetTexture()const;
 		const std::shared_ptr<Texture> GetSpecularMap()const;
+		const Material& GetMaterial()const;
 		void SetMesh(UUID meshUuid);
-		void SetTexture(UUID textureUuid);
-		void SetSpecularMap(UUID specularUuid);
 		const bool HasMesh()const;
 		const bool HasTexture()const;
 		const bool HasSpecularMap()const;
-		Material material;
+		const ObjectMaterial& GetObjectMaterial();
+		UUID materialUuid;
+		UUID meshUuid;
 	private:
-		UUID m_meshUuid;
-		UUID m_textureUuid;
-		UUID m_specularMap;
+		ObjectMaterial m_objectMat;
 	};
 }

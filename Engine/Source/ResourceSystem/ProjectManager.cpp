@@ -146,6 +146,11 @@ namespace Chilli {
         }
     }
 
+    void ProjectManager::CreateMaterial(Material mat)
+    {
+        m_assetManager->AddMaterial(mat);
+    }
+
     void ProjectManager::RemoveAsset(UUID uuid,AssetType type)
     {
         switch (type)
@@ -203,6 +208,16 @@ namespace Chilli {
     const std::unordered_map<uint64_t, std::shared_ptr<Texture>>& ProjectManager::GetTextures()const
     {
         return m_assetManager->GetTextures();
+    }
+
+    const std::unordered_map<uint64_t, Material>& ProjectManager::GetMaterials() const
+    {
+        return m_assetManager->GetMaterials();
+    }
+
+    const Material& ProjectManager::GetMaterial(uint64_t materialId)
+    {
+        return m_assetManager->GetMaterial(materialId);
     }
 
     SystemType ProjectManager::GetSystemType()

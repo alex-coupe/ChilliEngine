@@ -7,7 +7,7 @@
 namespace Chilli {
 
 	enum class AssetType : int {
-		Mesh, Scene, Texture, Script, Shader, Audio, Font
+		Mesh, Scene, Texture, Script, Shader, Audio, Font,Material
 	};
 
 	class CHILLI_API Asset {
