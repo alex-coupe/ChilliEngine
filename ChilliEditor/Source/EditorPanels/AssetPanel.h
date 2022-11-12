@@ -8,5 +8,8 @@ namespace Chilli {
 	public:
 		AssetPanel();
 		void DrawGui();
+	private:
+		std::unique_ptr<Texture> m_fileTexture;
+		std::unique_ptr<Texture> m_folderTexture;
 	};
 }

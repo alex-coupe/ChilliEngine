@@ -541,6 +541,15 @@ namespace Chilli {
 			ImGui::EndCombo();
 		}
 		ImGui::PopItemWidth();
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_MESH"))
+			{
+				const uint64_t* id = (const uint64_t*)payload->Data;
+				meshComp->meshUuid = *id;
+			}
+			ImGui::EndDragDropTarget();
+		}
 		ImGui::Spacing();
 		ImGui::Text("Material");
 		ImGui::PushItemWidth(180.0f);

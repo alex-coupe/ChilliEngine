@@ -3,6 +3,8 @@
 
 Chilli::AssetPanel::AssetPanel()
 {
+	m_fileTexture = std::make_unique<Texture>("Resources/Icons/FileIcon.png");
+	m_folderTexture = std::make_unique<Texture>("Resources/Icons/DirectoryIcon.png");
 	ChilliEditor::s_selectedScene = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene();
 }
 
@@ -15,7 +17,40 @@ void Chilli::AssetPanel::DrawGui()
 	{
 		if (ImGui::BeginTabItem("Meshes"))
 		{
-			if (ImGui::Button("Add"))
+			static float padding = 8.0f;
+			static float thumbnailSize = 64.0f;
+			
+			float cellSize = thumbnailSize + padding;
+			
+			float panelWidth = ImGui::GetContentRegionAvail().x;
+			
+			int columnCount = (int)(panelWidth / cellSize);
+			
+			if (columnCount < 1)
+				columnCount = 1;
+
+			ImGui::Columns(columnCount, 0, false);
+			for (const auto& mesh : projMan->GetMeshes())
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+				if (ImGui::ImageButtonEx((int)mesh.first, m_fileTexture->GetShaderResourceView().Get()
+					,{ thumbnailSize,thumbnailSize }, { 0,1 }, {1,0},ImVec4(0.0f, 0.0f, 0.0f, 0.0f), ImVec4(1, 1, 1, 1)))
+				{
+					ImGui::OpenPopup("removemesh");
+				}
+
+				if (ImGui::BeginDragDropSource())
+				{
+					ImGui::SetDragDropPayload("CONTENT_BROWSER_MESH", &mesh.first, sizeof(uint64_t));
+					ImGui::EndDragDropSource();
+				}
+
+				ImGui::TextWrapped(mesh.second->GetName().stem().string().c_str());
+				ImGui::PopStyleColor();
+				ImGui::NextColumn();
+			}
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+			if (ImGui::ImageButton(m_folderTexture->GetShaderResourceView().Get(),{ thumbnailSize,thumbnailSize }, { 1,0 }, { 0,1 }))
 			{
 				nfdchar_t* outPath = NULL;
 				nfdresult_t result = NFD_ERROR;
@@ -26,26 +61,19 @@ void Chilli::AssetPanel::DrawGui()
 					free(outPath);
 				}
 			}
-			ImGui::Separator();
+			ImGui::PopStyleColor();
+			ImGui::Columns(1);			
 
-			const auto& meshes = projMan->GetMeshes();
-			for (const auto& mesh : meshes)
-			{
-				if (ImGui::Selectable(mesh.second->GetName().stem().generic_string().c_str(), ChilliEditor::s_selectedAsset && ChilliEditor::s_selectedAsset->Uuid.Get() == mesh.first))
-				{
-					ChilliEditor::s_selectedAsset = mesh.second;
-				}
-			}
-
-			if (ChilliEditor::s_selectedAsset)
+			if (ImGui::BeginPopup("removemesh"))
 			{
 				if (ImGui::Button("Remove Mesh"))
 				{
 					projMan->RemoveAsset(ChilliEditor::s_selectedAsset->Uuid, AssetType::Mesh);
 					ChilliEditor::s_selectedAsset = nullptr;
 				}
+				ImGui::EndPopup();
 			}
-
+			
 			ImGui::EndTabItem();
 		}
 
