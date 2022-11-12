@@ -149,10 +149,7 @@ namespace Chilli {
 	{
 		auto boldFont = GuiManager::GetIO()->Fonts->Fonts[2];
 		ImGui::PushID(label);
-		ImGui::Columns(2);
-		ImGui::SetColumnWidth(0, 100.0f);
 		ImGui::Text(label);
-		ImGui::NextColumn();
 		ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
 		float lineHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y + 2.0f;
@@ -172,7 +169,6 @@ namespace Chilli {
 		ImGui::DragFloat("##x", &values.x, 0.1f, 0.0f, 0.0f, "%.2f");
 		ImGui::PopItemWidth();
 		ImGui::SameLine();
-
 
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.7f, 0.2f, 1.0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.8f, 0.3f, 1.0f));
@@ -204,7 +200,48 @@ namespace Chilli {
 		ImGui::PopItemWidth();
 		ImGui::SameLine();
 		ImGui::PopStyleVar();
-		ImGui::Columns(1);
+		ImGui::PopID();
+	}
+
+	void EntityInspector::DrawVec2Control(const char* label, DirectX::XMFLOAT2& values, float resetValue)
+	{
+		auto boldFont = GuiManager::GetIO()->Fonts->Fonts[2];
+		ImGui::PushID(label);
+		ImGui::Text(label);
+		ImGui::PushMultiItemsWidths(2, ImGui::CalcItemWidth());
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+		float lineHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y + 2.0f;
+		ImVec2 buttonSize = { lineHeight + 3.0f,lineHeight };
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.2f, 0.2f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+
+		ImGui::PushFont(boldFont);
+		if (ImGui::Button("X", buttonSize))
+			values.x = resetValue;
+		ImGui::PopFont();
+
+		ImGui::PopStyleColor(3);
+		ImGui::SameLine();
+		ImGui::DragFloat("##x", &values.x, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.7f, 0.2f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.8f, 0.3f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+
+		ImGui::PushFont(boldFont);
+		if (ImGui::Button("Y", buttonSize))
+			values.y = resetValue;
+		ImGui::PopFont();
+
+		ImGui::PopStyleColor(3);
+		ImGui::SameLine();
+		ImGui::DragFloat("##y", &values.y, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::PopItemWidth();
+		ImGui::PopStyleVar();
 		ImGui::PopID();
 	}
 
@@ -213,7 +250,9 @@ namespace Chilli {
 		const auto& transformComp = std::static_pointer_cast<TransformComponent>(comp);
 		ImGui::Spacing();
 		DrawVec3Control("Translation", transformComp->Translation());
+		ImGui::Spacing();
 		DrawVec3Control("Rotation", transformComp->Rotation());
+		ImGui::Spacing();
 		DrawVec3Control("Scale", transformComp->Scale(),1.0f);
 		ImGui::Spacing();
 	}
@@ -222,25 +261,32 @@ namespace Chilli {
 	{
 		const auto& scriptComp = std::static_pointer_cast<ScriptComponent>(comp);
 		
-		if (ImGui::Button("Select"))
-			ImGui::OpenPopup("scriptDropdown");
-		ImGui::SameLine();
-		ImGui::TextUnformatted(scriptComp->GetScriptName() == "" ? "<None>" :
-			scriptComp->GetScriptName().c_str());
-		if (ImGui::BeginPopup("scriptDropdown"))
+		ImGui::Spacing();
+		ImGui::Text("Script");
+		ImGui::PushItemWidth(180.0f);
+		if (ImGui::BeginCombo("##mesh", scriptComp->GetScriptName() == "" ? "None" : scriptComp->GetScriptName().c_str()))
 		{
-			ImGui::Text("Scripts");
-			ImGui::Separator();
+			bool noneSelected = scriptComp->GetScriptName() == "";
+			if (ImGui::Checkbox("None", &noneSelected))
+			{
+				scriptComp->SetScript("");
+				ScriptInstanceRepository::RemoveScriptInstance(ChilliEditor::s_selectedEntity->Uuid.Get());
+			}
+
 			for (const auto& script : ScriptEngine::GetAvailableScripts())
 			{
-				if (ImGui::Selectable(script->GetScriptName().c_str()))
+				bool selected = script->GetScriptName() == scriptComp->GetScriptName();
+				if (ImGui::Checkbox(script->GetScriptName().c_str(), &selected))
 				{
-					ScriptInstanceRepository::MakeScriptInstance(script->GetScriptName(), ChilliEditor::s_selectedEntity->Uuid.Get());
 					scriptComp->SetScript(script->GetScriptName());
+					ScriptInstanceRepository::RemoveScriptInstance(ChilliEditor::s_selectedEntity->Uuid.Get());
+					ScriptInstanceRepository::MakeScriptInstance(script->GetScriptName(), ChilliEditor::s_selectedEntity->Uuid.Get());
 				}
 			}
-			ImGui::EndPopup();
+			ImGui::EndCombo();
 		}
+		ImGui::PopItemWidth();
+		ImGui::Spacing();
 		ImGui::Spacing();
 		if (scriptComp->GetScriptName() != "")
 		{
@@ -253,96 +299,209 @@ namespace Chilli {
 				case FieldType::Float:
 				{
 					float data = scriptInstance->GetFieldValue<float>(name);
-
-					if (ImGui::DragFloat(name.c_str(), &data))
+					ImGui::PushID(field.Name.c_str());
+					ImGui::Text(field.Name.c_str());
+					ImGui::PushItemWidth(120.0f);
+					if (ImGui::DragFloat("", &data))
 					{
 						scriptInstance->SetFieldValue(name, data);
 					}
+					ImGui::PopItemWidth();
+					ImGui::PopID();
+					ImGui::Spacing();
 				}
 				break;
 				case FieldType::Bool:
 				{
 					bool data = scriptInstance->GetFieldValue<bool>(name);
-					if (ImGui::Checkbox(name.c_str(), &data))
+					ImGui::PushID(field.Name.c_str());
+					ImGui::Text(field.Name.c_str());
+					if (ImGui::Checkbox("", &data))
 					{
 						scriptInstance->SetFieldValue(name, data);
 					}
-				}
-				break;
-				case FieldType::Byte:
-
-					break;
-				case FieldType::Char:
-				{
-
+					ImGui::PopID();
 				}
 				break;
 				case FieldType::Double:
 				{
 					double data = scriptInstance->GetFieldValue<double>(name);
-
-					if (ImGui::InputDouble(name.c_str(), &data))
+					ImGui::PushID(field.Name.c_str());
+					ImGui::Text(field.Name.c_str());
+					ImGui::PushItemWidth(120.0f);
+					if (ImGui::InputDouble("", &data))
 					{
 						scriptInstance->SetFieldValue(name, data);
 					}
+					ImGui::PopItemWidth();
+					ImGui::PopID();
 				}
 				break;
 				case FieldType::Entity:
-				case FieldType::ULong:
 				{
-
+					uint64_t data = scriptInstance->GetFieldValue<uint64_t>(name);
+					ImGui::PushID(field.Name.c_str());
+					ImGui::Text(field.Name.c_str());
+					ImGui::PushItemWidth(120.0f);
+					auto entity = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene()->GetEntityByUUID(data);
+					ImGui::Text(entity->GetName().c_str());
+					ImGui::PopItemWidth();
+					ImGui::PopID();
 				}
 				break;
 				case FieldType::Int:
 				{
 					int data = scriptInstance->GetFieldValue<int>(name);
-
-					if (ImGui::InputInt(name.c_str(), &data))
+					ImGui::PushID(field.Name.c_str());
+					ImGui::Text(field.Name.c_str());
+					ImGui::PushItemWidth(120.0f);
+					if (ImGui::InputInt("", &data))
 					{
 						scriptInstance->SetFieldValue(name, data);
 					}
+					ImGui::PopItemWidth();
+					ImGui::PopID();
 				}
 				break;
-				case FieldType::Long:
-
-					break;
-				case FieldType::Short:
-
-					break;
-				case FieldType::UInt:
-
-					break;
-				case FieldType::UShort:
-
-					break;
+				
 				case FieldType::Vector2:
 				{
 					DirectX::XMFLOAT2 data = scriptInstance->GetFieldValue<DirectX::XMFLOAT2>(name);
-					float* vec2[2] = { &data.x,&data.y };
-					if (ImGui::InputFloat2(name.c_str(), vec2[0]))
+					auto boldFont = GuiManager::GetIO()->Fonts->Fonts[2];
+					ImGui::PushID(field.Name.c_str());
+					ImGui::Text(field.Name.c_str());
+					ImGui::PushMultiItemsWidths(2, ImGui::CalcItemWidth());
+					ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+					float lineHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y + 2.0f;
+					ImVec2 buttonSize = { lineHeight + 3.0f,lineHeight };
+
+					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.2f, 0.2f, 1.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+
+					ImGui::PushFont(boldFont);
+					if (ImGui::Button("X", buttonSize))
 					{
+						data.x = 0.0f;
 						scriptInstance->SetFieldValue(name, data);
 					}
+					ImGui::PopFont();
+
+					ImGui::PopStyleColor(3);
+					ImGui::SameLine();
+					if (ImGui::DragFloat("##x", &data.x, 0.1f, 0.0f, 0.0f, "%.2f"))
+						scriptInstance->SetFieldValue(name, data);
+					ImGui::PopItemWidth();
+					ImGui::SameLine();
+
+					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.7f, 0.2f, 1.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.8f, 0.3f, 1.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+
+					ImGui::PushFont(boldFont);
+					if (ImGui::Button("Y", buttonSize))
+					{
+						data.y = 0.0f;
+						scriptInstance->SetFieldValue(name, data);
+					}
+					ImGui::PopFont();
+
+					ImGui::PopStyleColor(3);
+					ImGui::SameLine();
+					if (ImGui::DragFloat("##y", &data.y, 0.1f, 0.0f, 0.0f, "%.2f"))
+						scriptInstance->SetFieldValue(name, data);
+					ImGui::PopItemWidth();
+					ImGui::PopStyleVar();
+					ImGui::PopID();
+					ImGui::Spacing();
 				}
 				break;
 				case FieldType::Vector3:
 				{
 					DirectX::XMFLOAT3 data = scriptInstance->GetFieldValue<DirectX::XMFLOAT3>(name);
-					float* vec3[3] = { &data.x,&data.y, &data.z };
-					if (ImGui::InputFloat3(name.c_str(), vec3[0]))
+					auto boldFont = GuiManager::GetIO()->Fonts->Fonts[2];
+					ImGui::PushID(field.Name.c_str());
+					ImGui::Text(field.Name.c_str());
+					ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
+					ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+					float lineHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y + 2.0f;
+					ImVec2 buttonSize = { lineHeight + 3.0f,lineHeight };
+
+					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.2f, 0.2f, 1.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+
+					ImGui::PushFont(boldFont);
+					if (ImGui::Button("X", buttonSize))
 					{
+						data.x = 0.0f;
 						scriptInstance->SetFieldValue(name, data);
 					}
+					ImGui::PopFont();
+
+					ImGui::PopStyleColor(3);
+					ImGui::SameLine();
+					if (ImGui::DragFloat("##x", &data.x, 0.1f, 0.0f, 0.0f, "%.2f"))
+						scriptInstance->SetFieldValue(name, data);
+					ImGui::PopItemWidth();
+					ImGui::SameLine();
+
+					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.7f, 0.2f, 1.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.8f, 0.3f, 1.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+
+					ImGui::PushFont(boldFont);
+					if (ImGui::Button("Y", buttonSize))
+					{
+						data.y = 0.0f;
+						scriptInstance->SetFieldValue(name, data);
+					}
+					ImGui::PopFont();
+
+					ImGui::PopStyleColor(3);
+					ImGui::SameLine();
+					if (ImGui::DragFloat("##y", &data.y, 0.1f, 0.0f, 0.0f, "%.2f"))
+						scriptInstance->SetFieldValue(name, data);
+					ImGui::PopItemWidth();
+					ImGui::SameLine();
+
+					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.25f, 0.8f, 1.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.35f, 0.9f, 1.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.25f, 0.8f, 1.0f));
+
+					ImGui::PushFont(boldFont);
+					if (ImGui::Button("Z", buttonSize))
+					{
+						data.z = 0.0f;
+						scriptInstance->SetFieldValue(name, data);
+					}
+					ImGui::PopFont();
+
+					ImGui::PopStyleColor(3);
+					ImGui::SameLine();
+					if (ImGui::DragFloat("##z", &data.z, 0.1f, 0.0f, 0.0f, "%.2f"))
+						scriptInstance->SetFieldValue(name, data);
+					ImGui::PopItemWidth();
+					ImGui::SameLine();
+					ImGui::PopStyleVar();
+					ImGui::PopID();
+					ImGui::Spacing();
 				}
 				break;
 				case FieldType::Vector4:
 				{
 					DirectX::XMFLOAT4 data = scriptInstance->GetFieldValue<DirectX::XMFLOAT4>(name);
 					float* vec4[4] = { &data.x,&data.y, &data.z, &data.w };
-					if (ImGui::InputFloat4(name.c_str(), vec4[0]))
+					ImGui::PushID(field.Name.c_str());
+					ImGui::Text(field.Name.c_str());
+					ImGui::PushItemWidth(120.0f);
+					if (ImGui::ColorEdit4("", vec4[0]))
 					{
 						scriptInstance->SetFieldValue(name, data);
 					}
+					ImGui::PopItemWidth();
+					ImGui::PopID();
+					ImGui::Spacing();
 				}
 				break;
 				}
@@ -362,6 +521,7 @@ namespace Chilli {
 		const auto& meshComp = std::static_pointer_cast<MeshComponent>(comp);
 		ImGui::Spacing();
 		ImGui::Text("Mesh");
+		ImGui::PushItemWidth(180.0f);
 		if (ImGui::BeginCombo("##mesh", meshComp->meshUuid == 0 ? "None" : meshComp->GetMesh()->GetName().stem().string().c_str()))
 		{
 			bool noneSelected = meshComp->meshUuid == 0;
@@ -380,8 +540,10 @@ namespace Chilli {
 			}
 			ImGui::EndCombo();
 		}
+		ImGui::PopItemWidth();
 		ImGui::Spacing();
 		ImGui::Text("Material");
+		ImGui::PushItemWidth(180.0f);
 		if (ImGui::BeginCombo("##material", meshComp->materialUuid == 0 ? "None" : meshComp->GetMaterial().Name.c_str()))
 		{
 			bool noneSelected = meshComp->materialUuid == 0;
@@ -403,6 +565,8 @@ namespace Chilli {
 			}
 			ImGui::EndCombo();
 		}
+		ImGui::PopItemWidth();
+		ImGui::Spacing();
 		ImGui::Spacing();
 		if (ImGui::Button("Remove Component"))
 		{
@@ -415,7 +579,10 @@ namespace Chilli {
 		const auto& rb2d = std::static_pointer_cast<RigidBody2DComponent>(comp);
 		const char* bodyTypeOptions[] = { "Static","Kinematic","Dynamic" };
 		const char* currentBodyTypeSelected = bodyTypeOptions[(int)rb2d->GetBodyType()];
-		if (ImGui::BeginCombo("Body Type", currentBodyTypeSelected))
+		ImGui::Spacing();
+		ImGui::Text("Body Type");
+		ImGui::PushItemWidth(130.0f);
+		if (ImGui::BeginCombo("##bodytype", currentBodyTypeSelected))
 		{
 			for (int i = 0; i <= 2; i++)
 			{
@@ -431,7 +598,11 @@ namespace Chilli {
 			}
 			ImGui::EndCombo();
 		}
-		ImGui::Checkbox("Fixed Rotation", rb2d->GetFixedRotation());
+		ImGui::PopItemWidth();
+		ImGui::Spacing();
+		ImGui::Text("Fixed Rotation");
+		ImGui::Checkbox("##fixrot", rb2d->GetFixedRotation());
+		ImGui::Spacing();
 		ImGui::Spacing();
 		if (ImGui::Button("Remove Component"))
 		{
@@ -442,13 +613,34 @@ namespace Chilli {
 	void EntityInspector::DrawCircleColliderComponentGui(const std::shared_ptr<Component> comp)
 	{
 		auto circleCollider = std::static_pointer_cast<CircleColliderComponent>(comp);
-		float* offset[2] = { &circleCollider->GetOffset().x,&circleCollider->GetOffset().y };
-		ImGui::DragFloat("Radius", &circleCollider->GetRadius(), 0.5f);
-		ImGui::DragFloat2("Offset", offset[0], 0.5f);
-		ImGui::DragFloat("Density", &circleCollider->GetDensity(), 0.01f, 0.0f, 1.0f);
-		ImGui::DragFloat("Friction", &circleCollider->GetFriction(), 0.01f, 0.0f, 1.0f);
-		ImGui::DragFloat("Restitution", &circleCollider->GetRestitution(), 0.01f, 0.0f, 1.0f);
-		ImGui::DragFloat("Restitution Threshold", &circleCollider->GetRestituitonThreshold(), 0.01f, 0.0f);
+		ImGui::Spacing();
+		ImGui::Text("Radius");
+		ImGui::PushItemWidth(120.0f);
+		ImGui::DragFloat("##radius", &circleCollider->GetRadius(), 0.5f);
+		ImGui::PopItemWidth();
+		ImGui::Spacing();
+		DrawVec2Control("Offset", circleCollider->GetOffset());
+		ImGui::Spacing();
+		ImGui::Text("Density");
+		ImGui::PushItemWidth(120.0f);
+		ImGui::DragFloat("##density", &circleCollider->GetDensity(), 0.01f, 0.0f, 1.0f);
+		ImGui::PopItemWidth();
+		ImGui::Spacing();
+		ImGui::Text("Friction");
+		ImGui::PushItemWidth(120.0f);
+		ImGui::DragFloat("##friction", &circleCollider->GetFriction(), 0.01f, 0.0f, 1.0f);
+		ImGui::PopItemWidth();
+		ImGui::Spacing();
+		ImGui::Text("Restitution");
+		ImGui::PushItemWidth(120.0f);
+		ImGui::DragFloat("##restitution", &circleCollider->GetRestitution(), 0.01f, 0.0f, 1.0f);
+		ImGui::PopItemWidth();
+		ImGui::Spacing();
+		ImGui::Text("Restitution Threshold");
+		ImGui::PushItemWidth(120.0f);
+		ImGui::DragFloat("##restitutionthreshold", &circleCollider->GetRestituitonThreshold(), 0.01f, 0.0f);
+		ImGui::PopItemWidth();
+		ImGui::Spacing();
 		ImGui::Spacing();
 		if (ImGui::Button("Remove Component"))
 		{
@@ -459,14 +651,28 @@ namespace Chilli {
 	void EntityInspector::DrawBoxColliderComponentGui(const std::shared_ptr<Component> comp)
 	{
 		auto bc2d = std::static_pointer_cast<BoxCollider2DComponent>(comp);
-		float* offset[2] = { &bc2d->GetOffset().x,&bc2d->GetOffset().y };
-		float* size[2] = { &bc2d->GetSize().x,&bc2d->GetSize().y };
-		ImGui::DragFloat2("Size", size[0], 0.5f);
-		ImGui::DragFloat2("Offset", offset[0], 0.5f);
-		ImGui::DragFloat("Density", &bc2d->GetDensity(), 0.01f, 0.0f, 1.0f);
-		ImGui::DragFloat("Friction", &bc2d->GetFriction(), 0.01f, 0.0f, 1.0f);
-		ImGui::DragFloat("Restitution", &bc2d->GetRestitution(), 0.01f, 0.0f, 1.0f);
-		ImGui::DragFloat("Restitution Threshold", &bc2d->GetRestituitonThreshold(), 0.01f, 0.0f);
+		DrawVec2Control("Size", bc2d->GetSize(), 1.0f);
+		ImGui::Spacing();
+		DrawVec2Control("Offset", bc2d->GetOffset());
+		ImGui::Spacing();
+		ImGui::Spacing();
+		ImGui::Text("Density");
+		ImGui::PushItemWidth(120.0f);
+		ImGui::DragFloat("##density", &bc2d->GetDensity(), 0.01f, 0.0f, 1.0f);
+		ImGui::PopItemWidth();
+		ImGui::Text("Friction");
+		ImGui::PushItemWidth(120.0f);
+		ImGui::DragFloat("##friction", &bc2d->GetFriction(), 0.01f, 0.0f, 1.0f);
+		ImGui::PopItemWidth();
+		ImGui::Text("Restitution");
+		ImGui::PushItemWidth(120.0f);
+		ImGui::DragFloat("##restitution", &bc2d->GetRestitution(), 0.01f, 0.0f, 1.0f);
+		ImGui::PopItemWidth();
+		ImGui::Text("Restitution Threshold");
+		ImGui::PushItemWidth(120.0f);
+		ImGui::DragFloat("##restitutionthreshold", &bc2d->GetRestituitonThreshold(), 0.01f, 0.0f);
+		ImGui::PopItemWidth();
+		ImGui::Spacing();
 		ImGui::Spacing();
 		if (ImGui::Button("Remove Component"))
 		{
@@ -479,7 +685,9 @@ namespace Chilli {
 		auto light = std::static_pointer_cast<LightComponent>(comp);
 		const char* lightTypeOptions[] = { "Directional Light","Point Light", "Spotlight" };
 		const char* currentLightTypeSelected = lightTypeOptions[(int)light->GetLightType()];
-		if (ImGui::BeginCombo("Light Type", currentLightTypeSelected))
+		ImGui::Spacing();
+		ImGui::Text("Light Type");
+		if (ImGui::BeginCombo("##lighttype", currentLightTypeSelected))
 		{
 			for (int i = 0; i <= 2; i++)
 			{
@@ -496,23 +704,45 @@ namespace Chilli {
 			ImGui::EndCombo();
 		}
 		ImGui::Spacing();
-		ImGui::ColorEdit3("Ambient", &light->Ambient().x);
-		ImGui::ColorEdit3("Diffuse", &light->Diffuse().x);
-		ImGui::ColorEdit3("Specular", &light->Specular().x);
+		ImGui::Text("Ambient");
+		ImGui::ColorEdit3("##ambient", &light->Ambient().x);
+		ImGui::Text("Diffuse");
+		ImGui::ColorEdit3("##diffuse", &light->Diffuse().x);
+		ImGui::Text("Specular");
+		ImGui::ColorEdit3("##specular", &light->Specular().x);
 		if (light->GetLightType() != LightType::DirectionalLight)
 		{
 			ImGui::Spacing();
 			ImGui::Text("Attenuation");
-			ImGui::DragFloat("Linear", &light->Linear(), 0.01f, 0.0f, 1.0f);
-			ImGui::DragFloat("Constant", &light->Constant(), 0.01f, 0.0f, 1.0f);
-			ImGui::DragFloat("Quadratic", &light->Quadratic(), 0.01f, 0.0f, 1.0f);
+			ImGui::Spacing();
+			ImGui::Text("Linear");
+			ImGui::PushItemWidth(120.0f);
+			ImGui::DragFloat("##linear", &light->Linear(), 0.01f, 0.0f, 1.0f);
+			ImGui::PopItemWidth();
+			ImGui::Text("Constant");
+			ImGui::PushItemWidth(120.0f);
+			ImGui::DragFloat("##constant", &light->Constant(), 0.01f, 0.0f, 1.0f);
+			ImGui::PopItemWidth();
+			ImGui::Text("Quadratic");
+			ImGui::PushItemWidth(120.0f);
+			ImGui::DragFloat("##quadratic", &light->Quadratic(), 0.01f, 0.0f, 1.0f);
+			ImGui::PopItemWidth();
 		}
 		if (light->GetLightType() == LightType::Spotlight)
 		{
 			ImGui::Spacing();
-			ImGui::DragFloat("Inner Cut Off", &light->InnerCutOff(), 0.5f, 0.0f, 50.0f);
-			ImGui::DragFloat("Outer Cut Off", &light->OuterCutOff(), 0.5f, 0.0f, 50.0f);
+			ImGui::Text("Cut Off");
+			ImGui::Spacing();
+			ImGui::Text("Inner");
+			ImGui::PushItemWidth(120.0f);
+			ImGui::DragFloat("##inner", &light->InnerCutOff(), 0.5f, 0.0f, 50.0f);
+			ImGui::PopItemWidth();
+			ImGui::Text("Outer");
+			ImGui::PushItemWidth(120.0f);
+			ImGui::DragFloat("##outer", &light->OuterCutOff(), 0.5f, 0.0f, 50.0f);
+			ImGui::PopItemWidth();
 		}
+		ImGui::Spacing();
 		ImGui::Spacing();
 
 		if (ImGui::Button("Remove Component"))
@@ -524,12 +754,12 @@ namespace Chilli {
 	void EntityInspector::DrawCameraComponentGui(const std::shared_ptr<Component> comp)
 	{
 		auto camera = std::static_pointer_cast<CameraComponent>(comp);
-		ImGui::DragFloat("Fov", &camera->GetFov(), 0.5f);
-		ImGui::DragFloat("Near Clip", &camera->GetNearClip(), 0.5f);
-		ImGui::DragFloat("Far Clip", &camera->GetFarClip(), 0.5f);
+		ImGui::Spacing();
+		ImGui::Text("Projection Type");
+		ImGui::PushItemWidth(180.0f);
 		const char* projectionTypeOptions[] = { "Perspective","Orthographic" };
 		const char* currentProjectionTypeSelected = projectionTypeOptions[(int)camera->GetProjectionType()];
-		if (ImGui::BeginCombo("Projection Type", currentProjectionTypeSelected))
+		if (ImGui::BeginCombo("##projectiontype", currentProjectionTypeSelected))
 		{
 			for (int i = 0; i <= 1; i++)
 			{
@@ -545,6 +775,21 @@ namespace Chilli {
 			}
 			ImGui::EndCombo();
 		}
+		ImGui::PopItemWidth();
+		ImGui::Spacing();
+		ImGui::Text("Fov");
+		ImGui::PushItemWidth(120.0f);
+		ImGui::DragFloat("##fov", &camera->GetFov(), 0.5f);
+		ImGui::PopItemWidth();
+		ImGui::Text("Near Clip");
+		ImGui::PushItemWidth(120.0f);
+		ImGui::DragFloat("##nearclip", &camera->GetNearClip(), 0.5f);
+		ImGui::PopItemWidth();
+		ImGui::Text("Far Clip");
+		ImGui::PushItemWidth(120.0f);
+		ImGui::DragFloat("##farclip", &camera->GetFarClip(), 0.5f);
+		ImGui::PopItemWidth();
+		ImGui::Spacing();
 		ImGui::Spacing();
 		if (ImGui::Button("Remove Component"))
 		{

@@ -11,6 +11,7 @@ namespace Chilli {
 		void DrawGui();
 	private:
 		void DrawVec3Control(const char* label, DirectX::XMFLOAT3& values, float resetValue = 0.0f);
+		void DrawVec2Control(const char* label, DirectX::XMFLOAT2& values, float resetValue = 0.0f);
 		void DrawTransformComponentGui(const std::shared_ptr<Component> comp);
 		void DrawScriptComponentGui(const std::shared_ptr<Component> comp);
 		void DrawMeshComponentGui(const std::shared_ptr<Component> comp);

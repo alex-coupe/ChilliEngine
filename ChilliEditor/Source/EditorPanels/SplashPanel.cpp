@@ -38,7 +38,7 @@ void Chilli::SplashPanel::DrawGui() const
 			ImGui::InputText("##location", dirBuffer, IM_ARRAYSIZE(dirBuffer));
 			ImGui::PopItemWidth();
 			ImGui::SameLine();
-			if (ImGui::Button("..."))
+			if (ImGui::Button("...", ImVec2{ 25.0f,25.0f }))
 			{
 				result = NFD_PickFolder(NULL, &outPath);
 				strcpy_s(dirBuffer, outPath);
