@@ -16,7 +16,8 @@ namespace Chilli {
 		auto projMan = DependencyResolver::ResolveDependency<ProjectManager>();
 		auto sceneState = projMan->GetCurrentScene()->GetSceneState();
 		float size = ImGui::GetWindowHeight() / 2.0f;
-		ImGui::SetCursorPosX((ImGui::GetWindowWidth() / 2.0f)-size);
+		ImGui::SetCursorPosX((ImGui::GetWindowWidth() * 0.5f)-size);
+		ImGui::SetCursorPosY(ImGui::GetWindowHeight() * 0.45f);
 		{
 			auto& icon = (sceneState == SceneState::Edit || sceneState == SceneState::Simulate) ? m_playIcon : m_stopIcon;
 			if (ImGui::ImageButton(icon->GetShaderResourceView().Get(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0, ImVec4(0.0f, 0.0f, 0.0f, 0.0f), ImVec4(1, 1, 1, 1)))
