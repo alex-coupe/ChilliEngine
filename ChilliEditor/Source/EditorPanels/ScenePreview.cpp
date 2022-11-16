@@ -35,6 +35,16 @@ void Chilli::ScenePreview::DrawGui(const std::unique_ptr<Camera>& editorCam)
 
 	ImGui::Image(m_frameBuffer->GetShaderResourceView().Get(), regionAvailable);
 
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_SCENE"))
+		{
+			const uint64_t* id = (const uint64_t*)payload->Data;
+			DependencyResolver::ResolveDependency<ProjectManager>()->SetCurrentScene(*id);
+		}
+		ImGui::EndDragDropTarget();
+	}
+
 	if (DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene()->GetSceneState() != SceneState::Play)
 	{
 		if (ImGui::IsKeyPressed(ImGuiKey_1, false) && ImGui::IsWindowHovered())

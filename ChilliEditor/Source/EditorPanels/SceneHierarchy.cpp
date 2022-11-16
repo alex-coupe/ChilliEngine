@@ -93,6 +93,13 @@ namespace Chilli {
 				ChilliEditor::s_selectedEntity = entity;
 			}
 			ImGui::PopID();
+
+			if (ImGui::BeginDragDropSource())
+			{
+				auto id = entity->Uuid.Get();
+				ImGui::SetDragDropPayload("ENTITY", &id, sizeof(uint64_t));
+				ImGui::EndDragDropSource();
+			}
 		}
 		
 		if (entity->HasChildren())
@@ -108,6 +115,12 @@ namespace Chilli {
 			if (ImGui::IsItemClicked())
 			{
 				ChilliEditor::s_selectedEntity = entity;
+			}
+			if (ImGui::BeginDragDropSource())
+			{
+				auto id = entity->Uuid.Get();
+				ImGui::SetDragDropPayload("ENTITY", &id, sizeof(uint64_t));
+				ImGui::EndDragDropSource();
 			}
 		}	
 	}

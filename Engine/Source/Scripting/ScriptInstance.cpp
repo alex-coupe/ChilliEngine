@@ -80,7 +80,7 @@ namespace Chilli {
                     break;
                 case FieldType::Entity:
                 case FieldType::ULong:
-                    SetFieldValue<uint64_t>(original->first, *(uint64_t*)field.second.FieldValueBuffer);
+                    SetFieldValue<UUID>(original->first, *(UUID*)field.second.FieldValueBuffer);
                     break;
                 case FieldType::Int:
                     SetFieldValue<int>(original->first, *(int*)field.second.FieldValueBuffer);

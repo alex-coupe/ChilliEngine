@@ -27,6 +27,11 @@ namespace Chilli {
 	{
 		return lhs.Get() != rhs;
 	}
+
+	inline bool operator!=(const UUID& lhs, const UUID& rhs)
+	{
+		return lhs.Get() != rhs.Get();
+	}
 }
 
 namespace std {

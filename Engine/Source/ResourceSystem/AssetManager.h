@@ -32,8 +32,9 @@ namespace Chilli {
 		const std::unordered_map<uint64_t, std::shared_ptr<Mesh>>& GetMeshes()const;
 		const std::unordered_map<uint64_t, std::shared_ptr<Texture>>& GetTextures()const;
 		const std::unordered_map<uint64_t, Material>& GetMaterials()const;
-		const Material& GetMaterial(uint64_t materialId);
+		Material& GetMaterial(uint64_t materialId);
 		void AddMaterial(Material mat);
+		void EditMaterial(Material mat);
 		void RemoveMaterial(const UUID matId);
 	private:
 		void AddDefaultMaterial();

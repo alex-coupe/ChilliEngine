@@ -97,18 +97,18 @@ namespace Chilli {
 
     void AssetManager::AddScript(const std::filesystem::path& filename)
     {
-        std::string basePath(m_projDir + "Assets\\Scripts\\");
+        std::string basePath(m_projDir + "/Assets/Scripts/");
         std::string fullPath = basePath + filename.string()+".cs";
         std::ofstream script(fullPath);
-        script << "using Chilli;"
-        << "namespace Application {" 
-        << "public class" << filename.string() << ": ChilliScript"
-        << "{"
-        << "public override void OnCreate()" 
-        <<"{}"
-        << "public override void OnDestroy() {}"
-        << "public override void OnUpdate(float dt) {}"
-        <<  "}" 
+        script << "using Chilli;\n"
+        << "namespace Application {\n" 
+        << "public class" << filename.string() << ": ChilliScript\n"
+        << "{\n"
+        << "public override void OnCreate()\n" 
+        <<"{}\n"
+        << "public override void OnDestroy() {}\n"
+        << "public override void OnUpdate(float dt) {}\n"
+        <<  "}\n" 
         <<"}";
         script.close();
     }
@@ -144,7 +144,7 @@ namespace Chilli {
     {
         return m_materials;
     }
-    const Material& AssetManager::GetMaterial(uint64_t materialId)
+    Material& AssetManager::GetMaterial(uint64_t materialId)
     {
         auto matItr = m_materials.find(materialId);
         if (matItr != m_materials.end())
@@ -155,6 +155,28 @@ namespace Chilli {
     {
         m_materials.emplace(mat.Id.Get(), mat);
     }
+
+    void AssetManager::EditMaterial(Material mat)
+    {
+        auto matItr = m_materials.find(mat.Id.Get());
+        if (matItr != m_materials.end())
+        {
+            matItr->second.DiffuseColor[0] = mat.DiffuseColor[0];
+            matItr->second.DiffuseColor[1] = mat.DiffuseColor[1];
+            matItr->second.DiffuseColor[2] = mat.DiffuseColor[2];
+            matItr->second.SpecularColor[0] = mat.SpecularColor[0];
+            matItr->second.SpecularColor[1] = mat.SpecularColor[1];
+            matItr->second.SpecularColor[2] = mat.SpecularColor[2];
+            matItr->second.DiffuseTexId = mat.DiffuseTexId;
+            matItr->second.SpecularTexId = mat.SpecularTexId;
+            matItr->second.SpecularTexId = mat.SpecularTexId;
+            matItr->second.Name = mat.Name;
+            matItr->second.Type = mat.Type;
+            matItr->second.Shininess = mat.Shininess;
+            matItr->second = mat;
+        }
+    }
+
     void AssetManager::RemoveMaterial(const UUID matId)
     {
         auto matItr = m_materials.find(matId.Get());
@@ -165,6 +187,6 @@ namespace Chilli {
     {
         Material mat = {};
         mat.Name = "Default";
-        m_materials.emplace(0, mat);
+        m_materials.emplace(1, mat);
     }
 }

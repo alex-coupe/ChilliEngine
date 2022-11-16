@@ -48,6 +48,8 @@ namespace Chilli {
 				return rhs->Uuid.Get() == uuid.Get();
 			}); m_sceneIterator != m_scenes.end() && m_scenes.size() > 0)
 		{
+			for (const auto& ent : m_sceneIterator->get()->GetEntities())
+				m_sceneIterator->get()->RemoveEntity(ent->Uuid);
 			m_scenes.erase(m_sceneIterator);
 		}
 	}

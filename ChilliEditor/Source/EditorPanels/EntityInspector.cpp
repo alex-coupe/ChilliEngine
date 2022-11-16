@@ -285,6 +285,17 @@ namespace Chilli {
 			}
 			ImGui::EndCombo();
 		}
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_SCRIPT"))
+			{
+				const char* name = (const char*)payload->Data;
+				scriptComp->SetScript(name);
+				ScriptInstanceRepository::RemoveScriptInstance(ChilliEditor::s_selectedEntity->Uuid.Get());
+				ScriptInstanceRepository::MakeScriptInstance(name, ChilliEditor::s_selectedEntity->Uuid.Get());
+			}
+			ImGui::EndDragDropTarget();
+		}
 		ImGui::PopItemWidth();
 		ImGui::Spacing();
 		ImGui::Spacing();
@@ -339,14 +350,32 @@ namespace Chilli {
 				break;
 				case FieldType::Entity:
 				{
-					uint64_t data = scriptInstance->GetFieldValue<uint64_t>(name);
+					UUID data = scriptInstance->GetFieldValue<UUID>(name);
 					ImGui::PushID(field.Name.c_str());
 					ImGui::Text(field.Name.c_str());
 					ImGui::PushItemWidth(120.0f);
 					auto entity = DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene()->GetEntityByUUID(data);
-					ImGui::Text(entity->GetName().c_str());
+					ImGui::Text(data != 0 && entity ? entity->GetName().c_str() : "None");
+					if (entity)
+					{
+						ImGui::SameLine();
+						if (ImGui::Button("Clear"))
+							scriptInstance->SetFieldValue(name, 0);
+					}
+					ImGui::Spacing();
+					ImGui::Spacing();
+					if (ImGui::BeginDragDropTarget())
+					{
+						if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ENTITY"))
+						{
+							const uint64_t* id = (const uint64_t*)payload->Data;
+							scriptInstance->SetFieldValue(name, *id);
+						}
+						ImGui::EndDragDropTarget();
+					}
 					ImGui::PopItemWidth();
 					ImGui::PopID();
+					
 				}
 				break;
 				case FieldType::Int:
@@ -553,17 +582,17 @@ namespace Chilli {
 		ImGui::Spacing();
 		ImGui::Text("Material");
 		ImGui::PushItemWidth(180.0f);
-		if (ImGui::BeginCombo("##material", meshComp->materialUuid == 0 ? "None" : meshComp->GetMaterial().Name.c_str()))
+		if (ImGui::BeginCombo("##material", meshComp->materialUuid == 1 ? "Default" : meshComp->GetMaterial().Name.c_str()))
 		{
-			bool noneSelected = meshComp->materialUuid == 0;
-			if (ImGui::Checkbox("None", &noneSelected))
+			bool noneSelected = meshComp->materialUuid == 1;
+			if (ImGui::Checkbox("Default", &noneSelected))
 			{
-				meshComp->materialUuid = 0;
+				meshComp->materialUuid = 1;
 			}
 			
 			for (const auto& material : projManager->GetMaterials())
 			{
-				if (material.first == 0)
+				if (material.first == 1)
 					continue;
 
 				bool selected = material.first == meshComp->materialUuid;
@@ -575,6 +604,15 @@ namespace Chilli {
 			ImGui::EndCombo();
 		}
 		ImGui::PopItemWidth();
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_MATERIAL"))
+			{
+				const uint64_t* id = (const uint64_t*)payload->Data;
+				meshComp->materialUuid = *id;
+			}
+			ImGui::EndDragDropTarget();
+		}
 		ImGui::Spacing();
 		ImGui::Spacing();
 		if (ImGui::Button("Remove Component"))

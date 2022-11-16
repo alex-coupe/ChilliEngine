@@ -44,6 +44,8 @@ void Chilli::SplashPanel::DrawGui() const
 				strcpy_s(dirBuffer, outPath);
 			}			
 			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Spacing();
 			ImGui::SetCursorPosX(center - 70.0f);
 			if (ImGui::Button("Create") && projectNameBuffer[0] != NULL && outPath != NULL)
 			{

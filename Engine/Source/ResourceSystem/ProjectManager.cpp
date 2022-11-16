@@ -128,6 +128,11 @@ namespace Chilli {
         return m_sceneManager->GetAllScenes();
     }
 
+    const std::shared_ptr<Scene> ProjectManager::GetScene(UUID sceneId) const
+    {
+        return m_sceneManager->GetSceneByUUID(sceneId);
+    }
+
     void ProjectManager::AddAsset(const std::filesystem::path& filename, AssetType type)
     {
         switch (type)
@@ -149,6 +154,16 @@ namespace Chilli {
     void ProjectManager::CreateMaterial(Material mat)
     {
         m_assetManager->AddMaterial(mat);
+    }
+
+    void ProjectManager::EditMaterial(Material mat)
+    {
+        m_assetManager->EditMaterial(mat);
+    }
+
+    void ProjectManager::RemoveMaterial(UUID matId)
+    {
+        m_assetManager->RemoveMaterial(matId);
     }
 
     void ProjectManager::RemoveAsset(UUID uuid,AssetType type)
@@ -215,7 +230,7 @@ namespace Chilli {
         return m_assetManager->GetMaterials();
     }
 
-    const Material& ProjectManager::GetMaterial(uint64_t materialId)
+    Material& ProjectManager::GetMaterial(uint64_t materialId)
     {
         return m_assetManager->GetMaterial(materialId);
     }
