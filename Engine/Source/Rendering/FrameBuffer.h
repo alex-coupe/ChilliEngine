@@ -6,7 +6,7 @@ namespace Chilli {
 
 	class CHILLI_API FrameBuffer {
 	public:
-		FrameBuffer(uint64_t width, uint64_t  height, const std::shared_ptr<Direct3D>& d3d);
+		FrameBuffer(uint64_t width, uint64_t  height, const std::shared_ptr<Direct3D>& d3d, UINT format = DXGI_FORMAT_R32G32B32A32_FLOAT, UINT access = 0);
 		~FrameBuffer();
 		void Bind();
 		void Unbind();

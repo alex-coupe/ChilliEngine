@@ -17,6 +17,21 @@ namespace Chilli {
 	private:
 		uint64_t m_uuid;
 	};
+
+	inline bool operator==(const UUID& lhs, const UUID& rhs)
+	{
+		return lhs.Get() == rhs.Get();
+	}
+
+	inline bool operator!=(const UUID& lhs, const int rhs)
+	{
+		return lhs.Get() != rhs;
+	}
+
+	inline bool operator!=(const UUID& lhs, const UUID& rhs)
+	{
+		return lhs.Get() != rhs.Get();
+	}
 }
 
 namespace std {

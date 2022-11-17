@@ -12,7 +12,7 @@ namespace Chilli {
     {
         for (unsigned int i = 0; i < entities.Size(); i++)
         {
-            m_entities.emplace_back(std::make_shared<Entity>(entities[i]["Uuid"].GetUint64(), entities[i]["Components"].GetArray()));
+            m_entities.emplace_back(std::make_shared<Entity>(entities[i]["Uuid"].GetUint64(), entities[i]["Parent"].GetUint64(), entities[i]["Children"].GetArray(), entities[i]["Components"].GetArray()));
         }
     }
 
@@ -36,18 +36,26 @@ namespace Chilli {
 
     void Scene::DuplicateEntity(const std::shared_ptr<Entity> entity)
     {
-       auto& dupe = m_entities.emplace_back(std::make_shared<Entity>(entity->GetName() + " - Duplicate"));
-       dupe->RemoveComponent(ComponentType::Transform);
-       for (auto& comp : entity->GetComponents())
-       {
-           if (comp->GetComponentType() != ComponentType::ID)
-           {
-               dupe->AddComponent(comp->GetComponentType());
-               auto newComp = dupe->GetComponentByType(comp->GetComponentType());
-               newComp->Clone(comp);
-           }
-       }
-       std::static_pointer_cast<IDComponent>(dupe->GetComponentByType(ComponentType::ID))->SetName(entity->GetName() + " - Copy");
+        auto& dupe = m_entities.emplace_back(std::make_shared<Entity>(entity->GetName() + " - Duplicate", entity->GetParentId()));
+        if (dupe->HasParent())
+        {
+            dupe->GetParent()->AddChild(dupe->Uuid);
+        }
+
+        dupe->RemoveComponent(ComponentType::Transform);
+        for (auto& comp : entity->GetComponents())
+        {
+            if (comp->GetComponentType() != ComponentType::ID)
+            {
+                dupe->AddComponent(comp->GetComponentType());
+                auto newComp = dupe->GetComponentByType(comp->GetComponentType());
+                newComp->Clone(comp);
+
+                if (comp->GetComponentType() == ComponentType::Script)
+                    ScriptInstanceRepository::MakeScriptInstance(std::static_pointer_cast<ScriptComponent>(comp)->GetScriptName(), dupe->Uuid.Get());
+            }
+        }
+        std::static_pointer_cast<IDComponent>(dupe->GetComponentByType(ComponentType::ID))->SetName(entity->GetName() + " - Copy");
     }
 
     const std::string Scene::Serialize()
@@ -66,7 +74,7 @@ namespace Chilli {
 
     void Scene::AddEntity(const std::string& name)
     {
-        m_entities.emplace_back(std::make_shared<Entity>(name));
+        m_entities.emplace_back(std::make_shared<Entity>(name, 0));
     }
 
     void Scene::AddEntity(const std::shared_ptr<Entity> ent)
@@ -85,6 +93,14 @@ namespace Chilli {
             {
                 m_entIterator->get()->RemoveComponent(m_entIterator->get()->GetComponents()[i]->GetComponentType());
             }
+            auto ent = m_entIterator->get();
+            if (ent->HasParent())
+                ent->GetParent()->RemoveChild(ent->Uuid);
+
+            if (ent->HasChildren())
+                for (const auto& child : ent->GetChildren())
+                    child->SetParent(0);
+
             m_entities.erase(m_entIterator);
         }
     }
@@ -117,9 +133,9 @@ namespace Chilli {
                 auto renderer = DependencyResolver::ResolveDependency<Renderer>();
                 m_sceneCamera = std::make_unique<Camera>(camComponent->GetFov(),
                     renderer->GetDisplayWindowAspectRatio(),
-                    camComponent->GetNearClip(), camComponent->GetFarClip(), 
-                    CameraType::Scene, camComponent->GetProjectionType(),transformComponent->Translation());
-               renderer->SetRenderCamera(m_sceneCamera.get());
+                    camComponent->GetNearClip(), camComponent->GetFarClip(),
+                    CameraType::Scene, camComponent->GetProjectionType(), transformComponent->Translation());
+                renderer->SetRenderCamera(m_sceneCamera.get());
             }
             if (entity->HasComponent(ComponentType::Script))
             {
@@ -144,7 +160,7 @@ namespace Chilli {
                 const auto& camComponent = std::static_pointer_cast<CameraComponent>(entity->GetComponentByType(ComponentType::Camera));
                 const auto& transformComponent = std::static_pointer_cast<TransformComponent>(entity->GetComponentByType(ComponentType::Transform));
 
-                m_sceneCamera->UpdatePosition(transformComponent->Translation(),transformComponent->Rotation());
+                m_sceneCamera->UpdatePosition(transformComponent->Translation(), transformComponent->Rotation());
             }
             entity->UpdatePhysics();
         }
@@ -167,6 +183,11 @@ namespace Chilli {
     const std::string& Scene::GetName() const
     {
         return m_name;
+    }
+
+    void Scene::SetName(const std::string& name)
+    {
+        m_name = name;
     }
 
     std::shared_ptr<Entity> Scene::GetEntityByUUID(UUID uuid)const

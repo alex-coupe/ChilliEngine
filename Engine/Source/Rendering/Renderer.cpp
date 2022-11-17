@@ -104,7 +104,7 @@ namespace Chilli {
 	{
 		m_appLayer->OnRender();
 		ProcessRenderJobs();
-		if (m_appLayer->HasGui())
+		if (m_appLayer->GetLayerType() == LayerType::Editor)
 		{
 			GuiManager::BeginFrame();
 			m_appLayer->OnRenderGui();

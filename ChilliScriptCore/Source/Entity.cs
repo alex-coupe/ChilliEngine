@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace Chilli
 {
-    public class Entity
+    public struct Entity
     {
         public readonly ulong ID;
         public Entity(ulong id) { ID = id; }
-
         public bool HasComponent<T>() where T : Component, new()
         {
             Type componentType = typeof(T);
@@ -42,8 +41,6 @@ namespace Chilli
         public Entity FindByName(string name)
         {
             ulong id = InternalCalls.Entity_FindByName(name);
-            if (id == 0)
-                return null;
             return new Entity(id);
         }
 

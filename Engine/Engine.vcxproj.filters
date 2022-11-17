@@ -210,6 +210,9 @@
     <ClInclude Include="Source\Gui\ImGuizmo\ImZoomSlider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ResourceSystem\Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Timer.cpp">
@@ -391,6 +394,7 @@
     <FxCompile Include="Source\Rendering\shaders\Pixel_Phong.hlsl" />
     <FxCompile Include="Source\Rendering\shaders\Vertex_Phong.hlsl" />
     <FxCompile Include="Source\Rendering\shaders\Pixel_PhongCol.hlsl" />
+    <FxCompile Include="Source\Rendering\shaders\Pixel_Entity.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Rendering\shaders\LightingFuncs.hlsli" />

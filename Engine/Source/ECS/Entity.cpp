@@ -4,16 +4,21 @@
 
 namespace Chilli {
 
-	Entity::Entity(const std::string& name)
-		: Uuid()
+	Entity::Entity(const std::string& name,UUID parent)
+		: Uuid(), m_parent(parent)
 	{
 		m_components.emplace_back(ComponentFactory::MakeIDComponent(name));
 		m_components.emplace_back(ComponentFactory::MakeTransformComponent());
 	}
 
-	Entity::Entity(UUID uuid, const rapidjson::Value& components)
-		: Uuid(uuid)
+	Entity::Entity(UUID uuid, UUID parent, const rapidjson::Value& children, const rapidjson::Value& components)
+		: Uuid(uuid), m_parent(parent)
 	{
+		for (unsigned int i = 0; i < children.Size(); i++)
+		{
+			m_children.push_back(children[i]["Child"].GetUint64());
+		}
+
 		for (unsigned int i = 0; i < components.Size(); i++)
 		{
 			switch (components[i]["Type"].GetInt())
@@ -32,10 +37,7 @@ namespace Chilli {
 				break;
 			}
 			case (int)ComponentType::Mesh:
-				DirectX::XMFLOAT3 diffuse = { components[i]["DiffR"].GetFloat(), components[i]["DiffG"].GetFloat(), components[i]["DiffB"].GetFloat() };
-				DirectX::XMFLOAT3 specular = { components[i]["SpecR"].GetFloat(), components[i]["SpecG"].GetFloat(), components[i]["SpecB"].GetFloat() };
-				m_components.emplace_back(std::make_shared<MeshComponent>(components[i]["MeshUuid"].GetUint64(), components[i]["TextureUuid"].GetUint64(), components[i]["SpecularMapUuid"].GetUint64(),
-					diffuse,specular,components[i]["Shininess"].GetFloat()));
+				m_components.emplace_back(std::make_shared<MeshComponent>(components[i]["MeshUuid"].GetUint64(), components[i]["MaterialUuid"].GetUint64()));
 				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this, RenderJobType::Mesh);
 				break;
 			case (int)ComponentType::RigidBody2D:
@@ -162,6 +164,8 @@ namespace Chilli {
 
 	Entity::Entity(const Entity& rhs)
 	{
+		m_parent = rhs.m_parent;
+		m_children = rhs.m_children;
 		for (const auto& component : rhs.m_components)
 		{
 			switch (component->GetComponentType())
@@ -226,6 +230,8 @@ namespace Chilli {
 
 	void Entity::Clone(const Entity& rhs)
 	{
+		m_children = rhs.m_children;
+		m_parent = rhs.m_parent;
 		for (int i = 0; i < m_components.size(); i++)
 		{
 			m_components[i]->Clone(rhs.m_components[i]);
@@ -431,10 +437,92 @@ namespace Chilli {
 		}	
 	}
 
+	void Entity::SetParent(const UUID parentId)
+	{
+		auto parentCopy = m_parent;
+		m_parent = parentId;
+
+		if (parentId == 0 && parentCopy != 0)
+			DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene()
+			->GetEntityByUUID(parentCopy)->RemoveChild(Uuid);
+		else if (parentId != 0 && parentCopy == 0)
+			GetParent()->AddChild(Uuid);
+		else if (parentId != 0 && parentCopy != 0)
+		{
+			DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene()
+				->GetEntityByUUID(parentCopy)->RemoveChild(Uuid);
+			GetParent()->AddChild(Uuid);
+		}
+	}
+
+	void Entity::RemoveChild(const UUID childId)
+	{
+		if (auto m_childrenIterator = std::find_if(m_children.begin(), m_children.end(), [childId](const UUID rhs)
+			{
+				return rhs.Get() == childId.Get();
+			}); m_childrenIterator != m_children.end())
+		{
+			m_children.erase(m_childrenIterator);
+		}
+	}
+
+	void Entity::AddChild(const UUID childId)
+	{
+		m_children.push_back(childId);
+	}
+
+	bool Entity::HasChildren()const
+	{
+		return m_children.size() > 0;
+	}
+
+	const std::vector<std::shared_ptr<Entity>> Entity::GetChildren()const
+	{
+		std::vector<std::shared_ptr<Entity>> children;
+		for (const auto& id : m_children)
+		{
+			children.push_back(
+				DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene()->GetEntityByUUID(id)
+			);
+		}
+		return children;
+	}
+
+	const std::shared_ptr<Entity> Entity::GetParent()const
+	{
+		return DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene()->GetEntityByUUID(m_parent);
+	}
+
+	const UUID Entity::GetParentId() const
+	{
+		return m_parent;
+	}
+
+	bool Entity::HasParent()
+	{
+		return m_parent.Get() != 0;
+	}
+
+	bool Entity::HasChild(UUID childId)
+	{
+		for (const auto& id : m_children)
+			if (id == childId)
+				return true;
+		return false;
+	}
+
 	const std::string Entity::Serialize() const
 	{
 		std::stringstream ss;
-		ss << "{\"Uuid\":" << Uuid.Get() << ", \"Components\":[";
+		ss << "{\"Uuid\":" << Uuid.Get() << ",\"Parent\":" << m_parent.Get()
+		<< ",\"Children\":[";
+		for (size_t i = 0; i < m_children.size(); i++)
+		{
+			ss << "{\"Child\":" << m_children[i].Get() << "},";
+			if (i != m_children.size() - 1)
+				ss << ",";
+		}
+		ss << "]" << ", \"Components\":[";
 		for (size_t i = 0; i < m_components.size(); i++)
 		{
 			ss << m_components[i]->Serialize(Uuid.Get());

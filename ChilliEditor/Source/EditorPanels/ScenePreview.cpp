@@ -17,6 +17,7 @@ void Chilli::ScenePreview::DrawGui(const std::unique_ptr<Camera>& editorCam)
 	ImGui::Begin("Scene Preview", 0);
 
 	const auto& renderer = DependencyResolver::ResolveDependency<Renderer>();
+	auto projMan = DependencyResolver::ResolveDependency<ProjectManager>();
 
 	auto regionAvailable = ImGui::GetContentRegionAvail();
 
@@ -35,7 +36,17 @@ void Chilli::ScenePreview::DrawGui(const std::unique_ptr<Camera>& editorCam)
 
 	ImGui::Image(m_frameBuffer->GetShaderResourceView().Get(), regionAvailable);
 
-	if (DependencyResolver::ResolveDependency<ProjectManager>()->GetCurrentScene()->GetSceneState() != SceneState::Play)
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_SCENE"))
+		{
+			const uint64_t* id = (const uint64_t*)payload->Data;
+			DependencyResolver::ResolveDependency<ProjectManager>()->SetCurrentScene(*id);
+		}
+		ImGui::EndDragDropTarget();
+	}
+
+	if (projMan->GetCurrentScene()->GetSceneState() != SceneState::Play)
 	{
 		if (ImGui::IsKeyPressed(ImGuiKey_1, false) && ImGui::IsWindowHovered())
 			m_guizmoType = ImGuizmo::TRANSLATE;
@@ -95,9 +106,22 @@ void Chilli::ScenePreview::DrawGui(const std::unique_ptr<Camera>& editorCam)
 		}
 	}
 
+	if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && ImGui::IsWindowHovered()
+		&& projMan->GetCurrentScene()->GetSceneState() == SceneState::Edit)
+	{
+		auto mousePos = ImGui::GetMousePos();
+		
+		auto winPos = ImGui::GetWindowPos();
+		auto clickableRegion = ImGui::GetContentRegionAvail();
+		auto winSize = ImGui::GetWindowSize();
+		auto padding = ImVec2({ clickableRegion.x - winSize.x,clickableRegion.y - winSize.y });
+		auto normalised = ImVec2({ mousePos.x - winPos.x,mousePos.y-winPos.y });
+		
+		
+	}
+
 	if (ImGui::IsMouseDown(ImGuiMouseButton_Right) && ImGui::IsWindowHovered() 
-		&& DependencyResolver::ResolveDependency<ProjectManager>
-		()->GetCurrentScene()->GetSceneState() == SceneState::Edit)
+		&& projMan->GetCurrentScene()->GetSceneState() == SceneState::Edit)
 	{
 		ImGui::SetMouseCursor(ImGuiMouseCursor_None);
 		if (m_initialMousePos)
@@ -154,3 +178,4 @@ float Chilli::ScenePreview::GetAspectRatio() const
 {
 	return m_scenePreviewWindowHeight / m_scenePreviewWindowWidth;
 }
+

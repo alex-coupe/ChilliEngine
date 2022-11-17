@@ -23,6 +23,7 @@ namespace Chilli {
 		static ImGuiContext* GetContext();
 		static void BeginFrame();
 		static void EndFrame();
-	private:		
+	private:	
+		static void SetDarkThemeColors();
 	};
 }

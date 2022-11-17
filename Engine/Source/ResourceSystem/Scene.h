@@ -28,6 +28,7 @@ namespace Chilli {
 		std::shared_ptr<Entity> GetEntityByName(const std::string& name)const;
 		const UUID Uuid;
 		const std::string& GetName()const;
+		void SetName(const std::string& name);
 		const SceneState GetSceneState()const;
 		void SetSceneState(SceneState state);
 		void StartScene();

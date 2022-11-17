@@ -97,7 +97,7 @@ namespace Chilli {
 	const std::string Texture::Serialize() const
 	{
 		std::stringstream ss;
-		ss << "{ \"Uuid\":" << Uuid.Get() << ", \"Type\":" << static_cast<int>(m_type) << ", \"FilePath\": \"Assets/Materials/" << m_filePath.filename().string() << "\"}";
+		ss << "{ \"Uuid\":" << Uuid.Get() << ", \"Type\":" << static_cast<int>(m_type) << ", \"FilePath\": \"Assets/Textures/" << m_filePath.filename().string() << "\"}";
 		return  ss.str();
 	}
 }

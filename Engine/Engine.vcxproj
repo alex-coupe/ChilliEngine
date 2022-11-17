@@ -220,6 +220,7 @@
     <ClInclude Include="Source\Rendering\VertexTypes.h" />
     <ClInclude Include="Source\ResourceSystem\Asset.h" />
     <ClInclude Include="Source\ResourceSystem\AssetManager.h" />
+    <ClInclude Include="Source\ResourceSystem\Material.h" />
     <ClInclude Include="Source\ResourceSystem\Mesh.h" />
     <ClInclude Include="Source\ResourceSystem\Scene.h" />
     <ClInclude Include="Source\ResourceSystem\ProjectManager.h" />
@@ -301,6 +302,13 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Rendering\shaders\Pixel_Entity.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Source\Rendering\shaders\Pixel_Phong.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

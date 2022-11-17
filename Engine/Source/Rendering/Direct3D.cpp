@@ -27,6 +27,16 @@ namespace Chilli {
 		m_swapChain->Present(0u, 0u);
 	}
 
+	void Direct3D::EnableZBuffer()
+	{
+		m_context->OMSetDepthStencilState(m_depthStencilStateEnabled.Get(), 1u);
+	}
+
+	void Direct3D::DisableZBuffer()
+	{
+		m_context->OMSetDepthStencilState(m_depthStencilStateDisabled.Get(), 1u);
+	}
+
 	void Direct3D::Draw(UINT vertexCount, UINT startVertex)const
 	{
 		m_context->Draw(vertexCount, startVertex);
@@ -169,11 +179,15 @@ namespace Chilli {
 		depth_stencil.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 		depth_stencil.DepthFunc = D3D11_COMPARISON_LESS;
 
-		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
+		GFX_THROW_ERR(m_device->CreateDepthStencilState(&depth_stencil, m_depthStencilStateEnabled.GetAddressOf()));
 
-		GFX_THROW_ERR(m_device->CreateDepthStencilState(&depth_stencil, depthStencilState.GetAddressOf()));
+		depth_stencil.DepthEnable = FALSE;
+		depth_stencil.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		depth_stencil.DepthFunc = D3D11_COMPARISON_LESS;
 
-		m_context->OMSetDepthStencilState(depthStencilState.Get(), 1u);
+		GFX_THROW_ERR(m_device->CreateDepthStencilState(&depth_stencil, m_depthStencilStateDisabled.GetAddressOf()));
+		
+		m_context->OMSetDepthStencilState(m_depthStencilStateEnabled.Get(), 1u);
 
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> depth_texture;
 		D3D11_TEXTURE2D_DESC depth_desc = {};

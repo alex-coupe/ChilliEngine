@@ -17,9 +17,9 @@ namespace Chilli {
     void ProjectManager::LoadProject(const std::filesystem::path filename)
     {
         m_projectOpen = true;
+        m_projectDir = filename.parent_path().generic_string();
         m_projectName = filename.stem().generic_string();
         m_projectFilePath = m_projectDir + "\\" + m_projectName + ".chilli";
-        m_projectDir = filename.parent_path().generic_string();
         ScriptEngine::Init();
         ScriptApi::Init();
         m_sceneManager.reset();
@@ -128,6 +128,11 @@ namespace Chilli {
         return m_sceneManager->GetAllScenes();
     }
 
+    const std::shared_ptr<Scene> ProjectManager::GetScene(UUID sceneId) const
+    {
+        return m_sceneManager->GetSceneByUUID(sceneId);
+    }
+
     void ProjectManager::AddAsset(const std::filesystem::path& filename, AssetType type)
     {
         switch (type)
@@ -144,6 +149,21 @@ namespace Chilli {
         default:
             break;
         }
+    }
+
+    void ProjectManager::CreateMaterial(Material mat)
+    {
+        m_assetManager->AddMaterial(mat);
+    }
+
+    void ProjectManager::EditMaterial(Material mat)
+    {
+        m_assetManager->EditMaterial(mat);
+    }
+
+    void ProjectManager::RemoveMaterial(UUID matId)
+    {
+        m_assetManager->RemoveMaterial(matId);
     }
 
     void ProjectManager::RemoveAsset(UUID uuid,AssetType type)
@@ -203,6 +223,16 @@ namespace Chilli {
     const std::unordered_map<uint64_t, std::shared_ptr<Texture>>& ProjectManager::GetTextures()const
     {
         return m_assetManager->GetTextures();
+    }
+
+    const std::unordered_map<uint64_t, Material>& ProjectManager::GetMaterials() const
+    {
+        return m_assetManager->GetMaterials();
+    }
+
+    Material& ProjectManager::GetMaterial(uint64_t materialId)
+    {
+        return m_assetManager->GetMaterial(materialId);
     }
 
     SystemType ProjectManager::GetSystemType()

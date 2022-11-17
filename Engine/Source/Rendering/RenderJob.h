@@ -15,6 +15,7 @@
 #include "ShaderLibrary.h"
 #include "Light.h"
 #include "../ResourceSystem/Scene.h"
+#include "../ResourceSystem/Material.h"
 
 namespace Chilli {
 
@@ -74,7 +75,7 @@ namespace Chilli {
 		std::shared_ptr<Mesh> m_baseMesh;
 		LightBuffer m_lightBuffer;
 		std::unique_ptr<ConstantBuffer<Transforms>> m_phongConstantVertexBuffer;
-		std::unique_ptr<ConstantBuffer<Material>> m_materialConstantBuffer;
+		std::unique_ptr<ConstantBuffer<ObjectMaterial>> m_materialConstantBuffer;
 		std::unique_ptr<ConstantBuffer<LightBuffer>> m_lightConstantBuffer;
 	};
 }
