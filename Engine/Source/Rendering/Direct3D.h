@@ -27,6 +27,8 @@ namespace Chilli {
 		Direct3D(Direct3D&&)noexcept = default;
 		void ClearBackBuffer();
 		void EndFrame();
+		void EnableZBuffer();
+		void DisableZBuffer();
 		void Draw(UINT vertexCount, UINT startVertex)const;
 		void DrawIndexed(UINT count)const;
 		void HandleWindowResize(const int64_t width, const int64_t height);
@@ -44,6 +46,8 @@ namespace Chilli {
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_backBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Resource> m_bufferTexture;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depthStencil;
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_depthStencilStateDisabled;
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_depthStencilStateEnabled;
 		Microsoft::WRL::ComPtr<ID3D11Debug> m_debugInfo;
 		HRESULT m_result = 0;
 		HWND m_handle;

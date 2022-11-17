@@ -2,7 +2,7 @@
 
 namespace Chilli {
 
-	FrameBuffer::FrameBuffer(uint64_t  width, uint64_t  height, const std::shared_ptr<Direct3D>& d3d)
+	FrameBuffer::FrameBuffer(uint64_t  width, uint64_t  height, const std::shared_ptr<Direct3D>& d3d, UINT format, UINT access)
 		:m_d3d(d3d)
 	{
 		D3D11_TEXTURE2D_DESC textureDesc;
@@ -14,11 +14,11 @@ namespace Chilli {
 		textureDesc.Height = (UINT)height;
 		textureDesc.MipLevels = 1;
 		textureDesc.ArraySize = 1;
-		textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		textureDesc.Format = (DXGI_FORMAT)format;
 		textureDesc.SampleDesc.Count = 1;
 		textureDesc.Usage = D3D11_USAGE_DEFAULT;
 		textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-		textureDesc.CPUAccessFlags = 0;
+		textureDesc.CPUAccessFlags = access;
 		textureDesc.MiscFlags = 0;
 
 		auto result = m_d3d->GetDevice()->CreateTexture2D(&textureDesc, NULL, &m_renderTargetTexture);
