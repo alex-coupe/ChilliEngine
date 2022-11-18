@@ -28,7 +28,7 @@ namespace Chilli {
     void Scene::Clone(const std::shared_ptr<Scene>& scene)
     {
         m_name = scene->m_name;
-        for (int i = 0; i < m_entities.size(); i++)
+        for (int i = 0; i < scene->m_entities.size(); i++)
         {
             m_entities[i]->Clone(*scene->m_entities[i]);
         }

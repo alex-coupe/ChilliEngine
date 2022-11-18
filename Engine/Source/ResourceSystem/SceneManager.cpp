@@ -94,12 +94,24 @@ namespace Chilli {
 
 	void SceneManager::GoToPreviousScene()
 	{
-		
+		if (auto m_scenesItr = std::find_if(m_scenes.begin(), m_scenes.end(), [this](const std::shared_ptr<Scene> rhs)
+			{
+				return rhs->GetName() == m_currentScene->GetName();
+			}); m_scenesItr != m_scenes.end() && m_scenes.size() > 0 && m_scenesItr != m_scenes.begin())
+		{
+			m_currentScene = *(--m_scenesItr);
+		}
 	}
 
 	void SceneManager::GoToNextScene()
 	{
-
+		if (auto m_scenesItr = std::find_if(m_scenes.begin(), m_scenes.end(), [this](const std::shared_ptr<Scene> rhs)
+			{
+				return rhs->GetName() == m_currentScene->GetName();
+			}); m_scenesItr != m_scenes.end() && m_scenes.size() > 0)
+		{	
+				m_currentScene = *(++m_scenesItr);
+		}
 	}
 
 	void SceneManager::StartCurrentScene()
