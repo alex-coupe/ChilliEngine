@@ -37,6 +37,7 @@ void Chilli::AssetPanel::DrawGui()
 				if (ImGui::ImageButtonEx((int)mesh.first, m_fileTexture->GetShaderResourceView().Get()
 					,{ thumbnailSize,thumbnailSize }, { 0,1 }, {1,0},ImVec4(0.0f, 0.0f, 0.0f, 0.0f), ImVec4(1, 1, 1, 1)))
 				{
+					ChilliEditor::s_selectedAsset = mesh.second;
 					ImGui::OpenPopup("removemesh");
 				}
 
@@ -196,12 +197,13 @@ void Chilli::AssetPanel::DrawGui()
 			for (const auto& material : projMan->GetMaterials())
 			{
 				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-				if (ImGui::ImageButtonEx((int)material.first, m_fileTexture->GetShaderResourceView().Get()
-					, { thumbnailSize,thumbnailSize }, { 0,1 }, { 1,0 }, ImVec4(0.0f, 0.0f, 0.0f, 0.0f), ImVec4(1, 1, 1, 1)))
+				ImGui::PushID(material.second.Id.Get());
+				if (ImGui::ImageButton(m_fileTexture->GetShaderResourceView().Get(), { thumbnailSize, thumbnailSize }, { 1,0 }, { 0,1 }))
 				{
 					materialId = material.first;
 					ImGui::OpenPopup("editmaterial");
 				}
+				ImGui::PopID();
 
 				if (ImGui::BeginDragDropSource())
 				{
@@ -417,6 +419,7 @@ void Chilli::AssetPanel::DrawGui()
 				if (ImGui::ImageButtonEx((int)texture.first, m_fileTexture->GetShaderResourceView().Get()
 					, { thumbnailSize,thumbnailSize }, { 0,1 }, { 1,0 }, ImVec4(0.0f, 0.0f, 0.0f, 0.0f), ImVec4(1, 1, 1, 1)))
 				{
+					ChilliEditor::s_selectedAsset = texture.second;
 					ImGui::OpenPopup("removetexture");
 				}
 

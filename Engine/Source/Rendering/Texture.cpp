@@ -5,7 +5,8 @@ namespace Chilli {
 	Texture::Texture(const std::filesystem::path& path)
 		:Asset(AssetType::Texture, path)
 	{
-		auto direct3d = DependencyResolver::ResolveDependency<Renderer>()->GetD3D();
+		auto& direct3d = DependencyResolver::ResolveDependency<Renderer>()->GetD3D();
+	
 		m_data = stbi_load(path.generic_string().c_str(), &m_width, &m_height, &m_colors, 4);
 
 		D3D11_TEXTURE2D_DESC texture_desc = {};
@@ -51,7 +52,7 @@ namespace Chilli {
 	Texture::Texture(const std::filesystem::path& path, const UUID uuid)
 		:Asset(AssetType::Texture, path, uuid)
 	{
-		auto direct3d = DependencyResolver::ResolveDependency<Renderer>()->GetD3D();
+		auto& direct3d = DependencyResolver::ResolveDependency<Renderer>()->GetD3D();
 		m_data = stbi_load(path.string().c_str(), &m_width, &m_height, &m_colors, 4);
 
 		D3D11_TEXTURE2D_DESC texture_desc = {};

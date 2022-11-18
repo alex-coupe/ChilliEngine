@@ -187,6 +187,7 @@ namespace Chilli {
     {
         Material mat = {};
         mat.Name = "Default";
+        mat.Id = 1;
         m_materials.emplace(1, mat);
     }
 }

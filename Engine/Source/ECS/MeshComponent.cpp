@@ -3,7 +3,7 @@
 
 namespace Chilli {
 	MeshComponent::MeshComponent()
-		: Component(ComponentType::Mesh, "Mesh"), meshUuid(UUID(0)), materialUuid(UUID(0))
+		: Component(ComponentType::Mesh, "Mesh"), meshUuid(UUID(0)), materialUuid(UUID(1))
 	{}
 
 	MeshComponent::MeshComponent(UUID meshUuid, UUID materialUuid)
