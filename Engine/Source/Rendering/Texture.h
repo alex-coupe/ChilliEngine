@@ -1,6 +1,6 @@
 #pragma once
 #include "../Core/ChilliDefinitions.h"
-#include "stb/stb_image.h"
+#include "DirectXTex.h"
 #include "Direct3D.h"
 
 namespace Chilli {
@@ -13,8 +13,7 @@ namespace Chilli {
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetShaderResourceView()const;
 		virtual const std::string Serialize()const override;
 	private:
-		unsigned char* m_data = nullptr;
-		int m_width = 0, m_height = 0, m_colors = 0;
+		
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_textureView;
 		HRESULT m_result = 0;
 	};
