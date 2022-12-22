@@ -7,11 +7,15 @@ namespace Chilli {
 	{
 		auto& direct3d = DependencyResolver::ResolveDependency<Renderer>()->GetD3D();
 	
-		m_data = stbi_load(path.generic_string().c_str(), &m_width, &m_height, &m_colors, 4);
+		DirectX::ScratchImage scratch;
+		m_result = DirectX::LoadFromWICFile(path.c_str(), DirectX::WIC_FLAGS_IGNORE_SRGB | DirectX::WIC_FLAGS_FORCE_RGB, nullptr, scratch);
 
+		if (FAILED(m_result))
+			CHILLI_ERROR("Failed to load image");
+		
 		D3D11_TEXTURE2D_DESC texture_desc = {};
-		texture_desc.Width = m_width;
-		texture_desc.Height = m_height;
+		texture_desc.Width = (UINT)scratch.GetMetadata().width;
+		texture_desc.Height = (UINT)scratch.GetMetadata().height;
 		texture_desc.MipLevels = 1;
 		texture_desc.ArraySize = 1;
 		texture_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -23,8 +27,8 @@ namespace Chilli {
 		texture_desc.MiscFlags = 0;
 
 		D3D11_SUBRESOURCE_DATA sub_resource = {};
-		sub_resource.pSysMem = m_data;
-		sub_resource.SysMemPitch = m_width * m_colors;
+		sub_resource.pSysMem = scratch.GetPixels();
+		sub_resource.SysMemPitch = scratch.GetImage(0, 0, 0)->rowPitch;
 
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
 
@@ -36,11 +40,6 @@ namespace Chilli {
 		resource_view.Texture2D.MostDetailedMip = 0;
 		resource_view.Texture2D.MipLevels = 1;
 		GFX_THROW_ERR(direct3d->GetDevice()->CreateShaderResourceView(texture.Get(), &resource_view, &m_textureView));
-
-		if (m_data)
-		{
-			stbi_image_free(m_data);
-		}
 
 	}
 
@@ -53,11 +52,15 @@ namespace Chilli {
 		:Asset(AssetType::Texture, path, uuid)
 	{
 		auto& direct3d = DependencyResolver::ResolveDependency<Renderer>()->GetD3D();
-		m_data = stbi_load(path.string().c_str(), &m_width, &m_height, &m_colors, 4);
+		DirectX::ScratchImage scratch;
+		m_result = DirectX::LoadFromWICFile(path.c_str(), DirectX::WIC_FLAGS_IGNORE_SRGB | DirectX::WIC_FLAGS_FORCE_RGB, nullptr, scratch);
+
+		if (FAILED(m_result))
+			CHILLI_ERROR("Failed to convert image");
 
 		D3D11_TEXTURE2D_DESC texture_desc = {};
-		texture_desc.Width = m_width;
-		texture_desc.Height = m_height;
+		texture_desc.Width = (UINT)scratch.GetMetadata().width;
+		texture_desc.Height = (UINT)scratch.GetMetadata().height;
 		texture_desc.MipLevels = 1;
 		texture_desc.ArraySize = 1;
 		texture_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -69,8 +72,8 @@ namespace Chilli {
 		texture_desc.MiscFlags = 0;
 
 		D3D11_SUBRESOURCE_DATA sub_resource = {};
-		sub_resource.pSysMem = m_data;
-		sub_resource.SysMemPitch = m_width * m_colors;
+		sub_resource.pSysMem = scratch.GetPixels();
+		sub_resource.SysMemPitch =scratch.GetImage(0,0,0)->rowPitch;
 
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
 
@@ -82,11 +85,6 @@ namespace Chilli {
 		resource_view.Texture2D.MostDetailedMip = 0;
 		resource_view.Texture2D.MipLevels = 1;
 		GFX_THROW_ERR(direct3d->GetDevice()->CreateShaderResourceView(texture.Get(), &resource_view, &m_textureView));
-
-		if (m_data)
-		{
-			stbi_image_free(m_data);
-		}
 	}
 
 	void Texture::Bind(UINT slot) const
