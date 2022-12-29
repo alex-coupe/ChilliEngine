@@ -1,6 +1,9 @@
 #include "AssetPanel.h"
 #include "../ChilliEditor.h"
 
+Chilli::Material Chilli::AssetPanel::mat = {};
+char Chilli::AssetPanel::nameBuff[256];
+
 Chilli::AssetPanel::AssetPanel()
 {
 	m_fileTexture = std::make_unique<Texture>("Resources/Icons/FileIcon.png");
@@ -197,14 +200,13 @@ void Chilli::AssetPanel::DrawGui()
 			for (const auto& material : projMan->GetMaterials())
 			{
 				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-				ImGui::PushID(material.second.Id.Get());
-				if (ImGui::ImageButton(m_fileTexture->GetShaderResourceView().Get(), { thumbnailSize, thumbnailSize }, { 1,0 }, { 0,1 }))
+				if (ImGui::ImageButtonEx((int)material.first, m_fileTexture->GetShaderResourceView().Get()
+					, { thumbnailSize,thumbnailSize }, { 0,1 }, { 1,0 }, ImVec4(0.0f, 0.0f, 0.0f, 0.0f), ImVec4(1, 1, 1, 1))) 
 				{
 					materialId = material.first;
 					ImGui::OpenPopup("editmaterial");
 				}
-				ImGui::PopID();
-
+				
 				if (ImGui::BeginDragDropSource())
 				{
 					ImGui::SetDragDropPayload("CONTENT_BROWSER_MATERIAL", &material.first, sizeof(uint64_t));
@@ -226,8 +228,7 @@ void Chilli::AssetPanel::DrawGui()
 			
 			if (ImGui::BeginPopupContextItem("editmaterial"))
 			{
-				static auto& mat = projMan->GetMaterial(materialId);
-				static char nameBuff[256];
+				mat = projMan->GetMaterial(materialId);
 				ImGui::Text("Edit Material");
 				ImGui::Spacing();
 				strcpy_s(nameBuff, mat.Name.c_str());
@@ -310,11 +311,9 @@ void Chilli::AssetPanel::DrawGui()
 				}
 				ImGui::EndPopup();
 			}
-
+			
 			if (ImGui::BeginPopupContextItem("newmaterial"))
 			{
-				static Material mat = {};
-				static char nameBuff[256];
 				ImGui::Text("New Material");
 				ImGui::Spacing();
 				ImGui::Text("Name");
@@ -382,13 +381,15 @@ void Chilli::AssetPanel::DrawGui()
 				{
 					mat.Name = nameBuff;
 					projMan->CreateMaterial(mat);
-					materialId = 0;
+					mat = {};
+					nameBuff[0] = NULL;
 					ImGui::CloseCurrentPopup();
 				}
 				ImGui::SameLine();
 				if (ImGui::Button("Close"))
 				{
-					materialId = 0;
+					mat = {};
+					nameBuff[0] = NULL;
 					ImGui::CloseCurrentPopup();
 				}
 				ImGui::EndPopup();

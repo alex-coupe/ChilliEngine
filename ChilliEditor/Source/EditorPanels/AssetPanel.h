@@ -9,6 +9,8 @@ namespace Chilli {
 		AssetPanel();
 		void DrawGui();
 	private:
+		static Material mat;
+		static char nameBuff[256];
 		std::unique_ptr<Texture> m_fileTexture;
 		std::unique_ptr<Texture> m_folderTexture;
 		std::unique_ptr<Texture> m_plusIcon;
