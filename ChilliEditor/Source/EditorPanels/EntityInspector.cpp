@@ -137,6 +137,9 @@ namespace Chilli {
 						case ComponentType::Script:
 							DrawScriptComponentGui(component);
 						break;
+						case ComponentType::Sprite:
+							DrawSpriteComponentGui(component);
+							break;
 					}
 					ImGui::TreePop();
 				}

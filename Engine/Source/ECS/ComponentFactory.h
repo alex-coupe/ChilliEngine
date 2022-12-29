@@ -8,6 +8,7 @@
 #include "CameraComponent.h"
 #include "LightComponent.h"
 #include "IDComponent.h"
+#include "SpriteComponent.h"
 
 namespace Chilli {
 	class CHILLI_API ComponentFactory {
@@ -20,6 +21,7 @@ namespace Chilli {
 		static std::shared_ptr<ScriptComponent> MakeScriptComponent();
 		static std::shared_ptr<CameraComponent> MakeCameraComponent();
 		static std::shared_ptr<LightComponent> MakeLightComponent();
+		static std::shared_ptr<SpriteComponent> MakeSpriteComponent();
 		static std::shared_ptr<IDComponent> MakeIDComponent(const std::string& name);
 	};
 

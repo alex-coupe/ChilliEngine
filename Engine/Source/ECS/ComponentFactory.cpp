@@ -41,6 +41,11 @@ namespace Chilli {
 		return std::make_shared<LightComponent>();
 	}
 
+	std::shared_ptr<SpriteComponent> ComponentFactory::MakeSpriteComponent()
+	{
+		return std::make_shared<SpriteComponent>();
+	}
+
 	std::shared_ptr<IDComponent> ComponentFactory::MakeIDComponent(const std::string& name)
 	{
 		return std::make_shared<IDComponent>(name);

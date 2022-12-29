@@ -82,6 +82,10 @@ namespace Chilli {
 					m_renderJobId = renderer->AddRenderJob(*this, RenderJobType::Light);
 			}
 			break;
+			case (int)ComponentType::Sprite:
+				m_components.emplace_back(std::make_shared<SpriteComponent>(components[i]["Transparent"].GetBool()));
+				DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this, RenderJobType::Sprite);
+				break;
 			case (int)ComponentType::Script:
 				m_components.emplace_back(std::make_shared<ScriptComponent>(components[i]["ScriptClassName"].GetString()));
 				auto scriptInstance = ScriptInstanceRepository::MakeScriptInstance(components[i]["ScriptClassName"].GetString(),Uuid.Get());
@@ -222,6 +226,11 @@ namespace Chilli {
 			{
 				auto pointer = std::static_pointer_cast<LightComponent>(component);
 				m_components.emplace_back(std::make_shared<LightComponent>(*pointer));
+			}
+			case ComponentType::Sprite:
+			{
+				auto pointer = std::static_pointer_cast<SpriteComponent>(component);
+				m_components.emplace_back(std::make_shared<SpriteComponent>(*pointer));
 			}
 			break;
 			}
@@ -380,6 +389,10 @@ namespace Chilli {
 				m_components.emplace_back(ComponentFactory::MakeMeshComponent());
 				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this, RenderJobType::Mesh);
 				break;
+			case ComponentType::Sprite:
+				m_components.emplace_back(ComponentFactory::MakeSpriteComponent());
+				m_renderJobId = DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this, RenderJobType::Sprite);
+				break;
 			case ComponentType::RigidBody2D:
 				m_components.emplace_back(ComponentFactory::MakeRigidBody2DComponent());
 				break;
@@ -416,13 +429,7 @@ namespace Chilli {
 			if (type == ComponentType::Script)
 				ScriptInstanceRepository::RemoveScriptInstance(Uuid.Get());	
 
-			if (type == ComponentType::Mesh)
-			{
-				DependencyResolver::ResolveDependency<Renderer>()->RemoveRenderJob(m_renderJobId);
-				m_renderJobId = 0;
-			}
-
-			if (type == ComponentType::Camera)
+			if (type == ComponentType::Mesh || type == ComponentType::Sprite || type == ComponentType::Camera)
 			{
 				DependencyResolver::ResolveDependency<Renderer>()->RemoveRenderJob(m_renderJobId);
 				m_renderJobId = 0;
