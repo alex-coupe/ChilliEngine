@@ -83,7 +83,7 @@ namespace Chilli {
 			}
 			break;
 			case (int)ComponentType::Sprite:
-				m_components.emplace_back(std::make_shared<SpriteComponent>(components[i]["Transparent"].GetBool()));
+				m_components.emplace_back(std::make_shared<SpriteComponent>(components[i]["Transparent"].GetBool(), components[i]["TextureId"].GetUint64()));
 				DependencyResolver::ResolveDependency<Renderer>()->AddRenderJob(*this, RenderJobType::Sprite);
 				break;
 			case (int)ComponentType::Script:

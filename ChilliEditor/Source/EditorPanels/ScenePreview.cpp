@@ -46,7 +46,7 @@ void Chilli::ScenePreview::DrawGui(const std::unique_ptr<Camera>& editorCam)
 		ImGui::EndDragDropTarget();
 	}
 
-	if (projMan->GetCurrentScene()->GetSceneState() != SceneState::Play)
+	if (projMan->GetCurrentScene() && projMan->GetCurrentScene()->GetSceneState() != SceneState::Play)
 	{
 		if (ImGui::IsKeyPressed(ImGuiKey_1, false) && ImGui::IsWindowHovered())
 			m_guizmoType = ImGuizmo::TRANSLATE;

@@ -14,7 +14,7 @@
 #include "../ECS/Entity.h"
 #include "ShaderLibrary.h"
 #include "Light.h"
-#include "../ResourceSystem/Scene.h"
+#include "../ResourceSystem/ProjectManager.h"
 #include "../ResourceSystem/Material.h"
 
 namespace Chilli {

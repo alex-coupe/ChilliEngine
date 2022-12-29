@@ -6,7 +6,7 @@ namespace Chilli {
 		m_engine = std::make_unique<ChilliEngine>();
 		m_engine->SetAppLayer(std::make_shared<AppLayer>(m_engine->GetWindow()));
 		auto projMan = DependencyResolver::ResolveDependency<ProjectManager>();
-		projMan->LoadProject("C:\\Users\\dh211628.DHDOM1\\OneDrive - Dunnhumby Ltd\\Documents\\Projects\\Test\\3d_test.chilli");
+		projMan->LoadProject("C:\\Users\\dh211628.DHDOM1\\OneDrive - Dunnhumby Ltd\\Documents\\Projects\\2d Test\\2d Test.chilli");
 		projMan->PlayCurrentScene();
 	}
 
