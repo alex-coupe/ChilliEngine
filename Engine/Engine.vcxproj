@@ -185,6 +185,7 @@
     <ClInclude Include="Source\ECS\MeshComponent.h" />
     <ClInclude Include="Source\ECS\RigidBody2DComponent.h" />
     <ClInclude Include="Source\ECS\ScriptComponent.h" />
+    <ClInclude Include="Source\ECS\SpriteComponent.h" />
     <ClInclude Include="Source\ECS\TransformComponent.h" />
     <ClInclude Include="Source\Gui\GuiManager.h" />
     <ClInclude Include="Source\Gui\ImGuizmo\GraphEditor.h" />
@@ -249,6 +250,7 @@
     <ClCompile Include="Source\ECS\MeshComponent.cpp" />
     <ClCompile Include="Source\ECS\RigidBody2DComponent.cpp" />
     <ClCompile Include="Source\ECS\ScriptComponent.cpp" />
+    <ClCompile Include="Source\ECS\SpriteComponent.cpp" />
     <ClCompile Include="Source\ECS\TransformComponent.cpp" />
     <ClCompile Include="Source\Gui\GuiManager.cpp" />
     <ClCompile Include="Source\Gui\ImGuizmo\GraphEditor.cpp" />
@@ -324,6 +326,12 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Source\Rendering\shaders\Pixel_Texture.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Rendering\shaders\Pixel_Texture_Transparent.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>

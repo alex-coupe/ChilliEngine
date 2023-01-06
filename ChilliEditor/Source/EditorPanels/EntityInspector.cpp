@@ -137,6 +137,9 @@ namespace Chilli {
 						case ComponentType::Script:
 							DrawScriptComponentGui(component);
 						break;
+						case ComponentType::Sprite:
+							DrawSpriteComponentGui(component);
+							break;
 					}
 					ImGui::TreePop();
 				}
@@ -846,6 +849,38 @@ namespace Chilli {
 
 	void EntityInspector::DrawSpriteComponentGui(const std::shared_ptr<Component> comp)
 	{
+		const auto& projManager = DependencyResolver::ResolveDependency<ProjectManager>();
+		const auto& spriteComp = std::static_pointer_cast<SpriteComponent>(comp);
+		const auto& textures = projManager->GetTextures();
+	
+		ImGui::Spacing();
+		ImGui::Text("Sprite");
+		ImGui::PushItemWidth(180.0f);
+		auto texId = spriteComp->GetTexId();
+		if (ImGui::BeginCombo("##spriteTex", texId == 0 ? "None" : projManager->GetAssetByUUID(texId, AssetType::Texture)->GetName().stem().string().c_str()))
+		{
+			bool noneSelected = texId == 0;
+			if (ImGui::Checkbox("None", &noneSelected))
+			{
+				spriteComp->SetTexId(0);
+			}
+
+			for (const auto& texture : textures)
+			{
+				bool selected = texture.first == texId;
+				if (ImGui::Checkbox(texture.second->GetName().stem().string().c_str(), &selected))
+				{
+					spriteComp->SetTexId(texture.first);
+				}
+			}
+			ImGui::EndCombo();
+		}
+		ImGui::PopItemWidth();
+		ImGui::Spacing();
+		ImGui::Text("Transparent");
+		ImGui::Checkbox("##transparent", &spriteComp->Transparent());
+		ImGui::Spacing();
+
 	}
 
 }

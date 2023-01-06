@@ -16,6 +16,9 @@ namespace Chilli {
 		case RenderJobType::Mesh:
 			CreateMeshJob();
 			break;
+		case RenderJobType::Sprite:
+			CreateSpriteJob();
+			break;
 		}
 		m_lightConstantBuffer = std::make_unique<ConstantBuffer<LightBuffer>>(ConstantBufferType::Pixel, d3d);
 		m_lightBuffer = {};
@@ -105,6 +108,72 @@ namespace Chilli {
 		}
 		m_topology = std::make_unique<Topology>(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, m_direct3d);
 		m_topology->Bind();
+	}
+
+	void RenderJob::CreateSpriteJob()
+	{
+		auto spriteComp = std::static_pointer_cast<SpriteComponent>(m_entity.GetComponentByType(ComponentType::Sprite));
+		auto& projDir = DependencyResolver::ResolveDependency<ProjectManager>()->GetProjectDirectory();
+		Mesh mesh(projDir+"\\Resources\\plane.fbx");
+		
+		m_vertexBuffer = std::make_unique<VertexBuffer>(mesh.GetVertices(), m_direct3d);
+		m_indexBuffer = std::make_unique<IndexBuffer>(mesh.GetIndices(), m_direct3d);
+		
+		if (spriteComp->GetTexId() != 0)
+		{
+			m_sampler = std::make_unique<Sampler>(m_direct3d);
+			m_sampler->Bind();
+			spriteComp->Transparent() ? m_pixelShader = ShaderLibrary::GetCoreShader("PixelTexTransparent") : m_pixelShader = ShaderLibrary::GetCoreShader("PixelTex");
+			m_vertexShader = ShaderLibrary::GetCoreShader("VertexTex");
+		}
+		else
+		{
+			m_pixelShader = ShaderLibrary::GetCoreShader("PixelCol");
+			m_vertexShader = ShaderLibrary::GetCoreShader("VertexCol");
+		}
+		m_inputLayout = std::make_unique<InputLayout>(ied, m_vertexShader->GetByteCode(), m_direct3d);
+		
+		m_topology = std::make_unique<Topology>(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, m_direct3d);
+		m_topology->Bind();
+		m_transformationCBuff = std::make_unique<ConstantBuffer<DirectX::XMMATRIX>>(ConstantBufferType::Vertex, m_direct3d);
+		m_color = std::make_unique<ConstantBuffer<DirectX::XMFLOAT4>>(ConstantBufferType::Pixel, m_direct3d);
+	}
+
+	void RenderJob::UpdateSpriteJob(Camera* cam)
+	{
+		auto spriteComp = std::static_pointer_cast<SpriteComponent>(m_entity.GetComponentByType(ComponentType::Sprite));
+		auto tranformComp = std::static_pointer_cast<TransformComponent>(m_entity.GetComponentByType(ComponentType::Transform));
+		auto transform = DirectX::XMMatrixTranspose(tranformComp->GetTransformMatrix() * cam->GetViewProjMatrix());
+		m_transformationCBuff->Update(transform);
+		m_transformationCBuff->Bind();
+
+		if (spriteComp->GetTexId() != 0)
+		{
+			if (!m_sampler)
+				m_sampler = std::make_unique<Sampler>(m_direct3d);
+
+			m_sampler->Bind();
+			m_vertexShader = ShaderLibrary::GetCoreShader("VertexTex");
+			spriteComp->Transparent() ? m_pixelShader = ShaderLibrary::GetCoreShader("PixelTexTransparent") : m_pixelShader = ShaderLibrary::GetCoreShader("PixelTex");
+			m_inputLayout = std::make_unique<InputLayout>(ied, m_vertexShader->GetByteCode(), m_direct3d);
+			std::static_pointer_cast<Texture>(DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetByUUID(spriteComp->GetTexId(), AssetType::Texture))->Bind();
+		}
+		else
+		{
+			m_vertexShader = ShaderLibrary::GetCoreShader("VertexCol");
+			m_pixelShader = ShaderLibrary::GetCoreShader("PixelCol");
+		}
+		if (!m_inputLayout)
+			m_inputLayout = std::make_unique<InputLayout>(ied, m_vertexShader->GetByteCode(), m_direct3d);
+
+		m_color->Update(DirectX::XMFLOAT4(1.0f,1.0f,1.0f,1.0f));
+		m_color->Bind();
+		if (m_inputLayout)
+			m_inputLayout->Bind();
+		if (m_vertexShader)
+			m_vertexShader->Bind();
+		if (m_pixelShader)
+			m_pixelShader->Bind();
 	}
 
 	void RenderJob::UpdateMeshJob(Camera* cam, SceneState state, std::map<uint64_t, std::unique_ptr<Light>>& sceneLights)
@@ -248,6 +317,15 @@ namespace Chilli {
 				m_indexBuffer->Bind();
 				m_direct3d->DrawIndexed(m_indexBuffer->GetCount());
 			}
+			break;
+		case RenderJobType::Sprite:
+			if (m_vertexBuffer && m_indexBuffer)
+			{
+				m_vertexBuffer->Bind();
+				m_indexBuffer->Bind();
+				m_direct3d->DrawIndexed(m_indexBuffer->GetCount());
+			}
+			break;
 		}
 	}
 
@@ -261,6 +339,9 @@ namespace Chilli {
 			break;
 		case RenderJobType::Light:
 			UpdateLightCasterJob(cam);
+			break;
+		case RenderJobType::Sprite:
+			UpdateSpriteJob(cam);
 			break;
 		case RenderJobType::Mesh:
 			UpdateMeshJob(cam, currState, sceneLights);

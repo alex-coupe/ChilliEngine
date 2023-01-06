@@ -213,6 +213,9 @@
     <ClInclude Include="Source\ResourceSystem\Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ECS\SpriteComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Timer.cpp">
@@ -383,6 +386,9 @@
     <ClCompile Include="Source\Gui\ImGuizmo\ImSequencer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ECS\SpriteComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Source\Rendering\shaders\Pixel_Basic.hlsl" />
@@ -394,6 +400,7 @@
     <FxCompile Include="Source\Rendering\shaders\Pixel_Phong.hlsl" />
     <FxCompile Include="Source\Rendering\shaders\Vertex_Phong.hlsl" />
     <FxCompile Include="Source\Rendering\shaders\Pixel_PhongCol.hlsl" />
+    <FxCompile Include="Source\Rendering\shaders\Pixel_Texture_Transparent.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Rendering\shaders\LightingFuncs.hlsli" />

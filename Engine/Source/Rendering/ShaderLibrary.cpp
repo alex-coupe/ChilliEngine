@@ -14,6 +14,7 @@ namespace Chilli {
 		m_coreShaders.emplace("VertexCol", std::make_shared<Shader>(ShaderType::Vertex, L"../Engine/Source/Rendering/shaders/Vertex_Color.hlsl", m_direct3d));
 		m_coreShaders.emplace("VertexPhong", std::make_shared<Shader>(ShaderType::Vertex, L"../Engine/Source/Rendering/shaders/Vertex_Phong.hlsl", m_direct3d));
 		m_coreShaders.emplace("PixelTex", std::make_shared<Shader>(ShaderType::Pixel, L"../Engine/Source/Rendering/shaders/Pixel_Texture.hlsl", m_direct3d));
+		m_coreShaders.emplace("PixelTexTransparent", std::make_shared<Shader>(ShaderType::Pixel, L"../Engine/Source/Rendering/shaders/Pixel_Texture_Transparent.hlsl", m_direct3d));
 		m_coreShaders.emplace("PixelBasic", std::make_shared<Shader>(ShaderType::Pixel, L"../Engine/Source/Rendering/shaders/Pixel_Basic.hlsl", m_direct3d));
 		m_coreShaders.emplace("PixelCol", std::make_shared<Shader>(ShaderType::Pixel, L"../Engine/Source/Rendering/shaders/Pixel_Color.hlsl", m_direct3d));
 		m_coreShaders.emplace("PixelPhongTex", std::make_shared<Shader>(ShaderType::Pixel, L"../Engine/Source/Rendering/shaders/Pixel_Phong.hlsl", m_direct3d));

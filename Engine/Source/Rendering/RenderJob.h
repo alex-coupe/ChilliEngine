@@ -14,13 +14,13 @@
 #include "../ECS/Entity.h"
 #include "ShaderLibrary.h"
 #include "Light.h"
-#include "../ResourceSystem/Scene.h"
+#include "../ResourceSystem/ProjectManager.h"
 #include "../ResourceSystem/Material.h"
 
 namespace Chilli {
 
 	enum class RenderJobType {
-		Camera,Light,Mesh
+		Camera,Light,Mesh, Sprite
 	};
 	struct LightCount {
 		int dirLightCount = 0;
@@ -46,6 +46,8 @@ namespace Chilli {
 		void CreateCameraJob();
 		void UpdateCameraJob(Camera* cam);
 		void CreateMeshJob();
+		void CreateSpriteJob();
+		void UpdateSpriteJob(Camera* cam);
 		void UpdateMeshJob(Camera* cam, SceneState state, std::map<uint64_t, std::unique_ptr<Light>>& sceneLights);
 		bool m_renderDuringPlay = true;
 		std::shared_ptr<Direct3D> m_direct3d;
