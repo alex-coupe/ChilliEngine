@@ -113,7 +113,7 @@ namespace Chilli {
 	void RenderJob::CreateSpriteJob()
 	{
 		auto spriteComp = std::static_pointer_cast<SpriteComponent>(m_entity.GetComponentByType(ComponentType::Sprite));
-		auto projDir = DependencyResolver::ResolveDependency<ProjectManager>()->GetProjectDirectory();
+		auto& projDir = DependencyResolver::ResolveDependency<ProjectManager>()->GetProjectDirectory();
 		Mesh mesh(projDir+"\\Resources\\plane.fbx");
 		
 		m_vertexBuffer = std::make_unique<VertexBuffer>(mesh.GetVertices(), m_direct3d);
@@ -123,7 +123,7 @@ namespace Chilli {
 		{
 			m_sampler = std::make_unique<Sampler>(m_direct3d);
 			m_sampler->Bind();
-			m_pixelShader = ShaderLibrary::GetCoreShader("PixelTex");
+			spriteComp->Transparent() ? m_pixelShader = ShaderLibrary::GetCoreShader("PixelTexTransparent") : m_pixelShader = ShaderLibrary::GetCoreShader("PixelTex");
 			m_vertexShader = ShaderLibrary::GetCoreShader("VertexTex");
 		}
 		else
@@ -154,7 +154,7 @@ namespace Chilli {
 
 			m_sampler->Bind();
 			m_vertexShader = ShaderLibrary::GetCoreShader("VertexTex");
-			m_pixelShader = ShaderLibrary::GetCoreShader("PixelTex");
+			spriteComp->Transparent() ? m_pixelShader = ShaderLibrary::GetCoreShader("PixelTexTransparent") : m_pixelShader = ShaderLibrary::GetCoreShader("PixelTex");
 			m_inputLayout = std::make_unique<InputLayout>(ied, m_vertexShader->GetByteCode(), m_direct3d);
 			std::static_pointer_cast<Texture>(DependencyResolver::ResolveDependency<ProjectManager>()->GetAssetByUUID(spriteComp->GetTexId(), AssetType::Texture))->Bind();
 		}

@@ -525,7 +525,7 @@ namespace Chilli {
 		<< ",\"Children\":[";
 		for (size_t i = 0; i < m_children.size(); i++)
 		{
-			ss << "{\"Child\":" << m_children[i].Get() << "},";
+			ss << "{\"Child\":" << m_children[i].Get() << "}";
 			if (i != m_children.size() - 1)
 				ss << ",";
 		}
